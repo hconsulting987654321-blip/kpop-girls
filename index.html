@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ambre, Eden & Louise - K-Pop Games</title>
+<title>K-Pop Star Academy - Ecole Saint-Esprit</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
 
@@ -27,19 +27,14 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* Sparkles */
 .sparkle-container {
-  position: fixed;
-  top: 0; left: 0;
+  position: fixed; top: 0; left: 0;
   width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
+  pointer-events: none; z-index: 0; overflow: hidden;
 }
 
 .sparkle {
   position: absolute;
-  font-size: 1.5em;
   animation: sparkleFloat linear infinite;
   opacity: 0.7;
 }
@@ -51,40 +46,192 @@ body {
   100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
 }
 
+/* Welcome screen */
+.welcome-screen {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #1a1a2e, #302b63, #0f3460);
+  z-index: 500;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.8s, transform 0.8s;
+}
+
+.welcome-screen.hidden {
+  opacity: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+
+.welcome-logo {
+  font-size: 5em;
+  margin-bottom: 10px;
+  animation: logoPulse 2s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(-3deg); }
+  75% { transform: scale(1.1) rotate(3deg); }
+}
+
+.welcome-title {
+  font-size: 2.8em;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 0 30px #ff6fd8, 0 0 60px rgba(255,111,216,0.3);
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.welcome-school {
+  font-size: 1.1em;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 30px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.welcome-input-group {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.welcome-input-group label {
+  display: block;
+  color: rgba(255,255,255,0.8);
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.welcome-input {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 14px 30px;
+  font-size: 1.3em;
+  border-radius: 50px;
+  font-family: inherit;
+  text-align: center;
+  width: 300px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.welcome-input:focus {
+  border-color: #ff6fd8;
+  box-shadow: 0 0 20px rgba(255,111,216,0.3);
+}
+
+.welcome-input::placeholder { color: rgba(255,255,255,0.3); }
+
+.quick-names {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.quick-name {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-family: inherit;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.quick-name:hover {
+  background: rgba(255,111,216,0.3);
+  border-color: #ff6fd8;
+  transform: scale(1.05);
+}
+
+.enter-btn {
+  background: linear-gradient(145deg, #ff6fd8, #cd77ff);
+  color: white;
+  border: none;
+  padding: 16px 50px;
+  font-size: 1.4em;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  box-shadow: 0 5px 30px rgba(255,111,216,0.4);
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.enter-btn:hover { transform: scale(1.05); }
+.enter-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+/* Main content */
+.main-content { display: none; width: 100%; }
+.main-content.show { display: flex; flex-direction: column; align-items: center; }
+
 /* Header */
 .header {
-  position: relative;
-  z-index: 2;
+  position: relative; z-index: 2;
   text-align: center;
-  padding: 40px 20px 20px;
+  padding: 25px 20px 10px;
 }
 
 .title {
-  font-size: 3em;
+  font-size: 2.5em;
   font-weight: 700;
   color: white;
   text-shadow: 0 0 20px rgba(255,255,255,0.5), 3px 3px 6px rgba(0,0,0,0.2);
-  margin-bottom: 5px;
-  animation: titlePulse 2s ease-in-out infinite;
-}
-
-@keyframes titlePulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  margin-bottom: 3px;
 }
 
 .subtitle {
-  font-size: 1.3em;
-  color: rgba(255,255,255,0.9);
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  font-size: 1em;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.player-greeting {
+  font-size: 1.4em;
+  color: #ffd700;
+  text-shadow: 0 0 15px rgba(255,215,0,0.5);
+  margin: 10px 0;
+  font-weight: 700;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin: 10px 0 20px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.stat-badge {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 8px 18px;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.95em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* Avatars */
 .avatars {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   justify-content: center;
-  margin: 30px 0;
+  margin: 15px 0;
   position: relative;
   z-index: 2;
   flex-wrap: wrap;
@@ -97,40 +244,30 @@ body {
   transition: transform 0.3s;
 }
 
-.avatar:hover {
-  transform: scale(1.1) !important;
-}
-
+.avatar:hover { transform: scale(1.1) !important; }
 .avatar:nth-child(2) { animation-delay: 0.5s; }
 .avatar:nth-child(3) { animation-delay: 1s; }
 
 @keyframes avatarBounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
 }
 
 .avatar-circle {
-  width: 100px;
-  height: 100px;
+  width: 85px; height: 85px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3em;
-  margin: 0 auto 8px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2), 0 0 30px rgba(255,255,255,0.3);
-  border: 3px solid rgba(255,255,255,0.6);
-  position: relative;
-  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5em;
+  margin: 0 auto 6px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2), 0 0 25px rgba(255,255,255,0.2);
+  border: 3px solid rgba(255,255,255,0.5);
+  position: relative; overflow: hidden;
 }
 
 .avatar-circle::after {
   content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
   background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
   animation: shine 3s ease-in-out infinite;
 }
@@ -145,104 +282,194 @@ body {
 .avatar:nth-child(3) .avatar-circle { background: linear-gradient(145deg, #fbc2eb, #f6a5c1); }
 
 .avatar-name {
-  font-size: 1.3em;
-  font-weight: 700;
-  color: white;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  font-size: 1.1em; font-weight: 700;
+  color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .avatar-age {
-  font-size: 0.9em;
-  color: rgba(255,255,255,0.8);
+  font-size: 0.8em;
+  color: rgba(255,255,255,0.7);
 }
 
 /* Games grid */
 .games {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 25px;
-  max-width: 900px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  max-width: 1000px;
+  width: 100%;
+  padding: 15px 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.game-card {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 22px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  background: rgba(255,255,255,0.22);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.2), 0 0 30px rgba(255,255,255,0.15);
+}
+
+.game-card .new-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: #ff3b30;
+  color: white;
+  font-size: 0.7em;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 10px;
+  animation: newPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes newPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.game-icon {
+  font-size: 3em;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.game-title {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  margin-bottom: 6px;
+}
+
+.game-desc {
+  font-size: 0.9em;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.3;
+}
+
+.game-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  padding: 3px 12px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  color: white;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.game-highscore {
+  font-size: 0.8em;
+  color: #ffd700;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* Trophies section */
+.trophies-section {
+  max-width: 1000px;
   width: 100%;
   padding: 20px;
   position: relative;
   z-index: 2;
 }
 
-.game-card {
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 24px;
-  padding: 30px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.game-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  background: rgba(255,255,255,0.25);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.2);
-}
-
-.game-icon {
-  font-size: 4em;
-  margin-bottom: 10px;
-  display: block;
-  animation: iconFloat 4s ease-in-out infinite;
-}
-
-.game-card:nth-child(2) .game-icon { animation-delay: 1s; }
-.game-card:nth-child(3) .game-icon { animation-delay: 2s; }
-.game-card:nth-child(4) .game-icon { animation-delay: 3s; }
-
-@keyframes iconFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-5px) rotate(3deg); }
-  75% { transform: translateY(5px) rotate(-3deg); }
-}
-
-.game-title {
+.trophies-title {
   font-size: 1.5em;
-  font-weight: 700;
   color: white;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  margin-bottom: 8px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  margin-bottom: 12px;
+  text-align: center;
 }
 
-.game-desc {
-  font-size: 1em;
-  color: rgba(255,255,255,0.85);
-  line-height: 1.4;
+.trophies-grid {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.game-badge {
-  display: inline-block;
-  background: rgba(255,255,255,0.3);
-  padding: 4px 14px;
-  border-radius: 20px;
-  font-size: 0.85em;
-  color: white;
-  margin-top: 12px;
-  font-weight: 600;
+.trophy {
+  width: 55px; height: 55px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8em;
+  transition: all 0.3s;
+  position: relative;
 }
+
+.trophy.locked {
+  background: rgba(255,255,255,0.08);
+  border: 2px dashed rgba(255,255,255,0.2);
+  filter: grayscale(1);
+  opacity: 0.4;
+}
+
+.trophy.unlocked {
+  background: rgba(255,215,0,0.2);
+  border: 2px solid rgba(255,215,0,0.5);
+  animation: trophyGlow 2s ease-in-out infinite;
+}
+
+@keyframes trophyGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.3); }
+  50% { box-shadow: 0 0 25px rgba(255,215,0,0.6); }
+}
+
+.trophy-tooltip {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  font-size: 0.5em;
+  padding: 3px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.trophy:hover .trophy-tooltip { opacity: 1; }
 
 /* Footer */
 .footer {
-  position: relative;
-  z-index: 2;
+  position: relative; z-index: 2;
   text-align: center;
-  padding: 30px;
-  color: rgba(255,255,255,0.6);
-  font-size: 0.9em;
+  padding: 25px;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.85em;
+}
+
+.footer a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
 }
 
 @media (max-width: 600px) {
-  .title { font-size: 2em; }
-  .avatars { gap: 15px; }
-  .avatar-circle { width: 75px; height: 75px; font-size: 2.2em; }
-  .games { grid-template-columns: 1fr; }
+  .title { font-size: 1.8em; }
+  .welcome-title { font-size: 2em; }
+  .avatars { gap: 12px; }
+  .avatar-circle { width: 65px; height: 65px; font-size: 2em; }
+  .games { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .game-icon { font-size: 2.2em; }
+  .game-title { font-size: 1.1em; }
+  .welcome-input { width: 250px; }
 }
 </style>
 </head>
@@ -250,65 +477,249 @@ body {
 
 <div class="sparkle-container" id="sparkles"></div>
 
-<div class="header">
-  <div class="title">Ambre, Eden & Louise</div>
-  <div class="subtitle">K-Pop Game Zone</div>
+<!-- WELCOME SCREEN -->
+<div class="welcome-screen" id="welcomeScreen">
+  <div class="welcome-logo">🎤</div>
+  <div class="welcome-title">K-Pop Star Academy</div>
+  <div class="welcome-school">Ecole Saint-Esprit</div>
+
+  <div class="welcome-input-group">
+    <label>Comment tu t'appelles ?</label>
+    <input type="text" class="welcome-input" id="nameInput" placeholder="Ton prenom..." maxlength="20" autocomplete="off">
+  </div>
+
+  <div class="quick-names">
+    <button class="quick-name" onclick="quickName('Ambre')">Ambre</button>
+    <button class="quick-name" onclick="quickName('Eden')">Eden</button>
+    <button class="quick-name" onclick="quickName('Louise')">Louise</button>
+  </div>
+
+  <button class="enter-btn" id="enterBtn" onclick="enterApp()" disabled>C'est parti !</button>
 </div>
 
-<div class="avatars">
-  <div class="avatar">
-    <div class="avatar-circle">💜</div>
-    <div class="avatar-name">Ambre</div>
-    <div class="avatar-age">6 ans</div>
+<!-- MAIN CONTENT -->
+<div class="main-content" id="mainContent">
+
+  <div class="header">
+    <div class="title">K-Pop Star Academy</div>
+    <div class="subtitle">Ecole Saint-Esprit</div>
+    <div class="player-greeting" id="playerGreeting"></div>
   </div>
-  <div class="avatar">
-    <div class="avatar-circle">💖</div>
-    <div class="avatar-name">Eden</div>
-    <div class="avatar-age">6 ans</div>
+
+  <div class="stats-bar">
+    <div class="stat-badge">⭐ <span id="totalStars">0</span> etoiles</div>
+    <div class="stat-badge">🏆 <span id="totalTrophies">0</span>/12 trophees</div>
+    <div class="stat-badge">🔥 Niveau <span id="playerLevel">1</span></div>
   </div>
-  <div class="avatar">
-    <div class="avatar-circle">⭐</div>
-    <div class="avatar-name">Louise</div>
-    <div class="avatar-age">10 ans</div>
+
+  <div class="avatars">
+    <div class="avatar">
+      <div class="avatar-circle">💜</div>
+      <div class="avatar-name">Ambre</div>
+      <div class="avatar-age">6 ans</div>
+    </div>
+    <div class="avatar">
+      <div class="avatar-circle">💖</div>
+      <div class="avatar-name">Eden</div>
+      <div class="avatar-age">6 ans</div>
+    </div>
+    <div class="avatar">
+      <div class="avatar-circle">⭐</div>
+      <div class="avatar-name">Louise</div>
+      <div class="avatar-age">10 ans</div>
+    </div>
   </div>
-</div>
 
-<div class="games">
-  <a class="game-card" href="dance.html">
-    <span class="game-icon">💃</span>
-    <div class="game-title">Dance Challenge</div>
-    <div class="game-desc">Appuie sur les bonnes touches au rythme de la musique !</div>
-    <span class="game-badge">Rythme</span>
-  </a>
+  <div class="games">
+    <a class="game-card" href="avatar.html">
+      <span class="new-badge">NEW</span>
+      <span class="game-icon">👸</span>
+      <div class="game-title">Cree ton Idol</div>
+      <div class="game-desc">Cree ta K-Pop star avec cheveux, tenue et accessoires !</div>
+      <span class="game-badge">Creation</span>
+      <div class="game-highscore" id="hs-avatar"></div>
+    </a>
 
-  <a class="game-card" href="memory.html">
-    <span class="game-icon">🎤</span>
-    <div class="game-title">K-Pop Memory</div>
-    <div class="game-desc">Retrouve les paires d'emojis K-pop le plus vite possible !</div>
-    <span class="game-badge">Memoire</span>
-  </a>
+    <a class="game-card" href="carte.html">
+      <span class="new-badge">NEW</span>
+      <span class="game-icon">💳</span>
+      <div class="game-title">Ma Carte K-Pop</div>
+      <div class="game-desc">Ta carte de star personnalisee a montrer aux copines !</div>
+      <span class="game-badge">Perso</span>
+    </a>
 
-  <a class="game-card" href="stars.html">
-    <span class="game-icon">⭐</span>
-    <div class="game-title">Attrape les Etoiles</div>
-    <div class="game-desc">Attrape un max d'etoiles et de coeurs avant la fin du temps !</div>
-    <span class="game-badge">Action</span>
-  </a>
+    <a class="game-card" href="dance.html">
+      <span class="game-icon">💃</span>
+      <div class="game-title">Dance Challenge</div>
+      <div class="game-desc">Appuie au rythme de la musique !</div>
+      <span class="game-badge">Rythme</span>
+      <div class="game-highscore" id="hs-dance"></div>
+    </a>
 
-  <a class="game-card" href="quiz.html">
-    <span class="game-icon">🎵</span>
-    <div class="game-title">Quiz K-Pop</div>
-    <div class="game-desc">Es-tu une vraie fan de K-pop ? Teste tes connaissances !</div>
-    <span class="game-badge">Quiz</span>
-  </a>
-</div>
+    <a class="game-card" href="memory.html">
+      <span class="game-icon">🎤</span>
+      <div class="game-title">K-Pop Memory</div>
+      <div class="game-desc">Retrouve les paires le plus vite possible !</div>
+      <span class="game-badge">Memoire</span>
+      <div class="game-highscore" id="hs-memory"></div>
+    </a>
 
-<div class="footer">
-  Fait avec amour par Papa
+    <a class="game-card" href="stars.html">
+      <span class="game-icon">⭐</span>
+      <div class="game-title">Attrape les Etoiles</div>
+      <div class="game-desc">Attrape un max d'etoiles et de coeurs !</div>
+      <span class="game-badge">Action</span>
+      <div class="game-highscore" id="hs-stars"></div>
+    </a>
+
+    <a class="game-card" href="quiz.html">
+      <span class="game-icon">🎵</span>
+      <div class="game-title">Quiz K-Pop</div>
+      <div class="game-desc">Teste tes connaissances K-pop !</div>
+      <span class="game-badge">Quiz</span>
+      <div class="game-highscore" id="hs-quiz"></div>
+    </a>
+
+    <a class="game-card" href="habillage.html">
+      <span class="new-badge">NEW</span>
+      <span class="game-icon">👗</span>
+      <div class="game-title">Habillage K-Pop</div>
+      <div class="game-desc">Habille ta star pour le concert !</div>
+      <span class="game-badge">Mode</span>
+    </a>
+
+    <a class="game-card" href="karaoke.html">
+      <span class="new-badge">NEW</span>
+      <span class="game-icon">🎙️</span>
+      <div class="game-title">Karaoke Star</div>
+      <div class="game-desc">Chante avec les paroles qui defilent !</div>
+      <span class="game-badge">Musique</span>
+    </a>
+  </div>
+
+  <!-- TROPHEES -->
+  <div class="trophies-section">
+    <div class="trophies-title">Mes Trophees</div>
+    <div class="trophies-grid" id="trophiesGrid"></div>
+  </div>
+
+  <div class="footer">
+    Fait avec amour par Papa — Ecole Saint-Esprit
+  </div>
 </div>
 
 <script>
-// Create floating sparkles
+// Trophies definition
+const TROPHIES = [
+  { id: 'first_game', emoji: '🌟', name: 'Premiere partie', desc: 'Joue ton premier jeu' },
+  { id: 'dance_100', emoji: '💃', name: 'Danseuse folle', desc: 'Score 100+ en Dance' },
+  { id: 'dance_500', emoji: '👑', name: 'Reine du dance floor', desc: 'Score 500+ en Dance' },
+  { id: 'memory_easy', emoji: '🧠', name: 'Bonne memoire', desc: 'Finis le Memory facile' },
+  { id: 'memory_hard', emoji: '🏆', name: 'Memoire d\'or', desc: 'Finis le Memory difficile' },
+  { id: 'stars_200', emoji: '⭐', name: 'Chasseuse d\'etoiles', desc: 'Score 200+ aux Etoiles' },
+  { id: 'quiz_80', emoji: '📚', name: 'Fan de K-pop', desc: '80%+ au Quiz' },
+  { id: 'quiz_100', emoji: '🎤', name: 'Experte K-pop', desc: '100% au Quiz' },
+  { id: 'avatar_created', emoji: '👸', name: 'Ma premiere Idol', desc: 'Cree ton avatar' },
+  { id: 'carte_created', emoji: '💳', name: 'Star certifiee', desc: 'Cree ta carte K-pop' },
+  { id: 'all_games', emoji: '🌈', name: 'Touche-a-tout', desc: 'Joue a tous les jeux' },
+  { id: 'collector', emoji: '💎', name: 'Collectionneuse', desc: 'Debloque 10 trophees' },
+];
+
+let playerName = '';
+
+// Welcome
+const nameInput = document.getElementById('nameInput');
+const enterBtn = document.getElementById('enterBtn');
+
+nameInput.addEventListener('input', () => {
+  enterBtn.disabled = nameInput.value.trim().length === 0;
+});
+
+nameInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && nameInput.value.trim()) enterApp();
+});
+
+function quickName(name) {
+  nameInput.value = name;
+  enterBtn.disabled = false;
+  nameInput.focus();
+}
+
+function enterApp() {
+  playerName = nameInput.value.trim();
+  if (!playerName) return;
+
+  localStorage.setItem('kpop_player', playerName);
+  localStorage.setItem('kpop_last_visit', Date.now());
+
+  // Track unique visitors
+  let visitors = JSON.parse(localStorage.getItem('kpop_visitors') || '[]');
+  if (!visitors.includes(playerName)) {
+    visitors.push(playerName);
+    localStorage.setItem('kpop_visitors', JSON.stringify(visitors));
+  }
+
+  document.getElementById('welcomeScreen').classList.add('hidden');
+  setTimeout(() => {
+    document.getElementById('mainContent').classList.add('show');
+    initMain();
+  }, 300);
+}
+
+function initMain() {
+  // Greetings
+  const greetings = [
+    `Bienvenue ${playerName} ! Tu es une STAR !`,
+    `${playerName} est dans la place !`,
+    `Salut ${playerName} ! Ready to shine ?`,
+    `${playerName}, la K-pop t'attend !`,
+  ];
+  document.getElementById('playerGreeting').textContent = greetings[Math.floor(Math.random() * greetings.length)];
+
+  // Stars
+  const totalStars = parseInt(localStorage.getItem(`kpop_stars_${playerName}`) || '0');
+  document.getElementById('totalStars').textContent = totalStars;
+
+  // Level
+  const level = Math.floor(totalStars / 100) + 1;
+  document.getElementById('playerLevel').textContent = level;
+
+  // Trophies
+  const unlocked = JSON.parse(localStorage.getItem(`kpop_trophies_${playerName}`) || '[]');
+  document.getElementById('totalTrophies').textContent = unlocked.length;
+
+  const grid = document.getElementById('trophiesGrid');
+  grid.innerHTML = '';
+  TROPHIES.forEach(t => {
+    const div = document.createElement('div');
+    div.className = `trophy ${unlocked.includes(t.id) ? 'unlocked' : 'locked'}`;
+    div.innerHTML = `${t.emoji}<div class="trophy-tooltip">${unlocked.includes(t.id) ? t.name : '???'}</div>`;
+    grid.appendChild(div);
+  });
+
+  // Unlock first_game trophy
+  if (!unlocked.includes('first_game')) {
+    unlocked.push('first_game');
+    localStorage.setItem(`kpop_trophies_${playerName}`, JSON.stringify(unlocked));
+  }
+
+  // High scores
+  const games = ['dance', 'memory', 'stars', 'quiz'];
+  games.forEach(g => {
+    const hs = localStorage.getItem(`kpop_hs_${g}_${playerName}`);
+    const el = document.getElementById(`hs-${g}`);
+    if (el && hs) el.textContent = `Record: ${hs}`;
+  });
+}
+
+// Check if returning player
+const savedName = localStorage.getItem('kpop_player');
+if (savedName) {
+  nameInput.value = savedName;
+  enterBtn.disabled = false;
+}
+
+// Sparkles
 const sparkleEmojis = ['✨','💖','⭐','🌟','💜','🎵','🎶','💫','🦋','🌸'];
 const container = document.getElementById('sparkles');
 
@@ -319,14 +730,21 @@ function createSparkle() {
   s.style.left = Math.random() * 100 + 'vw';
   s.style.fontSize = (1 + Math.random() * 1.5) + 'em';
   s.style.animationDuration = (6 + Math.random() * 8) + 's';
-  s.style.animationDelay = Math.random() * 2 + 's';
   container.appendChild(s);
   setTimeout(() => s.remove(), 16000);
 }
 
-// Initial burst
-for (let i = 0; i < 15; i++) createSparkle();
-setInterval(createSparkle, 800);
+for (let i = 0; i < 12; i++) createSparkle();
+setInterval(createSparkle, 1000);
+
+// Pass player name to game pages via URL
+document.querySelectorAll('.game-card').forEach(card => {
+  card.addEventListener('click', e => {
+    e.preventDefault();
+    const href = card.getAttribute('href');
+    window.location.href = href + '?player=' + encodeURIComponent(playerName || localStorage.getItem('kpop_player') || '');
+  });
+});
 </script>
 </body>
 </html>

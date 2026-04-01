@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habillage K-Pop - K-Pop Star Academy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: linear-gradient(135deg, #fbc2eb, #a18cd1, #ff6fd8);
+  background-size: 400% 400%;
+  animation: gradientBG 8s ease infinite;
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.back-btn {
+  position: fixed; top: 12px; left: 12px;
+  background: rgba(255,255,255,0.3);
+  color: white; border: 2px solid rgba(255,255,255,0.5);
+  padding: 6px 16px; border-radius: 30px;
+  font-family: inherit; font-size: 0.9em;
+  cursor: pointer; text-decoration: none; z-index: 100;
+}
+
+h1 { font-size: 2em; color: white; text-shadow: 3px 3px 6px rgba(0,0,0,0.2); margin: 10px 0 5px; }
+
+.player-info {
+  color: #ffd700; font-weight: 700;
+  text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  margin-bottom: 15px;
+}
+
+.stage {
+  display: flex;
+  gap: 20px;
+  max-width: 900px;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Mannequin */
+.mannequin-panel {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 24px;
+  padding: 20px;
+  text-align: center;
+  min-width: 260px;
+}
+
+.stage-bg {
+  width: 240px;
+  height: 350px;
+  margin: 0 auto 15px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-bg.bg-0 { background: linear-gradient(180deg, #1a1a2e, #302b63); }
+.stage-bg.bg-1 { background: linear-gradient(180deg, #ff6fd8, #ffd700); }
+.stage-bg.bg-2 { background: linear-gradient(180deg, #00c9ff, #92fe9d); }
+.stage-bg.bg-3 { background: linear-gradient(180deg, #fc466b, #3f5efb); }
+
+.spotlight {
+  position: absolute;
+  top: 0; left: 50%;
+  width: 150px; height: 100%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at top, rgba(255,255,255,0.2), transparent 70%);
+  pointer-events: none;
+}
+
+.mannequin {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.m-layer {
+  font-size: 4em;
+  display: block;
+  line-height: 1;
+  transition: all 0.3s;
+}
+
+.m-hat { font-size: 2.5em; margin-bottom: -10px; min-height: 45px; }
+.m-head { font-size: 3.5em; }
+.m-body { font-size: 4em; }
+.m-legs { font-size: 3em; }
+.m-shoes { font-size: 2em; min-height: 35px; }
+
+.outfit-name {
+  color: white;
+  font-size: 1.1em;
+  font-weight: 700;
+  margin-top: 10px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+.score-display {
+  color: #ffd700;
+  font-size: 1.3em;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.action-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn {
+  color: white; border: none;
+  padding: 10px 22px; border-radius: 20px;
+  font-family: inherit; font-size: 1em;
+  font-weight: 700; cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn:hover { transform: scale(1.05); }
+.btn-random { background: linear-gradient(145deg, #ff6fd8, #cd77ff); }
+.btn-rate { background: linear-gradient(145deg, #ffd700, #f6b93b); color: #333; }
+
+/* Wardrobe */
+.wardrobe {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wardrobe-section {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.section-title {
+  color: white;
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 1em;
+}
+
+.items-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.item-btn {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.12);
+  border: 2px solid transparent;
+  font-size: 1.7em;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+
+.item-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.25); }
+.item-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); }
+
+/* Rating popup */
+.rating-popup {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.rating-popup.show { display: flex; }
+
+.rating-box {
+  background: white;
+  border-radius: 25px;
+  padding: 30px 40px;
+  text-align: center;
+  animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.rating-box h2 { font-size: 2em; color: #a18cd1; margin-bottom: 10px; }
+.rating-box .rating-stars { font-size: 3em; margin: 10px 0; }
+.rating-box p { font-size: 1.1em; color: #666; margin: 5px 0; }
+
+.rating-close {
+  background: linear-gradient(145deg, #a18cd1, #ff6fd8);
+  color: white; border: none;
+  padding: 12px 30px; border-radius: 25px;
+  font-family: inherit; font-size: 1.1em;
+  font-weight: 700; cursor: pointer;
+  margin-top: 15px;
+}
+
+@media (max-width: 600px) {
+  .stage { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">Retour</a>
+
+<h1>Habillage K-Pop</h1>
+<div class="player-info" id="playerInfo"></div>
+
+<div class="stage">
+  <div class="mannequin-panel">
+    <div class="stage-bg bg-0" id="stageBg">
+      <div class="spotlight"></div>
+      <div class="mannequin">
+        <span class="m-layer m-hat" id="mHat"></span>
+        <span class="m-layer m-head" id="mHead">👩</span>
+        <span class="m-layer m-body" id="mBody">👗</span>
+        <span class="m-layer m-legs" id="mLegs">🦵</span>
+        <span class="m-layer m-shoes" id="mShoes">👠</span>
+      </div>
+    </div>
+    <div class="outfit-name" id="outfitName">Tenue de concert</div>
+    <div class="score-display">Style: <span id="styleScore">0</span>/100</div>
+    <div class="action-row">
+      <button class="btn btn-random" onclick="randomOutfit()">🎲 Aleatoire</button>
+      <button class="btn btn-rate" onclick="rateOutfit()">⭐ Note-moi !</button>
+    </div>
+  </div>
+
+  <div class="wardrobe">
+    <div class="wardrobe-section">
+      <div class="section-title">Chapeau / Accessoire tete</div>
+      <div class="items-row" id="hatItems"></div>
+    </div>
+    <div class="wardrobe-section">
+      <div class="section-title">Tete</div>
+      <div class="items-row" id="headItems"></div>
+    </div>
+    <div class="wardrobe-section">
+      <div class="section-title">Tenue</div>
+      <div class="items-row" id="bodyItems"></div>
+    </div>
+    <div class="wardrobe-section">
+      <div class="section-title">Chaussures</div>
+      <div class="items-row" id="shoeItems"></div>
+    </div>
+    <div class="wardrobe-section">
+      <div class="section-title">Scene</div>
+      <div class="items-row" id="bgItems"></div>
+    </div>
+  </div>
+</div>
+
+<div class="rating-popup" id="ratingPopup">
+  <div class="rating-box">
+    <h2 id="ratingTitle">Magnifique !</h2>
+    <div class="rating-stars" id="ratingStars">⭐⭐⭐</div>
+    <p id="ratingMsg"></p>
+    <p id="ratingScore"></p>
+    <button class="rating-close" onclick="closeRating()">Merci !</button>
+  </div>
+</div>
+
+<script>
+const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
+document.getElementById('playerInfo').textContent = `Styliste : ${playerName}`;
+
+const ITEMS = {
+  hat: ['','👑','🎀','🌸','🎩','🧢','🪖','🎧','🌺','💎','⭐','🦋'],
+  head: ['👩','👩‍🦰','👩‍🦱','👧','👩‍🦳','🧝‍♀️','👸','💆‍♀️','🧑‍🎤'],
+  body: ['👗','👘','🥻','👚','🎽','👔','🧥','💃','👙','🩱'],
+  shoes: ['👠','👟','👢','🩰','👡','🥿','👞','🩴'],
+  bg: [0, 1, 2, 3],
+};
+
+const bgEmojis = ['🌙','🌟','🌈','💜'];
+const outfitNames = ['Tenue de concert','Look de star','Style casual','Tenue de gala','Mode streetwear','Look tropical','Elegance pure','Style sport','Reine de la scene','Fashion queen'];
+
+let current = { hat: 0, head: 0, body: 0, shoes: 0, bg: 0 };
+
+function renderItems() {
+  ['hat','head','body','shoes'].forEach(cat => {
+    const el = document.getElementById(cat + 'Items');
+    el.innerHTML = '';
+    ITEMS[cat].forEach((item, i) => {
+      const btn = document.createElement('div');
+      btn.className = `item-btn ${i === current[cat] ? 'selected' : ''}`;
+      btn.textContent = item || '❌';
+      btn.onclick = () => { current[cat] = i; update(); };
+      el.appendChild(btn);
+    });
+  });
+
+  const bgEl = document.getElementById('bgItems');
+  bgEl.innerHTML = '';
+  ITEMS.bg.forEach((_, i) => {
+    const btn = document.createElement('div');
+    btn.className = `item-btn ${i === current.bg ? 'selected' : ''}`;
+    btn.textContent = bgEmojis[i];
+    btn.onclick = () => { current.bg = i; update(); };
+    bgEl.appendChild(btn);
+  });
+}
+
+function update() {
+  document.getElementById('mHat').textContent = ITEMS.hat[current.hat];
+  document.getElementById('mHead').textContent = ITEMS.head[current.head];
+  document.getElementById('mBody').textContent = ITEMS.body[current.body];
+  document.getElementById('mShoes').textContent = ITEMS.shoes[current.shoes];
+  document.getElementById('stageBg').className = `stage-bg bg-${current.bg}`;
+  document.getElementById('outfitName').textContent = outfitNames[Math.floor(Math.random() * outfitNames.length)];
+
+  const score = 60 + Math.floor(Math.random() * 41);
+  document.getElementById('styleScore').textContent = score;
+
+  renderItems();
+}
+
+function randomOutfit() {
+  current.hat = Math.floor(Math.random() * ITEMS.hat.length);
+  current.head = Math.floor(Math.random() * ITEMS.head.length);
+  current.body = Math.floor(Math.random() * ITEMS.body.length);
+  current.shoes = Math.floor(Math.random() * ITEMS.shoes.length);
+  current.bg = Math.floor(Math.random() * ITEMS.bg.length);
+  update();
+}
+
+function rateOutfit() {
+  const score = parseInt(document.getElementById('styleScore').textContent);
+  let stars, title, msg;
+
+  if (score >= 90) { stars = '⭐⭐⭐⭐⭐'; title = 'PARFAIT !!!'; msg = `${playerName} est la reine du style !`; }
+  else if (score >= 80) { stars = '⭐⭐⭐⭐'; title = 'Magnifique !'; msg = `${playerName} a un style incroyable !`; }
+  else if (score >= 70) { stars = '⭐⭐⭐'; title = 'Tres bien !'; msg = `${playerName} assure en mode !`; }
+  else { stars = '⭐⭐'; title = 'Pas mal !'; msg = `Continue ${playerName}, essaie d'autres combos !`; }
+
+  document.getElementById('ratingTitle').textContent = title;
+  document.getElementById('ratingStars').textContent = stars;
+  document.getElementById('ratingMsg').textContent = msg;
+  document.getElementById('ratingScore').textContent = `Score style : ${score}/100`;
+  document.getElementById('ratingPopup').classList.add('show');
+
+  // Stars reward
+  let totalStars = parseInt(localStorage.getItem(`kpop_stars_${playerName}`) || '0');
+  totalStars += Math.floor(score / 10);
+  localStorage.setItem(`kpop_stars_${playerName}`, totalStars);
+}
+
+function closeRating() {
+  document.getElementById('ratingPopup').classList.remove('show');
+}
+
+update();
+</script>
+</body>
+</html>

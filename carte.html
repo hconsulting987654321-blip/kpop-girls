@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma Carte K-Pop - K-Pop Star Academy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: linear-gradient(135deg, #1a1a2e, #302b63, #0f3460);
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.back-btn {
+  position: fixed; top: 12px; left: 12px;
+  background: rgba(255,255,255,0.15);
+  color: white; border: 2px solid rgba(255,255,255,0.3);
+  padding: 6px 16px; border-radius: 30px;
+  font-family: inherit; font-size: 0.9em;
+  cursor: pointer; text-decoration: none; z-index: 100;
+}
+
+h1 {
+  font-size: 2em; color: white;
+  text-shadow: 0 0 20px #ff6fd8;
+  margin: 10px 0 20px;
+}
+
+/* Card */
+.kpop-card {
+  width: 360px;
+  min-height: 500px;
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 50px rgba(0,0,0,0.5), 0 0 40px rgba(255,111,216,0.3);
+  animation: cardFloat 4s ease-in-out infinite;
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.5deg); }
+}
+
+.card-bg {
+  position: absolute;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+
+.card-bg.style-0 { background: linear-gradient(145deg, #ff6fd8, #cd77ff, #8c6fff); }
+.card-bg.style-1 { background: linear-gradient(145deg, #ffd700, #ff6fd8, #cd77ff); }
+.card-bg.style-2 { background: linear-gradient(145deg, #00c9ff, #92fe9d, #00c9ff); }
+.card-bg.style-3 { background: linear-gradient(145deg, #fc466b, #3f5efb); }
+.card-bg.style-4 { background: linear-gradient(145deg, #0f0c29, #302b63, #24243e); }
+.card-bg.style-5 { background: linear-gradient(145deg, #f7971e, #ffd200); }
+
+/* Holographic effect */
+.card-holo {
+  position: absolute;
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg,
+    transparent 0%,
+    rgba(255,255,255,0.1) 25%,
+    rgba(255,255,255,0.3) 50%,
+    rgba(255,255,255,0.1) 75%,
+    transparent 100%
+  );
+  background-size: 200% 200%;
+  animation: holoShine 3s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes holoShine {
+  0% { background-position: -100% -100%; }
+  100% { background-position: 200% 200%; }
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+  padding: 25px;
+  color: white;
+  text-align: center;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-label {
+  font-size: 0.7em;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.card-school {
+  font-size: 0.65em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  background: rgba(255,255,255,0.15);
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+.card-avatar {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 4px solid rgba(255,255,255,0.5);
+  margin: 10px auto;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4em;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+
+.card-player-name {
+  font-size: 2.2em;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255,255,255,0.5), 2px 2px 4px rgba(0,0,0,0.3);
+  margin: 10px 0 5px;
+}
+
+.card-title {
+  font-size: 1em;
+  opacity: 0.8;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.card-stat {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.stat-label {
+  font-size: 0.75em;
+  opacity: 0.7;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.stat-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #ffd700, #ff6fd8);
+  transition: width 1s ease;
+}
+
+.card-id {
+  font-size: 0.7em;
+  opacity: 0.5;
+  margin-top: 10px;
+  font-family: monospace;
+}
+
+/* Controls */
+.controls {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.control-group {
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.control-label {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.style-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.style-btn {
+  width: 45px; height: 45px;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.style-btn:hover { transform: scale(1.1); }
+.style-btn.selected { border-color: white; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+
+.style-btn.s0 { background: linear-gradient(145deg, #ff6fd8, #8c6fff); }
+.style-btn.s1 { background: linear-gradient(145deg, #ffd700, #ff6fd8); }
+.style-btn.s2 { background: linear-gradient(145deg, #00c9ff, #92fe9d); }
+.style-btn.s3 { background: linear-gradient(145deg, #fc466b, #3f5efb); }
+.style-btn.s4 { background: linear-gradient(145deg, #0f0c29, #302b63); }
+.style-btn.s5 { background: linear-gradient(145deg, #f7971e, #ffd200); }
+
+.emoji-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.emoji-btn {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.1);
+  border: 2px solid transparent;
+  font-size: 1.5em;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+
+.emoji-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
+.emoji-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); }
+
+.title-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.title-btn {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 15px;
+  font-family: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.title-btn:hover { background: rgba(255,255,255,0.2); }
+.title-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); }
+
+.action-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.save-card-btn {
+  background: linear-gradient(145deg, #4ecdc4, #2bcbba);
+  color: white; border: none;
+  padding: 14px 30px; border-radius: 25px;
+  font-family: inherit; font-size: 1.1em;
+  font-weight: 700; cursor: pointer;
+}
+
+.share-btn {
+  background: linear-gradient(145deg, #ff6fd8, #cd77ff);
+  color: white; border: none;
+  padding: 14px 30px; border-radius: 25px;
+  font-family: inherit; font-size: 1.1em;
+  font-weight: 700; cursor: pointer;
+}
+
+.save-card-btn:hover, .share-btn:hover { transform: scale(1.05); }
+
+.toast {
+  position: fixed;
+  bottom: 30px; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-size: 1.1em;
+  z-index: 500;
+  transition: transform 0.4s ease;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 400px) {
+  .kpop-card { width: 95vw; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">Retour</a>
+
+<h1>Ma Carte K-Pop</h1>
+
+<!-- THE CARD -->
+<div class="kpop-card" id="kpopCard">
+  <div class="card-bg style-0" id="cardBg"></div>
+  <div class="card-holo"></div>
+  <div class="card-content">
+    <div class="card-header">
+      <span class="card-label">K-POP STAR CARD</span>
+      <span class="card-school">Saint-Esprit</span>
+    </div>
+    <div class="card-avatar" id="cardAvatar">👸</div>
+    <div class="card-player-name" id="cardName">Star</div>
+    <div class="card-title" id="cardTitle">K-Pop Princess</div>
+
+    <div class="card-stats">
+      <div class="card-stat">
+        <div class="stat-label">Danse</div>
+        <div class="stat-value" id="statDance">95</div>
+        <div class="stat-bar"><div class="stat-bar-fill" id="barDance" style="width:95%"></div></div>
+      </div>
+      <div class="card-stat">
+        <div class="stat-label">Style</div>
+        <div class="stat-value" id="statStyle">88</div>
+        <div class="stat-bar"><div class="stat-bar-fill" id="barStyle" style="width:88%"></div></div>
+      </div>
+      <div class="card-stat">
+        <div class="stat-label">Chant</div>
+        <div class="stat-value" id="statSing">92</div>
+        <div class="stat-bar"><div class="stat-bar-fill" id="barSing" style="width:92%"></div></div>
+      </div>
+      <div class="card-stat">
+        <div class="stat-label">Charisme</div>
+        <div class="stat-value" id="statCharisma">97</div>
+        <div class="stat-bar"><div class="stat-bar-fill" id="barCharisma" style="width:97%"></div></div>
+      </div>
+    </div>
+
+    <div class="card-id" id="cardId">ID #0001 — K-POP STAR ACADEMY</div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <div class="control-group">
+    <div class="control-label">Style de carte</div>
+    <div class="style-options">
+      <div class="style-btn s0 selected" onclick="setStyle(0,this)"></div>
+      <div class="style-btn s1" onclick="setStyle(1,this)"></div>
+      <div class="style-btn s2" onclick="setStyle(2,this)"></div>
+      <div class="style-btn s3" onclick="setStyle(3,this)"></div>
+      <div class="style-btn s4" onclick="setStyle(4,this)"></div>
+      <div class="style-btn s5" onclick="setStyle(5,this)"></div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">Avatar</div>
+    <div class="emoji-options" id="avatarOptions"></div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">Titre</div>
+    <div class="title-options" id="titleOptions"></div>
+  </div>
+
+  <div class="action-btns">
+    <button class="save-card-btn" onclick="saveCard()">💾 Sauvegarder</button>
+    <button class="share-btn" onclick="randomStats()">🎲 Stats</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
+
+const avatars = ['👸','🧑‍🎤','💃','🦄','🌟','👑','🎤','🦋','🐱','🐰','🌸','💖','🎀','💎','🧜‍♀️','🧚‍♀️'];
+const titles = ['K-Pop Princess','Dance Queen','Star Supreme','Idol No.1','Main Vocal','Lead Dancer','Visual Queen','Center Stage','Fan Favorite','Rising Star'];
+
+let currentStyle = 0;
+let currentAvatar = 0;
+let currentTitle = 0;
+let stats = { dance: 95, style: 88, sing: 92, charisma: 97 };
+
+// Init
+document.getElementById('cardName').textContent = playerName;
+document.getElementById('cardId').textContent = `ID #${String(Math.floor(Math.random()*9999)+1).padStart(4,'0')} — K-POP STAR ACADEMY`;
+
+// Render avatar options
+const avEl = document.getElementById('avatarOptions');
+avatars.forEach((a, i) => {
+  const btn = document.createElement('div');
+  btn.className = `emoji-btn ${i === 0 ? 'selected' : ''}`;
+  btn.textContent = a;
+  btn.onclick = () => {
+    currentAvatar = i;
+    document.getElementById('cardAvatar').textContent = avatars[i];
+    document.querySelectorAll('#avatarOptions .emoji-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  };
+  avEl.appendChild(btn);
+});
+
+// Render title options
+const tiEl = document.getElementById('titleOptions');
+titles.forEach((t, i) => {
+  const btn = document.createElement('button');
+  btn.className = `title-btn ${i === 0 ? 'selected' : ''}`;
+  btn.textContent = t;
+  btn.onclick = () => {
+    currentTitle = i;
+    document.getElementById('cardTitle').textContent = titles[i];
+    document.querySelectorAll('.title-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  };
+  tiEl.appendChild(btn);
+});
+
+function setStyle(n, btn) {
+  currentStyle = n;
+  const bg = document.getElementById('cardBg');
+  bg.className = `card-bg style-${n}`;
+  document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function randomStats() {
+  stats = {
+    dance: 70 + Math.floor(Math.random() * 31),
+    style: 70 + Math.floor(Math.random() * 31),
+    sing: 70 + Math.floor(Math.random() * 31),
+    charisma: 70 + Math.floor(Math.random() * 31),
+  };
+  document.getElementById('statDance').textContent = stats.dance;
+  document.getElementById('statStyle').textContent = stats.style;
+  document.getElementById('statSing').textContent = stats.sing;
+  document.getElementById('statCharisma').textContent = stats.charisma;
+  document.getElementById('barDance').style.width = stats.dance + '%';
+  document.getElementById('barStyle').style.width = stats.style + '%';
+  document.getElementById('barSing').style.width = stats.sing + '%';
+  document.getElementById('barCharisma').style.width = stats.charisma + '%';
+}
+
+function saveCard() {
+  const data = { style: currentStyle, avatar: currentAvatar, title: currentTitle, stats };
+  localStorage.setItem(`kpop_carte_${playerName}`, JSON.stringify(data));
+
+  let trophies = JSON.parse(localStorage.getItem(`kpop_trophies_${playerName}`) || '[]');
+  if (!trophies.includes('carte_created')) {
+    trophies.push('carte_created');
+    localStorage.setItem(`kpop_trophies_${playerName}`, JSON.stringify(trophies));
+  }
+
+  let stars = parseInt(localStorage.getItem(`kpop_stars_${playerName}`) || '0');
+  stars += 30;
+  localStorage.setItem(`kpop_stars_${playerName}`, stars);
+
+  showToast(`Carte de ${playerName} sauvegardee ! +30 ⭐`);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Load saved
+const saved = localStorage.getItem(`kpop_carte_${playerName}`);
+if (saved) {
+  try {
+    const d = JSON.parse(saved);
+    if (d.style !== undefined) setStyle(d.style, document.querySelectorAll('.style-btn')[d.style]);
+    if (d.avatar !== undefined) {
+      currentAvatar = d.avatar;
+      document.getElementById('cardAvatar').textContent = avatars[d.avatar];
+    }
+    if (d.title !== undefined) {
+      currentTitle = d.title;
+      document.getElementById('cardTitle').textContent = titles[d.title];
+    }
+    if (d.stats) { stats = d.stats; randomStats(); Object.assign(stats, d.stats); }
+  } catch(e) {}
+}
+</script>
+</body>
+</html>
