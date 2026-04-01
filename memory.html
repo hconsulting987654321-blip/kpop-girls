@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Pop Memory - K-Pop Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  background-size: 400% 400%;
+  animation: gradientBG 8s ease infinite;
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.back-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: rgba(255,255,255,0.3);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.5);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-family: inherit;
+  font-size: 1em;
+  cursor: pointer;
+  text-decoration: none;
+  z-index: 100;
+}
+
+h1 {
+  font-size: 2.2em;
+  color: white;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+  margin: 10px 0;
+}
+
+/* Player select */
+.player-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.p-btn {
+  background: rgba(255,255,255,0.25);
+  border: 2px solid rgba(255,255,255,0.5);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-family: inherit;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.p-btn.active {
+  background: white;
+  color: #a18cd1;
+}
+
+.score-board {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.grid.size-8 { grid-template-columns: repeat(4, 1fr); }
+.grid.size-12 { grid-template-columns: repeat(4, 1fr); }
+.grid.size-16 { grid-template-columns: repeat(4, 1fr); }
+.grid.size-20 { grid-template-columns: repeat(5, 1fr); }
+
+.card {
+  aspect-ratio: 1;
+  border-radius: 14px;
+  cursor: pointer;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.card.flipped { transform: rotateY(180deg); }
+.card.matched {
+  transform: rotateY(180deg);
+  animation: matchBounce 0.5s ease;
+}
+
+@keyframes matchBounce {
+  50% { transform: rotateY(180deg) scale(1.15); }
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-front {
+  background: linear-gradient(145deg, #a18cd1, #6c5ce7);
+  color: white;
+  font-size: 2em;
+}
+
+.card-back {
+  background: white;
+  transform: rotateY(180deg);
+  font-size: 2.8em;
+}
+
+.difficulty {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.diff-btn {
+  background: rgba(255,255,255,0.25);
+  border: 2px solid rgba(255,255,255,0.5);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 25px;
+  font-family: inherit;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.diff-btn.active {
+  background: white;
+  color: #a18cd1;
+  font-weight: 700;
+}
+
+/* Timer */
+.timer-bar {
+  width: 100%;
+  max-width: 500px;
+  height: 8px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 10px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.timer-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6fd8, #ffd700);
+  border-radius: 10px;
+  transition: width 1s linear;
+  width: 100%;
+}
+
+/* Win */
+.win-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.win-overlay.show { display: flex; }
+
+.win-box {
+  background: white;
+  border-radius: 30px;
+  padding: 35px 50px;
+  text-align: center;
+  animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.win-box h2 { font-size: 2.2em; color: #a18cd1; margin-bottom: 5px; }
+.win-box .stars { font-size: 3em; margin: 10px 0; }
+.win-box p { font-size: 1.1em; color: #666; margin: 5px 0; }
+
+.btn {
+  background: linear-gradient(145deg, #a18cd1, #6c5ce7);
+  color: white;
+  border: none;
+  padding: 14px 35px;
+  font-size: 1.2em;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  margin-top: 15px;
+  box-shadow: 0 4px 15px rgba(108,92,231,0.3);
+}
+.btn:hover { transform: scale(1.05); }
+
+.confetti {
+  position: fixed;
+  font-size: 2em;
+  animation: confettiFall linear forwards;
+  z-index: 300;
+  pointer-events: none;
+}
+
+@keyframes confettiFall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+@media (max-width: 500px) {
+  .card-back { font-size: 2em; }
+  h1 { font-size: 1.8em; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">Retour</a>
+
+<h1>K-Pop Memory</h1>
+
+<div class="player-bar">
+  <button class="p-btn active" onclick="setPlayer(this,'Ambre')">Ambre</button>
+  <button class="p-btn" onclick="setPlayer(this,'Eden')">Eden</button>
+  <button class="p-btn" onclick="setPlayer(this,'Louise')">Louise</button>
+</div>
+
+<div class="difficulty">
+  <button class="diff-btn active" onclick="startGame(8, this)">Facile</button>
+  <button class="diff-btn" onclick="startGame(12, this)">Moyen</button>
+  <button class="diff-btn" onclick="startGame(16, this)">Dur</button>
+  <button class="diff-btn" onclick="startGame(20, this)">Expert</button>
+</div>
+
+<div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+
+<div class="score-board">
+  <span>Paires: <span id="pairs">0</span>/<span id="total">4</span></span>
+  <span>Coups: <span id="moves">0</span></span>
+  <span id="timeDisplay">1:00</span>
+</div>
+
+<div class="grid size-8" id="grid"></div>
+
+<div class="win-overlay" id="winOverlay">
+  <div class="win-box">
+    <h2 id="winTitle">Bravo !</h2>
+    <div class="stars" id="winStars"></div>
+    <p id="winMsg"></p>
+    <p id="winDetails"></p>
+    <button class="btn" onclick="restartGame()">Rejouer</button>
+  </div>
+</div>
+
+<script>
+const kpopEmojis = ['🎤','🎵','🎶','💜','💖','⭐','🌟','👑','🦋','🌸','💎','🎀','🎧','🎹','🎸','💫','🌈','🦄','✨','🎪'];
+let cards = [], flipped = [], matched = 0, moves = 0, locked = false;
+let currentSize = 8, totalPairs = 4, currentPlayer = 'Ambre';
+let timerInterval, timeLeft, totalTime;
+
+function setPlayer(btn, name) {
+  currentPlayer = name;
+  document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startGame(size, btn) {
+  currentSize = size;
+  totalPairs = size / 2;
+  matched = 0;
+  moves = 0;
+  flipped = [];
+  locked = false;
+
+  if (btn) {
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  document.getElementById('pairs').textContent = 0;
+  document.getElementById('total').textContent = totalPairs;
+  document.getElementById('moves').textContent = 0;
+  document.getElementById('winOverlay').classList.remove('show');
+
+  const grid = document.getElementById('grid');
+  grid.className = `grid size-${size}`;
+
+  const selected = shuffle([...kpopEmojis]).slice(0, totalPairs);
+  cards = shuffle([...selected, ...selected]);
+
+  grid.innerHTML = '';
+  cards.forEach((emoji, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="card-front">🎵</div><div class="card-back">${emoji}</div>`;
+    card.addEventListener('click', () => flipCard(card, i));
+    grid.appendChild(card);
+  });
+
+  // Timer
+  clearInterval(timerInterval);
+  totalTime = size <= 8 ? 60 : size <= 12 ? 90 : size <= 16 ? 120 : 150;
+  timeLeft = totalTime;
+  updateTimer();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimer();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      gameOver(false);
+    }
+  }, 1000);
+}
+
+function updateTimer() {
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  document.getElementById('timeDisplay').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  document.getElementById('timerFill').style.width = (timeLeft / totalTime * 100) + '%';
+
+  if (timeLeft < 10) {
+    document.getElementById('timerFill').style.background = '#ff6b6b';
+  } else {
+    document.getElementById('timerFill').style.background = 'linear-gradient(90deg, #ff6fd8, #ffd700)';
+  }
+}
+
+function flipCard(card, index) {
+  if (locked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  if (flipped.length >= 2) return;
+
+  card.classList.add('flipped');
+  flipped.push({ card, index });
+  playPop(600);
+
+  if (flipped.length === 2) {
+    moves++;
+    document.getElementById('moves').textContent = moves;
+    locked = true;
+
+    const [a, b] = flipped;
+    if (cards[a.index] === cards[b.index]) {
+      setTimeout(() => {
+        a.card.classList.add('matched');
+        b.card.classList.add('matched');
+        matched++;
+        document.getElementById('pairs').textContent = matched;
+        playPop(900);
+        flipped = [];
+        locked = false;
+        if (matched === totalPairs) {
+          clearInterval(timerInterval);
+          setTimeout(() => gameOver(true), 400);
+        }
+      }, 300);
+    } else {
+      setTimeout(() => {
+        a.card.classList.remove('flipped');
+        b.card.classList.remove('flipped');
+        flipped = [];
+        locked = false;
+      }, 700);
+    }
+  }
+}
+
+function gameOver(won) {
+  const ratio = moves / totalPairs;
+  let stars, title, msg;
+
+  if (won) {
+    if (ratio <= 1.5) { stars = '⭐⭐⭐'; title = 'PARFAIT !!!'; }
+    else if (ratio <= 2.5) { stars = '⭐⭐'; title = 'SUPER !!'; }
+    else { stars = '⭐'; title = 'BRAVO !'; }
+
+    const msgs = [
+      `${currentPlayer} a une memoire de champion !`,
+      `Trop forte ${currentPlayer} !`,
+      `${currentPlayer} est la meilleure !`,
+      `Incroyable ${currentPlayer} !`
+    ];
+    msg = msgs[Math.floor(Math.random() * msgs.length)];
+
+    // Confetti
+    const emojis = ['🎉','💖','⭐','🌟','🎀','✨','💜'];
+    for (let i = 0; i < 25; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.animationDuration = (2 + Math.random() * 3) + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+      }, i * 80);
+    }
+  } else {
+    stars = '⏰';
+    title = 'Temps ecoulé !';
+    msg = `Pas grave ${currentPlayer}, réessaie !`;
+  }
+
+  document.getElementById('winTitle').textContent = title;
+  document.getElementById('winStars').textContent = stars;
+  document.getElementById('winMsg').textContent = msg;
+  document.getElementById('winDetails').textContent = won ? `En ${moves} coups et ${totalTime - timeLeft}s !` : `${matched}/${totalPairs} paires trouvees`;
+  document.getElementById('winOverlay').classList.add('show');
+}
+
+function restartGame() {
+  startGame(currentSize, null);
+}
+
+function playPop(freq) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = freq; o.type = 'sine';
+    g.gain.setValueAtTime(0.2, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    o.start(); o.stop(ctx.currentTime + 0.1);
+  } catch(e) {}
+}
+
+startGame(8, null);
+</script>
+</body>
+</html>

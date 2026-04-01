@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ambre, Eden & Louise - K-Pop Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: linear-gradient(135deg, #ff6fd8, #cd77ff, #8c6fff, #ff6fd8);
+  background-size: 600% 600%;
+  animation: gradientBG 6s ease infinite;
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Sparkles */
+.sparkle-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 1.5em;
+  animation: sparkleFloat linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes sparkleFloat {
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+/* Header */
+.header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px 20px 20px;
+}
+
+.title {
+  font-size: 3em;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 0 20px rgba(255,255,255,0.5), 3px 3px 6px rgba(0,0,0,0.2);
+  margin-bottom: 5px;
+  animation: titlePulse 2s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+.subtitle {
+  font-size: 1.3em;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Avatars */
+.avatars {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin: 30px 0;
+  position: relative;
+  z-index: 2;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  text-align: center;
+  animation: avatarBounce 3s ease-in-out infinite;
+  cursor: default;
+  transition: transform 0.3s;
+}
+
+.avatar:hover {
+  transform: scale(1.1) !important;
+}
+
+.avatar:nth-child(2) { animation-delay: 0.5s; }
+.avatar:nth-child(3) { animation-delay: 1s; }
+
+@keyframes avatarBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.avatar-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3em;
+  margin: 0 auto 8px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2), 0 0 30px rgba(255,255,255,0.3);
+  border: 3px solid rgba(255,255,255,0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-circle::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
+  animation: shine 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.avatar:nth-child(1) .avatar-circle { background: linear-gradient(145deg, #ff9a9e, #fecfef); }
+.avatar:nth-child(2) .avatar-circle { background: linear-gradient(145deg, #a18cd1, #cdb4f0); }
+.avatar:nth-child(3) .avatar-circle { background: linear-gradient(145deg, #fbc2eb, #f6a5c1); }
+
+.avatar-name {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.avatar-age {
+  font-size: 0.9em;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Games grid */
+.games {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  max-width: 900px;
+  width: 100%;
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.game-card {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 24px;
+  padding: 30px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  background: rgba(255,255,255,0.25);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.2);
+}
+
+.game-icon {
+  font-size: 4em;
+  margin-bottom: 10px;
+  display: block;
+  animation: iconFloat 4s ease-in-out infinite;
+}
+
+.game-card:nth-child(2) .game-icon { animation-delay: 1s; }
+.game-card:nth-child(3) .game-icon { animation-delay: 2s; }
+.game-card:nth-child(4) .game-icon { animation-delay: 3s; }
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-5px) rotate(3deg); }
+  75% { transform: translateY(5px) rotate(-3deg); }
+}
+
+.game-title {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  margin-bottom: 8px;
+}
+
+.game-desc {
+  font-size: 1em;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.4;
+}
+
+.game-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.3);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  color: white;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+/* Footer */
+.footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 30px;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9em;
+}
+
+@media (max-width: 600px) {
+  .title { font-size: 2em; }
+  .avatars { gap: 15px; }
+  .avatar-circle { width: 75px; height: 75px; font-size: 2.2em; }
+  .games { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="sparkle-container" id="sparkles"></div>
+
+<div class="header">
+  <div class="title">Ambre, Eden & Louise</div>
+  <div class="subtitle">K-Pop Game Zone</div>
+</div>
+
+<div class="avatars">
+  <div class="avatar">
+    <div class="avatar-circle">💜</div>
+    <div class="avatar-name">Ambre</div>
+    <div class="avatar-age">6 ans</div>
+  </div>
+  <div class="avatar">
+    <div class="avatar-circle">💖</div>
+    <div class="avatar-name">Eden</div>
+    <div class="avatar-age">6 ans</div>
+  </div>
+  <div class="avatar">
+    <div class="avatar-circle">⭐</div>
+    <div class="avatar-name">Louise</div>
+    <div class="avatar-age">10 ans</div>
+  </div>
+</div>
+
+<div class="games">
+  <a class="game-card" href="dance.html">
+    <span class="game-icon">💃</span>
+    <div class="game-title">Dance Challenge</div>
+    <div class="game-desc">Appuie sur les bonnes touches au rythme de la musique !</div>
+    <span class="game-badge">Rythme</span>
+  </a>
+
+  <a class="game-card" href="memory.html">
+    <span class="game-icon">🎤</span>
+    <div class="game-title">K-Pop Memory</div>
+    <div class="game-desc">Retrouve les paires d'emojis K-pop le plus vite possible !</div>
+    <span class="game-badge">Memoire</span>
+  </a>
+
+  <a class="game-card" href="stars.html">
+    <span class="game-icon">⭐</span>
+    <div class="game-title">Attrape les Etoiles</div>
+    <div class="game-desc">Attrape un max d'etoiles et de coeurs avant la fin du temps !</div>
+    <span class="game-badge">Action</span>
+  </a>
+
+  <a class="game-card" href="quiz.html">
+    <span class="game-icon">🎵</span>
+    <div class="game-title">Quiz K-Pop</div>
+    <div class="game-desc">Es-tu une vraie fan de K-pop ? Teste tes connaissances !</div>
+    <span class="game-badge">Quiz</span>
+  </a>
+</div>
+
+<div class="footer">
+  Fait avec amour par Papa
+</div>
+
+<script>
+// Create floating sparkles
+const sparkleEmojis = ['✨','💖','⭐','🌟','💜','🎵','🎶','💫','🦋','🌸'];
+const container = document.getElementById('sparkles');
+
+function createSparkle() {
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.textContent = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
+  s.style.left = Math.random() * 100 + 'vw';
+  s.style.fontSize = (1 + Math.random() * 1.5) + 'em';
+  s.style.animationDuration = (6 + Math.random() * 8) + 's';
+  s.style.animationDelay = Math.random() * 2 + 's';
+  container.appendChild(s);
+  setTimeout(() => s.remove(), 16000);
+}
+
+// Initial burst
+for (let i = 0; i < 15; i++) createSparkle();
+setInterval(createSparkle, 800);
+</script>
+</body>
+</html>

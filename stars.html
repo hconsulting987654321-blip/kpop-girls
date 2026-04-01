@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attrape les Etoiles - K-Pop Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: linear-gradient(180deg, #0f0c29, #302b63, #24243e);
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.back-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.3);
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-family: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+  text-decoration: none;
+  z-index: 100;
+}
+
+/* HUD */
+.hud {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 25px;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 700;
+  z-index: 50;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.hud .score-val { color: #ffd700; }
+.hud .lives-val { color: #ff6b6b; }
+.hud .time-val { color: #4ecdc4; }
+
+/* Game canvas */
+#gameCanvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Overlays */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.overlay.hidden { display: none; }
+
+.overlay h2 {
+  font-size: 2.5em;
+  color: white;
+  margin-bottom: 10px;
+  text-shadow: 0 0 30px #ff6fd8;
+}
+
+.overlay p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+.big-num {
+  font-size: 4em;
+  color: #ffd700;
+  font-weight: 700;
+  text-shadow: 0 0 30px rgba(255,215,0,0.5);
+  margin: 10px 0;
+}
+
+.player-select {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.player-btn {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-family: inherit;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.player-btn:hover, .player-btn.active {
+  background: rgba(255,111,216,0.3);
+  border-color: #ff6fd8;
+}
+
+.play-btn {
+  background: linear-gradient(145deg, #ff6fd8, #cd77ff);
+  color: white;
+  border: none;
+  padding: 16px 45px;
+  font-size: 1.4em;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  margin-top: 20px;
+  box-shadow: 0 5px 25px rgba(255,111,216,0.4);
+}
+
+.play-btn:hover { transform: scale(1.05); }
+
+.instructions {
+  color: rgba(255,255,255,0.6);
+  margin-top: 15px;
+  font-size: 0.95em;
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">Retour</a>
+
+<div class="hud">
+  <span>Score: <span class="score-val" id="hudScore">0</span></span>
+  <span class="lives-val" id="hudLives">❤️❤️❤️</span>
+  <span class="time-val" id="hudTime">30s</span>
+  <span id="hudPlayer"></span>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<!-- Start -->
+<div class="overlay" id="startScreen">
+  <h2>Attrape les Etoiles !</h2>
+  <p>Qui joue ?</p>
+  <div class="player-select">
+    <button class="player-btn" onclick="selectPlayer('Ambre')">Ambre</button>
+    <button class="player-btn" onclick="selectPlayer('Eden')">Eden</button>
+    <button class="player-btn" onclick="selectPlayer('Louise')">Louise</button>
+  </div>
+  <p class="instructions">Souris ou doigt pour attraper !</p>
+  <p class="instructions">⭐ +10 &nbsp; 💖 +20 &nbsp; 💎 +50 &nbsp; 💜 +30</p>
+  <p class="instructions">💣 Evite les bombes !</p>
+  <button class="play-btn" id="startBtn" onclick="startGame()" disabled>Jouer !</button>
+</div>
+
+<!-- End -->
+<div class="overlay hidden" id="endScreen">
+  <h2 id="endTitle">Bravo !</h2>
+  <div class="big-num" id="endScore">0</div>
+  <p id="endMsg"></p>
+  <button class="play-btn" onclick="showStart()">Rejouer</button>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// Game state
+let items = [];
+let particles = [];
+let score = 0;
+let lives = 3;
+let timeLeft = 30;
+let gameRunning = false;
+let currentPlayer = '';
+let mouseX = W / 2, mouseY = H / 2;
+let basketSize = 70;
+let spawnRate = 800;
+let gameTimer, spawnTimer, frame;
+let bgStars = [];
+
+// Background stars
+for (let i = 0; i < 80; i++) {
+  bgStars.push({
+    x: Math.random() * 2000,
+    y: Math.random() * 2000,
+    size: Math.random() * 2 + 0.5,
+    speed: Math.random() * 0.3 + 0.1,
+    twinkle: Math.random() * Math.PI * 2
+  });
+}
+
+const ITEMS = [
+  { emoji: '⭐', points: 10, weight: 40, size: 35 },
+  { emoji: '🌟', points: 15, weight: 25, size: 38 },
+  { emoji: '💖', points: 20, weight: 15, size: 35 },
+  { emoji: '💜', points: 30, weight: 8, size: 35 },
+  { emoji: '💎', points: 50, weight: 5, size: 32 },
+  { emoji: '👑', points: 40, weight: 4, size: 38 },
+  { emoji: '💣', points: -1, weight: 10, size: 35 }, // -1 = lose life
+];
+
+function selectPlayer(name) {
+  currentPlayer = name;
+  document.querySelectorAll('.player-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === name);
+  });
+  document.getElementById('startBtn').disabled = false;
+}
+
+function showStart() {
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
+}
+
+function startGame() {
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('hudPlayer').textContent = currentPlayer;
+
+  score = 0;
+  lives = 3;
+  timeLeft = 30;
+  items = [];
+  particles = [];
+  spawnRate = 800;
+  gameRunning = true;
+
+  updateHUD();
+
+  // Spawn items
+  function spawn() {
+    if (!gameRunning) return;
+    spawnItem();
+    // Speed up over time
+    spawnRate = Math.max(300, 800 - (30 - timeLeft) * 20);
+    spawnTimer = setTimeout(spawn, spawnRate);
+  }
+  spawn();
+
+  // Timer
+  gameTimer = setInterval(() => {
+    timeLeft--;
+    updateHUD();
+    if (timeLeft <= 0) endGame();
+  }, 1000);
+
+  // Start render loop
+  if (!frame) render();
+}
+
+function spawnItem() {
+  // Weighted random
+  const totalWeight = ITEMS.reduce((s, i) => s + i.weight, 0);
+  let r = Math.random() * totalWeight;
+  let chosen = ITEMS[0];
+  for (const item of ITEMS) {
+    r -= item.weight;
+    if (r <= 0) { chosen = item; break; }
+  }
+
+  items.push({
+    x: 50 + Math.random() * (W - 100),
+    y: -50,
+    emoji: chosen.emoji,
+    points: chosen.points,
+    size: chosen.size,
+    speed: 2 + Math.random() * 2 + (30 - timeLeft) * 0.1,
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: 0.02 + Math.random() * 0.03,
+    rotation: 0,
+    rotSpeed: (Math.random() - 0.5) * 0.05
+  });
+}
+
+function updateHUD() {
+  document.getElementById('hudScore').textContent = score;
+  document.getElementById('hudLives').textContent = '❤️'.repeat(Math.max(0, lives));
+  document.getElementById('hudTime').textContent = timeLeft + 's';
+}
+
+function createParticles(x, y, emoji, color) {
+  for (let i = 0; i < 6; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 8,
+      vy: -Math.random() * 6 - 2,
+      life: 1,
+      emoji: emoji,
+      size: 15 + Math.random() * 10
+    });
+  }
+}
+
+function render() {
+  frame = requestAnimationFrame(render);
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw bg stars
+  bgStars.forEach(s => {
+    s.twinkle += 0.02;
+    const alpha = 0.3 + Math.sin(s.twinkle) * 0.3;
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.beginPath();
+    ctx.arc(s.x % W, s.y % H, s.size, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  if (!gameRunning && items.length === 0) return;
+
+  // Draw basket (the catcher)
+  ctx.font = `${basketSize}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🧺', mouseX, mouseY);
+
+  // Glow around basket
+  const glow = ctx.createRadialGradient(mouseX, mouseY, 10, mouseX, mouseY, basketSize);
+  glow.addColorStop(0, 'rgba(255,111,216,0.15)');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(mouseX - basketSize, mouseY - basketSize, basketSize * 2, basketSize * 2);
+
+  // Update and draw items
+  for (let i = items.length - 1; i >= 0; i--) {
+    const item = items[i];
+    item.y += item.speed;
+    item.wobble += item.wobbleSpeed;
+    item.rotation += item.rotSpeed;
+    const drawX = item.x + Math.sin(item.wobble) * 20;
+
+    // Draw
+    ctx.save();
+    ctx.translate(drawX, item.y);
+    ctx.rotate(item.rotation);
+    ctx.font = `${item.size}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(item.emoji, 0, 0);
+    ctx.restore();
+
+    // Check collision with basket
+    const dx = drawX - mouseX;
+    const dy = item.y - mouseY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < basketSize * 0.6) {
+      if (item.points === -1) {
+        // Bomb!
+        lives--;
+        updateHUD();
+        createParticles(drawX, item.y, '💥', '#ff0000');
+        playSound(200, 0.2);
+        if (lives <= 0) endGame();
+      } else {
+        score += item.points;
+        updateHUD();
+        createParticles(drawX, item.y, item.emoji, '#ffd700');
+        playSound(700 + item.points * 5, 0.1);
+      }
+      items.splice(i, 1);
+      continue;
+    }
+
+    // Remove if off screen
+    if (item.y > H + 50) {
+      items.splice(i, 1);
+    }
+  }
+
+  // Particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.2;
+    p.life -= 0.03;
+
+    if (p.life <= 0) {
+      particles.splice(i, 1);
+      continue;
+    }
+
+    ctx.globalAlpha = p.life;
+    ctx.font = `${p.size}px serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(p.emoji, p.x, p.y);
+    ctx.globalAlpha = 1;
+  }
+
+  // Score popup trail near basket
+  if (gameRunning) {
+    ctx.font = '14px Quicksand';
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.textAlign = 'center';
+    ctx.fillText(currentPlayer, mouseX, mouseY + basketSize * 0.7);
+  }
+}
+
+function endGame() {
+  gameRunning = false;
+  clearInterval(gameTimer);
+  clearTimeout(spawnTimer);
+
+  let title, msg;
+  if (score >= 500) { title = 'LEGENDAIRE !!!'; msg = `${currentPlayer} est la QUEEN de la K-pop !!! 👑`; }
+  else if (score >= 300) { title = 'INCROYABLE !!'; msg = `${currentPlayer} est une vraie star ! ⭐`; }
+  else if (score >= 150) { title = 'Super !'; msg = `Bien joué ${currentPlayer} !`; }
+  else { title = 'Pas mal !'; msg = `Continue ${currentPlayer}, tu peux faire mieux !`; }
+
+  setTimeout(() => {
+    document.getElementById('endTitle').textContent = title;
+    document.getElementById('endScore').textContent = score;
+    document.getElementById('endMsg').textContent = msg;
+    document.getElementById('endScreen').classList.remove('hidden');
+  }, 500);
+}
+
+function playSound(freq, dur) {
+  try {
+    const ctx2 = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx2.createOscillator();
+    const g = ctx2.createGain();
+    o.connect(g); g.connect(ctx2.destination);
+    o.frequency.value = freq; o.type = 'sine';
+    g.gain.setValueAtTime(0.2, ctx2.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx2.currentTime + dur);
+    o.start(); o.stop(ctx2.currentTime + dur);
+  } catch(e) {}
+}
+
+// Mouse
+canvas.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+// Touch
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  mouseX = e.touches[0].clientX;
+  mouseY = e.touches[0].clientY;
+}, { passive: false });
+
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  mouseX = e.touches[0].clientX;
+  mouseY = e.touches[0].clientY;
+}, { passive: false });
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dance Challenge - K-Pop Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.back-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.3);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-family: inherit;
+  font-size: 1em;
+  cursor: pointer;
+  text-decoration: none;
+  z-index: 100;
+  transition: all 0.3s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.3); }
+
+.header {
+  text-align: center;
+  padding: 15px;
+  z-index: 10;
+}
+
+.header h1 {
+  font-size: 2em;
+  color: white;
+  text-shadow: 0 0 20px #ff6fd8;
+}
+
+.score-bar {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  color: white;
+  font-size: 1.2em;
+  padding: 10px;
+  z-index: 10;
+}
+
+.score-bar span { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+#combo { color: #ffd700; }
+#score-val { color: #ff6fd8; }
+
+/* Game area */
+.game-area {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 65vh;
+  margin: 0 auto;
+}
+
+/* Lanes */
+.lanes {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.lane {
+  width: 80px;
+  height: 100%;
+  position: relative;
+  border-left: 1px solid rgba(255,255,255,0.05);
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Hit zone */
+.hit-zone {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 360px;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  z-index: 5;
+}
+
+.hit-zone::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  bottom: -28px;
+  background: linear-gradient(to bottom, rgba(255,111,216,0.1), transparent);
+  border-radius: 0 0 10px 10px;
+}
+
+/* Keys display */
+.keys-display {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.key-btn {
+  width: 80px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: 700;
+  color: white;
+  border: 2px solid rgba(255,255,255,0.4);
+  transition: all 0.1s;
+  font-family: inherit;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.key-btn:nth-child(1) { background: rgba(255,107,107,0.3); }
+.key-btn:nth-child(2) { background: rgba(78,205,196,0.3); }
+.key-btn:nth-child(3) { background: rgba(255,217,61,0.3); }
+.key-btn:nth-child(4) { background: rgba(162,155,254,0.3); }
+
+.key-btn.pressed {
+  transform: scale(0.9);
+  box-shadow: 0 0 30px rgba(255,255,255,0.5);
+  border-color: white;
+}
+
+/* Notes */
+.note {
+  position: absolute;
+  width: 70px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  animation: notefall linear forwards;
+  z-index: 3;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+
+.note.lane-0 { background: linear-gradient(145deg, #ff6b6b, #ee5a24); }
+.note.lane-1 { background: linear-gradient(145deg, #4ecdc4, #2bcbba); }
+.note.lane-2 { background: linear-gradient(145deg, #ffd93d, #f6b93b); }
+.note.lane-3 { background: linear-gradient(145deg, #a29bfe, #6c5ce7); }
+
+@keyframes notefall {
+  0% { top: -40px; }
+  100% { top: calc(100% + 40px); }
+}
+
+/* Feedback */
+.feedback {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5em;
+  font-weight: 700;
+  z-index: 50;
+  pointer-events: none;
+  animation: feedbackPop 0.6s ease forwards;
+}
+
+@keyframes feedbackPop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+  100% { opacity: 0; transform: translate(-50%, -80%) scale(1); }
+}
+
+/* Start/End screen */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.overlay.hidden { display: none; }
+
+.overlay h2 {
+  font-size: 2.5em;
+  color: white;
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px #ff6fd8;
+}
+
+.overlay p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+.overlay .big-score {
+  font-size: 4em;
+  color: #ff6fd8;
+  font-weight: 700;
+  margin: 15px 0;
+  text-shadow: 0 0 30px rgba(255,111,216,0.5);
+}
+
+.play-btn {
+  background: linear-gradient(145deg, #ff6fd8, #cd77ff);
+  color: white;
+  border: none;
+  padding: 18px 50px;
+  font-size: 1.5em;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  margin-top: 20px;
+  box-shadow: 0 5px 25px rgba(255,111,216,0.4);
+  transition: transform 0.2s;
+}
+
+.play-btn:hover { transform: scale(1.05); }
+
+.player-select {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.player-btn {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.player-btn:hover, .player-btn.active {
+  background: rgba(255,111,216,0.3);
+  border-color: #ff6fd8;
+  transform: scale(1.05);
+}
+
+/* Pulse background */
+.bg-pulse {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,111,216,0.1), transparent);
+  transform: translate(-50%, -50%);
+  animation: bgPulse 1.5s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes bgPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+  50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.6; }
+}
+
+.mobile-hint {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-pulse"></div>
+<a href="index.html" class="back-btn">Retour</a>
+
+<div class="header">
+  <h1>Dance Challenge</h1>
+</div>
+
+<div class="score-bar">
+  <span>Score: <span id="score-val">0</span></span>
+  <span>Combo: <span id="combo">0</span>x</span>
+  <span id="player-name"></span>
+</div>
+
+<div class="game-area" id="gameArea">
+  <div class="lanes">
+    <div class="lane" id="lane-0"></div>
+    <div class="lane" id="lane-1"></div>
+    <div class="lane" id="lane-2"></div>
+    <div class="lane" id="lane-3"></div>
+  </div>
+  <div class="hit-zone"></div>
+</div>
+
+<div class="keys-display">
+  <div class="key-btn" id="key-0" ontouchstart="handleTouch(0)" ontouchend="releaseTouch(0)">S</div>
+  <div class="key-btn" id="key-1" ontouchstart="handleTouch(1)" ontouchend="releaseTouch(1)">D</div>
+  <div class="key-btn" id="key-2" ontouchstart="handleTouch(2)" ontouchend="releaseTouch(2)">K</div>
+  <div class="key-btn" id="key-3" ontouchstart="handleTouch(3)" ontouchend="releaseTouch(3)">L</div>
+</div>
+
+<!-- Start Screen -->
+<div class="overlay" id="startScreen">
+  <h2>Dance Challenge</h2>
+  <p>Qui joue ?</p>
+  <div class="player-select">
+    <button class="player-btn" onclick="selectPlayer('Ambre')">Ambre</button>
+    <button class="player-btn" onclick="selectPlayer('Eden')">Eden</button>
+    <button class="player-btn" onclick="selectPlayer('Louise')">Louise</button>
+  </div>
+  <p>Appuie sur S, D, K, L quand les notes arrivent en bas !</p>
+  <p class="mobile-hint">Sur telephone : appuie sur les boutons en bas</p>
+  <button class="play-btn" id="startBtn" onclick="startGame()" disabled>C'est parti !</button>
+</div>
+
+<!-- End Screen -->
+<div class="overlay hidden" id="endScreen">
+  <h2 id="endTitle">Bravo !</h2>
+  <div class="big-score" id="finalScore">0</div>
+  <p id="endMsg"></p>
+  <p>Combo max : <span id="maxCombo">0</span>x</p>
+  <button class="play-btn" onclick="showStart()">Rejouer</button>
+</div>
+
+<script>
+const keyMap = { 's': 0, 'd': 1, 'k': 2, 'l': 3 };
+const noteEmojis = ['💃','🎤','🌟','💜'];
+const GAME_DURATION = 45000; // 45 seconds
+const NOTE_SPEED_BASE = 2800;
+
+let score = 0;
+let combo = 0;
+let maxCombo = 0;
+let notes = [];
+let gameRunning = false;
+let gameTimer = null;
+let spawnTimer = null;
+let currentPlayer = '';
+let noteSpeed = NOTE_SPEED_BASE;
+
+function selectPlayer(name) {
+  currentPlayer = name;
+  document.querySelectorAll('.player-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === name);
+  });
+  document.getElementById('startBtn').disabled = false;
+}
+
+function showStart() {
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
+}
+
+function startGame() {
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('player-name').textContent = currentPlayer;
+  score = 0;
+  combo = 0;
+  maxCombo = 0;
+  notes = [];
+  updateDisplay();
+
+  // Clear any existing notes
+  document.querySelectorAll('.note').forEach(n => n.remove());
+
+  gameRunning = true;
+
+  // Spawn notes
+  let elapsed = 0;
+  function spawnNote() {
+    if (!gameRunning) return;
+
+    const lane = Math.floor(Math.random() * 4);
+    // Sometimes spawn doubles
+    const lanes = [lane];
+    if (Math.random() < 0.2) {
+      let second = (lane + 1 + Math.floor(Math.random() * 3)) % 4;
+      lanes.push(second);
+    }
+
+    lanes.forEach(l => createNote(l));
+
+    // Speed up over time
+    elapsed += 500;
+    noteSpeed = Math.max(1800, NOTE_SPEED_BASE - elapsed / 50);
+
+    const nextDelay = 400 + Math.random() * 500;
+    spawnTimer = setTimeout(spawnNote, nextDelay);
+  }
+
+  spawnNote();
+
+  // End game after duration
+  gameTimer = setTimeout(endGame, GAME_DURATION);
+}
+
+function createNote(lane) {
+  const el = document.createElement('div');
+  el.className = `note lane-${lane}`;
+  el.textContent = noteEmojis[lane];
+  el.style.animationDuration = (noteSpeed / 1000) + 's';
+
+  const laneEl = document.getElementById(`lane-${lane}`);
+  laneEl.appendChild(el);
+
+  const noteObj = { el, lane, hit: false, time: Date.now() };
+  notes.push(noteObj);
+
+  // Remove when off screen
+  el.addEventListener('animationend', () => {
+    if (!noteObj.hit) {
+      combo = 0;
+      updateDisplay();
+      showFeedback('Miss !', '#ff6b6b');
+    }
+    el.remove();
+    notes = notes.filter(n => n !== noteObj);
+  });
+}
+
+function hitLane(lane) {
+  if (!gameRunning) return;
+
+  const keyEl = document.getElementById(`key-${lane}`);
+  keyEl.classList.add('pressed');
+  setTimeout(() => keyEl.classList.remove('pressed'), 100);
+
+  // Find closest note in lane
+  const gameArea = document.getElementById('gameArea');
+  const hitY = gameArea.offsetHeight - 80; // hit zone position
+
+  let closest = null;
+  let closestDist = Infinity;
+
+  notes.forEach(n => {
+    if (n.lane !== lane || n.hit) return;
+    const rect = n.el.getBoundingClientRect();
+    const noteY = rect.top - gameArea.getBoundingClientRect().top + rect.height / 2;
+    const dist = Math.abs(noteY - hitY);
+    if (dist < closestDist) {
+      closestDist = dist;
+      closest = n;
+    }
+  });
+
+  if (closest && closestDist < 80) {
+    closest.hit = true;
+    closest.el.remove();
+    notes = notes.filter(n => n !== closest);
+
+    combo++;
+    if (combo > maxCombo) maxCombo = combo;
+
+    let points = 10;
+    let text = 'Cool !';
+    let color = '#4ecdc4';
+
+    if (closestDist < 20) {
+      points = 30;
+      text = 'PERFECT !!';
+      color = '#ffd700';
+    } else if (closestDist < 40) {
+      points = 20;
+      text = 'Super !';
+      color = '#ff6fd8';
+    }
+
+    points += combo * 2;
+    score += points;
+    updateDisplay();
+    showFeedback(text, color);
+
+    // Sparkle effect
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
+        const spark = document.createElement('div');
+        spark.className = 'feedback';
+        spark.textContent = ['✨','💖','⭐'][i];
+        spark.style.left = (20 + lane * 25) + '%';
+        spark.style.top = '55%';
+        spark.style.fontSize = '1.5em';
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 600);
+      }, i * 100);
+    }
+  }
+}
+
+function showFeedback(text, color) {
+  const fb = document.createElement('div');
+  fb.className = 'feedback';
+  fb.textContent = text;
+  fb.style.color = color;
+  fb.style.textShadow = `0 0 20px ${color}`;
+  document.body.appendChild(fb);
+  setTimeout(() => fb.remove(), 600);
+}
+
+function updateDisplay() {
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('combo').textContent = combo;
+}
+
+function endGame() {
+  gameRunning = false;
+  clearTimeout(spawnTimer);
+
+  const msgs = [
+    { min: 0, text: `Continue ${currentPlayer}, tu vas y arriver !`, title: 'Pas mal !' },
+    { min: 200, text: `${currentPlayer} assure grave !`, title: 'Super !' },
+    { min: 500, text: `${currentPlayer} est une STAR de la K-pop !`, title: 'INCROYABLE !' },
+    { min: 1000, text: `${currentPlayer} est la REINE du dance floor !!!`, title: 'LEGENDAIRE !!!' },
+  ];
+
+  let msg = msgs[0];
+  for (const m of msgs) {
+    if (score >= m.min) msg = m;
+  }
+
+  document.getElementById('endTitle').textContent = msg.title;
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('endMsg').textContent = msg.text;
+  document.getElementById('maxCombo').textContent = maxCombo;
+  document.getElementById('endScreen').classList.remove('hidden');
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  const lane = keyMap[e.key.toLowerCase()];
+  if (lane !== undefined) hitLane(lane);
+});
+
+// Touch support
+function handleTouch(lane) { hitLane(lane); }
+function releaseTouch(lane) {
+  document.getElementById(`key-${lane}`).classList.remove('pressed');
+}
+
+// Prevent scrolling on touch
+document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+</script>
+</body>
+</html>
