@@ -94,7 +94,7 @@ body{
 }
 
 /* Mannequin layers */
-.mannequin{position:relative;z-index:2;text-align:center;animation:idleBounce 2s ease-in-out infinite}
+.mannequin{position:relative;z-index:2;text-align:center}
 @keyframes idleBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
 .m-layer{display:block;line-height:1;transition:.35s cubic-bezier(.34,1.56,.64,1)}
@@ -310,6 +310,96 @@ body{
   font-weight:700;cursor:pointer;font-size:.95em;
 }
 
+/* ── BREATHING ANIMATION ── */
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+.mannequin.breathing{animation:breathe 3s ease-in-out infinite}
+
+/* ── GLOW AURA ── */
+.mannequin-aura{
+  position:absolute;z-index:1;width:180px;height:300px;
+  border-radius:50%;filter:blur(40px);opacity:.35;
+  transition:background 0.6s;pointer-events:none;
+}
+
+/* ── BOUNCE-IN ITEMS ── */
+@keyframes bounceIn{
+  0%{transform:scale(0);opacity:0}
+  60%{transform:scale(1.15)}
+  100%{transform:scale(1);opacity:1}
+}
+.item-btn.bounce-in{animation:bounceIn .35s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0}
+
+/* ── CONFETTI ── */
+.confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:400;overflow:hidden}
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0}
+}
+.confetti-piece{
+  position:absolute;width:10px;height:10px;border-radius:2px;
+  animation:confettiFall 2.5s ease-out forwards;
+}
+
+/* ── PHOTO FLASH V2 ── */
+.flash-overlay.flash-big{opacity:1;transition:opacity .08s}
+
+/* ── SCORE COUNTER ANIMATED ── */
+.score-counting{transition:none}
+
+/* ── GOLDEN FRAME ── */
+.gallery-card.golden-frame{
+  border:2px solid var(--gold);
+  box-shadow:0 0 16px rgba(255,215,0,0.5),inset 0 0 8px rgba(255,215,0,0.1);
+}
+.gallery-card.golden-frame::before{
+  content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;
+  border-radius:18px;border:2px solid var(--gold);opacity:.5;pointer-events:none;
+}
+
+/* ── CHALLENGE MODE ── */
+.challenge-banner{
+  background:linear-gradient(135deg,#ff6fd8,#cd77ff);
+  padding:10px 20px;text-align:center;font-weight:700;font-size:1em;
+  display:none;align-items:center;justify-content:center;gap:10px;
+  border-radius:0 0 16px 16px;margin:0 20px;
+}
+.challenge-banner.show{display:flex}
+.challenge-timer{
+  background:rgba(0,0,0,0.3);padding:4px 12px;border-radius:12px;font-size:.85em;
+}
+.challenge-theme-label{color:var(--gold);font-size:1.1em}
+
+/* ── BADGE LOOK COMPLET ── */
+@keyframes badgePop{
+  0%{transform:scale(0) rotate(-10deg);opacity:0}
+  60%{transform:scale(1.2) rotate(3deg)}
+  100%{transform:scale(1) rotate(0);opacity:1}
+}
+.complete-badge{
+  position:absolute;top:8px;right:8px;z-index:10;
+  background:linear-gradient(135deg,var(--gold),#f6b93b);
+  color:#333;padding:4px 10px;border-radius:12px;
+  font-size:.7em;font-weight:700;display:none;
+  animation:badgePop .5s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.complete-badge.show{display:block}
+
+/* ── ACHIEVEMENT TRACKER ── */
+.achievement-bar{
+  display:flex;gap:6px;justify-content:center;padding:4px 20px;flex-wrap:wrap;
+}
+.achievement-pill{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+  padding:3px 10px;border-radius:12px;font-size:.75em;font-weight:600;
+  transition:.3s;
+}
+.achievement-pill.done{
+  background:linear-gradient(135deg,var(--gold),#f6b93b);color:#333;
+  border-color:var(--gold);
+}
+
+.btn-challenge{background:linear-gradient(145deg,#e74c3c,#c0392b)}
+
 @media(max-width:750px){
   .top-bar{justify-content:center;text-align:center}
   .mannequin-panel{max-width:100%;width:100%}
@@ -326,15 +416,23 @@ body{
 </div>
 
 <div class="theme-bar" id="themeBar"></div>
+<div class="achievement-bar" id="achievementBar"></div>
+<div class="challenge-banner" id="challengeBanner">
+  <span>Challenge : </span>
+  <span class="challenge-theme-label" id="challengeThemeLabel"></span>
+  <span class="challenge-timer" id="challengeTimer">60s</span>
+</div>
 
 <div class="main-stage">
   <!-- LEFT: Mannequin -->
   <div class="mannequin-panel">
+    <div class="complete-badge" id="completeBadge">Look Complet !</div>
     <div class="scene-container" id="sceneContainer">
       <div class="spotlight"></div>
       <div class="floating-stars" id="floatingStars"></div>
       <div class="runway-sparkles" id="runwaySparkles"></div>
-      <div class="mannequin" id="mannequin">
+      <div class="mannequin-aura" id="mannequinAura"></div>
+      <div class="mannequin breathing" id="mannequin">
         <span class="m-layer m-hat" id="mHat"></span>
         <span class="m-layer m-head" id="mHead">👩</span>
         <span class="m-layer m-body" id="mBody">👗</span>
@@ -360,6 +458,7 @@ body{
   <button class="btn btn-save" onclick="openSavePrompt()">📸 Sauver</button>
   <button class="btn btn-gallery" onclick="openGallery()">🖼️ Galerie</button>
   <button class="btn btn-daily" onclick="showDailyOutfit()">🌟 Outfit du jour</button>
+  <button class="btn btn-challenge" onclick="startChallenge()">🎯 Challenge</button>
 </div>
 
 <!-- RATING POPUP -->
@@ -406,6 +505,274 @@ body{
 <div class="flash-overlay" id="flashOverlay"></div>
 
 <script>
+// ═══════════════════════════════════════════════
+// SOUND ENGINE (Web Audio API)
+// ═══════════════════════════════════════════════
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function ensureAudio() { if (!audioCtx) audioCtx = new AudioCtx(); return audioCtx; }
+
+function playClick() {
+  const ctx = ensureAudio();
+  const o = ctx.createOscillator(); const g = ctx.createGain();
+  o.type = 'sine'; o.frequency.value = 400;
+  g.gain.setValueAtTime(0.15, ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(); o.stop(ctx.currentTime + 0.04);
+}
+
+function playSwoosh() {
+  const ctx = ensureAudio();
+  const bufferSize = ctx.sampleRate * 0.15;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+  const src = ctx.createBufferSource(); src.buffer = buffer;
+  const filt = ctx.createBiquadFilter(); filt.type = 'bandpass'; filt.frequency.value = 800; filt.Q.value = 1.5;
+  const g = ctx.createGain(); g.gain.setValueAtTime(0.12, ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+  src.connect(filt); filt.connect(g); g.connect(ctx.destination);
+  src.start(); src.stop(ctx.currentTime + 0.15);
+}
+
+function playRunwayMelody() {
+  const ctx = ensureAudio();
+  const notes = [523.25, 587.33, 659.25, 783.99, 880]; // C5 D5 E5 G5 A5
+  let t = ctx.currentTime;
+  notes.forEach((freq, i) => {
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.type = 'triangle'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0, t + i * 0.25);
+    g.gain.linearRampToValueAtTime(0.12, t + i * 0.25 + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.25 + 0.22);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t + i * 0.25); o.stop(t + i * 0.25 + 0.25);
+  });
+}
+
+function playCameraClick() {
+  const ctx = ensureAudio();
+  const bufferSize = ctx.sampleRate * 0.08;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3);
+  const src = ctx.createBufferSource(); src.buffer = buffer;
+  const g = ctx.createGain(); g.gain.value = 0.2;
+  src.connect(g); g.connect(ctx.destination);
+  src.start(); src.stop(ctx.currentTime + 0.08);
+}
+
+function playSaveJingle() {
+  const ctx = ensureAudio();
+  const notes = [659.25, 783.99, 1046.5]; // E5 G5 C6
+  notes.forEach((freq, i) => {
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    const t = ctx.currentTime + i * 0.12;
+    g.gain.setValueAtTime(0.13, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t + 0.3);
+  });
+}
+
+function playStarChime(count) {
+  const ctx = ensureAudio();
+  const baseNotes = [523.25, 659.25, 783.99, 880, 1046.5];
+  for (let i = 0; i < count && i < 5; i++) {
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = baseNotes[i];
+    const t = ctx.currentTime + i * 0.18;
+    g.gain.setValueAtTime(0.1, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t + 0.4);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// CONFETTI ENGINE
+// ═══════════════════════════════════════════════
+function launchConfetti(count, colors) {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (10 + Math.random() * 80) + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (6 + Math.random() * 8) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDelay = (Math.random() * 0.6) + 's';
+    piece.style.animationDuration = (1.8 + Math.random() * 1.2) + 's';
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.remove(), 3500);
+}
+
+// ═══════════════════════════════════════════════
+// ANIMATED SCORE COUNTER
+// ═══════════════════════════════════════════════
+let displayedScore = 0;
+function animateScoreTo(target) {
+  const el = document.getElementById('scoreNum');
+  const fill = document.getElementById('scoreFill');
+  const start = displayedScore;
+  const diff = target - start;
+  if (diff === 0) return;
+  const duration = 400;
+  const startTime = performance.now();
+  function tick(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(start + diff * eased);
+    el.textContent = val;
+    fill.textContent = val;
+    fill.style.width = val + '%';
+    if (progress < 1) requestAnimationFrame(tick);
+    else displayedScore = target;
+  }
+  requestAnimationFrame(tick);
+}
+
+// ═══════════════════════════════════════════════
+// CHALLENGE MODE
+// ═══════════════════════════════════════════════
+let challengeActive = false;
+let challengeTheme = null;
+let challengeTimer = null;
+let challengeTimeLeft = 60;
+
+function startChallenge() {
+  if (challengeActive) return;
+  const themes = Object.keys(THEMES);
+  challengeTheme = themes[Math.floor(Math.random() * themes.length)];
+  challengeActive = true;
+  challengeTimeLeft = 60;
+
+  // Reset outfit
+  Object.keys(CATALOG).forEach(cat => { current[cat] = 0; });
+  current.bg = 0;
+
+  const banner = document.getElementById('challengeBanner');
+  document.getElementById('challengeThemeLabel').textContent = THEMES[challengeTheme].label;
+  document.getElementById('challengeTimer').textContent = '60s';
+  banner.classList.add('show');
+
+  playRunwayMelody();
+  update();
+
+  challengeTimer = setInterval(() => {
+    challengeTimeLeft--;
+    document.getElementById('challengeTimer').textContent = challengeTimeLeft + 's';
+    if (challengeTimeLeft <= 0) {
+      endChallenge();
+    }
+  }, 1000);
+}
+
+function endChallenge() {
+  clearInterval(challengeTimer);
+  challengeActive = false;
+  document.getElementById('challengeBanner').classList.remove('show');
+
+  // Score based on theme match
+  const score = calcChallengeScore();
+  const totalScore = calcScore();
+
+  let msg, stars;
+  if (score >= 80) { stars = 5; msg = 'PARFAIT ! Tu as compris le theme !'; }
+  else if (score >= 60) { stars = 4; msg = 'Excellent choix !'; }
+  else if (score >= 40) { stars = 3; msg = 'Pas mal du tout !'; }
+  else if (score >= 20) { stars = 2; msg = 'Tu peux faire mieux...'; }
+  else { stars = 1; msg = 'Essaie encore !'; }
+
+  document.getElementById('ratingTitle').textContent = 'Challenge termine !';
+  document.getElementById('ratingStars').textContent = ''.padStart(stars, '').split('').map(() => '\u2B50').join('');
+  document.getElementById('ratingMsg').textContent = msg;
+  document.getElementById('ratingScore').textContent = `Precision theme : ${score}%`;
+  document.getElementById('ratingPopup').classList.add('show');
+
+  playStarChime(stars);
+  if (stars >= 4) {
+    const th = THEMES[challengeTheme];
+    launchConfetti(25, [th.colors[0], th.colors[1], '#ffd700', '#ff6fd8']);
+  }
+
+  // Track theme achievement
+  trackThemeAchievement(challengeTheme);
+}
+
+function calcChallengeScore() {
+  if (!challengeTheme) return 0;
+  let matched = 0; let total = 0;
+  ['hat','head','body','legs','shoes','accessory'].forEach(cat => {
+    const item = CATALOG[cat][current[cat]];
+    if (!item || item.e === '') return;
+    total++;
+    if (item.t.includes(challengeTheme)) matched++;
+  });
+  const bg = BACKGROUNDS[current.bg];
+  if (bg && bg.t === challengeTheme) { matched++; total++; }
+  else if (bg) total++;
+  return total > 0 ? Math.round((matched / total) * 100) : 0;
+}
+
+// ═══════════════════════════════════════════════
+// ACHIEVEMENT TRACKER
+// ═══════════════════════════════════════════════
+function getTriedThemes() {
+  return JSON.parse(localStorage.getItem(`kpop_themes_${playerName}`) || '[]');
+}
+function trackThemeAchievement(theme) {
+  let tried = getTriedThemes();
+  if (!tried.includes(theme)) {
+    tried.push(theme);
+    localStorage.setItem(`kpop_themes_${playerName}`, JSON.stringify(tried));
+  }
+  renderAchievements();
+}
+function renderAchievements() {
+  const bar = document.getElementById('achievementBar');
+  const tried = getTriedThemes();
+  const total = Object.keys(THEMES).length;
+  bar.innerHTML = `<span class="achievement-pill ${tried.length >= total ? 'done' : ''}">${tried.length}/${total} themes essayes</span>`;
+  Object.entries(THEMES).forEach(([key, th]) => {
+    const pill = document.createElement('span');
+    pill.className = `achievement-pill ${tried.includes(key) ? 'done' : ''}`;
+    pill.textContent = th.label;
+    bar.appendChild(pill);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// OUTFIT COMPLETION CHECK
+// ═══════════════════════════════════════════════
+function checkOutfitComplete() {
+  const slots = ['hat','head','body','legs','shoes','accessory'];
+  let filled = 0;
+  slots.forEach(cat => {
+    const item = CATALOG[cat][current[cat]];
+    if (item && item.e !== '') filled++;
+  });
+  // Need background too = 7 slots
+  const bgOk = current.bg > 0;
+  if (bgOk) filled++;
+  const badge = document.getElementById('completeBadge');
+  if (filled >= 7) {
+    if (!badge.classList.contains('show')) {
+      badge.classList.add('show');
+      playSaveJingle();
+    }
+  } else {
+    badge.classList.remove('show');
+  }
+}
+
 // ─── PLAYER ───
 const params = new URLSearchParams(window.location.search);
 const playerName = params.get('player') || localStorage.getItem('kpop_player') || 'Star';
@@ -518,7 +885,17 @@ function init() {
   renderThemeBar();
   buildWardrobe();
   createFloatingStars();
+  renderAchievements();
+  updateAura();
   update();
+}
+
+// ─── AURA ───
+function updateAura() {
+  const aura = document.getElementById('mannequinAura');
+  const bg = BACKGROUNDS[current.bg];
+  const th = THEMES[currentTheme];
+  aura.style.background = th ? th.colors[0] : '#a18cd1';
 }
 
 // ─── THEME BAR ───
@@ -601,7 +978,10 @@ function renderAllItems() {
         dot.style.background = THEMES[currentTheme].colors[0];
         btn.appendChild(dot);
       }
-      btn.onclick = () => { current[cat] = i; sparkleLayer(cat); update(); };
+      // Stagger bounce-in
+      btn.classList.add('bounce-in');
+      btn.style.animationDelay = (i * 0.03) + 's';
+      btn.onclick = () => { current[cat] = i; playClick(); playSwoosh(); sparkleLayer(cat); update(); };
       el.appendChild(btn);
     });
   });
@@ -619,7 +999,9 @@ function renderAllItems() {
       dot.style.background = THEMES[currentTheme].colors[0];
       btn.appendChild(dot);
     }
-    btn.onclick = () => { current.bg = i; update(); };
+    btn.classList.add('bounce-in');
+    btn.style.animationDelay = (i * 0.03) + 's';
+    btn.onclick = () => { current.bg = i; playClick(); update(); };
     bgEl.appendChild(btn);
   });
 }
@@ -698,12 +1080,15 @@ function update() {
   const th = THEMES[currentTheme];
   document.getElementById('outfitLabel').textContent = `${th.label} — ${bg ? bg.label : 'Scène'}`;
 
-  // Score
+  // Score (animated)
   const score = calcScore();
-  document.getElementById('scoreNum').textContent = score;
-  const fill = document.getElementById('scoreFill');
-  fill.style.width = score + '%';
-  fill.textContent = score;
+  animateScoreTo(score);
+
+  // Aura color
+  updateAura();
+
+  // Completion check
+  checkOutfitComplete();
 
   renderAllItems();
 }
@@ -714,6 +1099,7 @@ function randomOutfit() {
     current[cat] = Math.floor(Math.random() * CATALOG[cat].length);
   });
   current.bg = Math.floor(Math.random() * BACKGROUNDS.length);
+  playSwoosh();
   update();
 }
 
@@ -721,10 +1107,12 @@ function randomOutfit() {
 function startRunway() {
   const m = document.getElementById('mannequin');
   const sp = document.getElementById('runwaySparkles');
+  m.classList.remove('breathing');
   m.style.animation = 'none';
   void m.offsetWidth;
   m.classList.add('runway');
   m.style.animation = '';
+  playRunwayMelody();
 
   // Sparkle burst
   sp.innerHTML = '';
@@ -743,7 +1131,8 @@ function startRunway() {
 
   setTimeout(() => {
     m.classList.remove('runway');
-    m.style.animation = 'idleBounce 2s ease-in-out infinite';
+    m.classList.add('breathing');
+    m.style.animation = '';
     sp.innerHTML = '';
   }, 3200);
 }
@@ -759,11 +1148,33 @@ function rateOutfit() {
   else if (score >= 30) { stars = '⭐⭐'; title = 'Pas mal !'; msg = `Essaie de matcher le thème ${THEMES[currentTheme].label} !`; }
   else { stars = '⭐'; title = 'Continue !'; msg = `Choisis des items du thème pour plus de points !`; }
 
-  document.getElementById('ratingTitle').textContent = title;
-  document.getElementById('ratingStars').textContent = stars;
-  document.getElementById('ratingMsg').textContent = msg;
-  document.getElementById('ratingScore').textContent = `Score style : ${score}/100`;
-  document.getElementById('ratingPopup').classList.add('show');
+  // Photo flash
+  const flash = document.getElementById('flashOverlay');
+  flash.classList.add('flash');
+  playCameraClick();
+  setTimeout(() => flash.classList.remove('flash'), 150);
+
+  // Count stars for chime
+  const starCount = stars.split('\u2B50').length - 1;
+
+  setTimeout(() => {
+    document.getElementById('ratingTitle').textContent = title;
+    document.getElementById('ratingStars').textContent = stars;
+    document.getElementById('ratingMsg').textContent = msg;
+    document.getElementById('ratingScore').textContent = `Score style : ${score}/100`;
+    document.getElementById('ratingPopup').classList.add('show');
+
+    playStarChime(starCount);
+
+    // Confetti for 4+ stars
+    if (starCount >= 4) {
+      const th = THEMES[currentTheme];
+      launchConfetti(25, [th.colors[0], th.colors[1], '#ffd700', '#ff6fd8', '#a18cd1']);
+    }
+  }, 200);
+
+  // Track theme
+  trackThemeAchievement(currentTheme);
 
   // Stars reward
   let totalStars = parseInt(localStorage.getItem(`kpop_stars_${playerName}`) || '0');
@@ -796,9 +1207,10 @@ function confirmSave() {
   savedOutfits.push(outfit);
   localStorage.setItem(`kpop_gallery_${playerName}`, JSON.stringify(savedOutfits));
   closeSavePrompt();
-  // Flash effect
+  // Flash effect + save jingle
   const flash = document.getElementById('flashOverlay');
   flash.classList.add('flash');
+  playSaveJingle();
   setTimeout(() => flash.classList.remove('flash'), 150);
 }
 
@@ -818,7 +1230,8 @@ function openGallery() {
       const acc = CATALOG.accessory[o.items.accessory]?.e || '';
 
       const card = document.createElement('div');
-      card.className = 'gallery-card';
+      card.className = `gallery-card ${o.score >= 80 ? 'golden-frame' : ''}`;
+      card.style.position = 'relative';
       card.innerHTML = `
         <div class="gc-mannequin">${hat}<br>${head}<br>${body}<br>${legs}<br>${shoes}${acc ? '<br>'+acc : ''}</div>
         <div class="gc-name">${o.name}</div>

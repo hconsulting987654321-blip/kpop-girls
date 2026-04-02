@@ -20,6 +20,11 @@ body {
   -webkit-user-select: none;
 }
 
+/* Star field canvas */
+#starField {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
 /* Animated stage background */
 .stage-bg {
   position: fixed; inset: 0; z-index: 0; overflow: hidden;
@@ -45,9 +50,54 @@ body {
   background: #ffd700; right: 35%; top: -100px;
   animation: lightSway 4.5s ease-in-out infinite alternate-reverse;
 }
+
+/* Lens flare on stage lights */
+.lens-flare {
+  position: absolute;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: lensFlareGlow 3s ease-in-out infinite;
+}
+.lens-flare:nth-child(5) {
+  background: radial-gradient(circle, rgba(255,111,216,0.6) 0%, rgba(255,111,216,0) 70%);
+  left: 14%; top: 30px;
+  animation-delay: 0s;
+}
+.lens-flare:nth-child(6) {
+  background: radial-gradient(circle, rgba(205,119,255,0.5) 0%, rgba(205,119,255,0) 70%);
+  left: 44%; top: 25px;
+  animation-delay: 1s;
+}
+.lens-flare:nth-child(7) {
+  background: radial-gradient(circle, rgba(132,250,176,0.5) 0%, rgba(132,250,176,0) 70%);
+  right: 14%; top: 35px;
+  animation-delay: 0.5s;
+}
+.lens-flare:nth-child(8) {
+  background: radial-gradient(circle, rgba(255,215,0,0.5) 0%, rgba(255,215,0,0) 70%);
+  right: 39%; top: 28px;
+  animation-delay: 1.5s;
+}
+@keyframes lensFlareGlow {
+  0%, 100% { opacity: 0.15; transform: scale(0.8); }
+  50% { opacity: 0.6; transform: scale(1.3); }
+}
+
 @keyframes lightSway {
   0% { transform: rotate(-15deg) translateX(-30px); opacity: 0.06; }
   100% { transform: rotate(15deg) translateX(30px); opacity: 0.12; }
+}
+
+/* Combo stage flash */
+.stage-flash {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: white; opacity: 0;
+  transition: opacity 0.05s;
+}
+.stage-flash.active {
+  opacity: 0.3;
 }
 
 /* Screen edge glow */
@@ -60,6 +110,34 @@ body {
   box-shadow: inset 0 0 80px rgba(255,111,216,0.25), inset 0 0 120px rgba(205,119,255,0.15);
 }
 
+/* Edge ripple on tap */
+.edge-ripple {
+  position: fixed; pointer-events: none; z-index: 2;
+  border: 3px solid rgba(255,111,216,0.5);
+  border-radius: 50%;
+  animation: edgeRippleExpand 0.6s ease-out forwards;
+}
+@keyframes edgeRippleExpand {
+  0% { width: 20px; height: 20px; opacity: 0.8; }
+  100% { width: 300px; height: 300px; opacity: 0; }
+}
+
+/* Spotlight cone behind singer */
+.spotlight-cone {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-bottom: 250px solid rgba(255,215,0,0.04);
+  z-index: 1; pointer-events: none;
+  filter: blur(20px);
+  animation: spotlightPulse 3s ease-in-out infinite;
+}
+@keyframes spotlightPulse {
+  0%, 100% { opacity: 0.5; border-bottom-color: rgba(255,215,0,0.04); }
+  50% { opacity: 1; border-bottom-color: rgba(255,215,0,0.08); }
+}
+
 /* Singer silhouette */
 .singer-silhouette {
   position: fixed; bottom: -10px; left: 50%; transform: translateX(-50%);
@@ -70,6 +148,46 @@ body {
 @keyframes singerBob {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* Disco ball overlay */
+.disco-overlay {
+  position: fixed; inset: 0; z-index: 3; pointer-events: none;
+  opacity: 0; transition: opacity 0.5s;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255,111,216,0.05) 0deg,
+    rgba(132,250,176,0.05) 60deg,
+    rgba(205,119,255,0.05) 120deg,
+    rgba(255,215,0,0.05) 180deg,
+    rgba(255,111,216,0.05) 240deg,
+    rgba(132,250,176,0.05) 300deg,
+    rgba(205,119,255,0.05) 360deg
+  );
+  background-size: 100% 100%;
+  animation: discoSpin 4s linear infinite;
+}
+.disco-overlay.active { opacity: 1; }
+@keyframes discoSpin {
+  0% { transform: rotate(0deg) scale(2); }
+  100% { transform: rotate(360deg) scale(2); }
+}
+
+/* Screen shake */
+@keyframes screenShake {
+  0%, 100% { transform: translate(0,0); }
+  10% { transform: translate(-3px, 2px); }
+  20% { transform: translate(3px, -2px); }
+  30% { transform: translate(-2px, 3px); }
+  40% { transform: translate(2px, -1px); }
+  50% { transform: translate(-1px, 2px); }
+  60% { transform: translate(3px, 1px); }
+  70% { transform: translate(-2px, -2px); }
+  80% { transform: translate(1px, 3px); }
+  90% { transform: translate(-3px, -1px); }
+}
+body.shaking {
+  animation: screenShake 0.3s ease;
 }
 
 .back-btn {
@@ -142,16 +260,68 @@ body {
 }
 .song-select::-webkit-scrollbar { width: 6px; }
 .song-select::-webkit-scrollbar-thumb { background: rgba(255,111,216,0.4); border-radius: 3px; }
+
+/* Song completion tracker bar */
+.song-tracker {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,111,216,0.3);
+  border-radius: 14px; padding: 10px 16px;
+  margin-bottom: 12px; color: white;
+  text-align: center; font-size: 0.9em;
+}
+.song-tracker .tracker-bar {
+  width: 100%; height: 8px; background: rgba(255,255,255,0.1);
+  border-radius: 4px; margin-top: 6px; overflow: hidden;
+}
+.song-tracker .tracker-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, #ff6fd8, #cd77ff, #84fab0);
+  transition: width 0.5s;
+}
+.song-tracker .master-badge {
+  display: inline-block; margin-top: 6px;
+  background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(255,111,216,0.2));
+  border: 1px solid rgba(255,215,0,0.5);
+  padding: 3px 10px; border-radius: 10px;
+  color: #ffd700; font-weight: 700; font-size: 0.85em;
+  animation: achievePop 0.6s ease;
+}
+
 .song-card {
   background: linear-gradient(135deg, rgba(255,111,216,0.15), rgba(161,140,209,0.15));
   border: 2px solid rgba(255,111,216,0.3); border-radius: 16px;
   padding: 14px 18px; margin: 8px 0; cursor: pointer;
   color: white; transition: all 0.3s;
+  position: relative; overflow: hidden;
 }
 .song-card:hover, .song-card:active {
   background: linear-gradient(135deg, rgba(255,111,216,0.35), rgba(161,140,209,0.35));
   transform: scale(1.03); border-color: #ff6fd8;
 }
+
+/* Vinyl record hover animation */
+.song-card .vinyl {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #222 30%, #444 31%, #333 60%, #222 61%, #111 100%);
+  opacity: 0; transition: opacity 0.3s;
+  box-shadow: 0 0 8px rgba(0,0,0,0.5);
+}
+.song-card .vinyl::after {
+  content: ''; position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 12px; height: 12px; border-radius: 50%;
+  background: radial-gradient(circle, #ff6fd8 40%, #cd77ff 100%);
+}
+.song-card:hover .vinyl {
+  opacity: 0.7;
+  animation: vinylSpin 2s linear infinite;
+}
+@keyframes vinylSpin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
 .song-card .top-row { display: flex; align-items: center; justify-content: space-between; }
 .song-card .title { font-size: 1.15em; font-weight: 700; }
 .song-card .difficulty { font-size: 0.85em; }
@@ -160,6 +330,29 @@ body {
   font-style: italic;
 }
 .song-card .info { font-size: 0.82em; color: #cd77ff; margin-top: 3px; }
+
+/* High score display on song card */
+.song-card .high-score {
+  font-size: 0.78em; color: #ffd700; margin-top: 3px;
+  font-weight: 600;
+}
+
+/* Favorite heart */
+.song-card .fav-btn {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 1.2em; cursor: pointer; z-index: 5;
+  transition: transform 0.2s;
+  filter: grayscale(1) opacity(0.4);
+}
+.song-card .fav-btn.active {
+  filter: none;
+  animation: heartPop 0.3s ease;
+}
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
 
 /* Karaoke bar for lyrics */
 .lyrics-zone {
@@ -192,7 +385,7 @@ body {
 .lyric-line.active .word.current {
   color: white; font-size: 1.35em;
   text-shadow: 0 0 20px #ff6fd8, 0 0 40px #cd77ff;
-  animation: wordPulse 0.5s ease infinite alternate;
+  animation: wordPulseRainbow 1.5s ease infinite;
   transform: scale(1.1);
 }
 .lyric-line.active .word.sung {
@@ -200,9 +393,14 @@ body {
 }
 .lyric-line.done { color: rgba(161,140,209,0.35); font-size: 0.95em; }
 
-@keyframes wordPulse {
-  0% { text-shadow: 0 0 15px #ff6fd8, 0 0 30px #cd77ff; }
-  100% { text-shadow: 0 0 30px #ff6fd8, 0 0 60px #cd77ff, 0 0 80px #a18cd1; }
+@keyframes wordPulseRainbow {
+  0% { text-shadow: 0 0 20px #ff6fd8, 0 0 40px #ff6fd8, 0 0 60px #ff6fd8; }
+  16% { text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700, 0 0 60px #ffd700; }
+  33% { text-shadow: 0 0 20px #84fab0, 0 0 40px #84fab0, 0 0 60px #84fab0; }
+  50% { text-shadow: 0 0 20px #87ceeb, 0 0 40px #87ceeb, 0 0 60px #87ceeb; }
+  66% { text-shadow: 0 0 20px #cd77ff, 0 0 40px #cd77ff, 0 0 60px #cd77ff; }
+  83% { text-shadow: 0 0 20px #ff9a9e, 0 0 40px #ff9a9e, 0 0 60px #ff9a9e; }
+  100% { text-shadow: 0 0 20px #ff6fd8, 0 0 40px #ff6fd8, 0 0 60px #ff6fd8; }
 }
 
 /* Duet indicator */
@@ -213,32 +411,48 @@ body {
 .duet-p1 { background: rgba(255,111,216,0.3); color: #ff9ee8; }
 .duet-p2 { background: rgba(132,250,176,0.3); color: #84fab0; }
 
-/* Sing button */
+/* Sing button — 3D press effect */
 .sing-btn {
   width: 130px; height: 130px; border-radius: 50%;
   background: linear-gradient(135deg, #ff6fd8, #cd77ff);
   border: 4px solid rgba(255,255,255,0.5);
   color: white; font-size: 2.5em; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.1s; margin: 14px 0;
-  box-shadow: 0 0 30px rgba(255,111,216,0.5);
+  transition: transform 0.1s, box-shadow 0.1s;
+  margin: 14px 0;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 30px rgba(255,111,216,0.5), inset 0 2px 4px rgba(255,255,255,0.3);
   -webkit-tap-highlight-color: transparent;
   position: relative; z-index: 10;
 }
-.sing-btn:active { transform: scale(0.88); }
+.sing-btn:active {
+  transform: scale(0.88) translateY(4px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 15px rgba(255,111,216,0.3), inset 0 -2px 4px rgba(0,0,0,0.2);
+}
 .sing-btn.glow {
-  box-shadow: 0 0 50px rgba(255,111,216,0.8), 0 0 80px rgba(205,119,255,0.5);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 50px rgba(255,111,216,0.8), 0 0 80px rgba(205,119,255,0.5), inset 0 2px 4px rgba(255,255,255,0.3);
 }
 .sing-btn.bounce {
   animation: micBounce 0.2s ease;
 }
 @keyframes micBounce {
-  0% { transform: scale(0.82); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+  0% { transform: scale(0.82) translateY(4px); }
+  50% { transform: scale(1.15) translateY(-2px); }
+  100% { transform: scale(1) translateY(0); }
 }
 
-/* Progress bar — music staff style */
+/* Golden note trail */
+.golden-trail {
+  position: fixed; pointer-events: none; z-index: 50;
+  font-size: 1.2em; color: #ffd700;
+  text-shadow: 0 0 10px #ffd700;
+  animation: goldenTrail 0.8s ease-out forwards;
+}
+@keyframes goldenTrail {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-180px) scale(0.5); }
+}
+
+/* Progress bar -- music staff style */
 .progress-wrap {
   width: 85%; max-width: 420px; height: 18px;
   background: rgba(255,255,255,0.08); border-radius: 10px;
@@ -286,14 +500,55 @@ body {
   100% { opacity: 0; transform: translate(-50%,-50%) scale(1); }
 }
 
-/* End screen */
+/* End screen — curtain reveal */
+.end-curtain {
+  position: fixed; inset: 0; z-index: 55;
+  background: linear-gradient(180deg, #1a1a2e, #0f3460);
+  pointer-events: none;
+  animation: curtainReveal 1.2s ease-out forwards;
+}
+@keyframes curtainReveal {
+  0% { clip-path: inset(0 0 0 0); opacity: 1; }
+  60% { clip-path: inset(0 0 0 0); opacity: 0.8; }
+  100% { clip-path: inset(50% 0 50% 0); opacity: 0; }
+}
+
 .end-box {
   background: linear-gradient(135deg, rgba(255,111,216,0.2), rgba(161,140,209,0.2));
   border: 2px solid rgba(255,111,216,0.4); border-radius: 20px;
   padding: 28px; text-align: center; color: white; max-width: 420px;
+  animation: endBoxReveal 0.8s ease-out 0.4s both;
+}
+@keyframes endBoxReveal {
+  0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 .end-box h2 { font-size: 1.8em; margin-bottom: 10px; text-shadow: 0 0 15px #ff6fd8; }
-.end-stars { font-size: 2.5em; margin: 12px 0; }
+.end-stars { font-size: 2.5em; margin: 12px 0; min-height: 50px; }
+.end-star {
+  display: inline-block;
+  opacity: 0;
+  animation: starFlyIn 0.5s ease-out forwards;
+}
+@keyframes starFlyIn {
+  0% { opacity: 0; transform: translateY(-40px) scale(0) rotate(-180deg); }
+  60% { transform: translateY(5px) scale(1.3) rotate(10deg); }
+  80% { transform: translateY(-2px) scale(0.95) rotate(-5deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+}
+/* Star sparkle after landing */
+.end-star.sparkle::after {
+  content: '';
+  position: absolute; top: -4px; right: -4px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #fff;
+  animation: starSparkle 0.6s ease-out forwards;
+}
+@keyframes starSparkle {
+  0% { opacity: 1; transform: scale(0); }
+  50% { opacity: 1; transform: scale(2); }
+  100% { opacity: 0; transform: scale(0); }
+}
 .end-msg { font-size: 1.05em; color: #cd77ff; margin: 10px 0; }
 .end-score { font-size: 1.5em; color: #ff6fd8; font-weight: 700; }
 .end-achievement {
@@ -352,21 +607,38 @@ body {
   .sing-btn { width: 110px; height: 110px; font-size: 2em; }
   .song-select { max-height: calc(100vh - 140px); }
   .singer-silhouette { font-size: 80px; }
+  .spotlight-cone { border-left-width: 60px; border-right-width: 60px; border-bottom-width: 160px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Stage background lights -->
+<!-- Star field canvas -->
+<canvas id="starField"></canvas>
+
+<!-- Stage background lights + lens flares -->
 <div class="stage-bg">
   <div class="stage-light"></div>
   <div class="stage-light"></div>
   <div class="stage-light"></div>
   <div class="stage-light"></div>
+  <div class="lens-flare"></div>
+  <div class="lens-flare"></div>
+  <div class="lens-flare"></div>
+  <div class="lens-flare"></div>
 </div>
+
+<!-- Stage flash for combos -->
+<div class="stage-flash" id="stageFlash"></div>
 
 <!-- Edge glow -->
 <div class="edge-glow" id="edgeGlow"></div>
+
+<!-- Disco ball overlay -->
+<div class="disco-overlay" id="discoOverlay"></div>
+
+<!-- Spotlight cone behind singer -->
+<div class="spotlight-cone"></div>
 
 <!-- Singer silhouette -->
 <div class="singer-silhouette">🧑‍🎤</div>
@@ -605,6 +877,63 @@ let audioCtx = null;
 let songsCompleted = new Set();
 let currentWordIdx = 0, wordTimers = [];
 
+// Load persisted data
+let favorites = JSON.parse(localStorage.getItem('kpop_karaoke_favs') || '[]');
+let highScores = JSON.parse(localStorage.getItem('kpop_karaoke_highscores') || '{}');
+let completedSongs = JSON.parse(localStorage.getItem('kpop_karaoke_completed') || '[]');
+let songStars = JSON.parse(localStorage.getItem('kpop_karaoke_stars') || '{}');
+completedSongs.forEach(i => songsCompleted.add(i));
+
+function savePersist() {
+  localStorage.setItem('kpop_karaoke_favs', JSON.stringify(favorites));
+  localStorage.setItem('kpop_karaoke_highscores', JSON.stringify(highScores));
+  localStorage.setItem('kpop_karaoke_completed', JSON.stringify([...songsCompleted]));
+  localStorage.setItem('kpop_karaoke_stars', JSON.stringify(songStars));
+}
+
+// ==================== STAR FIELD ====================
+const starCanvas = document.getElementById('starField');
+const starCtx = starCanvas.getContext('2d');
+let stars = [];
+
+function initStars() {
+  starCanvas.width = window.innerWidth;
+  starCanvas.height = window.innerHeight;
+  stars = [];
+  for (let i = 0; i < 80; i++) {
+    stars.push({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height,
+      size: 0.5 + Math.random() * 2,
+      speed: 0.1 + Math.random() * 0.3,
+      alpha: 0.3 + Math.random() * 0.7,
+      twinkleSpeed: 0.005 + Math.random() * 0.015,
+      twinklePhase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function animateStars() {
+  starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+  const time = Date.now() * 0.001;
+  for (const s of stars) {
+    s.y += s.speed;
+    s.x += s.speed * 0.3;
+    if (s.y > starCanvas.height) { s.y = -2; s.x = Math.random() * starCanvas.width; }
+    if (s.x > starCanvas.width) s.x = 0;
+    const twinkle = 0.4 + 0.6 * Math.sin(time * s.twinkleSpeed * 60 + s.twinklePhase);
+    starCtx.fillStyle = `rgba(255,255,255,${s.alpha * twinkle})`;
+    starCtx.beginPath();
+    starCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+    starCtx.fill();
+  }
+  requestAnimationFrame(animateStars);
+}
+
+initStars();
+animateStars();
+window.addEventListener('resize', initStars);
+
 // ==================== PLAYER SELECT ====================
 function selectPlayer(name) {
   currentPlayer = name;
@@ -626,19 +955,60 @@ function selectMode(mode) {
 }
 
 // ==================== SONG SELECT ====================
+function toggleFavorite(idx, e) {
+  e.stopPropagation();
+  const i = favorites.indexOf(idx);
+  if (i >= 0) favorites.splice(i, 1);
+  else favorites.push(idx);
+  savePersist();
+  buildSongList();
+}
+
 function buildSongList() {
   const songList = document.getElementById('songList');
   songList.innerHTML = '';
+
+  // Song completion tracker
+  const trackerDiv = document.createElement('div');
+  trackerDiv.className = 'song-tracker';
+  const completed = songsCompleted.size;
+  const total = songs.length;
+  const pct = Math.round((completed / total) * 100);
+
+  // Check master badge: all songs completed with 3+ stars
+  const allWith3Stars = songs.every((_, i) => (songStars[i] || 0) >= 3);
+  let masterHTML = '';
+  if (allWith3Stars && completed === total) {
+    masterHTML = '<div class="master-badge">👑 Karaoké Master 👑</div>';
+  }
+
+  trackerDiv.innerHTML = `
+    ${completed}/${total} chansons chantées
+    <div class="tracker-bar"><div class="tracker-fill" style="width:${pct}%"></div></div>
+    ${masterHTML}
+  `;
+  songList.appendChild(trackerDiv);
+
   songs.forEach((s, i) => {
     const card = document.createElement('div');
     card.className = 'song-card';
     const stars = '⭐'.repeat(s.difficulty);
+    const isFav = favorites.includes(i);
+    const hs = highScores[i];
+    const savedStars = songStars[i];
+    let hsHTML = '';
+    if (hs !== undefined) {
+      hsHTML = `<div class="high-score">🏆 Record : ${hs}${savedStars ? ' — ' + '⭐'.repeat(savedStars) : ''}</div>`;
+    }
     card.innerHTML = `
+      <span class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(${i}, event)">❤️</span>
+      <div class="vinyl"></div>
       <div class="top-row">
         <div class="title">${s.icon} ${s.title}</div>
         <div class="difficulty">${stars}</div>
       </div>
       <div class="info">${s.info}${songsCompleted.has(i) ? ' ✅' : ''}</div>
+      ${hsHTML}
       <div class="preview">"${s.preview}"</div>
     `;
     card.onclick = () => startSong(i);
@@ -688,7 +1058,6 @@ function playCountdownBeep(n) {
 }
 
 function playCrowdCheer() {
-  // Simulate a cheer with noise + filtered harmonics
   if (!audioCtx) return;
   try {
     const bufferSize = audioCtx.sampleRate * 1.5;
@@ -714,8 +1083,8 @@ function playCrowdCheer() {
 }
 
 function playComboChord() {
-  playChord([262, 330, 392], 0.4); // C major
-  setTimeout(() => playChord([349, 440, 523], 0.5), 150); // F major
+  playChord([262, 330, 392], 0.4);
+  setTimeout(() => playChord([349, 440, 523], 0.5), 150);
 }
 
 // ==================== GAME START ====================
@@ -731,6 +1100,7 @@ function startSong(idx) {
   document.getElementById('score-val').textContent = '0';
   document.getElementById('combo').textContent = '';
   document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('discoOverlay').classList.remove('active');
 
   // Player indicator
   const indic = document.getElementById('playerIndicator');
@@ -824,7 +1194,6 @@ function beginSong(song) {
       if (currentLine >= 0) {
         lines[currentLine].el.classList.remove('active');
         lines[currentLine].el.classList.add('done');
-        // Mark all words as sung
         lines[currentLine].words.forEach(w => {
           w.classList.remove('current');
           w.classList.add('sung');
@@ -851,7 +1220,6 @@ function beginSong(song) {
       const targetWord = Math.min(wordCount - 1, Math.floor((lineElapsed / lineDuration) * wordCount));
 
       if (targetWord > activeWordInLine) {
-        // Advance
         for (let w = activeWordInLine; w < targetWord; w++) {
           if (line.words[w]) {
             line.words[w].classList.remove('current');
@@ -869,9 +1237,13 @@ function beginSong(song) {
     const btn = document.getElementById('singBtn');
     btn.classList.toggle('glow', currentLine >= 0 && elapsed < lastTime + 2);
 
+    // Disco ball for high combos
+    document.getElementById('discoOverlay').classList.toggle('active', combo >= 15);
+
     if (elapsed >= totalDuration) {
       clearInterval(gameTimer);
       gameRunning = false;
+      document.getElementById('discoOverlay').classList.remove('active');
       setTimeout(endSong, 500);
     }
   }, 50);
@@ -887,11 +1259,19 @@ function onSing(e) {
 
   ensureAudio();
 
+  // Vibration feedback
+  if (navigator.vibrate) {
+    navigator.vibrate(combo >= 10 ? [30, 20, 30] : [20]);
+  }
+
   const elapsed = (Date.now() - startTime) / 1000;
   const song = songs[currentSong];
   let onBeat = false;
+  let perfectTiming = false;
   for (const l of song.lyrics) {
-    if (Math.abs(elapsed - l.t) < 1.8) { onBeat = true; break; }
+    const diff = Math.abs(elapsed - l.t);
+    if (diff < 0.5) { perfectTiming = true; onBeat = true; break; }
+    if (diff < 1.8) { onBeat = true; break; }
   }
 
   if (onBeat) {
@@ -900,7 +1280,6 @@ function onSing(e) {
     if (combo > maxCombo) maxCombo = combo;
   } else {
     score += 5;
-    // Combo doesn't break — kids never feel bad
   }
 
   document.getElementById('score-val').textContent = score;
@@ -912,6 +1291,16 @@ function onSing(e) {
   if (combo > 0 && combo % 10 === 0) {
     showComboFlash(combo);
     playComboChord();
+    // Stage lights flash
+    triggerStageFlash();
+  }
+
+  // Screen shake at combo 20+
+  if (combo >= 20 && combo % 5 === 0) {
+    document.body.classList.remove('shaking');
+    void document.body.offsetWidth;
+    document.body.classList.add('shaking');
+    setTimeout(() => document.body.classList.remove('shaking'), 300);
   }
 
   // Floating note emoji
@@ -921,6 +1310,14 @@ function onSing(e) {
   const glow = document.getElementById('edgeGlow');
   glow.classList.add('pulse');
   setTimeout(() => glow.classList.remove('pulse'), 200);
+
+  // Edge ripple
+  spawnEdgeRipple(e);
+
+  // Golden note trail for perfect timing
+  if (perfectTiming) {
+    spawnGoldenTrail();
+  }
 
   // Melodic note from song scale
   const scale = song.scale || [262, 294, 330, 349, 392, 440, 494, 523];
@@ -957,6 +1354,40 @@ function spawnFloatNote(e) {
   setTimeout(() => el.remove(), 1300);
 }
 
+function spawnEdgeRipple(e) {
+  const el = document.createElement('div');
+  el.className = 'edge-ripple';
+  const x = (e.clientX || e.touches?.[0]?.clientX || window.innerWidth / 2);
+  const y = (e.clientY || e.touches?.[0]?.clientY || window.innerHeight * 0.7);
+  el.style.left = (x - 10) + 'px';
+  el.style.top = (y - 10) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 600);
+}
+
+function spawnGoldenTrail() {
+  const btn = document.getElementById('singBtn');
+  const rect = btn.getBoundingClientRect();
+  const notes = ['♪', '♫', '♬', '✦'];
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'golden-trail';
+      el.textContent = notes[Math.floor(Math.random() * notes.length)];
+      el.style.left = (rect.left + rect.width / 2 + (Math.random() - 0.5) * 40) + 'px';
+      el.style.top = (rect.top - 10) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }, i * 80);
+  }
+}
+
+function triggerStageFlash() {
+  const flash = document.getElementById('stageFlash');
+  flash.classList.add('active');
+  setTimeout(() => flash.classList.remove('active'), 120);
+}
+
 function showComboFlash(n) {
   const el = document.createElement('div');
   el.className = 'combo-flash';
@@ -973,7 +1404,6 @@ function endSong() {
   const maxScore = song.lyrics.length * 20 * 3;
   const ratio = Math.min(1, score / Math.max(1, maxScore));
 
-  // Always at least 2 stars (encouraging for kids)
   let starCount, msg, title;
   if (ratio >= 0.75) {
     starCount = 5;
@@ -988,12 +1418,19 @@ function endSong() {
     msg = `Très bien ${currentPlayer} ! Continue comme ça !`;
     title = 'Bravo !';
   } else {
-    starCount = 2; // Minimum 2 stars
+    starCount = 2;
     msg = `Bon début ${currentPlayer} ! Tu vas devenir une star !`;
     title = 'Bien !';
   }
 
-  const stars = '⭐'.repeat(starCount);
+  // Save high score and stars
+  if (!highScores[currentSong] || score > highScores[currentSong]) {
+    highScores[currentSong] = score;
+  }
+  if (!songStars[currentSong] || starCount > songStars[currentSong]) {
+    songStars[currentSong] = starCount;
+  }
+  savePersist();
 
   // Crowd cheer
   playCrowdCheer();
@@ -1001,19 +1438,49 @@ function endSong() {
   // Confetti for 4+ stars
   if (starCount >= 4) launchConfetti();
 
+  // Curtain reveal
+  const curtain = document.createElement('div');
+  curtain.className = 'end-curtain';
+  document.body.appendChild(curtain);
+  setTimeout(() => curtain.remove(), 1300);
+
   document.getElementById('endTitle').textContent = title;
-  document.getElementById('endStars').textContent = stars;
+
+  // Animated stars that fly in with delay
+  const starsDiv = document.getElementById('endStars');
+  starsDiv.innerHTML = '';
+  for (let i = 0; i < starCount; i++) {
+    const starEl = document.createElement('span');
+    starEl.className = 'end-star';
+    starEl.textContent = '⭐';
+    starEl.style.animationDelay = (0.3 + i * 0.2) + 's';
+    // Add sparkle effect after landing
+    setTimeout(() => {
+      starEl.style.position = 'relative';
+      const sparkle = document.createElement('span');
+      sparkle.style.cssText = 'position:absolute;top:-6px;right:-6px;font-size:0.4em;animation:starSparkle 0.6s ease-out forwards;';
+      sparkle.textContent = '✨';
+      starEl.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 600);
+    }, 600 + i * 200);
+    starsDiv.appendChild(starEl);
+  }
+
   document.getElementById('endScore').textContent = score;
   document.getElementById('endMsg').textContent = msg;
 
-  // Achievement check: "Chanteuse Pro" if 5 songs completed
+  // Achievement check
   const achDiv = document.getElementById('endAchievement');
-  if (songsCompleted.size >= 5) {
+  const allWith3Stars = songs.every((_, i) => (songStars[i] || 0) >= 3);
+  if (allWith3Stars && songsCompleted.size === songs.length) {
+    achDiv.innerHTML = '<div class="end-achievement">👑 Karaoké Master ! Toutes les chansons avec 3+ étoiles !</div>';
+    setTimeout(() => playChord([523, 659, 784], 0.8), 500);
+    setTimeout(() => playChord([659, 784, 1047], 1.0), 1000);
+  } else if (songsCompleted.size >= 5) {
     achDiv.innerHTML = '<div class="end-achievement">🏆 Chanteuse Pro ! 5 chansons terminées !</div>';
-    // Extra celebration
     setTimeout(() => playChord([523, 659, 784], 0.8), 500);
   } else {
-    achDiv.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.85em;margin-top:8px;">${songsCompleted.size}/5 chansons pour le trophée 🏆</div>`;
+    achDiv.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.85em;margin-top:8px;">${songsCompleted.size}/${songs.length} chansons pour le trophée 🏆</div>`;
   }
 
   showScreen('endScreen');

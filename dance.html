@@ -31,6 +31,12 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
 .combo-fire.fever{animation:fireGlow .3s ease infinite alternate}
 @keyframes fireGlow{0%{text-shadow:0 0 8px #ffd700,0 0 20px #ff6b6b}100%{text-shadow:0 0 15px #ff6fd8,0 0 35px #ffd700}}
 
+/* ── COMBO TIERS ── */
+.combo-tier-fire #combo::after{content:' \01F525';font-size:.9em}
+.combo-tier-rainbow #combo{background:linear-gradient(90deg,#ff6b6b,#ffd700,#4ecdc4,#cd77ff,#ff6fd8);background-size:300% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:rainbowText 1s linear infinite}
+.combo-tier-crown #combo::before{content:'\01F451 ';font-size:.9em}
+@keyframes rainbowText{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
 /* ── FEVER BANNER ── */
 .fever-banner{position:fixed;top:60px;left:50%;transform:translateX(-50%) scale(0);font-size:2em;font-weight:800;color:#ffd700;z-index:100;pointer-events:none;text-shadow:0 0 30px #ff6fd8,0 0 60px #cd77ff;transition:transform .3s}
 .fever-banner.show{transform:translateX(-50%) scale(1);animation:feverPulse .5s ease infinite alternate}
@@ -39,15 +45,26 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
 /* ── GAME AREA ── */
 .game-area{position:relative;width:100%;max-width:500px;flex:1;min-height:0;overflow:hidden}
 .lanes-container{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;gap:6px}
-.lane{flex:none;height:100%;position:relative;border-left:1px solid rgba(255,255,255,.04);border-right:1px solid rgba(255,255,255,.04)}
+.lane{flex:none;height:100%;position:relative;border-left:1px solid rgba(255,255,255,.04);border-right:1px solid rgba(255,255,255,.04);transition:border-color .3s,box-shadow .3s}
 .lane-2{width:140px}
 .lane-3{width:100px}
 .lane-4{width:80px}
 
+/* ── LANE LIGHT-UP ── */
+.lane.lane-hit-0{box-shadow:inset 0 0 40px rgba(255,107,107,.35);border-color:rgba(255,107,107,.4)}
+.lane.lane-hit-1{box-shadow:inset 0 0 40px rgba(78,205,196,.35);border-color:rgba(78,205,196,.4)}
+.lane.lane-hit-2{box-shadow:inset 0 0 40px rgba(255,217,61,.35);border-color:rgba(255,217,61,.4)}
+.lane.lane-hit-3{box-shadow:inset 0 0 40px rgba(162,155,254,.35);border-color:rgba(162,155,254,.4)}
+
+/* ── FEVER LANE RAINBOW BORDERS ── */
+.lane.fever-lane{border-image:linear-gradient(180deg,#ff6fd8,#ffd700,#4ecdc4,#cd77ff,#ff6b6b) 1;border-left-width:2px;border-right-width:2px;animation:feverLanePulse 1.5s ease infinite alternate}
+@keyframes feverLanePulse{0%{border-image:linear-gradient(180deg,#ff6fd8,#ffd700,#4ecdc4,#cd77ff,#ff6b6b) 1}50%{border-image:linear-gradient(180deg,#4ecdc4,#ff6b6b,#cd77ff,#ffd700,#ff6fd8) 1}100%{border-image:linear-gradient(180deg,#ffd700,#cd77ff,#ff6fd8,#4ecdc4,#ff6b6b) 1}}
+
 /* ── HIT ZONE ── */
 .hit-zone{position:absolute;bottom:0;left:0;width:100%;height:70px;z-index:5;pointer-events:none}
 .hit-zone-line{position:absolute;top:0;left:50%;transform:translateX(-50%);width:95%;height:3px;background:rgba(255,255,255,.2);border-radius:2px}
-.hit-zone-glow{position:absolute;top:-10px;left:0;width:100%;height:70px;background:linear-gradient(to bottom,rgba(255,111,216,.08),transparent);border-radius:0 0 12px 12px}
+.hit-zone-glow{position:absolute;top:-10px;left:0;width:100%;height:70px;background:linear-gradient(to bottom,rgba(255,111,216,.08),transparent);border-radius:0 0 12px 12px;animation:hitZonePulse 0.8s ease-in-out infinite alternate}
+@keyframes hitZonePulse{0%{opacity:.5;box-shadow:0 0 15px rgba(255,111,216,.1)}100%{opacity:1;box-shadow:0 0 30px rgba(255,111,216,.25)}}
 
 /* ── KEY BUTTONS ── */
 .keys-display{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:20}
@@ -68,6 +85,17 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
 .note-trail{position:absolute;border-radius:50%;pointer-events:none;z-index:2;animation:trailFade .5s ease forwards}
 @keyframes trailFade{0%{opacity:.6;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(2)}}
 
+/* ── NOTE BLOOM/GLOW TRAIL ── */
+.note-bloom{position:absolute;border-radius:50%;pointer-events:none;z-index:1;animation:bloomPulse .6s ease-out forwards}
+@keyframes bloomPulse{0%{opacity:.5;transform:translate(-50%,-50%) scale(.8)}50%{opacity:.3;transform:translate(-50%,-50%) scale(1.5)}100%{opacity:0;transform:translate(-50%,-50%) scale(2)}}
+
+/* ── NOTE GLOW ANIMATION (pulsing box-shadow on notes) ── */
+.note{animation:noteGlow 0.6s ease-in-out infinite alternate}
+@keyframes noteGlow{0%{filter:drop-shadow(0 0 6px rgba(255,255,255,.3))}100%{filter:drop-shadow(0 0 16px rgba(255,255,255,.6)) drop-shadow(0 0 30px rgba(255,111,216,.3))}}
+
+/* ── COUNTDOWN ON NOTE (practice) ── */
+.note-countdown{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.7em;font-weight:800;color:rgba(255,255,255,.8);text-shadow:0 0 6px rgba(0,0,0,.5);z-index:5;pointer-events:none}
+
 /* ── POWER-UPS ── */
 .power-up{position:absolute;width:36px;height:36px;left:50%;transform:translateX(-50%);z-index:4;font-size:1.6em;display:flex;align-items:center;justify-content:center;animation:puBob 1s ease infinite alternate;pointer-events:none}
 @keyframes puBob{0%{filter:drop-shadow(0 0 6px #ffd700)}100%{filter:drop-shadow(0 0 16px #ff6fd8)}}
@@ -76,9 +104,31 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
 .feedback{position:fixed;top:38%;left:50%;transform:translate(-50%,-50%);font-size:2.3em;font-weight:800;z-index:50;pointer-events:none;animation:feedPop .55s ease forwards}
 @keyframes feedPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-80%) scale(.9)}}
 
-/* ── SCREEN SHAKE ── */
+/* ── SCREEN SHAKE (multiple intensities) ── */
+.shake-light{animation:shakeLight .15s ease}
+@keyframes shakeLight{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
 .shake{animation:shakeIt .15s ease}
 @keyframes shakeIt{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.shake-medium{animation:shakeMed .18s ease}
+@keyframes shakeMed{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-3px,4px)}80%{transform:translate(6px,-2px)}}
+.shake-strong{animation:shakeStrong .22s ease}
+@keyframes shakeStrong{0%,100%{transform:translate(0,0)}15%{transform:translate(-10px,4px)}30%{transform:translate(8px,-6px)}45%{transform:translate(-6px,8px)}60%{transform:translate(10px,-4px)}75%{transform:translate(-8px,6px)}}
+
+/* ── PERFECT BORDER FLASH ── */
+.perfect-border-flash{animation:borderFlash .3s ease forwards}
+@keyframes borderFlash{0%{box-shadow:inset 0 0 0 0 rgba(255,215,0,0)}30%{box-shadow:inset 0 0 0 6px rgba(255,215,0,.7)}100%{box-shadow:inset 0 0 0 0 rgba(255,215,0,0)}}
+
+/* ── MISS VIGNETTE ── */
+.miss-vignette{position:fixed;top:0;left:0;width:100%;height:100%;z-index:55;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(255,50,50,.25) 100%);animation:vignetteFlash .4s ease forwards}
+@keyframes vignetteFlash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+
+/* ── MISS DIM ── */
+.miss-dim{position:fixed;top:0;left:0;width:100%;height:100%;z-index:54;pointer-events:none;background:rgba(0,0,0,.2);animation:dimFlash .35s ease forwards}
+@keyframes dimFlash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+
+/* ── RIPPLE EFFECT (power-up collect) ── */
+.ripple-effect{position:fixed;top:50%;left:50%;width:20px;height:20px;border-radius:50%;transform:translate(-50%,-50%);z-index:56;pointer-events:none;background:radial-gradient(circle,rgba(255,215,0,.4),rgba(255,111,216,.2),transparent);animation:rippleExpand .7s ease-out forwards}
+@keyframes rippleExpand{0%{width:20px;height:20px;opacity:.8}100%{width:150vw;height:150vw;opacity:0}}
 
 /* ── PARTICLES ── */
 .particle{position:fixed;pointer-events:none;z-index:60;border-radius:50%;animation:particleFly .7s ease-out forwards}
@@ -87,6 +137,10 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
 /* ── CONFETTI ── */
 .confetti{position:fixed;width:8px;height:14px;z-index:80;pointer-events:none;animation:confettiFall 2s ease-out forwards}
 @keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+
+/* ── FLOATING MUSIC NOTES ── */
+.floating-note{position:fixed;z-index:0;pointer-events:none;font-size:1.5em;opacity:.12;animation:floatUp linear forwards}
+@keyframes floatUp{0%{transform:translateX(0) rotate(0deg);opacity:.12}80%{opacity:.08}100%{transform:translateX(30px) rotate(25deg);opacity:0}}
 
 /* ── DANCER ── */
 .dancer{position:absolute;bottom:75px;left:50%;transform:translateX(-50%);font-size:3em;z-index:6;pointer-events:none;transition:.15s}
@@ -117,8 +171,26 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
 .overlay p{color:rgba(255,255,255,.8);font-size:1.1em;margin-bottom:4px;text-align:center}
 .overlay .big-score{font-size:3.5em;color:#ff6fd8;font-weight:800;margin:10px 0;text-shadow:0 0 35px rgba(255,111,216,.5)}
 
-.grade-display{font-size:5em;margin:10px 0;animation:gradeIn .6s ease}
+/* ── END SCREEN GRADE ANIMATIONS ── */
+.grade-display{font-size:5em;margin:10px 0}
+.grade-S{animation:gradeSpin .8s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes gradeSpin{0%{transform:scale(0) rotate(-360deg);opacity:0}60%{transform:scale(1.3) rotate(15deg);opacity:1}80%{transform:scale(.95) rotate(-5deg)}100%{transform:scale(1) rotate(0)}}
+.grade-A{animation:gradeBounce .7s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes gradeBounce{0%{transform:scale(0) translateY(80px);opacity:0}50%{transform:scale(1.2) translateY(-20px);opacity:1}70%{transform:scale(.9) translateY(10px)}85%{transform:scale(1.05) translateY(-5px)}100%{transform:scale(1) translateY(0)}}
+.grade-B{animation:gradeSlide .6s ease forwards}
+@keyframes gradeSlide{0%{transform:translateX(-100px) scale(.5);opacity:0}60%{transform:translateX(10px) scale(1.1);opacity:1}100%{transform:translateX(0) scale(1)}}
+.grade-C{animation:gradeIn .6s ease forwards}
 @keyframes gradeIn{0%{transform:scale(0) rotate(-20deg);opacity:0}60%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+
+/* ── NOUVEAU RECORD BANNER ── */
+.new-record-banner{animation:recordPulse 1s ease infinite alternate;font-size:1.3em;text-shadow:0 0 20px rgba(255,215,0,.6)}
+@keyframes recordPulse{0%{transform:scale(1);text-shadow:0 0 20px rgba(255,215,0,.4)}100%{transform:scale(1.08);text-shadow:0 0 35px rgba(255,215,0,.8),0 0 60px rgba(255,111,216,.3)}}
+
+/* ── BEST STATS ON START ── */
+.best-stats{display:flex;gap:20px;margin:8px 0;justify-content:center}
+.best-stat{text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:6px 14px}
+.best-stat .val{font-size:1.3em;font-weight:700;color:#ffd700}
+.best-stat .lbl{font-size:.75em;color:rgba(255,255,255,.45)}
 
 .stars-row{font-size:2.5em;margin:8px 0}
 .stars-row .star{display:inline-block;animation:starPop .4s ease forwards;opacity:0;transform:scale(0)}
@@ -192,6 +264,10 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
 <div class="overlay" id="startScreen">
   <h2>Dance Challenge</h2>
   <p style="color:rgba(255,255,255,.5);font-size:.9em">K-Pop Star Academy &mdash; &Eacute;cole Saint-Esprit</p>
+  <div class="best-stats" id="bestStats" style="display:none">
+    <div class="best-stat"><div class="val" id="bestScoreVal">0</div><div class="lbl">Meilleur Score</div></div>
+    <div class="best-stat"><div class="val" id="bestComboVal">0</div><div class="lbl">Meilleur Combo</div></div>
+  </div>
   <p style="margin-top:12px">Qui joue ?</p>
   <div class="player-select" id="playerSelect">
     <button class="player-btn" onclick="selectPlayer('Ambre')">Ambre</button>
@@ -254,13 +330,9 @@ const DIFFICULTY={
 };
 
 const NOTE_SHAPES=[
-  // Star
   `<svg viewBox="0 0 50 50"><polygon points="25,2 32,18 49,20 36,32 39,49 25,41 11,49 14,32 1,20 18,18" fill="FLC" stroke="rgba(255,255,255,.5)" stroke-width="1"/></svg>`,
-  // Heart
   `<svg viewBox="0 0 50 50"><path d="M25 45 C5 28 0 15 12 8 C18 5 24 9 25 14 C26 9 32 5 38 8 C50 15 45 28 25 45Z" fill="FLC" stroke="rgba(255,255,255,.5)" stroke-width="1"/></svg>`,
-  // Diamond
   `<svg viewBox="0 0 50 50"><polygon points="25,2 45,25 25,48 5,25" fill="FLC" stroke="rgba(255,255,255,.5)" stroke-width="1"/></svg>`,
-  // Circle-star
   `<svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="FLC" stroke="rgba(255,255,255,.5)" stroke-width="1"/><polygon points="25,10 29,20 40,20 31,27 34,37 25,31 16,37 19,27 10,20 21,20" fill="rgba(255,255,255,.4)"/></svg>`
 ];
 const LANE_COLORS=['#ff6b6b','#4ecdc4','#ffd93d','#a29bfe'];
@@ -269,9 +341,9 @@ const LANE_GRADIENTS=[
 ];
 
 const POWER_UP_TYPES=[
-  {id:'shield',emoji:'🛡️',duration:8000,desc:'Bouclier'},
+  {id:'shield',emoji:'\u{1F6E1}\uFE0F',duration:8000,desc:'Bouclier'},
   {id:'double',emoji:'x2',duration:6000,desc:'x2 Points'},
-  {id:'slowmo',emoji:'🐌',duration:5000,desc:'Ralenti'}
+  {id:'slowmo',emoji:'\u{1F40C}',duration:5000,desc:'Ralenti'}
 ];
 
 // ─── STATE ───
@@ -286,9 +358,12 @@ let activePowerUps={shield:false,double:false,slowmo:false};
 let puTimers={};
 let stageLevel=0;
 let dancerSide=0;
-let holdNotes=new Map();// noteId -> {startTime, lane, el, holdEl, scored}
+let holdNotes=new Map();
 let noteIdCounter=0;
-let bestMoments=[];// [{time,type,score}]
+let bestMoments=[];
+let floatingNotesInterval=null;
+let slowMoActive=false;
+let savedNoteSpeed=0;
 
 // ─── PLAYER / DIFF ───
 function getParam(k){return new URLSearchParams(location.search).get(k)}
@@ -297,14 +372,33 @@ function selectPlayer(name){
   document.querySelectorAll('.player-btn').forEach(b=>b.classList.toggle('active',b.textContent===name));
   localStorage.setItem('kpop_dance_player',name);
   checkReady();
+  updateBestStats();
 }
 function selectDiff(d){
   currentDiff=d;
   document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
   event.currentTarget.classList.add('active');
   checkReady();
+  updateBestStats();
 }
 function checkReady(){document.getElementById('startBtn').disabled=!currentPlayer}
+
+// ─── BEST STATS ON START SCREEN ───
+function updateBestStats(){
+  if(!currentPlayer)return;
+  const hsKey=`kpop_hs_dance_${currentPlayer}`;
+  const hcKey=`kpop_hc_dance_${currentPlayer}`;
+  const bestScore=parseInt(localStorage.getItem(hsKey))||0;
+  const bestCombo=parseInt(localStorage.getItem(hcKey))||0;
+  const container=document.getElementById('bestStats');
+  if(bestScore>0||bestCombo>0){
+    container.style.display='flex';
+    document.getElementById('bestScoreVal').textContent=bestScore;
+    document.getElementById('bestComboVal').textContent=bestCombo+'x';
+  } else {
+    container.style.display='none';
+  }
+}
 
 // ─── INIT ───
 (function init(){
@@ -314,6 +408,26 @@ function checkReady(){document.getElementById('startBtn').disabled=!currentPlaye
     document.querySelectorAll('.player-btn').forEach(b=>{if(b.textContent===savedPlayer)b.classList.add('active')});
   }
 })();
+
+// ─── FLOATING MUSIC NOTES (background ambiance) ───
+function startFloatingNotes(){
+  floatingNotesInterval=setInterval(()=>{
+    const noteEmojis=['\u{1F3B5}','\u{1F3B6}','\u{1F3B5}','\u{1F3B6}'];
+    const el=document.createElement('div');
+    el.className='floating-note';
+    el.textContent=noteEmojis[Math.floor(Math.random()*noteEmojis.length)];
+    el.style.left=(5+Math.random()*90)+'%';
+    el.style.bottom='-30px';
+    const dur=6+Math.random()*6;
+    el.style.animationDuration=dur+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),dur*1000);
+  },1800);
+}
+function stopFloatingNotes(){
+  if(floatingNotesInterval){clearInterval(floatingNotesInterval);floatingNotesInterval=null}
+  document.querySelectorAll('.floating-note').forEach(n=>n.remove());
+}
 
 // ─── BUILD LANES ───
 function buildLanes(){
@@ -372,6 +486,7 @@ function startGame(){
   feverActive=false;missForgivenessLeft=missForgiveness;
   activePowerUps={shield:false,double:false,slowmo:false};
   Object.values(puTimers).forEach(clearTimeout);puTimers={};
+  slowMoActive=false;
   updateDisplay();updateStage();
   document.getElementById('feverBg').classList.remove('active');
   document.getElementById('feverBanner').classList.remove('show');
@@ -381,6 +496,9 @@ function startGame(){
   const cfg=DIFFICULTY[currentDiff];
   noteSpeed=cfg.speed;
   gameRunning=true;
+
+  startFloatingNotes();
+  syncHitZonePulse();
 
   let timeLeft=GAME_DURATION/1000;
   document.getElementById('timer-val').textContent=timeLeft+'s';
@@ -392,6 +510,15 @@ function startGame(){
 
   spawnLoop();
   gameTimer=setTimeout(endGame,GAME_DURATION);
+}
+
+// ─── SYNC HIT ZONE PULSE WITH SPAWN RATE ───
+function syncHitZonePulse(){
+  const cfg=DIFFICULTY[currentDiff];
+  const avgSpawn=(cfg.spawnMin+cfg.spawnMax)/2;
+  const pulseMs=avgSpawn/1000;
+  const glow=document.querySelector('.hit-zone-glow');
+  if(glow) glow.style.animationDuration=pulseMs+'s';
 }
 
 // ─── SPAWN ───
@@ -460,23 +587,30 @@ function createNote(lane,isHold=false){
     laneEl.appendChild(holdEl);
   }
 
-  const noteObj={id,el,holdEl,lane,hit:false,isHold,holdDuration,holdScored:false,time:Date.now(),startTop:-50};
+  // Practice mode countdown (Facile only)
+  let countdownEl=null;
+  if(currentDiff==='easy'){
+    countdownEl=document.createElement('div');
+    countdownEl.className='note-countdown';
+    countdownEl.textContent='';
+    el.appendChild(countdownEl);
+  }
+
+  const noteObj={id,el,holdEl,lane,hit:false,isHold,holdDuration,holdScored:false,time:Date.now(),startTop:-50,countdownEl};
   notes.push(noteObj);
 
-  // Animate with rAF
   const startTime=performance.now();
   const dur=noteSpeed;
   const gameH=document.getElementById('gameArea').offsetHeight;
   const endTop=gameH+50;
+  const hitY=gameH-70;
 
   function animate(now){
     if(!gameRunning||noteObj.hit){
-      // If hit, remove
       return;
     }
     const progress=(now-startTime)/dur;
     if(progress>=1){
-      // Missed
       if(!noteObj.hit){
         handleMiss();
         el.remove();
@@ -493,6 +627,23 @@ function createNote(lane,isHold=false){
       const holdPx=Math.min(holdDuration/dur*(endTop+50),80);
       holdEl.style.height=holdPx+'px';
       holdEl.style.top=(top-holdPx)+'px';
+    }
+
+    // Practice countdown (Facile only)
+    if(countdownEl&&currentDiff==='easy'){
+      const distToHit=hitY-top;
+      const pixelsPerSec=(endTop+50)/dur*1000;
+      const secsToHit=distToHit/pixelsPerSec;
+      if(secsToHit>0&&secsToHit<=3.5){
+        countdownEl.textContent=Math.ceil(secsToHit);
+      } else if(secsToHit<=0){
+        countdownEl.textContent='';
+      }
+    }
+
+    // Bloom trail (glow puffs behind note)
+    if(Math.random()<.12&&!noteObj.hit){
+      spawnBloom(lane,top,color,cfg.lanes);
     }
 
     // Particle trail
@@ -515,6 +666,20 @@ function spawnTrail(lane,top,color,numLanes){
   t.style.opacity='.4';
   laneEl.appendChild(t);
   setTimeout(()=>t.remove(),500);
+}
+
+function spawnBloom(lane,top,color,numLanes){
+  const laneEl=document.getElementById(`lane-${lane}`);
+  if(!laneEl)return;
+  const b=document.createElement('div');
+  b.className='note-bloom';
+  const size=12+Math.random()*10;
+  b.style.width=size+'px';b.style.height=size+'px';
+  b.style.background=color;
+  b.style.left='50%';b.style.top=top+'px';
+  b.style.boxShadow=`0 0 ${size}px ${color}, 0 0 ${size*2}px ${color}44`;
+  laneEl.appendChild(b);
+  setTimeout(()=>b.remove(),600);
 }
 
 // ─── POWER-UPS ───
@@ -555,6 +720,7 @@ function collectPowerUp(lane){
       pu.collected=true;
       pu.el.remove();
       activatePowerUp(pu.type);
+      spawnRipple();
     }
   });
 }
@@ -584,6 +750,14 @@ function updatePUIndicator(){
   });
 }
 
+// ─── RIPPLE EFFECT (power-up collect) ───
+function spawnRipple(){
+  const r=document.createElement('div');
+  r.className='ripple-effect';
+  document.body.appendChild(r);
+  setTimeout(()=>r.remove(),700);
+}
+
 // ─── HIT LOGIC ───
 function handlePress(lane){
   if(!gameRunning)return;
@@ -611,7 +785,6 @@ function handlePress(lane){
 
     if(closest.isHold){
       holdNotes.set(closest.id,{lane,startTime:Date.now(),note:closest,scored:false});
-      // Don't remove yet, wait for release
       closest.el.style.opacity='.5';
     } else {
       closest.el.remove();
@@ -626,13 +799,20 @@ function handlePress(lane){
     if(closestDist<35){
       points=30;text='PERFECT !!';color='#ffd700';perfectCount++;
       playPerfectVoice();
-      screenShake();
+      screenShake(true);
       spawnParticles(lane);
+      perfectBorderFlash();
+      triggerSlowMo();
     } else if(closestDist<70){
       points=20;text='Super !';color='#ff6fd8';goodCount++;
+      screenShake(false);
     } else {
       goodCount++;
+      screenShake(false);
     }
+
+    // Lane light-up
+    laneLightUp(lane);
 
     points+=Math.min(combo*2,60);
     if(feverActive)points*=2;
@@ -665,7 +845,6 @@ function handleRelease(lane){
   const keyEl=document.getElementById(`key-${lane}`);
   if(keyEl)keyEl.classList.remove('pressed');
 
-  // Check hold notes
   holdNotes.forEach((h,id)=>{
     if(h.lane===lane&&!h.scored){
       h.scored=true;
@@ -690,13 +869,54 @@ function handleMiss(){
   if(missForgivenessLeft>0){
     missForgivenessLeft--;
     showFeedback('Sauve !','#ffd93d');
-    return; // combo preserved
+    return;
   }
   combo=0;
   if(feverActive)deactivateFever();
   playMissSound();
   showFeedback('Miss !','#ff6b6b');
   updateDisplay();
+  // Miss visual effects: dim + red vignette
+  showMissVignette();
+}
+
+// ─── MISS VISUAL EFFECTS ───
+function showMissVignette(){
+  const v=document.createElement('div');
+  v.className='miss-vignette';
+  document.body.appendChild(v);
+  setTimeout(()=>v.remove(),400);
+  const d=document.createElement('div');
+  d.className='miss-dim';
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),350);
+}
+
+// ─── LANE LIGHT-UP ───
+function laneLightUp(lane){
+  const laneEl=document.getElementById(`lane-${lane}`);
+  if(!laneEl)return;
+  laneEl.classList.add(`lane-hit-${lane%4}`);
+  setTimeout(()=>laneEl.classList.remove(`lane-hit-${lane%4}`),200);
+}
+
+// ─── PERFECT BORDER FLASH ───
+function perfectBorderFlash(){
+  const ga=document.getElementById('gameArea');
+  ga.classList.add('perfect-border-flash');
+  setTimeout(()=>ga.classList.remove('perfect-border-flash'),300);
+}
+
+// ─── SLOW-MO ON PERFECT ───
+function triggerSlowMo(){
+  if(slowMoActive)return;
+  slowMoActive=true;
+  savedNoteSpeed=noteSpeed;
+  noteSpeed*=1.6; // slower = bigger number
+  setTimeout(()=>{
+    noteSpeed=savedNoteSpeed;
+    slowMoActive=false;
+  },100);
 }
 
 // ─── FEVER ───
@@ -708,12 +928,15 @@ function activateFever(){
   playFeverSound();
   spawnConfetti();
   bestMoments.push({time:Date.now(),type:'fever',score});
+  // Add rainbow borders to all lanes
+  document.querySelectorAll('.lane').forEach(l=>l.classList.add('fever-lane'));
 }
 function deactivateFever(){
   feverActive=false;
   document.getElementById('feverBg').classList.remove('active');
   document.getElementById('feverBanner').classList.remove('show');
   document.getElementById('combo').classList.remove('fever');
+  document.querySelectorAll('.lane').forEach(l=>l.classList.remove('fever-lane'));
 }
 
 // ─── STAGE ───
@@ -735,10 +958,28 @@ function updateStage(){
 }
 
 // ─── VISUAL FX ───
-function screenShake(){
+function screenShake(isPerfect){
   const ga=document.getElementById('gameArea');
-  ga.classList.add('shake');
-  setTimeout(()=>ga.classList.remove('shake'),150);
+  // Remove any existing shake
+  ga.classList.remove('shake-light','shake','shake-medium','shake-strong');
+  let cls='shake-light';
+  if(isPerfect){
+    // Perfect: bigger shake, scaled by combo
+    if(combo>=25) cls='shake-strong';
+    else if(combo>=15) cls='shake-medium';
+    else cls='shake';
+  } else {
+    // Normal hit: subtle, scaled by combo
+    if(combo>=25) cls='shake-medium';
+    else if(combo>=15) cls='shake';
+    else if(combo>=5) cls='shake-light';
+    else return; // no shake below 5 combo for normal hits
+  }
+  // Force reflow
+  void ga.offsetWidth;
+  ga.classList.add(cls);
+  const dur=cls==='shake-strong'?220:cls==='shake-medium'?180:150;
+  setTimeout(()=>ga.classList.remove(cls),dur);
 }
 
 function spawnParticles(lane){
@@ -780,7 +1021,7 @@ function spawnConfetti(){
 function animateDancer(lane){
   const d=document.getElementById('dancer');
   const cfg=DIFFICULTY[currentDiff];
-  const emojis=['💃','🕺','💃','🕺'];
+  const emojis=['\u{1F483}','\u{1F57A}','\u{1F483}','\u{1F57A}'];
   d.textContent=emojis[lane%4];
   d.className='dancer';
   if(lane<cfg.lanes/2)d.classList.add('left');
@@ -801,6 +1042,17 @@ function updateDisplay(){
   document.getElementById('score-val').textContent=score;
   const comboEl=document.getElementById('combo');
   comboEl.textContent=combo;
+
+  // Combo tier visuals
+  const wrap=document.getElementById('combo-wrap');
+  wrap.classList.remove('combo-tier-fire','combo-tier-rainbow','combo-tier-crown');
+  if(combo>=30){
+    wrap.classList.add('combo-tier-crown');
+  } else if(combo>=20){
+    wrap.classList.add('combo-tier-rainbow');
+  } else if(combo>=10){
+    wrap.classList.add('combo-tier-fire');
+  }
 }
 
 // ─── END GAME ───
@@ -809,8 +1061,8 @@ function endGame(){
   clearTimeout(spawnTimer);
   clearInterval(timerInterval);
   if(feverActive)deactivateFever();
+  stopFloatingNotes();
 
-  // Clean up remaining notes
   document.querySelectorAll('.note,.hold-tail,.power-up').forEach(n=>n.remove());
 
   // Grade
@@ -841,11 +1093,12 @@ function endGame(){
   document.getElementById('statMaxCombo').textContent=maxCombo;
   document.getElementById('statMiss').textContent=missCount;
 
-  // Grade display
+  // Grade display with per-grade animation
   const gd=document.getElementById('gradeDisplay');
   gd.textContent=grade;
   gd.style.color=gradeColor;
   gd.style.textShadow=`0 0 40px ${gradeColor}`;
+  gd.className='grade-display grade-'+grade;
 
   // Stars
   const sr=document.getElementById('starsRow');
@@ -853,30 +1106,46 @@ function endGame(){
   for(let i=0;i<5;i++){
     const s=document.createElement('span');
     s.className='star';
-    s.textContent=i<stars?'★':'☆';
+    s.textContent=i<stars?'\u2605':'\u2606';
     s.style.color=i<stars?'#ffd700':'rgba(255,255,255,.2)';
     s.style.animationDelay=(i*.15)+'s';
     sr.appendChild(s);
   }
 
-  // High score
+  // High score + best combo
   const hsKey=`kpop_hs_dance_${currentPlayer}`;
+  const hcKey=`kpop_hc_dance_${currentPlayer}`;
   const prev=parseInt(localStorage.getItem(hsKey))||0;
+  const prevCombo=parseInt(localStorage.getItem(hcKey))||0;
   const hsMsg=document.getElementById('highScoreMsg');
+
+  // Save best combo
+  if(maxCombo>prevCombo){
+    localStorage.setItem(hcKey,maxCombo);
+  }
+
   if(score>prev){
     localStorage.setItem(hsKey,score);
     hsMsg.style.display='block';
-    hsMsg.textContent='Nouveau record ! (ancien: '+prev+')';
+    hsMsg.textContent='Nouveau Record !';
+    hsMsg.style.color='#ffd700';
+    hsMsg.style.fontWeight='700';
+    hsMsg.className='new-record-banner';
+    if(prev>0){
+      hsMsg.textContent=`Nouveau Record ! (ancien: ${prev})`;
+    }
+    // Extra confetti for new record
+    spawnConfetti();
   } else {
     hsMsg.style.display='block';
     hsMsg.textContent='Record: '+prev;
     hsMsg.style.color='rgba(255,255,255,.5)';
     hsMsg.style.fontWeight='400';
+    hsMsg.className='';
   }
 
   document.getElementById('endScreen').classList.remove('hidden');
 
-  // End confetti if good
   if(grade==='S'||grade==='A')spawnConfetti();
 }
 
@@ -885,7 +1154,9 @@ function showStart(){
   document.getElementById('startScreen').classList.remove('hidden');
   document.getElementById('highScoreMsg').style.color='#ffd700';
   document.getElementById('highScoreMsg').style.fontWeight='700';
+  document.getElementById('highScoreMsg').className='';
   stageLevel=0;updateStage();
+  updateBestStats();
 }
 
 // ─── KEYBOARD ───

@@ -21,7 +21,79 @@ body{
 
 @keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-.back-btn{position:fixed;top:10px;left:10px;background:rgba(255,255,255,0.3);color:white;border:2px solid rgba(255,255,255,0.5);padding:6px 16px;border-radius:30px;font-family:inherit;font-size:0.9em;cursor:pointer;text-decoration:none;z-index:100;transition:all 0.3s}
+/* Screen flash overlays */
+.screen-flash{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  pointer-events:none;z-index:150;opacity:0;
+}
+.screen-flash.correct-glow{
+  background:radial-gradient(ellipse at center,rgba(76,217,100,0.3) 0%,transparent 70%);
+  animation:correctGlowAnim 0.6s ease forwards;
+}
+@keyframes correctGlowAnim{
+  0%{opacity:0}30%{opacity:1}100%{opacity:0}
+}
+.screen-flash.wrong-vignette{
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(255,50,50,0.35) 100%);
+  animation:wrongVignetteAnim 0.25s ease forwards;
+}
+@keyframes wrongVignetteAnim{
+  0%{opacity:0}40%{opacity:1}100%{opacity:0}
+}
+
+/* Fire trail on streak counter */
+.fire-trail-particle{
+  position:fixed;pointer-events:none;z-index:400;
+  font-size:1.2em;
+  animation:fireParticleAnim 0.7s ease forwards;
+}
+@keyframes fireParticleAnim{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-25px) scale(0.3) rotate(20deg)}
+}
+
+/* Nouveau Record banner */
+.record-banner{
+  position:fixed;top:15%;left:50%;transform:translateX(-50%);
+  background:linear-gradient(145deg,#ffd700,#ff6fd8);
+  color:white;padding:16px 40px;border-radius:20px;
+  font-size:1.4em;font-weight:800;z-index:500;pointer-events:none;
+  box-shadow:0 10px 40px rgba(255,215,0,0.5);
+  animation:recordBannerAnim 2s ease forwards;
+  text-align:center;
+}
+@keyframes recordBannerAnim{
+  0%{opacity:0;transform:translateX(-50%) scale(0.5) rotate(-3deg)}
+  15%{opacity:1;transform:translateX(-50%) scale(1.1) rotate(1deg)}
+  30%{transform:translateX(-50%) scale(1) rotate(0)}
+  75%{opacity:1;transform:translateX(-50%) scale(1)}
+  100%{opacity:0;transform:translateX(-50%) translateY(-20px) scale(0.9)}
+}
+
+/* Grade drop bounce */
+.grade-drop{
+  animation:gradeDropAnim 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes gradeDropAnim{
+  0%{opacity:0;transform:translateY(-80px) scale(0.5)}
+  50%{opacity:1;transform:translateY(10px) scale(1.1)}
+  70%{transform:translateY(-5px) scale(0.95)}
+  100%{transform:translateY(0) scale(1)}
+}
+
+/* Result review sequential animation */
+.rd-item{
+  opacity:0;transform:translateX(-20px);
+}
+.rd-item.animate-in{
+  animation:rdSlideIn 0.3s ease forwards;
+}
+@keyframes rdSlideIn{
+  0%{opacity:0;transform:translateX(-20px)}
+  100%{opacity:1;transform:translateX(0)}
+}
+
+.back-btn{position:fixed;top:10px;left:10px;background:rgba(255,255,255,0.3);color:white;border:2px solid rgba(255,255,255,0.5);padding:6px 16px;border-radius:30px;font-family:inherit;font-size:0.9em;cursor:pointer;text-decoration:none;z-index:100;transition:all 0.3s;backdrop-filter:blur(5px)}
 .back-btn:hover{background:rgba(255,255,255,0.5)}
 
 h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px 0 5px;text-align:center}
@@ -65,6 +137,19 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
 .timer-ring .fg.danger{stroke:#ff4444}
 .timer-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:1.3em;font-weight:800;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}
 
+/* Timer ring glow */
+.timer-ring-wrap.glow-warn{
+  filter:drop-shadow(0 0 6px rgba(255,204,0,0.6));
+}
+.timer-ring-wrap.glow-danger{
+  filter:drop-shadow(0 0 10px rgba(255,68,68,0.7));
+  animation:timerDangerPulse 0.5s ease infinite;
+}
+@keyframes timerDangerPulse{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(255,68,68,0.5))}
+  50%{filter:drop-shadow(0 0 16px rgba(255,68,68,0.9))}
+}
+
 .info-row{display:flex;justify-content:space-between;width:100%;max-width:620px;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px}
 .score-display{color:white;font-size:1.05em;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.2)}
 .streak-display{color:#ffd700;font-size:1em;font-weight:700;min-width:80px;text-align:right}
@@ -81,13 +166,42 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
 
 /* Lifelines */
 .lifelines{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
-.ll-btn{background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);color:white;padding:8px 14px;border-radius:14px;font-family:inherit;font-size:0.85em;font-weight:700;cursor:pointer;transition:all 0.3s}
+.ll-btn{
+  background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);color:white;
+  padding:8px 14px;border-radius:14px;font-family:inherit;font-size:0.85em;font-weight:700;
+  cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;
+}
+.ll-btn::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle,rgba(255,255,255,0.15) 0%,transparent 60%);
+  animation:magicalGlow 2s ease infinite;
+  opacity:0;transition:opacity 0.3s;
+}
+.ll-btn:not(:disabled)::before{opacity:1}
+@keyframes magicalGlow{
+  0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}
+}
+.ll-btn:not(:disabled){
+  animation:lifelineAvailable 2s ease infinite;
+}
+@keyframes lifelineAvailable{
+  0%,100%{box-shadow:0 0 5px rgba(255,255,255,0.2)}
+  50%{box-shadow:0 0 15px rgba(255,215,0,0.4)}
+}
 .ll-btn:hover:not(:disabled){background:rgba(255,255,255,0.35);transform:scale(1.05)}
-.ll-btn:disabled{opacity:0.35;cursor:default}
+.ll-btn:disabled{opacity:0.35;cursor:default;animation:none}
+.ll-btn:disabled::before{opacity:0}
 .ll-btn .ll-icon{font-size:1.2em}
 
-/* Question card */
-.question-card{background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.3);border-radius:24px;padding:25px 20px;max-width:620px;width:100%;text-align:center}
+/* Question card — glass morphism */
+.question-card{
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:2px solid rgba(255,255,255,0.25);
+  border-radius:24px;padding:25px 20px;max-width:620px;width:100%;text-align:center;
+  box-shadow:0 8px 32px rgba(0,0,0,0.1);
+}
 
 @keyframes slideInLeft{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
 @keyframes slideInRight{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
@@ -95,7 +209,7 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
 .card-anim-left{animation:slideInLeft 0.4s ease}
 .card-anim-right{animation:slideInRight 0.4s ease}
 
-.q-number-badge{display:inline-block;background:rgba(255,255,255,0.25);color:white;padding:4px 14px;border-radius:20px;font-size:0.85em;font-weight:700;margin-bottom:8px}
+.q-number-badge{display:inline-block;background:rgba(255,255,255,0.25);backdrop-filter:blur(5px);color:white;padding:4px 14px;border-radius:20px;font-size:0.85em;font-weight:700;margin-bottom:8px}
 .q-emoji{font-size:2.8em;margin-bottom:8px}
 .q-text{font-size:1.3em;color:white;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.2);margin-bottom:8px;line-height:1.4}
 .q-hint{color:rgba(255,255,255,0.85);font-size:0.95em;font-weight:600;margin-bottom:12px;font-style:italic;display:none;animation:slideInUp 0.3s ease}
@@ -103,25 +217,71 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
 
 .answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-.answer-btn{background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);color:white;padding:14px 10px;border-radius:16px;font-family:inherit;font-size:1.05em;font-weight:600;cursor:pointer;transition:all 0.3s;text-shadow:1px 1px 3px rgba(0,0,0,0.2);position:relative;overflow:hidden}
-.answer-btn:hover:not(:disabled){background:rgba(255,255,255,0.35);transform:scale(1.03)}
+.answer-btn{
+  background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);color:white;
+  padding:14px 10px;border-radius:16px;font-family:inherit;font-size:1.05em;font-weight:600;
+  cursor:pointer;transition:all 0.15s cubic-bezier(0.4,0,0.2,1);
+  text-shadow:1px 1px 3px rgba(0,0,0,0.2);position:relative;overflow:hidden;
+  transform:translateY(0);
+  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+  backdrop-filter:blur(5px);
+}
+.answer-btn:hover:not(:disabled){background:rgba(255,255,255,0.35);transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,0.15)}
+.answer-btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 3px rgba(0,0,0,0.1)}
 .answer-btn .ans-emoji{margin-right:4px}
-.answer-btn.correct{background:rgba(76,217,100,0.5)!important;border-color:#4cd964!important;animation:correctPulse 0.5s ease}
+.answer-btn.correct{
+  background:rgba(76,217,100,0.5)!important;border-color:#4cd964!important;
+  animation:correctBounce 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 0 20px rgba(76,217,100,0.4)!important;
+}
+@keyframes correctBounce{
+  0%{transform:translateY(2px) scale(1)}
+  40%{transform:translateY(-8px) scale(1.08)}
+  70%{transform:translateY(2px) scale(0.98)}
+  100%{transform:translateY(0) scale(1)}
+}
 .answer-btn.wrong{background:rgba(255,59,48,0.5)!important;border-color:#ff3b30!important;animation:shake 0.5s ease}
-.answer-btn.highlight-correct{background:rgba(76,217,100,0.35)!important;border-color:#4cd964!important}
-.answer-btn.hidden-5050{opacity:0;pointer-events:none;transform:scale(0.8)}
+.answer-btn.highlight-correct{
+  background:rgba(76,217,100,0.35)!important;border-color:#4cd964!important;
+  box-shadow:0 0 15px rgba(255,215,0,0.4)!important;
+  animation:goldenHighlight 0.8s ease infinite;
+}
+@keyframes goldenHighlight{
+  0%,100%{box-shadow:0 0 10px rgba(255,215,0,0.3)}
+  50%{box-shadow:0 0 25px rgba(255,215,0,0.6)}
+}
+.answer-btn.hidden-5050{
+  opacity:0;pointer-events:none;
+  transform:scale(0.3);
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
 .answer-btn:disabled{cursor:default}
 
-@keyframes correctPulse{50%{transform:scale(1.08)}}
 @keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-5px)}}
 
-/* Fun fact */
-.funfact-bar{background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.25);border-radius:16px;padding:12px 16px;margin-top:14px;color:white;font-size:0.95em;font-weight:600;line-height:1.4;display:none;animation:slideInUp 0.4s ease}
+/* Fun fact — glass morphism */
+.funfact-bar{
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:2px solid rgba(255,255,255,0.2);border-radius:16px;padding:12px 16px;
+  margin-top:14px;color:white;font-size:0.95em;font-weight:600;line-height:1.4;
+  display:none;animation:slideInUp 0.4s ease;
+  box-shadow:0 4px 16px rgba(0,0,0,0.08);
+}
 .funfact-bar.show{display:block}
 .funfact-bar .ff-label{color:#ffd700;font-weight:800;margin-right:5px}
 
 /* ========== RESULT SCREEN ========== */
-.result-card{background:rgba(255,255,255,0.95);border-radius:28px;padding:30px 20px;width:100%;text-align:center;animation:popIn 0.5s ease;max-height:85vh;overflow-y:auto}
+.result-card{
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:2px solid rgba(255,255,255,0.5);
+  border-radius:28px;padding:30px 20px;width:100%;text-align:center;
+  animation:popIn 0.5s ease;max-height:85vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,0.15);
+}
 @keyframes popIn{0%{transform:scale(0)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 
 .result-grade{font-size:4em;font-weight:800;margin:5px 0}
@@ -157,6 +317,16 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
 .streak-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(145deg,#ffd700,#ff6fd8);color:white;padding:15px 35px;border-radius:20px;font-size:1.5em;font-weight:800;z-index:400;pointer-events:none;animation:streakBannerAnim 1.2s ease forwards;box-shadow:0 10px 30px rgba(255,111,216,0.5)}
 @keyframes streakBannerAnim{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}40%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-60%) scale(0.8)}}
 
+/* Glass morphism panels */
+.info-row,.lifelines,.progress-path{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:16px;
+  padding:8px 12px;
+}
+
 @media(max-width:500px){
   .answers{grid-template-columns:1fr}
   .q-text{font-size:1.15em}
@@ -168,6 +338,9 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
 </style>
 </head>
 <body>
+
+<!-- Screen flash overlay -->
+<div class="screen-flash" id="screenFlash"></div>
 
 <a href="index.html" class="back-btn">Retour</a>
 <h1>Quiz K-Pop</h1>
@@ -199,7 +372,7 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
 <!-- ========== GAME SCREEN ========== -->
 <div class="screen" id="gameScreen">
   <div class="game-header">
-    <div class="timer-ring-wrap">
+    <div class="timer-ring-wrap" id="timerRingWrap">
       <svg class="timer-ring" viewBox="0 0 80 80" width="70" height="70">
         <circle class="bg" cx="40" cy="40" r="34"/>
         <circle class="fg" id="timerCircle" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="0"/>
@@ -235,6 +408,7 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
     <div class="result-title" id="resultTitle"></div>
     <div class="result-score-big" id="resultScoreBig"></div>
     <div class="result-stats" id="resultStats"></div>
+    <div id="recordBadge"></div>
     <div class="result-details" id="resultDetails"></div>
     <button class="play-btn" onclick="goToMenu()">Rejouer</button>
   </div>
@@ -328,6 +502,42 @@ let audioCtx = null;
 function getAudioCtx(){
   if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   return audioCtx;
+}
+
+// ============================================================
+//  SCREEN EFFECTS
+// ============================================================
+function showScreenFlash(type) {
+  const el = document.getElementById('screenFlash');
+  el.className = 'screen-flash';
+  void el.offsetWidth;
+  el.classList.add(type);
+  setTimeout(() => { el.className = 'screen-flash'; }, 700);
+}
+
+function spawnFireTrailOnStreak() {
+  const el = document.getElementById('streakDisplay');
+  const rect = el.getBoundingClientRect();
+  const fires = ['🔥','✨','💫'];
+  for (let i = 0; i < 4; i++) {
+    setTimeout(() => {
+      const f = document.createElement('div');
+      f.className = 'fire-trail-particle';
+      f.textContent = fires[i % fires.length];
+      f.style.left = (rect.left + Math.random() * rect.width) + 'px';
+      f.style.top = (rect.top) + 'px';
+      document.body.appendChild(f);
+      setTimeout(() => f.remove(), 800);
+    }, i * 60);
+  }
+}
+
+function showRecordBanner() {
+  const b = document.createElement('div');
+  b.className = 'record-banner';
+  b.textContent = 'Nouveau Record !';
+  document.body.appendChild(b);
+  setTimeout(() => b.remove(), 2500);
 }
 
 // ============================================================
@@ -451,8 +661,18 @@ function updateTimerVisual(){
   const circle=document.getElementById('timerCircle');
   circle.style.strokeDashoffset=offset;
   circle.classList.remove('warn','danger');
-  if(timeLeft<=5)circle.classList.add('danger');
-  else if(timeLeft<=10)circle.classList.add('warn');
+
+  const wrap=document.getElementById('timerRingWrap');
+  wrap.classList.remove('glow-warn','glow-danger');
+
+  if(timeLeft<=5){
+    circle.classList.add('danger');
+    wrap.classList.add('glow-danger');
+  } else if(timeLeft<=10){
+    circle.classList.add('warn');
+    wrap.classList.add('glow-warn');
+  }
+
   document.getElementById('timerText').textContent=Math.ceil(timeLeft);
 }
 
@@ -469,6 +689,7 @@ function timeUp(){
   updateStone(currentQ,'wrong');
   showFunFact(q);
   playWrongSound();
+  showScreenFlash('wrong-vignette');
   setTimeout(()=>nextQuestion(),2200);
 }
 
@@ -486,6 +707,10 @@ function showQuestion(){
   document.getElementById('qHint').classList.remove('show');
   document.getElementById('qHint').textContent='';
   document.getElementById('funFact').classList.remove('show');
+
+  // Reset timer ring glow
+  const wrap=document.getElementById('timerRingWrap');
+  wrap.classList.remove('glow-warn','glow-danger');
 
   // Animate card
   const card=document.getElementById('questionCard');
@@ -522,6 +747,9 @@ function checkAnswer(index,btn){
 
   if(index===q.correct){
     btn.classList.add('correct');
+    // Green screen glow
+    showScreenFlash('correct-glow');
+
     // Calculate points: 10 base + speed bonus
     let speedBonus=0;
     if(timeLeft>=15)speedBonus=10;
@@ -533,6 +761,9 @@ function checkAnswer(index,btn){
     streak++;
     if(streak>bestStreak)bestStreak=streak;
     correctCount++;
+
+    // Fire trail on streak counter
+    if(streak>=2) spawnFireTrailOnStreak();
 
     // Streak bonus
     if(streak>=3 && streak%3===0){
@@ -552,6 +783,9 @@ function checkAnswer(index,btn){
   } else {
     btn.classList.add('wrong');
     btns[q.correct].classList.add('highlight-correct');
+    // Red vignette flash
+    showScreenFlash('wrong-vignette');
+
     streak=0;
     updateStreakDisplay();
     updateStone(currentQ,'wrong');
@@ -581,12 +815,16 @@ function useLifeline(type){
     document.getElementById('ll5050').disabled=true;
     const q=questions[currentQ];
     const btns=[...document.querySelectorAll('.answer-btn')];
-    // Pick 2 wrong answers to hide
+    // Pick 2 wrong answers to hide with vanishing animation
     let wrongIndices=[];
     btns.forEach((b,i)=>{if(i!==q.correct)wrongIndices.push(i)});
     shuffle(wrongIndices);
     const toHide=wrongIndices.slice(0,2);
-    toHide.forEach(i=>btns[i].classList.add('hidden-5050'));
+    toHide.forEach((idx,i)=>{
+      setTimeout(()=>{
+        btns[idx].classList.add('hidden-5050');
+      }, i * 150);
+    });
     playSound(600,0.08);setTimeout(()=>playSound(800,0.08),100);
   }
   else if(type==='skip'){
@@ -689,13 +927,16 @@ function showResult(){
   else if(pct>=40){grade='C';gradeClass='grade-C';title='Pas mal !';msg=`Continue ${currentPlayer}, tu progresses !`}
   else{grade='D';gradeClass='grade-try';title='Continue !';msg=`${currentPlayer}, tu vas devenir experte !`}
 
-  document.getElementById('resultGrade').textContent=grade;
-  document.getElementById('resultGrade').className='result-grade '+gradeClass;
+  // Grade drops in with bounce
+  const gradeEl=document.getElementById('resultGrade');
+  gradeEl.textContent=grade;
+  gradeEl.className='result-grade '+gradeClass+' grade-drop';
+
   document.getElementById('resultTitle').textContent=title;
   document.getElementById('resultScoreBig').textContent=score+' pts';
   document.getElementById('resultStats').innerHTML=`<span>${correctCount}</span>/${questions.length} bonnes reponses — Meilleur streak : <span>🔥x${bestStreak}</span>`;
 
-  // Detailed results
+  // Detailed results with sequential animation
   const det=document.getElementById('resultDetails');
   det.innerHTML='';
   results.forEach((r,i)=>{
@@ -705,13 +946,28 @@ function showResult(){
     if(r.wasCorrect) ansText=`Ta reponse : ${r.userAnswer} (+${r.points} pts)`;
     else if(r.skipped) ansText=`Passee — Reponse : ${r.correctAnswer}`;
     else ansText=`Ta reponse : ${r.userAnswer} — Bonne reponse : ${r.correctAnswer}`;
-    det.innerHTML+=`<div class="rd-item ${cls}"><div class="rd-icon">${icon}</div><div class="rd-content"><div class="rd-q">${i+1}. ${r.q}</div><div class="rd-a">${ansText}</div></div></div>`;
+    const item=document.createElement('div');
+    item.className=`rd-item ${cls}`;
+    item.innerHTML=`<div class="rd-icon">${icon}</div><div class="rd-content"><div class="rd-q">${i+1}. ${r.q}</div><div class="rd-a">${ansText}</div></div>`;
+    det.appendChild(item);
+    // Animate in sequence
+    setTimeout(()=>item.classList.add('animate-in'), 300 + i * 100);
   });
 
-  // Save high score
+  // Save high score & check record
   const key='kpop_hs_quiz_'+currentPlayer;
   const prev=parseInt(localStorage.getItem(key))||0;
-  if(score>prev)localStorage.setItem(key,score);
+  const isNewRecord = score > prev;
+  if(isNewRecord) localStorage.setItem(key,score);
+
+  // Record badge
+  const recordBadge=document.getElementById('recordBadge');
+  if(isNewRecord && prev > 0){
+    recordBadge.innerHTML='<div style="display:inline-block;background:linear-gradient(135deg,#ffd700,#ff6fd8);color:white;padding:8px 20px;border-radius:20px;font-weight:800;font-size:1.1em;margin:10px 0;animation:pulseGlow 1.5s ease infinite;">Nouveau Record !</div>';
+    setTimeout(()=>showRecordBanner(), 600);
+  } else {
+    recordBadge.innerHTML='';
+  }
 
   showScreen('resultScreen');
 

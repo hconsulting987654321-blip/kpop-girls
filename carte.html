@@ -16,6 +16,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  overflow-x: hidden;
 }
 
 .back-btn {
@@ -35,14 +36,38 @@ h1 {
 
 .subtitle {
   color: rgba(255,255,255,0.5); font-size: 0.85em;
-  margin-bottom: 18px; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 10px; letter-spacing: 2px; text-transform: uppercase;
 }
 
-/* Card scene (3D flip) */
+/* Rarity counter + progress */
+.rarity-counter {
+  color: rgba(255,255,255,0.7); font-size: 0.8em;
+  margin-bottom: 6px; text-align: center;
+  background: rgba(255,255,255,0.08);
+  padding: 6px 18px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.rarity-counter span { margin: 0 6px; }
+.rarity-counter .rc-legendary { color: #ffd700; font-weight: 700; }
+.rarity-counter .rc-epic { color: #d8b4fe; font-weight: 700; }
+.rarity-counter .rc-rare { color: #7dd3fc; font-weight: 700; }
+
+.progress-msg {
+  color: rgba(255,255,255,0.5); font-size: 0.75em;
+  margin-bottom: 4px; letter-spacing: 1px;
+}
+
+.total-counter {
+  color: rgba(255,255,255,0.4); font-size: 0.7em;
+  margin-bottom: 14px;
+}
+
+/* Card scene (3D flip + tilt) */
 .card-scene {
   width: 360px; height: 520px;
   perspective: 1200px;
   margin-bottom: 20px;
+  position: relative;
 }
 
 .card-flipper {
@@ -84,6 +109,30 @@ h1 {
 
 .card-front {
   position: relative;
+}
+
+/* Carte parfaite border */
+.carte-parfaite .card-front {
+  border: 3px solid #ffd700;
+  border-radius: 24px;
+}
+.carte-parfaite-badge {
+  display: none;
+  position: absolute; bottom: 8px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: linear-gradient(90deg, #ffd700, #ffaa00, #ffd700);
+  color: #1a1a2e;
+  font-size: 0.65em; font-weight: 700;
+  padding: 3px 14px; border-radius: 10px;
+  letter-spacing: 2px; text-transform: uppercase;
+  animation: parfaitePulse 1.5s ease-in-out infinite;
+}
+.carte-parfaite .carte-parfaite-badge { display: block; }
+
+@keyframes parfaitePulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.5); }
+  50% { box-shadow: 0 0 20px rgba(255,215,0,0.9); }
 }
 
 @keyframes cardFloat {
@@ -148,11 +197,32 @@ h1 {
   box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 50px rgba(255,215,0,0.6), 0 0 80px rgba(255,215,0,0.2);
 }
 
+/* Epic purple aura pulse */
+@keyframes epicAura {
+  0%, 100% { box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 35px rgba(180,0,255,0.5); }
+  50% { box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 55px rgba(180,0,255,0.7), 0 0 80px rgba(180,0,255,0.25); }
+}
+.rarity-epic .card-front { animation: epicAura 2.5s ease-in-out infinite; }
+
 @keyframes legendaryPulse {
   0%, 100% { box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 50px rgba(255,215,0,0.6); }
   50% { box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 70px rgba(255,215,0,0.8), 0 0 100px rgba(255,215,0,0.3); }
 }
 .rarity-legendary .card-front { animation: legendaryPulse 2s ease-in-out infinite; }
+
+/* Legendary crown */
+.legendary-crown {
+  display: none;
+  position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
+  z-index: 10; font-size: 1.6em;
+  animation: crownBob 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255,215,0,0.8));
+}
+.rarity-legendary .legendary-crown { display: block; }
+@keyframes crownBob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-5px); }
+}
 
 .rarity-badge {
   position: absolute; top: 12px; right: 12px; z-index: 5;
@@ -232,17 +302,126 @@ h1 {
 .stat-bar {
   height: 4px; background: rgba(255,255,255,0.2);
   border-radius: 4px; margin-top: 4px; overflow: hidden;
+  position: relative;
 }
 .stat-bar-fill {
   height: 100%; border-radius: 4px;
   background: linear-gradient(90deg, #ffd700, #ff6fd8);
   transition: width 0.8s ease;
+  position: relative;
+}
+/* Stat bar glow effect */
+.stat-bar-fill::after {
+  content: '';
+  position: absolute; top: -2px; right: 0;
+  width: 12px; height: 8px;
+  background: radial-gradient(circle, rgba(255,255,255,0.8), transparent);
+  border-radius: 50%;
+  animation: statGlow 1.5s ease-in-out infinite;
+}
+@keyframes statGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Stat bar animated fill on load */
+@keyframes statFillGlow {
+  0% { box-shadow: 0 0 4px rgba(255,215,0,0.3); }
+  50% { box-shadow: 0 0 10px rgba(255,111,216,0.6); }
+  100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); }
+}
+.stat-bar-fill.animating {
+  animation: statFillGlow 0.8s ease-in-out;
 }
 
 .card-id {
   font-size: 0.65em; opacity: 0.4;
   margin-top: 6px; font-family: monospace;
 }
+
+/* Sparkle particles for rare */
+.sparkle-container {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 6; overflow: hidden;
+  border-radius: 24px;
+}
+.sparkle {
+  position: absolute;
+  width: 6px; height: 6px;
+  background: radial-gradient(circle, rgba(255,255,255,0.9), transparent);
+  border-radius: 50%;
+  animation: sparkleFloat 3s ease-in-out infinite;
+}
+@keyframes sparkleFloat {
+  0%, 100% { transform: translateY(0) scale(0.5); opacity: 0.3; }
+  50% { transform: translateY(-15px) scale(1.2); opacity: 1; }
+}
+
+/* Golden particle rain for legendary */
+.golden-rain {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 6; overflow: hidden;
+  border-radius: 24px;
+  display: none;
+}
+.rarity-legendary .golden-rain { display: block; }
+
+.gold-particle {
+  position: absolute; top: -10px;
+  width: 4px; height: 4px;
+  background: #ffd700;
+  border-radius: 50%;
+  animation: goldFall linear infinite;
+  box-shadow: 0 0 4px rgba(255,215,0,0.6);
+}
+@keyframes goldFall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(530px) rotate(360deg); opacity: 0; }
+}
+
+/* Confetti */
+.confetti-container {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 1000;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute; top: -20px;
+  width: 10px; height: 10px;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Curtain reveal for Carte du Jour */
+.curtain-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 900; pointer-events: none; display: flex;
+}
+.curtain-left, .curtain-right {
+  width: 50%; height: 100%;
+  background: linear-gradient(180deg, #1a1a2e, #302b63);
+  transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.curtain-left { transform: translateX(-100%); }
+.curtain-right { transform: translateX(100%); }
+.curtain-overlay.closing .curtain-left { transform: translateX(0); }
+.curtain-overlay.closing .curtain-right { transform: translateX(0); }
+.curtain-overlay.opening .curtain-left { transform: translateX(-100%); }
+.curtain-overlay.opening .curtain-right { transform: translateX(100%); }
+.curtain-text {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffd700; font-size: 2em; font-weight: 700;
+  text-shadow: 0 0 30px rgba(255,215,0,0.5);
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 2;
+  letter-spacing: 4px;
+}
+.curtain-overlay.closing .curtain-text { opacity: 1; }
 
 /* Controls */
 .controls {
@@ -340,11 +519,14 @@ h1 {
 
 .mini-card {
   width: 110px; border-radius: 14px; overflow: hidden;
-  cursor: pointer; transition: transform 0.2s;
+  cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
-.mini-card:hover { transform: scale(1.08); }
+.mini-card:hover {
+  transform: scale(1.08) translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 20px rgba(255,111,216,0.3);
+}
 
 .mini-card-inner {
   padding: 10px; text-align: center; color: white;
@@ -395,7 +577,19 @@ h1 {
 <h1>Ma Carte K-Pop</h1>
 <div class="subtitle">Ecole Saint-Esprit</div>
 
-<!-- Card with 3D flip -->
+<!-- Rarity counter + progress -->
+<div class="rarity-counter" id="rarityCounter"></div>
+<div class="progress-msg" id="progressMsg"></div>
+<div class="total-counter" id="totalCounter"></div>
+
+<!-- Curtain reveal -->
+<div class="curtain-overlay" id="curtainOverlay">
+  <div class="curtain-left"></div>
+  <div class="curtain-right"></div>
+  <div class="curtain-text">CARTE DU JOUR</div>
+</div>
+
+<!-- Card with 3D flip + tilt -->
 <div class="card-scene rarity-normal" id="cardScene">
   <div class="card-flipper" id="cardFlipper">
     <!-- Back -->
@@ -408,8 +602,12 @@ h1 {
     <!-- Front -->
     <div class="card-face card-front card-entrance" id="cardFront">
       <div class="card-bg style-0" id="cardBg"></div>
-      <div class="card-holo"></div>
+      <div class="card-holo" id="cardHolo"></div>
+      <div class="sparkle-container" id="sparkleContainer"></div>
+      <div class="golden-rain" id="goldenRain"></div>
+      <div class="legendary-crown" id="legendaryCrown">&#x1F451;</div>
       <div class="rarity-badge normal" id="rarityBadge">Normal</div>
+      <div class="carte-parfaite-badge" id="parfaiteBadge">CARTE PARFAITE!</div>
       <div class="card-content">
         <div class="card-header">
           <span class="card-label">K-POP STAR CARD</span>
@@ -490,9 +688,344 @@ h1 {
   <div class="collection-grid" id="collectionGrid"></div>
 </div>
 
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+// ==========================================
+// SOUND ENGINE (Web Audio API)
+// ==========================================
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// UI click sound — short soft pop
+function playClick() {
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(800, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.06);
+  gain.gain.setValueAtTime(0.12, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 0.08);
+}
+
+// Card flip whoosh — filtered noise sweep 0.2s
+function playFlipSound() {
+  const ctx = getAudioCtx();
+  const bufferSize = ctx.sampleRate * 0.25;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.setValueAtTime(300, ctx.currentTime);
+  filter.frequency.exponentialRampToValueAtTime(3000, ctx.currentTime + 0.1);
+  filter.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.2);
+  filter.Q.value = 2;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.15, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+  source.start(ctx.currentTime);
+  source.stop(ctx.currentTime + 0.25);
+}
+
+// Stat roll — rapid ascending ticking pops
+function playStatRoll(duration) {
+  const ctx = getAudioCtx();
+  const steps = 12;
+  const interval = duration / steps;
+  for (let i = 0; i < steps; i++) {
+    const t = ctx.currentTime + i * interval;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400 + i * 80, t);
+    gain.gain.setValueAtTime(0.08, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.05);
+  }
+}
+
+// Save stamp — low thump + sparkle
+function playSaveSound() {
+  const ctx = getAudioCtx();
+  // Thump
+  const osc1 = ctx.createOscillator();
+  const gain1 = ctx.createGain();
+  osc1.type = 'sine';
+  osc1.frequency.setValueAtTime(120, ctx.currentTime);
+  osc1.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.15);
+  gain1.gain.setValueAtTime(0.3, ctx.currentTime);
+  gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+  osc1.connect(gain1);
+  gain1.connect(ctx.destination);
+  osc1.start(ctx.currentTime);
+  osc1.stop(ctx.currentTime + 0.2);
+  // Sparkle — high shimmer
+  const osc2 = ctx.createOscillator();
+  const gain2 = ctx.createGain();
+  osc2.type = 'triangle';
+  osc2.frequency.setValueAtTime(2000, ctx.currentTime + 0.1);
+  osc2.frequency.exponentialRampToValueAtTime(4000, ctx.currentTime + 0.3);
+  gain2.gain.setValueAtTime(0.001, ctx.currentTime);
+  gain2.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.15);
+  gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+  osc2.connect(gain2);
+  gain2.connect(ctx.destination);
+  osc2.start(ctx.currentTime + 0.1);
+  osc2.stop(ctx.currentTime + 0.4);
+}
+
+// Rare card reveal — epic major chord with reverb
+function playRareReveal() {
+  const ctx = getAudioCtx();
+  const convolver = ctx.createConvolver();
+  const reverbLen = ctx.sampleRate * 1.5;
+  const reverbBuf = ctx.createBuffer(2, reverbLen, ctx.sampleRate);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = reverbBuf.getChannelData(ch);
+    for (let i = 0; i < reverbLen; i++) {
+      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLen, 2.5);
+    }
+  }
+  convolver.buffer = reverbBuf;
+  const freqs = [523.25, 659.25, 783.99]; // C5 E5 G5 major chord
+  freqs.forEach((f, idx) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = f;
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+    osc.connect(gain);
+    gain.connect(convolver);
+    convolver.connect(ctx.destination);
+    // Also dry signal
+    const dryGain = ctx.createGain();
+    dryGain.gain.value = 0.5;
+    gain.connect(dryGain);
+    dryGain.connect(ctx.destination);
+    osc.start(ctx.currentTime + idx * 0.03);
+    osc.stop(ctx.currentTime + 1.5);
+  });
+}
+
+// Legendary fanfare — dramatic ascending
+function playLegendaryFanfare() {
+  const ctx = getAudioCtx();
+  const notes = [261.63, 329.63, 392, 523.25, 659.25, 783.99]; // C4-G5 ascend
+  notes.forEach((f, i) => {
+    const t = ctx.currentTime + i * 0.12;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = i < 3 ? 'sawtooth' : 'triangle';
+    osc.frequency.value = f;
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.linearRampToValueAtTime(0.08 + i * 0.015, t + 0.05);
+    gain.gain.setValueAtTime(0.08 + i * 0.015, t + 0.15);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + (i === notes.length - 1 ? 1.5 : 0.3));
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 1.5);
+  });
+  // Final chord ring
+  setTimeout(() => {
+    const chord = [523.25, 659.25, 783.99, 1046.5];
+    chord.forEach(f => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 2);
+    });
+  }, notes.length * 120);
+}
+
+// ==========================================
+// VISUAL EFFECTS
+// ==========================================
+
+// Sparkle particles for rare cards
+function updateSparkles() {
+  const container = document.getElementById('sparkleContainer');
+  container.innerHTML = '';
+  const rarity = rarities[currentRarity].key;
+  if (rarity === 'normal') return;
+
+  const count = rarity === 'rare' ? 5 : rarity === 'epic' ? 7 : 10;
+  const colors = rarity === 'rare' ? ['#7dd3fc','#38bdf8','#fff']
+    : rarity === 'epic' ? ['#d8b4fe','#a855f7','#fff']
+    : ['#ffd700','#ffaa00','#fff','#ffe066'];
+
+  for (let i = 0; i < count; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.left = (10 + Math.random() * 80) + '%';
+    s.style.top = (10 + Math.random() * 80) + '%';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    s.style.animationDuration = (2 + Math.random() * 2) + 's';
+    s.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]}, transparent)`;
+    s.style.width = (4 + Math.random() * 5) + 'px';
+    s.style.height = s.style.width;
+    container.appendChild(s);
+  }
+}
+
+// Golden particle rain for legendary
+function updateGoldenRain() {
+  const container = document.getElementById('goldenRain');
+  container.innerHTML = '';
+  if (rarities[currentRarity].key !== 'legendary') return;
+  for (let i = 0; i < 15; i++) {
+    const p = document.createElement('div');
+    p.className = 'gold-particle';
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.animationDuration = (2 + Math.random() * 3) + 's';
+    p.style.animationDelay = (Math.random() * 4) + 's';
+    p.style.width = (2 + Math.random() * 4) + 'px';
+    p.style.height = p.style.width;
+    container.appendChild(p);
+  }
+}
+
+// Confetti burst
+function launchConfetti(count) {
+  const container = document.getElementById('confettiContainer');
+  const colors = ['#ff6fd8','#ffd700','#cd77ff','#4ecdc4','#ff6b6b','#7dd3fc','#43e97b','#a18cd1'];
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (30 + Math.random() * 40) + '%';
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (6 + Math.random() * 8) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    piece.style.animationDelay = (Math.random() * 0.5) + 's';
+    piece.style.transform = `translateX(${(Math.random() - 0.5) * 300}px)`;
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.innerHTML = '', 4000);
+}
+
+// Card 3D tilt on mouse move
+function initCardTilt() {
+  const scene = document.getElementById('cardScene');
+  const front = document.getElementById('cardFront');
+  const holo = document.getElementById('cardHolo');
+
+  scene.addEventListener('mousemove', (e) => {
+    const rect = scene.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    const rotateX = (y - 0.5) * -16; // max +-8deg
+    const rotateY = (x - 0.5) * 16;
+
+    const flipper = document.getElementById('cardFlipper');
+    if (!flipper.classList.contains('flipped')) {
+      flipper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      flipper.style.transition = 'transform 0.1s ease-out';
+    }
+    // Holographic shift
+    if (holo) {
+      holo.style.backgroundPosition = `${x * 100}% ${y * 100}%`;
+    }
+  });
+
+  scene.addEventListener('mouseleave', () => {
+    const flipper = document.getElementById('cardFlipper');
+    if (!flipper.classList.contains('flipped')) {
+      flipper.style.transform = '';
+      flipper.style.transition = 'transform 0.5s ease-out';
+    }
+  });
+}
+
+// Animated stat bar fill with glow
+function animateStatBars() {
+  const bars = document.querySelectorAll('.stat-bar-fill');
+  bars.forEach(bar => {
+    bar.classList.add('animating');
+    setTimeout(() => bar.classList.remove('animating'), 800);
+  });
+}
+
+// Check carte parfaite (all stats 95+)
+function checkCarteParfaite() {
+  const scene = document.getElementById('cardScene');
+  if (stats.dance >= 95 && stats.style >= 95 && stats.sing >= 95 && stats.charisma >= 95) {
+    scene.classList.add('carte-parfaite');
+  } else {
+    scene.classList.remove('carte-parfaite');
+  }
+}
+
+// ==========================================
+// BANKABLE: Counters & Progress
+// ==========================================
+function updateRarityCounter() {
+  const collection = JSON.parse(localStorage.getItem('kpop_card_collection_' + playerName) || '[]');
+  let counts = { normal: 0, rare: 0, epic: 0, legendary: 0 };
+  collection.forEach(c => {
+    const r = rarities[c.data.rarity || 0].key;
+    counts[r]++;
+  });
+  const total = collection.length;
+
+  document.getElementById('rarityCounter').innerHTML =
+    '<span class="rc-legendary">Legendaires: ' + counts.legendary + '/8</span>' +
+    '<span class="rc-epic">Epiques: ' + counts.epic + '/8</span>' +
+    '<span class="rc-rare">Rares: ' + counts.rare + '/8</span>';
+
+  // Progress message
+  const pct = Math.round((total / 8) * 100);
+  const msgEl = document.getElementById('progressMsg');
+  if (total >= 8) {
+    msgEl.textContent = 'Collection COMPLETE ! Tu es une vraie idol !';
+  } else if (total >= 5) {
+    msgEl.textContent = 'Encore ' + (8 - total) + ' carte(s) ! Complete la collection !';
+  } else if (total > 0) {
+    msgEl.textContent = 'Collection : ' + total + '/8 — Continue !';
+  } else {
+    msgEl.textContent = 'Cree ta premiere carte !';
+  }
+
+  // Total cards created (lifetime)
+  let totalCreated = parseInt(localStorage.getItem('kpop_total_cards_' + playerName) || '0');
+  document.getElementById('totalCounter').textContent = 'Total cartes creees : ' + totalCreated;
+}
+
+// ==========================================
+// MAIN LOGIC
+// ==========================================
 const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
 
 const avatars = [
@@ -537,6 +1070,13 @@ let stats = { dance: 95, style: 88, sing: 92, charisma: 97 };
 document.getElementById('cardName').textContent = playerName;
 document.getElementById('cardId').textContent = 'ID #' + String(Math.floor(Math.random()*9999)+1).padStart(4,'0') + ' \u2014 K-POP STAR ACADEMY';
 
+// Add click sounds to ALL buttons
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.act-btn, .tag-btn, .emoji-btn, .style-btn, .back-btn, .mc-delete')) {
+    playClick();
+  }
+});
+
 // Render rarity options
 function renderRarityOptions() {
   const el = document.getElementById('rarityOptions');
@@ -557,9 +1097,13 @@ function renderRarityOptions() {
 function applyRarity() {
   const scene = document.getElementById('cardScene');
   scene.className = 'card-scene rarity-' + rarities[currentRarity].key;
+  // Preserve carte-parfaite if applicable
+  checkCarteParfaite();
   const badge = document.getElementById('rarityBadge');
   badge.className = 'rarity-badge ' + rarities[currentRarity].cls;
   badge.textContent = rarities[currentRarity].label;
+  updateSparkles();
+  updateGoldenRain();
 }
 
 // Render style options
@@ -630,14 +1174,36 @@ function renderTalentOptions() {
 }
 
 function randomStats() {
-  // Stats always high: 80-100
-  stats = {
+  playStatRoll(0.6);
+  playFlipSound();
+
+  // Animate stat values counting up
+  const targets = {
     dance: 80 + Math.floor(Math.random() * 21),
     style: 80 + Math.floor(Math.random() * 21),
     sing: 80 + Math.floor(Math.random() * 21),
     charisma: 80 + Math.floor(Math.random() * 21),
   };
-  applyStats();
+
+  // Quick counting animation
+  let frame = 0;
+  const totalFrames = 15;
+  const interval = setInterval(() => {
+    frame++;
+    if (frame >= totalFrames) {
+      clearInterval(interval);
+      stats = targets;
+      applyStats();
+      animateStatBars();
+      checkCarteParfaite();
+      return;
+    }
+    // Show random numbers while rolling
+    document.getElementById('statDance').textContent = 80 + Math.floor(Math.random() * 21);
+    document.getElementById('statStyle').textContent = 80 + Math.floor(Math.random() * 21);
+    document.getElementById('statSing').textContent = 80 + Math.floor(Math.random() * 21);
+    document.getElementById('statCharisma').textContent = 80 + Math.floor(Math.random() * 21);
+  }, 40);
 
   // Flip card for effect
   const flipper = document.getElementById('cardFlipper');
@@ -654,32 +1220,38 @@ function applyStats() {
   document.getElementById('barStyle').style.width = stats.style + '%';
   document.getElementById('barSing').style.width = stats.sing + '%';
   document.getElementById('barCharisma').style.width = stats.charisma + '%';
+  checkCarteParfaite();
 }
 
 function carteDuJour() {
-  // Full random card with flip
-  currentStyle = Math.floor(Math.random() * 8);
-  currentAvatar = Math.floor(Math.random() * avatars.length);
-  currentTitle = Math.floor(Math.random() * titles.length);
-  currentTalent = Math.floor(Math.random() * talents.length);
-  // Weighted rarity: 50% normal, 25% rare, 15% epic, 10% legendary
-  const roll = Math.random();
-  if (roll < 0.10) currentRarity = 3;
-  else if (roll < 0.25) currentRarity = 2;
-  else if (roll < 0.50) currentRarity = 1;
-  else currentRarity = 0;
+  // Curtain close
+  const curtain = document.getElementById('curtainOverlay');
+  curtain.classList.remove('opening');
+  curtain.classList.add('closing');
+  curtain.style.pointerEvents = 'all';
 
-  stats = {
-    dance: 80 + Math.floor(Math.random() * 21),
-    style: 80 + Math.floor(Math.random() * 21),
-    sing: 80 + Math.floor(Math.random() * 21),
-    charisma: 80 + Math.floor(Math.random() * 21),
-  };
+  playFlipSound();
 
-  // Flip animation
-  const flipper = document.getElementById('cardFlipper');
-  flipper.classList.add('flipped');
   setTimeout(() => {
+    // Full random card
+    currentStyle = Math.floor(Math.random() * 8);
+    currentAvatar = Math.floor(Math.random() * avatars.length);
+    currentTitle = Math.floor(Math.random() * titles.length);
+    currentTalent = Math.floor(Math.random() * talents.length);
+    // Weighted rarity
+    const roll = Math.random();
+    if (roll < 0.10) currentRarity = 3;
+    else if (roll < 0.25) currentRarity = 2;
+    else if (roll < 0.50) currentRarity = 1;
+    else currentRarity = 0;
+
+    stats = {
+      dance: 80 + Math.floor(Math.random() * 21),
+      style: 80 + Math.floor(Math.random() * 21),
+      sing: 80 + Math.floor(Math.random() * 21),
+      charisma: 80 + Math.floor(Math.random() * 21),
+    };
+
     document.getElementById('cardBg').className = 'card-bg style-' + currentStyle;
     document.getElementById('cardAvatar').textContent = avatars[currentAvatar];
     document.getElementById('cardTitle').textContent = titles[currentTitle];
@@ -687,12 +1259,33 @@ function carteDuJour() {
     applyRarity();
     applyStats();
     renderAll();
-    flipper.classList.remove('flipped');
-    showToast('Carte du jour generee ! ' + rarities[currentRarity].label + ' !');
-  }, 800);
+
+    // Play rarity-appropriate sound
+    if (currentRarity === 3) {
+      playLegendaryFanfare();
+    } else if (currentRarity >= 1) {
+      playRareReveal();
+    }
+
+    // Curtain open
+    setTimeout(() => {
+      curtain.classList.remove('closing');
+      curtain.classList.add('opening');
+      curtain.style.pointerEvents = 'none';
+
+      animateStatBars();
+      showToast('Carte du jour : ' + rarities[currentRarity].label + ' !');
+
+      // Confetti for epic+ cards
+      if (currentRarity >= 2) {
+        launchConfetti(currentRarity === 3 ? 50 : 25);
+      }
+    }, 1200);
+  }, 1000);
 }
 
 function shareCard() {
+  playClick();
   const desc = [
     'Ma Carte K-Pop !',
     'Nom: ' + playerName,
@@ -712,6 +1305,8 @@ function shareCard() {
 }
 
 function saveCard() {
+  playSaveSound();
+
   const data = {
     style: currentStyle, avatar: currentAvatar,
     title: currentTitle, talent: currentTalent,
@@ -727,6 +1322,11 @@ function saveCard() {
   // Also save main card
   localStorage.setItem('kpop_carte_' + playerName, JSON.stringify(data));
 
+  // Increment total cards created
+  let totalCreated = parseInt(localStorage.getItem('kpop_total_cards_' + playerName) || '0');
+  totalCreated++;
+  localStorage.setItem('kpop_total_cards_' + playerName, String(totalCreated));
+
   // Trophies
   let trophies = JSON.parse(localStorage.getItem('kpop_trophies_' + playerName) || '[]');
   if (!trophies.includes('carte_created')) {
@@ -738,8 +1338,12 @@ function saveCard() {
   starCount += 30;
   localStorage.setItem('kpop_stars_' + playerName, String(starCount));
 
+  // Confetti on save!
+  launchConfetti(30);
+
   showToast('Carte sauvegardee ! +30 etoiles');
   renderCollection();
+  updateRarityCounter();
 }
 
 function renderCollection() {
@@ -756,10 +1360,6 @@ function renderCollection() {
     const mini = document.createElement('div');
     mini.className = 'mini-card';
 
-    const bgClasses = ['style-0','style-1','style-2','style-3','style-4','style-5','style-6','style-7'];
-    const bgStyle = bgClasses[card.data.style] || 'style-0';
-
-    // Get gradient colors from CSS
     const gradients = [
       '#ff6fd8, #cd77ff', '#ffd700, #ff6fd8', '#00c9ff, #92fe9d', '#fc466b, #3f5efb',
       '#0f0c29, #302b63', '#f7971e, #ffd200', '#ee9ca7, #ffdde1', '#43e97b, #38f9d7'
@@ -791,14 +1391,17 @@ function renderCollection() {
     del.textContent = '\u2716';
     del.onclick = (e) => {
       e.stopPropagation();
+      playClick();
       collection.splice(idx, 1);
       localStorage.setItem('kpop_card_collection_' + playerName, JSON.stringify(collection));
       renderCollection();
+      updateRarityCounter();
     };
     mini.appendChild(del);
 
     // Click to load
     mini.onclick = () => {
+      playFlipSound();
       currentStyle = card.data.style;
       currentAvatar = card.data.avatar;
       currentTitle = card.data.title;
@@ -813,6 +1416,7 @@ function renderCollection() {
       applyRarity();
       applyStats();
       renderAll();
+      animateStatBars();
       showToast('Carte chargee !');
 
       // Flip effect
@@ -864,6 +1468,12 @@ if (saved) {
 // Initial render
 renderAll();
 renderCollection();
+updateRarityCounter();
+updateSparkles();
+updateGoldenRain();
+checkCarteParfaite();
+initCardTilt();
+animateStatBars();
 </script>
 </body>
 </html>

@@ -41,6 +41,42 @@ body {
   100% { opacity: 0; transform: translateY(-60px) scale(0.5); }
 }
 
+@keyframes pulseGold {
+  0%, 100% { border-color: #ffd700; box-shadow: 0 0 8px rgba(255,215,0,0.3); }
+  50% { border-color: #ffec8b; box-shadow: 0 0 20px rgba(255,215,0,0.6); }
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.3) translateY(20px); }
+  50% { transform: scale(1.08) translateY(-4px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(120px) rotate(720deg) scale(0.3); }
+}
+
+@keyframes sparkBurst {
+  0% { opacity: 1; transform: translate(0,0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0); }
+}
+
+@keyframes cameraFlash {
+  0% { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px var(--glow-color, rgba(255,105,180,0.4)); }
+  50% { box-shadow: 0 0 40px var(--glow-color, rgba(255,105,180,0.6)), 0 0 60px var(--glow-color, rgba(255,105,180,0.2)); }
+}
+
+@keyframes idolFrameShine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 .back-btn {
   position: fixed; top: 12px; left: 12px;
   background: rgba(255,255,255,0.3);
@@ -59,8 +95,51 @@ h1 {
 .player-name-display {
   color: #ffd700; font-size: 1.1em; font-weight: 700;
   text-shadow: 0 0 10px rgba(255,215,0,0.5);
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
+
+/* Unlock counter */
+.unlock-counter {
+  color: rgba(255,255,255,0.85); font-size: 0.85em; font-weight: 600;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+.unlock-counter span { color: #ffd700; font-weight: 700; }
+
+/* Idol du Jour */
+.idol-du-jour {
+  background: linear-gradient(145deg, rgba(255,215,0,0.2), rgba(255,105,180,0.2));
+  border: 2px solid rgba(255,215,0,0.4);
+  border-radius: 16px; padding: 10px 20px;
+  margin-bottom: 12px; text-align: center;
+  max-width: 500px; width: 100%;
+  backdrop-filter: blur(8px);
+  position: relative; overflow: hidden;
+}
+.idol-du-jour::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.15), transparent);
+  background-size: 200% 100%;
+  animation: idolFrameShine 3s linear infinite;
+}
+.idol-du-jour-title {
+  color: #ffd700; font-weight: 700; font-size: 0.95em;
+  text-shadow: 0 0 8px rgba(255,215,0,0.4);
+  position: relative;
+}
+.idol-du-jour-suggestion {
+  color: white; font-size: 0.85em; margin-top: 4px;
+  position: relative;
+}
+.idol-du-jour-btn {
+  background: linear-gradient(145deg, #ffd700, #ffaa00);
+  color: #333; border: none; padding: 5px 14px; border-radius: 12px;
+  font-family: inherit; font-size: 0.8em; font-weight: 700;
+  cursor: pointer; margin-top: 6px; position: relative;
+  transition: transform 0.15s;
+}
+.idol-du-jour-btn:hover { transform: scale(1.06); }
 
 .tabs {
   display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center;
@@ -94,12 +173,21 @@ h1 {
   min-width: 280px; flex: 0 0 290px;
 }
 
+.avatar-preview-wrapper {
+  perspective: 600px;
+  margin: 0 auto 12px;
+  width: 220px; height: 300px;
+}
+
 .avatar-preview {
   width: 220px; height: 300px;
-  margin: 0 auto 12px; position: relative;
+  position: relative;
   border-radius: 20px; overflow: hidden;
   background: linear-gradient(180deg, #ffecd2, #fcb69f);
-  animation: bounce 3s ease-in-out infinite;
+  animation: bounce 3s ease-in-out infinite, glowPulse 2s ease-in-out infinite;
+  transition: transform 0.15s ease-out, box-shadow 0.3s;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .avatar-layer {
@@ -124,6 +212,13 @@ h1 {
   animation: sparkle 2s ease-in-out infinite;
 }
 
+/* Spark burst container */
+.spark-burst {
+  position: absolute; pointer-events: none;
+  font-size: 1em; z-index: 50;
+  animation: sparkBurst 0.6s ease-out forwards;
+}
+
 .idol-name-input {
   width: 80%; padding: 8px 16px; border-radius: 20px;
   border: 2px solid rgba(255,255,255,0.4);
@@ -140,6 +235,12 @@ h1 {
   font-size: 1.15em; font-weight: 700; display: inline-block;
   margin-bottom: 8px;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Star rating display */
+.star-rating {
+  margin-bottom: 6px; font-size: 1.1em;
+  text-shadow: 0 0 6px rgba(255,215,0,0.5);
 }
 
 .btn-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 5px 0; }
@@ -172,6 +273,16 @@ h1 {
   align-items: center; justify-content: center;
 }
 .photo-overlay.active { display: flex; }
+
+/* Camera flash */
+.camera-flash {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: white; z-index: 199; pointer-events: none;
+  opacity: 0;
+}
+.camera-flash.flash {
+  animation: cameraFlash 0.5s ease-out forwards;
+}
 
 .photo-frame {
   background: white; border-radius: 20px; padding: 20px;
@@ -270,7 +381,12 @@ h1 {
 .option-item:hover { transform: scale(1.1); background: rgba(255,255,255,0.3); }
 .option-item.selected {
   border-color: #ffd700; background: rgba(255,215,0,0.2);
-  box-shadow: 0 0 12px rgba(255,215,0,0.3);
+  animation: pulseGold 1.5s ease-in-out infinite;
+}
+
+/* Bounce-in for items when category opens */
+.option-item.bounce-enter {
+  animation: bounceIn 0.35s ease forwards;
 }
 
 .color-item {
@@ -280,6 +396,7 @@ h1 {
 .color-item:hover { transform: scale(1.15); }
 .color-item.selected {
   border-color: white; box-shadow: 0 0 12px rgba(255,255,255,0.5);
+  animation: pulseGold 1.5s ease-in-out infinite;
 }
 
 .swatch-item {
@@ -290,6 +407,14 @@ h1 {
 .swatch-item:hover { transform: scale(1.1); }
 .swatch-item.selected {
   border-color: #ffd700; box-shadow: 0 0 12px rgba(255,215,0,0.4);
+  animation: pulseGold 1.5s ease-in-out infinite;
+}
+
+/* Confetti piece */
+.confetti-piece {
+  position: fixed; z-index: 600; pointer-events: none;
+  font-size: 1.5em;
+  animation: confettiFall 1.5s ease-in forwards;
 }
 
 .toast {
@@ -315,22 +440,34 @@ h1 {
 
 <h1>Cree ton Idol</h1>
 <div class="player-name-display" id="playerDisplay"></div>
+<div class="unlock-counter" id="unlockCounter"></div>
+
+<!-- Idol du Jour -->
+<div class="idol-du-jour" id="idolDuJour">
+  <div class="idol-du-jour-title" id="idolDuJourTitle"></div>
+  <div class="idol-du-jour-suggestion" id="idolDuJourSuggestion"></div>
+  <button class="idol-du-jour-btn" onclick="applyIdolDuJour()">Essayer ce look !</button>
+</div>
 
 <div class="tabs" id="tabsBar"></div>
 
 <div class="creator">
   <div class="preview-panel">
-    <div class="avatar-preview" id="avatarPreview">
-      <div class="avatar-layer av-bg" id="avBg"></div>
-      <div class="avatar-layer av-body" id="avBody"></div>
-      <div class="avatar-layer av-hair" id="avHair"></div>
-      <div class="avatar-layer av-face" id="avFace"></div>
-      <div class="avatar-layer av-top" id="avTop"></div>
-      <div class="avatar-layer av-bottom" id="avBottom"></div>
-      <div class="avatar-layer av-shoes" id="avShoes"></div>
-      <div class="avatar-layer av-accessory" id="avAccessory"></div>
-      <div class="avatar-layer av-effect" id="avEffect"></div>
+    <div class="avatar-preview-wrapper" id="avatarWrapper">
+      <div class="avatar-preview" id="avatarPreview">
+        <div class="avatar-layer av-bg" id="avBg"></div>
+        <div class="avatar-layer av-body" id="avBody"></div>
+        <div class="avatar-layer av-hair" id="avHair"></div>
+        <div class="avatar-layer av-face" id="avFace"></div>
+        <div class="avatar-layer av-top" id="avTop"></div>
+        <div class="avatar-layer av-bottom" id="avBottom"></div>
+        <div class="avatar-layer av-shoes" id="avShoes"></div>
+        <div class="avatar-layer av-accessory" id="avAccessory"></div>
+        <div class="avatar-layer av-effect" id="avEffect"></div>
+      </div>
     </div>
+
+    <div class="star-rating" id="starRating"></div>
 
     <input type="text" class="idol-name-input" id="idolNameInput" placeholder="Nom de ton idol..." maxlength="16">
     <div class="avatar-name-tag" id="nameTag">Ma Star</div>
@@ -368,9 +505,157 @@ h1 {
   </div>
 </div>
 
+<!-- Camera flash overlay -->
+<div class="camera-flash" id="cameraFlash"></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+// ========== WEB AUDIO — SOUND ENGINE ==========
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+// Soft pop (300Hz sine, 0.05s)
+function playPop() {
+  ensureAudio();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = 'sine'; o.frequency.value = 300;
+  g.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + 0.05);
+}
+
+// Sparkle — ascending 3-note
+function playSparkle() {
+  ensureAudio();
+  [523, 659, 784].forEach((freq, i) => {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    const t = audioCtx.currentTime + i * 0.07;
+    g.gain.setValueAtTime(0.12, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t + 0.12);
+  });
+}
+
+// Camera shutter — white noise burst
+function playShutter() {
+  ensureAudio();
+  const bufferSize = audioCtx.sampleRate * 0.12;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.3;
+  const src = audioCtx.createBufferSource();
+  const g = audioCtx.createGain();
+  src.buffer = buffer;
+  g.gain.setValueAtTime(0.25, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+  src.connect(g); g.connect(audioCtx.destination);
+  src.start(); src.stop(audioCtx.currentTime + 0.12);
+}
+
+// Save jingle — 4-note ascending melody
+function playJingle() {
+  ensureAudio();
+  [523, 659, 784, 1047].forEach((freq, i) => {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'triangle'; o.frequency.value = freq;
+    const t = audioCtx.currentTime + i * 0.12;
+    g.gain.setValueAtTime(0.15, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t + 0.2);
+  });
+}
+
+// Slot machine spin — rapid ascending tones
+function playSlotSpin() {
+  ensureAudio();
+  for (let i = 0; i < 8; i++) {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'square'; o.frequency.value = 200 + i * 80;
+    const t = audioCtx.currentTime + i * 0.04;
+    g.gain.setValueAtTime(0.06, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t + 0.06);
+  }
+}
+
+// ========== VISUAL EFFECTS ==========
+
+// Sparkle burst at a point (relative to body)
+function spawnSparkleBurst(x, y) {
+  const emojis = ['\u2728','\u2B50','\uD83C\uDF1F','\uD83D\uDCAB','\u2764\uFE0F'];
+  for (let i = 0; i < 6; i++) {
+    const el = document.createElement('div');
+    el.className = 'spark-burst';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    const angle = (Math.PI * 2 / 6) * i;
+    const dist = 30 + Math.random() * 40;
+    el.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+    el.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 600);
+  }
+}
+
+// Confetti explosion (20 emoji pieces)
+function launchConfetti() {
+  const pieces = ['\uD83C\uDF89','\uD83C\uDF8A','\u2B50','\uD83D\uDC96','\uD83C\uDF1F','\u2728','\uD83C\uDF38','\uD83E\uDD8B','\uD83D\uDC8E','\uD83C\uDF80','\uD83C\uDFB5','\uD83C\uDF08','\uD83D\uDC51','\uD83E\uDE84','\uD83C\uDF3A','\uD83C\uDF3B','\uD83D\uDCAB','\uD83D\uDC9C','\uD83C\uDFF0','\uD83C\uDFA4'];
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.textContent = pieces[i % pieces.length];
+    el.style.left = (10 + Math.random() * 80) + 'vw';
+    el.style.top = (5 + Math.random() * 20) + 'vh';
+    el.style.animationDelay = (Math.random() * 0.5) + 's';
+    el.style.animationDuration = (1 + Math.random() * 1) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+}
+
+// Camera flash
+function triggerFlash() {
+  const flash = document.getElementById('cameraFlash');
+  flash.classList.remove('flash');
+  void flash.offsetWidth;
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 600);
+}
+
+// ========== 3D TILT ON MOUSE MOVE ==========
+const wrapper = document.getElementById('avatarWrapper');
+const preview = document.getElementById('avatarPreview');
+
+wrapper.addEventListener('mousemove', function(e) {
+  const rect = wrapper.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const dx = (e.clientX - cx) / (rect.width / 2);
+  const dy = (e.clientY - cy) / (rect.height / 2);
+  const rotY = dx * 5;   // max +/-5deg
+  const rotX = -dy * 5;
+  preview.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+});
+wrapper.addEventListener('mouseleave', function() {
+  preview.style.transform = 'rotateX(0) rotateY(0)';
+});
+
+// ========== DATA ==========
 const CATEGORIES = [
   { key: 'skin', label: 'Peau', tab: 'Peau' },
   { key: 'hair', label: 'Style de cheveux', tab: 'Cheveux' },
@@ -442,11 +727,106 @@ let current = {
 };
 
 let activeTab = 'Peau';
+let lastActiveTab = '';
 
 const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
 document.getElementById('playerDisplay').textContent = "L'idol de " + playerName;
 
-// Tabs
+// ========== UNLOCK COUNTER ==========
+function countTotalOptions() {
+  let total = 0;
+  total += OPTIONS.skin.length;
+  total += OPTIONS.hair.length;
+  total += OPTIONS.hairColor.length;
+  total += OPTIONS.face.length;
+  total += OPTIONS.top.length;
+  total += OPTIONS.bottom.length;
+  total += OPTIONS.shoes.length;
+  total += OPTIONS.accessory.length;
+  total += OPTIONS.bg.length;
+  total += OPTIONS.effect.length;
+  return total;
+}
+function updateUnlockCounter() {
+  const total = countTotalOptions();
+  document.getElementById('unlockCounter').innerHTML =
+    '\uD83D\uDD13 <span>' + total + '/' + total + '</span> options debloquees — Acces VIP !';
+}
+
+// ========== STAR RATING ==========
+function getStarRating() {
+  // Rating based on how many categories have non-default values
+  let score = 0;
+  if (current.skin !== 0) score++;
+  if (current.hair !== 0) score++;
+  if (current.hairColor !== 2) score++;
+  if (current.face !== 0) score++;
+  if (current.top !== 0) score++;
+  if (current.bottom !== 0) score++;
+  if (current.shoes !== 0) score++;
+  if (current.accessory !== 0) score++;
+  if (current.effect !== 0) score++;
+  if (document.getElementById('idolNameInput').value.length > 0) score++;
+  // Map 0-10 to 1-5 stars
+  return Math.max(1, Math.min(5, Math.ceil(score / 2)));
+}
+function updateStarRating() {
+  const stars = getStarRating();
+  let display = '';
+  for (let i = 0; i < 5; i++) {
+    display += i < stars ? '\u2B50' : '\u2606';
+  }
+  document.getElementById('starRating').textContent = display + ' Niveau ' + stars;
+}
+
+// ========== IDOL DU JOUR ==========
+const IDOL_SUGGESTIONS = [
+  { name: 'Princesse Lunaire', theme: 'princess', desc: 'Style royal avec fond etoile et couronne' },
+  { name: 'Neon Queen', theme: 'cool', desc: 'Look electrique avec cheveux colores' },
+  { name: 'Cherry Blossom', theme: 'cute', desc: 'Douceur florale et tons pastels' },
+  { name: 'Midnight Star', theme: 'cool', desc: 'Style sombre et mysterieux' },
+  { name: 'Golden Angel', theme: 'princess', desc: 'Elegance doree et lumineuse' },
+  { name: 'Candy Pop', theme: 'cute', desc: 'Couleurs vives et accessoires fun' },
+  { name: 'Crystal Fairy', theme: 'princess', desc: 'Look feerique avec diamants' },
+];
+
+function getIdolDuJour() {
+  // Deterministic per day
+  const today = new Date();
+  const dayIndex = (today.getFullYear() * 366 + today.getMonth() * 31 + today.getDate()) % IDOL_SUGGESTIONS.length;
+  return IDOL_SUGGESTIONS[dayIndex];
+}
+
+function renderIdolDuJour() {
+  const idol = getIdolDuJour();
+  document.getElementById('idolDuJourTitle').textContent = '\uD83C\uDF1F Idol du Jour : ' + idol.name;
+  document.getElementById('idolDuJourSuggestion').textContent = idol.desc;
+}
+
+function applyIdolDuJour() {
+  const idol = getIdolDuJour();
+  playSlotSpin();
+  randomTheme(idol.theme);
+  document.getElementById('idolNameInput').value = idol.name;
+  document.getElementById('nameTag').textContent = idol.name;
+  spawnSparkleBurstOnPreview();
+  showToast('\uD83C\uDF1F Look "' + idol.name + '" applique !');
+}
+
+function spawnSparkleBurstOnPreview() {
+  const el = document.getElementById('avatarPreview');
+  const rect = el.getBoundingClientRect();
+  spawnSparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+}
+
+// ========== GLOW AURA ==========
+function updateGlowColor() {
+  const color = OPTIONS.hairColor[current.hairColor].color;
+  const preview = document.getElementById('avatarPreview');
+  preview.style.setProperty('--glow-color', color + '80');
+}
+
+// ========== TABS ==========
 const allTabs = [...new Set(CATEGORIES.map(c => c.tab))];
 
 function renderTabs() {
@@ -456,14 +836,31 @@ function renderTabs() {
     const b = document.createElement('button');
     b.className = 'tab-btn' + (t === activeTab ? ' active' : '');
     b.textContent = t;
-    b.onclick = () => { activeTab = t; renderTabs(); showTab(); };
+    b.onclick = () => {
+      lastActiveTab = activeTab;
+      activeTab = t;
+      playPop();
+      renderTabs();
+      showTab();
+    };
     bar.appendChild(b);
   });
 }
 
 function showTab() {
   document.querySelectorAll('.option-group').forEach(g => {
-    g.classList.toggle('visible', g.dataset.tab === activeTab);
+    const isTarget = g.dataset.tab === activeTab;
+    g.classList.toggle('visible', isTarget);
+    // Bounce-in animation for items when opening a category
+    if (isTarget && activeTab !== lastActiveTab) {
+      const items = g.querySelectorAll('.option-item, .color-item, .swatch-item');
+      items.forEach((item, i) => {
+        item.classList.remove('bounce-enter');
+        item.style.animationDelay = (i * 0.03) + 's';
+        void item.offsetWidth;
+        item.classList.add('bounce-enter');
+      });
+    }
   });
 }
 
@@ -510,7 +907,12 @@ function renderEmojiOptions(containerId, items, key) {
     const d = document.createElement('div');
     d.className = 'option-item' + (i === current[key] ? ' selected' : '');
     d.innerHTML = item;
-    d.onclick = () => { current[key] = i; updateAll(); };
+    d.onclick = (e) => {
+      current[key] = i;
+      playPop();
+      spawnSparkleBurstOnPreview();
+      updateAll();
+    };
     el.appendChild(d);
   });
 }
@@ -524,7 +926,12 @@ function renderColorOptions(containerId, items, key) {
     d.className = 'color-item' + (i === current[key] ? ' selected' : '');
     d.style.background = hc.color;
     d.title = hc.name;
-    d.onclick = () => { current[key] = i; updateAll(); };
+    d.onclick = (e) => {
+      current[key] = i;
+      playSparkle();
+      spawnSparkleBurstOnPreview();
+      updateAll();
+    };
     el.appendChild(d);
   });
 }
@@ -540,7 +947,12 @@ function renderBgOptions() {
     d.title = bg.emoji;
     d.innerHTML = '<span style="font-size:1.4em;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">' + bg.emoji + '</span>';
     d.style.position = 'relative';
-    d.onclick = () => { current.bg = i; updateAll(); };
+    d.onclick = () => {
+      current.bg = i;
+      playPop();
+      spawnSparkleBurstOnPreview();
+      updateAll();
+    };
     el.appendChild(d);
   });
 }
@@ -554,7 +966,12 @@ function renderEffectOptions() {
     d.className = 'option-item' + (i === current.effect ? ' selected' : '');
     d.textContent = eff.particles[0] || '\u274C';
     d.title = eff.name;
-    d.onclick = () => { current.effect = i; updateAll(); };
+    d.onclick = () => {
+      current.effect = i;
+      playPop();
+      spawnSparkleBurstOnPreview();
+      updateAll();
+    };
     el.appendChild(d);
   });
 }
@@ -593,6 +1010,12 @@ function updatePreview() {
   // Name tag
   const idolName = document.getElementById('idolNameInput').value || playerName + ' Star';
   document.getElementById('nameTag').textContent = idolName;
+
+  // Glow aura color
+  updateGlowColor();
+
+  // Star rating
+  updateStarRating();
 }
 
 function updateAll() {
@@ -603,10 +1026,13 @@ function updateAll() {
 // Idol name input
 document.getElementById('idolNameInput').addEventListener('input', function() {
   document.getElementById('nameTag').textContent = this.value || playerName + ' Star';
+  updateStarRating();
 });
 
 // Random with themes
 function randomTheme(theme) {
+  playSlotSpin();
+
   if (theme === 'cute') {
     current.skin = Math.floor(Math.random() * OPTIONS.skin.length);
     current.hair = pickRandom([3,6,7,11]);
@@ -641,6 +1067,7 @@ function randomTheme(theme) {
     current.bg = pickRandom([1,13]);
     current.effect = pickRandom([4,1,7]);
   }
+  spawnSparkleBurstOnPreview();
   updateAll();
   showToast('Style ' + theme + ' genere !');
 }
@@ -649,6 +1076,9 @@ function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 // Photo booth
 function openPhotoBooth() {
+  playShutter();
+  triggerFlash();
+
   const overlay = document.getElementById('photoOverlay');
   overlay.classList.add('active');
   const box = document.getElementById('photoBox');
@@ -685,9 +1115,14 @@ function closePhotoBooth() {
 
 // Export description
 function exportDescription() {
+  playPop();
   const name = document.getElementById('idolNameInput').value || playerName + ' Star';
+  const stars = getStarRating();
+  let starText = '';
+  for (let i = 0; i < stars; i++) starText += '\u2B50';
+
   const desc = [
-    'Mon Idol: ' + name,
+    'Mon Idol: ' + name + ' ' + starText + ' (' + stars + '/5)',
     'Peau: ' + OPTIONS.skin[current.skin],
     'Cheveux: ' + OPTIONS.hair[current.hair] + ' (' + OPTIONS.hairColor[current.hairColor].name + ')',
     'Expression: ' + OPTIONS.face[current.face],
@@ -709,6 +1144,9 @@ function exportDescription() {
 
 // Save / Gallery (max 5)
 function saveAvatar() {
+  playJingle();
+  launchConfetti();
+
   const name = document.getElementById('idolNameInput').value || playerName + ' Star';
   let gallery = JSON.parse(localStorage.getItem('kpop_idol_gallery_' + playerName) || '[]');
 
@@ -792,6 +1230,7 @@ function renderGallery() {
     card.onclick = () => {
       Object.assign(current, idol.data);
       document.getElementById('idolNameInput').value = idol.name;
+      playPop();
       updateAll();
       showToast(idol.name + ' chargee !');
     };
@@ -819,6 +1258,8 @@ renderTabs();
 showTab();
 updateAll();
 renderGallery();
+updateUnlockCounter();
+renderIdolDuJour();
 </script>
 </body>
 </html>
