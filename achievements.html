@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes Succes — Ecole Saint-Esprit</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --pink:#ff6fd8;--purple:#b44dff;--gold:#ffd700;--dark:#1a1028;
+  --glass:rgba(255,255,255,0.1);--glass-border:rgba(255,255,255,0.18);
+  --card-bg:rgba(255,255,255,0.08);
+  --bronze:#cd7f32;--silver:#c0c0c0;--diamond:#b9f2ff;
+}
+
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--dark);
+  background-image:
+    radial-gradient(ellipse at 20% 0%,rgba(180,77,255,.25) 0%,transparent 60%),
+    radial-gradient(ellipse at 80% 100%,rgba(255,111,216,.2) 0%,transparent 60%);
+  min-height:100vh;
+  font-family:'Quicksand',sans-serif;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* ===== BACK BUTTON ===== */
+.back-btn{
+  position:fixed;top:12px;left:12px;
+  background:rgba(255,255,255,.15);color:#fff;
+  border:2px solid rgba(255,255,255,.3);
+  padding:7px 16px;border-radius:30px;
+  font-family:inherit;font-size:.95em;
+  cursor:pointer;text-decoration:none;z-index:300;
+  transition:.3s;
+}
+.back-btn:hover{background:rgba(255,255,255,.3);}
+
+/* ===== HEADER ===== */
+.header{
+  text-align:center;padding:40px 20px 10px;
+}
+.header h1{
+  font-size:clamp(1.6em,4vw,2.6em);font-weight:700;
+  background:linear-gradient(135deg,#fff,var(--pink),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.header .school-sub{
+  font-size:.8em;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,.45);margin-top:2px;
+}
+.player-name{
+  font-size:1.2em;color:var(--gold);font-weight:700;margin-top:8px;
+  text-shadow:0 0 20px rgba(255,215,0,.3);
+}
+
+/* ===== STATS BAR ===== */
+.stats-bar{
+  display:flex;flex-wrap:wrap;gap:16px;justify-content:center;
+  max-width:900px;margin:20px auto;padding:0 16px;
+}
+.stat-card{
+  background:var(--glass);backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
+  border-radius:20px;padding:16px 24px;
+  text-align:center;min-width:140px;flex:1;max-width:220px;
+}
+.stat-value{
+  font-size:2em;font-weight:700;
+  background:linear-gradient(135deg,var(--gold),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.stat-label{font-size:.8em;color:rgba(255,255,255,.6);margin-top:2px;}
+
+/* ===== PROGRESS RING ===== */
+.progress-section{
+  display:flex;align-items:center;justify-content:center;gap:30px;
+  margin:20px auto;max-width:600px;flex-wrap:wrap;
+}
+.progress-ring-wrap{position:relative;width:120px;height:120px;}
+.progress-ring{transform:rotate(-90deg);}
+.progress-ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:8;}
+.progress-ring-fill{
+  fill:none;stroke:url(#progressGrad);stroke-width:8;
+  stroke-linecap:round;
+  transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);
+}
+.progress-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;
+}
+.progress-pct{font-size:1.8em;font-weight:700;color:var(--gold);}
+.progress-sub{font-size:.7em;color:rgba(255,255,255,.5);}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar-wrap{flex:1;min-width:200px;}
+.progress-bar-outer{
+  background:rgba(255,255,255,.1);border-radius:12px;height:18px;
+  overflow:hidden;position:relative;
+}
+.progress-bar-inner{
+  height:100%;border-radius:12px;
+  background:linear-gradient(90deg,var(--pink),var(--purple),var(--gold));
+  background-size:200% 100%;
+  animation:barShimmer 3s ease infinite;
+  transition:width 1.5s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.progress-bar-inner::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  animation:barShine 2s ease infinite;
+}
+@keyframes barShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes barShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.milestone-markers{display:flex;justify-content:space-between;margin-top:6px;font-size:.7em;color:rgba(255,255,255,.4);}
+
+/* ===== FILTER BUTTONS ===== */
+.filters{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+  max-width:900px;margin:20px auto;padding:0 16px;
+}
+.filter-btn{
+  background:var(--glass);border:1.5px solid var(--glass-border);
+  color:#fff;padding:8px 18px;border-radius:25px;
+  font-family:inherit;font-size:.85em;font-weight:600;
+  cursor:pointer;transition:all .3s;
+}
+.filter-btn:hover{background:rgba(255,255,255,.18);}
+.filter-btn.active{
+  background:linear-gradient(145deg,var(--pink),var(--purple));
+  border-color:transparent;
+  box-shadow:0 2px 12px rgba(180,77,255,.3);
+}
+
+/* ===== GAME SECTION ===== */
+.game-section{
+  max-width:1000px;margin:10px auto 30px;padding:0 16px;width:100%;
+}
+.game-section-title{
+  font-size:1.3em;font-weight:700;margin-bottom:14px;
+  padding-bottom:8px;
+  border-bottom:2px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;gap:10px;
+}
+.game-section-title .game-emoji{font-size:1.2em;}
+.game-section-title .game-count{
+  font-size:.7em;font-weight:500;
+  color:rgba(255,255,255,.4);margin-left:auto;
+}
+
+/* ===== ACHIEVEMENT GRID ===== */
+.ach-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:14px;
+}
+
+/* ===== ACHIEVEMENT CARD ===== */
+.ach-card{
+  background:var(--glass);backdrop-filter:blur(12px);
+  border:2px solid var(--glass-border);
+  border-radius:18px;padding:18px;
+  position:relative;overflow:hidden;
+  transition:all .4s cubic-bezier(.17,.67,.35,1.2);
+  cursor:default;
+}
+.ach-card:hover{transform:translateY(-4px) scale(1.02);}
+
+/* Rarity borders */
+.ach-card.rarity-bronze{border-color:rgba(205,127,50,.5);}
+.ach-card.rarity-silver{border-color:rgba(192,192,192,.5);}
+.ach-card.rarity-gold{border-color:rgba(255,215,0,.5);}
+.ach-card.rarity-diamond{border-color:rgba(185,242,255,.6);}
+
+/* Unlocked glow */
+.ach-card.unlocked{
+  box-shadow:0 0 20px rgba(255,215,0,.15);
+}
+.ach-card.unlocked.rarity-bronze{box-shadow:0 0 20px rgba(205,127,50,.2);}
+.ach-card.unlocked.rarity-silver{box-shadow:0 0 20px rgba(192,192,192,.2);}
+.ach-card.unlocked.rarity-gold{box-shadow:0 0 25px rgba(255,215,0,.25);}
+.ach-card.unlocked.rarity-diamond{box-shadow:0 0 30px rgba(185,242,255,.3);}
+
+/* Locked state */
+.ach-card.locked{
+  filter:grayscale(.8) brightness(.6);
+  opacity:.7;
+}
+.ach-card.locked:hover{
+  filter:grayscale(.6) brightness(.7);
+  opacity:.85;
+}
+
+.ach-icon{
+  font-size:2.4em;margin-bottom:6px;display:block;
+  transition:transform .3s;
+}
+.ach-card:hover .ach-icon{transform:scale(1.15) rotate(-5deg);}
+
+.ach-title{font-size:1.05em;font-weight:700;margin-bottom:4px;}
+.ach-desc{font-size:.8em;color:rgba(255,255,255,.6);line-height:1.4;margin-bottom:6px;}
+.ach-game-tag{
+  display:inline-block;
+  font-size:.65em;font-weight:600;
+  padding:2px 10px;border-radius:12px;
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.5);
+}
+.ach-date{
+  font-size:.65em;color:var(--gold);
+  margin-top:6px;display:block;
+}
+.ach-rarity-tag{
+  position:absolute;top:10px;right:10px;
+  font-size:.6em;font-weight:700;
+  padding:2px 8px;border-radius:10px;
+  text-transform:uppercase;letter-spacing:1px;
+}
+.rarity-bronze .ach-rarity-tag{background:rgba(205,127,50,.25);color:var(--bronze);}
+.rarity-silver .ach-rarity-tag{background:rgba(192,192,192,.2);color:var(--silver);}
+.rarity-gold .ach-rarity-tag{background:rgba(255,215,0,.2);color:var(--gold);}
+.rarity-diamond .ach-rarity-tag{background:rgba(185,242,255,.2);color:var(--diamond);}
+
+/* Lock overlay */
+.lock-overlay{
+  position:absolute;top:10px;left:10px;
+  font-size:1.2em;opacity:.5;
+}
+
+/* ===== TOAST NOTIFICATION ===== */
+.ach-toast{
+  position:fixed;top:-100px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(145deg,rgba(26,16,40,.95),rgba(42,16,64,.95));
+  backdrop-filter:blur(16px);
+  border:2px solid rgba(255,215,0,.4);
+  border-radius:18px;padding:14px 28px;
+  display:flex;align-items:center;gap:14px;
+  z-index:9999;
+  box-shadow:0 8px 40px rgba(255,215,0,.2);
+  transition:top .6s cubic-bezier(.17,.67,.35,1.2);
+  max-width:90vw;
+}
+.ach-toast.show{top:20px;}
+.ach-toast .toast-icon{font-size:2em;}
+.ach-toast .toast-text{font-size:.95em;font-weight:600;}
+.ach-toast .toast-sub{font-size:.75em;color:var(--gold);display:block;margin-top:2px;}
+
+/* ===== CONFETTI ===== */
+.confetti-piece{
+  position:fixed;width:10px;height:10px;
+  border-radius:2px;z-index:9998;
+  pointer-events:none;
+  animation:confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall{
+  0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);}
+  100%{opacity:0;transform:translateY(100vh) rotate(720deg) scale(.3);}
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  .ach-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+  .ach-card{padding:14px;}
+  .ach-icon{font-size:2em;}
+  .stat-card{min-width:100px;padding:12px 14px;}
+  .stat-value{font-size:1.5em;}
+  .progress-ring-wrap{width:90px;height:90px;}
+  .progress-pct{font-size:1.3em;}
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state{
+  text-align:center;padding:40px 20px;
+  color:rgba(255,255,255,.4);font-size:1.1em;
+}
+</style>
+</head>
+<body>
+
+<a class="back-btn" id="backBtn" href="index.html">Retour</a>
+
+<!-- Toast container -->
+<div class="ach-toast" id="achToast">
+  <span class="toast-icon" id="toastIcon"></span>
+  <div>
+    <span class="toast-text" id="toastText"></span>
+    <span class="toast-sub">Succes debloque !</span>
+  </div>
+</div>
+
+<div class="header">
+  <h1>Mes Succes</h1>
+  <div class="school-sub">Ecole Saint-Esprit</div>
+  <div class="player-name" id="playerGreeting"></div>
+</div>
+
+<!-- Progress Section -->
+<div class="progress-section">
+  <div class="progress-ring-wrap">
+    <svg class="progress-ring" width="100%" height="100%" viewBox="0 0 120 120">
+      <defs>
+        <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="var(--pink)"/>
+          <stop offset="100%" stop-color="var(--gold)"/>
+        </linearGradient>
+      </defs>
+      <circle class="progress-ring-bg" cx="60" cy="60" r="52"/>
+      <circle class="progress-ring-fill" id="progressRing" cx="60" cy="60" r="52"
+        stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+    </svg>
+    <div class="progress-text">
+      <div class="progress-pct" id="progressPct">0%</div>
+      <div class="progress-sub">complete</div>
+    </div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+    </div>
+    <div class="milestone-markers">
+      <span>0</span><span>10</span><span>25</span><span>50</span>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-value" id="statTotal">0/50</div>
+    <div class="stat-label">Succes</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="statRare">0</div>
+    <div class="stat-label">Rares</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="statStars">0</div>
+    <div class="stat-label">Etoiles</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="statGames">0</div>
+    <div class="stat-label">Jeux joues</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">Tous</button>
+  <button class="filter-btn" data-filter="unlocked">Debloques</button>
+  <button class="filter-btn" data-filter="locked">Verrouilles</button>
+  <button class="filter-btn" data-filter="game-general">General</button>
+  <button class="filter-btn" data-filter="game-dance">Dance</button>
+  <button class="filter-btn" data-filter="game-stars">Etoiles</button>
+  <button class="filter-btn" data-filter="game-memory">Memory</button>
+  <button class="filter-btn" data-filter="game-quiz">Quiz</button>
+  <button class="filter-btn" data-filter="game-habillage">Habillage</button>
+  <button class="filter-btn" data-filter="game-karaoke">Karaoke</button>
+  <button class="filter-btn" data-filter="game-coloriage">Coloriage</button>
+  <button class="filter-btn" data-filter="game-puzzle">Puzzle</button>
+  <button class="filter-btn" data-filter="game-avatar">Avatar</button>
+  <button class="filter-btn" data-filter="game-carte">Carte</button>
+</div>
+
+<!-- Achievement sections will be injected here -->
+<div id="achievementsContainer"></div>
+
+<script>
+// ===== PLAYER =====
+const params = new URLSearchParams(window.location.search);
+const playerName = params.get('player') || localStorage.getItem('kpop_player') || 'Star';
+document.getElementById('playerGreeting').textContent = playerName;
+document.getElementById('backBtn').href = 'index.html?player=' + encodeURIComponent(playerName);
+
+// ===== ACHIEVEMENT DEFINITIONS =====
+const ACHIEVEMENTS = [
+  // ===== GENERAL (10) =====
+  {id:'gen_premier_pas',icon:'🌟',title:'Premier Pas',desc:'Jouer a un jeu pour la premiere fois',hint:'Joue a n\'importe quel jeu',game:'general',rarity:'bronze'},
+  {id:'gen_en_feu',icon:'🔥',title:'En Feu',desc:'3 jours de suite de connexion',hint:'Reviens 3 jours de suite',game:'general',rarity:'silver'},
+  {id:'gen_collectionneuse',icon:'💎',title:'Collectionneuse',desc:'Collecter 10 stickers',hint:'Continue a collecter...',game:'general',rarity:'silver'},
+  {id:'gen_reine',icon:'👑',title:'Reine',desc:'Atteindre le niveau 10',hint:'Gagne des etoiles pour monter de niveau',game:'general',rarity:'gold'},
+  {id:'gen_championne',icon:'🏆',title:'Championne',desc:'Obtenir un grade S dans un jeu',hint:'Fais un score parfait !',game:'general',rarity:'gold'},
+  {id:'gen_perseverante',icon:'💪',title:'Perseverante',desc:'Jouer 50 parties au total',hint:'Continue a jouer !',game:'general',rarity:'silver'},
+  {id:'gen_arc_en_ciel',icon:'🌈',title:'Arc-en-ciel',desc:'Jouer aux 10 jeux au moins une fois',hint:'Essaie tous les jeux !',game:'general',rarity:'gold'},
+  {id:'gen_1000_etoiles',icon:'⭐',title:'1000 Etoiles',desc:'Gagner 1000 etoiles au total',hint:'Accumule les etoiles...',game:'general',rarity:'gold'},
+  {id:'gen_perfectionniste',icon:'🎯',title:'Perfectionniste',desc:'Score parfait dans un jeu',hint:'Vise la perfection !',game:'general',rarity:'diamond'},
+  {id:'gen_legende',icon:'💫',title:'Legende',desc:'Atteindre le niveau 20',hint:'Le sommet t\'attend...',game:'general',rarity:'diamond'},
+
+  // ===== DANCE (4) =====
+  {id:'dance_first',icon:'💃',title:'Premiere Danse',desc:'Jouer au Dance Challenge pour la premiere fois',hint:'Essaie le Dance Challenge',game:'dance',rarity:'bronze'},
+  {id:'dance_500',icon:'🎶',title:'Groove Master',desc:'Atteindre 500 points au Dance Challenge',hint:'Atteins 500 pts',game:'dance',rarity:'silver'},
+  {id:'dance_1000',icon:'🕺',title:'Danseuse Elite',desc:'Atteindre 1000 points au Dance Challenge',hint:'1000 pts, c\'est possible !',game:'dance',rarity:'gold'},
+  {id:'dance_s_grade',icon:'👸',title:'Reine du Dance Floor',desc:'Obtenir un grade S au Dance Challenge',hint:'Le grade S ultime...',game:'dance',rarity:'diamond'},
+
+  // ===== STARS (4) =====
+  {id:'stars_first',icon:'⭐',title:'Chasseuse d\'Etoiles',desc:'Jouer a Attrape les Etoiles pour la premiere fois',hint:'Essaie Attrape les Etoiles',game:'stars',rarity:'bronze'},
+  {id:'stars_300',icon:'🌟',title:'Super Catch',desc:'Atteindre 300 points',hint:'Attrape 300 pts d\'etoiles',game:'stars',rarity:'silver'},
+  {id:'stars_unicorn',icon:'🦄',title:'Licorne Magique',desc:'Attraper une licorne',hint:'Cherche la licorne...',game:'stars',rarity:'gold'},
+  {id:'stars_no_bomb',icon:'🛡️',title:'Intouchable',desc:'Finir une partie sans toucher de bombe',hint:'Esquive tout !',game:'stars',rarity:'diamond'},
+
+  // ===== MEMORY (4) =====
+  {id:'memory_first',icon:'🧠',title:'Bonne Memoire',desc:'Gagner une partie de Memory',hint:'Trouve toutes les paires',game:'memory',rarity:'bronze'},
+  {id:'memory_expert',icon:'🎓',title:'Experte Memory',desc:'Gagner en mode Expert',hint:'Essaie le mode Expert',game:'memory',rarity:'silver'},
+  {id:'memory_perfect',icon:'✨',title:'Memoire Parfaite',desc:'Gagner sans aucune erreur',hint:'Zero erreur, c\'est possible ?',game:'memory',rarity:'gold'},
+  {id:'memory_speed',icon:'⚡',title:'Eclair de Genie',desc:'Gagner en moins de 30 coups',hint:'Moins de 30 coups !',game:'memory',rarity:'diamond'},
+
+  // ===== QUIZ (4) =====
+  {id:'quiz_first',icon:'❓',title:'Quizzeuse',desc:'Completer un quiz K-Pop',hint:'Reponds au quiz !',game:'quiz',rarity:'bronze'},
+  {id:'quiz_80',icon:'📚',title:'K-Pop Experte',desc:'Obtenir 80% ou plus au quiz',hint:'80% minimum !',game:'quiz',rarity:'silver'},
+  {id:'quiz_100',icon:'💯',title:'Score Parfait',desc:'Obtenir 100% au quiz',hint:'Toutes les bonnes reponses',game:'quiz',rarity:'gold'},
+  {id:'quiz_3perfect',icon:'🧪',title:'Genie K-Pop',desc:'3 quiz parfaits consecutifs',hint:'3 fois 100% de suite !',game:'quiz',rarity:'diamond'},
+
+  // ===== HABILLAGE (4) =====
+  {id:'hab_first',icon:'👗',title:'Styliste Debutante',desc:'Creer une premiere tenue',hint:'Habille ta star !',game:'habillage',rarity:'bronze'},
+  {id:'hab_themes',icon:'🎨',title:'Exploratrice Mode',desc:'Essayer tous les themes',hint:'Essaie chaque theme',game:'habillage',rarity:'silver'},
+  {id:'hab_5saves',icon:'💾',title:'Garde-robe Complete',desc:'Sauvegarder 5 tenues',hint:'Sauvegarde 5 looks',game:'habillage',rarity:'gold'},
+  {id:'hab_s_grade',icon:'💅',title:'Icone de Mode',desc:'Obtenir un grade S en Habillage',hint:'Le style ultime...',game:'habillage',rarity:'diamond'},
+
+  // ===== KARAOKE (4) =====
+  {id:'kara_first',icon:'🎤',title:'Premiere Note',desc:'Chanter une chanson au karaoke',hint:'Chante ta premiere chanson',game:'karaoke',rarity:'bronze'},
+  {id:'kara_all_songs',icon:'🎵',title:'Repertoire Complet',desc:'Chanter toutes les chansons',hint:'Chante-les toutes !',game:'karaoke',rarity:'silver'},
+  {id:'kara_5stars',icon:'🌟',title:'5 Etoiles',desc:'Obtenir 5 etoiles sur une chanson',hint:'Chante parfaitement',game:'karaoke',rarity:'gold'},
+  {id:'kara_duo',icon:'👯',title:'Duo Parfait',desc:'Completer un duo',hint:'Trouve une partenaire',game:'karaoke',rarity:'diamond'},
+
+  // ===== COLORIAGE (4) =====
+  {id:'color_first',icon:'🖌️',title:'Premiere Couleur',desc:'Completer un premier coloriage',hint:'Colorie un dessin !',game:'coloriage',rarity:'bronze'},
+  {id:'color_all',icon:'🎨',title:'Artiste Complete',desc:'Colorier tous les dessins',hint:'Colorie tout !',game:'coloriage',rarity:'silver'},
+  {id:'color_badges',icon:'🏅',title:'Collectionne les Badges',desc:'Obtenir tous les badges coloriage',hint:'Decroche tous les badges',game:'coloriage',rarity:'gold'},
+  {id:'color_speed',icon:'🚀',title:'Speed Painter',desc:'Colorier un dessin en moins de 2 minutes',hint:'Vite, vite !',game:'coloriage',rarity:'diamond'},
+
+  // ===== PUZZLE (4) =====
+  {id:'puzzle_first',icon:'🧩',title:'Premier Puzzle',desc:'Completer un premier puzzle',hint:'Assemble les pieces !',game:'puzzle',rarity:'bronze'},
+  {id:'puzzle_hard',icon:'🔥',title:'Mode Difficile',desc:'Completer un puzzle en mode difficile',hint:'Ose le mode difficile',game:'puzzle',rarity:'silver'},
+  {id:'puzzle_all',icon:'🏆',title:'Tous les Puzzles',desc:'Completer tous les puzzles',hint:'Finis-les tous !',game:'puzzle',rarity:'gold'},
+  {id:'puzzle_speed',icon:'⏱️',title:'Speed Puzzle',desc:'Completer un puzzle en moins de 60 secondes',hint:'Chrono !',game:'puzzle',rarity:'diamond'},
+
+  // ===== AVATAR (4) =====
+  {id:'avatar_first',icon:'🎭',title:'Ma Premiere Idol',desc:'Creer un premier avatar idol',hint:'Cree ton idol !',game:'avatar',rarity:'bronze'},
+  {id:'avatar_5',icon:'👥',title:'Groupe Complet',desc:'Sauvegarder 5 idols differentes',hint:'Cree 5 idols',game:'avatar',rarity:'silver'},
+  {id:'avatar_photo',icon:'📸',title:'Photo Booth',desc:'Utiliser le mode photo booth',hint:'Prends une photo !',game:'avatar',rarity:'gold'},
+  {id:'avatar_effects',icon:'✨',title:'Effets Speciaux',desc:'Essayer tous les effets',hint:'Teste tous les effets',game:'avatar',rarity:'diamond'},
+
+  // ===== CARTE (4) =====
+  {id:'carte_first',icon:'🃏',title:'Premiere Carte',desc:'Creer une premiere carte K-Pop',hint:'Cree ta carte !',game:'carte',rarity:'bronze'},
+  {id:'carte_legendary',icon:'🌈',title:'Carte Legendaire',desc:'Obtenir une carte legendaire',hint:'La chance sourira...',game:'carte',rarity:'gold'},
+  {id:'carte_8',icon:'📇',title:'Collection 8 Cartes',desc:'Collecter 8 cartes differentes',hint:'8 cartes dans ta collection',game:'carte',rarity:'silver'},
+  {id:'carte_perfect',icon:'💎',title:'Carte Parfaite',desc:'Creer une carte avec un score parfait',hint:'La carte parfaite...',game:'carte',rarity:'diamond'},
+];
+
+const GAME_META = {
+  general: {emoji:'🏠',label:'General'},
+  dance: {emoji:'💃',label:'Dance Challenge'},
+  stars: {emoji:'⭐',label:'Attrape les Etoiles'},
+  memory: {emoji:'🧠',label:'K-Pop Memory'},
+  quiz: {emoji:'❓',label:'Quiz K-Pop'},
+  habillage: {emoji:'👗',label:'Habillage K-Pop'},
+  karaoke: {emoji:'🎤',label:'Karaoke Star'},
+  coloriage: {emoji:'🖌️',label:'Coloriage K-Pop'},
+  puzzle: {emoji:'🧩',label:'Puzzle Star'},
+  avatar: {emoji:'🎭',label:'Cree ton Idol'},
+  carte: {emoji:'🃏',label:'Ma Carte K-Pop'},
+};
+
+const RARITY_LABELS = {bronze:'Bronze',silver:'Argent',gold:'Or',diamond:'Diamant'};
+
+// ===== PERSISTENCE =====
+function getAchKey(){ return 'kpop_achievements_' + playerName; }
+
+function getUnlocked(){
+  try { return JSON.parse(localStorage.getItem(getAchKey()) || '{}'); } catch(e){ return {}; }
+}
+
+function setUnlocked(data){
+  localStorage.setItem(getAchKey(), JSON.stringify(data));
+}
+
+function isUnlocked(id){
+  return !!getUnlocked()[id];
+}
+
+function unlockAchievement(id){
+  const data = getUnlocked();
+  if(data[id]) return false; // already unlocked
+  data[id] = Date.now();
+  setUnlocked(data);
+  return true;
+}
+
+// ===== AUTO-DETECT from localStorage =====
+function autoDetectAchievements(){
+  const p = playerName;
+  const stars = parseInt(localStorage.getItem('kpop_stars_' + p) || '0');
+  const streak = parseInt(localStorage.getItem('kpop_streak_' + p) || '0');
+  const stickers = JSON.parse(localStorage.getItem('kpop_stickers_' + p) || '[]');
+  const trophies = JSON.parse(localStorage.getItem('kpop_trophies_' + p) || '[]');
+  const gallery = JSON.parse(localStorage.getItem('kpop_gallery_' + p) || '[]');
+  const cardCollection = JSON.parse(localStorage.getItem('kpop_card_collection_' + p) || '[]');
+  const totalCards = parseInt(localStorage.getItem('kpop_total_cards_' + p) || '0');
+  const themesTried = JSON.parse(localStorage.getItem('kpop_themes_' + p) || '[]');
+
+  // Calculate level from stars
+  const level = Math.floor(stars / 100) + 1;
+
+  // Track which games have been played (check for any game-specific localStorage)
+  const gamesPlayed = new Set();
+  const gameKeys = {
+    dance:'kpop_dance_hs_'+p, stars:'kpop_stars_hs_'+p,
+    memory:'kpop_memory_hs_'+p, quiz:'kpop_quiz_hs_'+p,
+    habillage:'kpop_gallery_'+p, karaoke:'kpop_karaoke_'+p,
+    coloriage:'kpop_coloriage_'+p, puzzle:'kpop_puzzle_completed_'+p,
+    avatar:'kpop_trophies_'+p, carte:'kpop_card_collection_'+p
+  };
+
+  // Check all possible localStorage keys to detect game plays
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(!k) continue;
+    if(k.includes('dance') && k.includes(p)) gamesPlayed.add('dance');
+    if(k.includes('stars_hs') && k.includes(p)) gamesPlayed.add('stars');
+    if(k.includes('memory') && k.includes(p)) gamesPlayed.add('memory');
+    if(k.includes('quiz') && k.includes(p)) gamesPlayed.add('quiz');
+    if(k.includes('gallery') && k.includes(p) && gallery.length>0) gamesPlayed.add('habillage');
+    if(k.includes('karaoke') && k.includes(p)) gamesPlayed.add('karaoke');
+    if(k.includes('coloriage') && k.includes(p)) gamesPlayed.add('coloriage');
+    if(k.includes('puzzle') && k.includes(p)) gamesPlayed.add('puzzle');
+    if(k.includes('avatar') && k.includes(p)) gamesPlayed.add('avatar');
+    if(k.includes('card_collection') && k.includes(p) && cardCollection.length>0) gamesPlayed.add('carte');
+  }
+
+  // Also check trophies for game detection
+  if(trophies.length>0){
+    trophies.forEach(t => {
+      const tl = (t||'').toLowerCase();
+      if(tl.includes('dance')) gamesPlayed.add('dance');
+      if(tl.includes('star') || tl.includes('catch')) gamesPlayed.add('stars');
+      if(tl.includes('memory')) gamesPlayed.add('memory');
+      if(tl.includes('quiz')) gamesPlayed.add('quiz');
+      if(tl.includes('habillage') || tl.includes('outfit') || tl.includes('mode')) gamesPlayed.add('habillage');
+      if(tl.includes('karao')) gamesPlayed.add('karaoke');
+      if(tl.includes('color') || tl.includes('colori')) gamesPlayed.add('coloriage');
+      if(tl.includes('puzzle')) gamesPlayed.add('puzzle');
+      if(tl.includes('avatar') || tl.includes('idol')) gamesPlayed.add('avatar');
+      if(tl.includes('carte') || tl.includes('card')) gamesPlayed.add('carte');
+    });
+  }
+
+  // === GENERAL ===
+  if(gamesPlayed.size > 0) unlockAchievement('gen_premier_pas');
+  if(streak >= 3) unlockAchievement('gen_en_feu');
+  if(stickers.length >= 10) unlockAchievement('gen_collectionneuse');
+  if(level >= 10) unlockAchievement('gen_reine');
+  if(level >= 20) unlockAchievement('gen_legende');
+  if(stars >= 1000) unlockAchievement('gen_1000_etoiles');
+  if(gamesPlayed.size >= 10) unlockAchievement('gen_arc_en_ciel');
+
+  // Check S grade / perfect from trophies
+  const hasSGrade = trophies.some(t => (t||'').toLowerCase().includes('grade s') || (t||'').includes('S'));
+  if(hasSGrade) unlockAchievement('gen_championne');
+
+  // Count total games played (rough estimate)
+  let totalGamesPlayed = 0;
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.includes(p) && (k.includes('_hs_') || k.includes('completed') || k.includes('_score')))
+      totalGamesPlayed++;
+  }
+  if(totalGamesPlayed >= 50) unlockAchievement('gen_perseverante');
+
+  // === DANCE ===
+  if(gamesPlayed.has('dance')) unlockAchievement('dance_first');
+  const danceHs = parseInt(localStorage.getItem('kpop_dance_hs_' + p) || '0');
+  if(danceHs >= 500) unlockAchievement('dance_500');
+  if(danceHs >= 1000) unlockAchievement('dance_1000');
+
+  // === STARS ===
+  if(gamesPlayed.has('stars')) unlockAchievement('stars_first');
+  const starsHs = parseInt(localStorage.getItem('kpop_stars_hs_' + p) || '0');
+  if(starsHs >= 300) unlockAchievement('stars_300');
+
+  // === MEMORY ===
+  if(gamesPlayed.has('memory')) unlockAchievement('memory_first');
+  // Check memory high scores for expert/speed
+  try {
+    const memData = JSON.parse(localStorage.getItem('kpop_memory_hs_' + p) || '{}');
+    if(memData.expert || memData.hard) unlockAchievement('memory_expert');
+    // Check for speed achievement
+    Object.values(memData).forEach(v => {
+      if(typeof v === 'number' && v <= 30) unlockAchievement('memory_speed');
+    });
+  } catch(e){}
+
+  // === QUIZ ===
+  if(gamesPlayed.has('quiz')) unlockAchievement('quiz_first');
+  const quizHs = parseInt(localStorage.getItem('kpop_quiz_hs_' + p) || '0');
+  if(quizHs >= 80) unlockAchievement('quiz_80');
+  if(quizHs >= 100) unlockAchievement('quiz_100');
+
+  // === HABILLAGE ===
+  if(gamesPlayed.has('habillage') || gallery.length > 0) unlockAchievement('hab_first');
+  if(themesTried.length >= 5) unlockAchievement('hab_themes');
+  if(gallery.length >= 5) unlockAchievement('hab_5saves');
+
+  // === KARAOKE ===
+  if(gamesPlayed.has('karaoke')) unlockAchievement('kara_first');
+
+  // === COLORIAGE ===
+  if(gamesPlayed.has('coloriage')) unlockAchievement('color_first');
+  // Check for badges in trophies
+  const colorBadges = trophies.filter(t => (t||'').toLowerCase().includes('colori') || (t||'').toLowerCase().includes('color'));
+  if(colorBadges.length >= 3) unlockAchievement('color_badges');
+
+  // === PUZZLE ===
+  if(gamesPlayed.has('puzzle')) unlockAchievement('puzzle_first');
+  // Check puzzle completions
+  let puzzleCompleted = 0;
+  let puzzleHardDone = false;
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(!k) continue;
+    if(k.startsWith('kpop_puzzle_done_'+p) && localStorage.getItem(k)==='1'){
+      puzzleCompleted++;
+      if(k.includes('hard') || k.includes('diff2') || k.includes('diff3')) puzzleHardDone = true;
+    }
+  }
+  if(puzzleHardDone) unlockAchievement('puzzle_hard');
+  if(puzzleCompleted >= 8) unlockAchievement('puzzle_all');
+
+  // === AVATAR ===
+  if(gamesPlayed.has('avatar')) unlockAchievement('avatar_first');
+  // Check avatar saves from trophies
+  const avatarTrophies = trophies.filter(t => (t||'').toLowerCase().includes('idol') || (t||'').toLowerCase().includes('avatar'));
+  if(avatarTrophies.length >= 5) unlockAchievement('avatar_5');
+
+  // === CARTE ===
+  if(cardCollection.length > 0) unlockAchievement('carte_first');
+  if(cardCollection.length >= 8) unlockAchievement('carte_8');
+  // Check for legendary
+  const hasLegendary = cardCollection.some(c => c && (c.rarity === 'legendary' || c.rarity === 'legendaire'));
+  if(hasLegendary) unlockAchievement('carte_legendary');
+
+  return {stars, level, gamesPlayed: gamesPlayed.size, stickers: stickers.length, streak};
+}
+
+// ===== RENDER =====
+function renderAll(){
+  const stats = autoDetectAchievements();
+  const unlocked = getUnlocked();
+  const unlockedCount = Object.keys(unlocked).length;
+  const total = ACHIEVEMENTS.length;
+  const pct = Math.round((unlockedCount / total) * 100);
+
+  // Stats
+  document.getElementById('statTotal').textContent = unlockedCount + '/' + total;
+  document.getElementById('statStars').textContent = stats.stars;
+  document.getElementById('statGames').textContent = stats.gamesPlayed;
+
+  // Rare count (gold + diamond)
+  const rareCount = ACHIEVEMENTS.filter(a => (a.rarity === 'gold' || a.rarity === 'diamond') && unlocked[a.id]).length;
+  document.getElementById('statRare').textContent = rareCount;
+
+  // Progress ring
+  const circumference = 2 * Math.PI * 52;
+  const offset = circumference - (pct / 100) * circumference;
+  const ring = document.getElementById('progressRing');
+  setTimeout(() => { ring.style.strokeDashoffset = offset; }, 100);
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  // Progress bar
+  setTimeout(() => { document.getElementById('progressBar').style.width = pct + '%'; }, 100);
+
+  // Group by game
+  const gameOrder = ['general','dance','stars','memory','quiz','habillage','karaoke','coloriage','puzzle','avatar','carte'];
+  const container = document.getElementById('achievementsContainer');
+  container.innerHTML = '';
+
+  gameOrder.forEach(game => {
+    const gameAchs = ACHIEVEMENTS.filter(a => a.game === game);
+    const meta = GAME_META[game];
+    const gameUnlocked = gameAchs.filter(a => unlocked[a.id]).length;
+
+    const section = document.createElement('div');
+    section.className = 'game-section';
+    section.setAttribute('data-game', game);
+
+    section.innerHTML = `
+      <div class="game-section-title">
+        <span class="game-emoji">${meta.emoji}</span>
+        <span>${meta.label}</span>
+        <span class="game-count">${gameUnlocked}/${gameAchs.length}</span>
+      </div>
+      <div class="ach-grid"></div>
+    `;
+
+    const grid = section.querySelector('.ach-grid');
+
+    gameAchs.forEach(ach => {
+      const isU = !!unlocked[ach.id];
+      const card = document.createElement('div');
+      card.className = `ach-card rarity-${ach.rarity} ${isU ? 'unlocked' : 'locked'}`;
+      card.setAttribute('data-game', ach.game);
+      card.setAttribute('data-state', isU ? 'unlocked' : 'locked');
+
+      const dateStr = isU ? new Date(unlocked[ach.id]).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : '';
+
+      card.innerHTML = `
+        ${!isU ? '<div class="lock-overlay">🔒</div>' : ''}
+        <span class="ach-rarity-tag">${RARITY_LABELS[ach.rarity]}</span>
+        <span class="ach-icon">${isU ? ach.icon : '❔'}</span>
+        <div class="ach-title">${isU ? ach.title : '???'}</div>
+        <div class="ach-desc">${isU ? ach.desc : ach.hint}</div>
+        <span class="ach-game-tag">${meta.label}</span>
+        ${isU ? '<span class="ach-date">Debloque le ' + dateStr + '</span>' : ''}
+      `;
+
+      grid.appendChild(card);
+    });
+
+    container.appendChild(section);
+  });
+
+  // Check milestones for confetti
+  if(unlockedCount >= 10 || unlockedCount >= 25 || unlockedCount >= 50){
+    const lastConfetti = parseInt(localStorage.getItem('kpop_ach_confetti_' + playerName) || '0');
+    const milestone = unlockedCount >= 50 ? 50 : unlockedCount >= 25 ? 25 : 10;
+    if(lastConfetti < milestone){
+      localStorage.setItem('kpop_ach_confetti_' + playerName, milestone);
+      launchConfetti();
+    }
+  }
+}
+
+// ===== FILTERS =====
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    applyFilter(filter);
+  });
+});
+
+function applyFilter(filter){
+  const sections = document.querySelectorAll('.game-section');
+  const cards = document.querySelectorAll('.ach-card');
+
+  if(filter === 'all'){
+    sections.forEach(s => s.style.display = '');
+    cards.forEach(c => c.style.display = '');
+  } else if(filter === 'unlocked'){
+    sections.forEach(s => s.style.display = '');
+    cards.forEach(c => {
+      c.style.display = c.dataset.state === 'unlocked' ? '' : 'none';
+    });
+    // Hide sections with no visible cards
+    sections.forEach(s => {
+      const visible = s.querySelectorAll('.ach-card:not([style*="display: none"])');
+      s.style.display = visible.length ? '' : 'none';
+    });
+  } else if(filter === 'locked'){
+    sections.forEach(s => s.style.display = '');
+    cards.forEach(c => {
+      c.style.display = c.dataset.state === 'locked' ? '' : 'none';
+    });
+    sections.forEach(s => {
+      const visible = s.querySelectorAll('.ach-card:not([style*="display: none"])');
+      s.style.display = visible.length ? '' : 'none';
+    });
+  } else if(filter.startsWith('game-')){
+    const game = filter.replace('game-','');
+    sections.forEach(s => {
+      s.style.display = s.dataset.game === game ? '' : 'none';
+    });
+    cards.forEach(c => c.style.display = '');
+  }
+}
+
+// ===== TOAST NOTIFICATION =====
+let toastQueue = [];
+let toastShowing = false;
+
+function showAchToast(icon, title){
+  toastQueue.push({icon, title});
+  if(!toastShowing) processToastQueue();
+}
+
+function processToastQueue(){
+  if(toastQueue.length === 0){ toastShowing = false; return; }
+  toastShowing = true;
+  const {icon, title} = toastQueue.shift();
+  const toast = document.getElementById('achToast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastText').textContent = title;
+  toast.classList.add('show');
+
+  // Play sparkle sound
+  playSparkleSound();
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(processToastQueue, 400);
+  }, 3000);
+}
+
+function playSparkleSound(){
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [880, 1108, 1318, 1760];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.08);
+      gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + i * 0.08 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.3);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.08);
+      osc.stop(ctx.currentTime + i * 0.08 + 0.35);
+    });
+  } catch(e){}
+}
+
+// ===== CONFETTI =====
+function launchConfetti(){
+  const colors = ['#ff6fd8','#b44dff','#ffd700','#ff4444','#44ff44','#4488ff','#ff88cc'];
+  for(let i = 0; i < 80; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.top = -10 + 'px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (Math.random() * 8 + 4) + 'px';
+    piece.style.height = (Math.random() * 8 + 4) + 'px';
+    piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    piece.style.animationDelay = (Math.random() * 1) + 's';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 4000);
+  }
+}
+
+// ===== GLOBAL UNLOCK FUNCTION (for other pages to include) =====
+// This function can be copied to other game pages
+window.checkAndUnlockAchievement = function(id, condition){
+  if(!condition) return false;
+  const key = 'kpop_achievements_' + (new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star');
+  let data;
+  try { data = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){ data = {}; }
+  if(data[id]) return false;
+  data[id] = Date.now();
+  localStorage.setItem(key, JSON.stringify(data));
+
+  // Show toast if on achievements page
+  const ach = (typeof ACHIEVEMENTS !== 'undefined') ? ACHIEVEMENTS.find(a => a.id === id) : null;
+  if(ach && typeof showAchToast === 'function'){
+    showAchToast(ach.icon, ach.title);
+  }
+  return true;
+};
+
+// ===== INIT =====
+renderAll();
+
+// Show toasts for newly detected achievements
+(function(){
+  const beforeRender = JSON.parse(sessionStorage.getItem('kpop_ach_before') || '{}');
+  const afterRender = getUnlocked();
+  const newlyUnlocked = [];
+  Object.keys(afterRender).forEach(id => {
+    if(!beforeRender[id]) newlyUnlocked.push(id);
+  });
+  if(newlyUnlocked.length > 0 && newlyUnlocked.length <= 5){
+    newlyUnlocked.forEach(id => {
+      const ach = ACHIEVEMENTS.find(a => a.id === id);
+      if(ach) showAchToast(ach.icon, ach.title);
+    });
+  }
+  // Store current state for next visit comparison
+  sessionStorage.setItem('kpop_ach_before', JSON.stringify(afterRender));
+})();
+</script>
+</body>
+</html>

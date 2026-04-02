@@ -31,6 +31,27 @@ body{
   font-family:'Quicksand',sans-serif;
   color:#fff;
   overflow-x:hidden;
+  animation: pageEnter 0.6s ease-out;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== ANIMATED EMOJI BORDER ===== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: 3px solid transparent;
+  border-image: linear-gradient(45deg, #ff6fd8, #ffd700, #a18cd1, #4ecdc4, #ff6fd8) 1;
+  animation: borderShift 4s linear infinite;
+  pointer-events: none;
+  z-index: 9990;
+}
+@keyframes borderShift {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
 }
 
 /* ===== SPARKLE CANVAS ===== */
@@ -843,6 +864,9 @@ const TRANSLATIONS = {
       'karaoke.html': {title:'Karaoké Star', desc:'Chante avec les paroles qui défilent !', badge:'Musique'},
       'coloriage.html': {title:'Coloriage K-Pop', desc:'Colorie de belles images K-Pop !', badge:'Art'},
       'puzzle.html': {title:'Puzzle Star', desc:'Reconstitue les photos de tes idols !', badge:'Logique'},
+      'studio.html': {title:'Studio Musical', desc:'Crée tes propres beats et mélodies !', badge:'Musique'},
+      'photobooth.html': {title:'Photo Booth', desc:'Crée tes photos avec des stickers K-Pop !', badge:'Créatif'},
+      'pet.html': {title:'Mon Pet K-Pop', desc:'Adopte et prends soin de ton animal virtuel !', badge:'Pet'},
     },
     trophies: {
       first_game: {name:'Première partie', desc:'Joue ton premier jeu'},
@@ -949,6 +973,9 @@ const TRANSLATIONS = {
       'karaoke.html': {title:'Karaoke Star', desc:'Sing along with the scrolling lyrics!', badge:'Music'},
       'coloriage.html': {title:'K-Pop Coloring', desc:'Color beautiful K-Pop pictures!', badge:'Art'},
       'puzzle.html': {title:'Puzzle Star', desc:'Put together photos of your idols!', badge:'Logic'},
+      'studio.html': {title:'Music Studio', desc:'Create your own beats and melodies!', badge:'Music'},
+      'photobooth.html': {title:'Photo Booth', desc:'Create photos with K-Pop stickers!', badge:'Creative'},
+      'pet.html': {title:'My K-Pop Pet', desc:'Adopt and take care of your virtual pet!', badge:'Pet'},
     },
     trophies: {
       first_game: {name:'First Game', desc:'Play your first game'},
@@ -1056,6 +1083,9 @@ const GAMES = [
   {file:'karaoke.html',icon:'🎙️',difficulty:2,time:'3 min',isNew:false},
   {file:'coloriage.html',icon:'🎨',difficulty:1,time:'5 min',isNew:true},
   {file:'puzzle.html',icon:'🧩',difficulty:3,time:'4 min',isNew:true,hs:'puzzle'},
+  {file:'studio.html',icon:'🎹',difficulty:2,time:'5 min',isNew:true},
+  {file:'photobooth.html',icon:'📸',difficulty:1,time:'5 min',isNew:true},
+  {file:'pet.html',icon:'🐱',difficulty:1,time:'∞',isNew:true},
 ];
 
 const TROPHIES = [
@@ -1802,6 +1832,41 @@ if(installBtn){
 window.addEventListener('appinstalled',()=>{
   if(installBtn) installBtn.style.display='none';
   deferredPrompt=null;
+});
+// ===== SPARKLE TRAIL =====
+document.addEventListener('mousemove', (e) => {
+  if (Math.random() > 0.7) {
+    const s = document.createElement('div');
+    s.style.cssText = `position:fixed;pointer-events:none;z-index:9999;font-size:${8+Math.random()*12}px;left:${e.clientX}px;top:${e.clientY}px;opacity:1;transition:all 0.8s ease-out;`;
+    s.textContent = ['\u2728','\u2B50','\uD83D\uDCAB','\uD83C\uDF1F','\uD83D\uDC96'][Math.floor(Math.random()*5)];
+    document.body.appendChild(s);
+    requestAnimationFrame(() => {
+      s.style.transform = `translateY(-${30+Math.random()*40}px) translateX(${(Math.random()-0.5)*30}px) scale(0)`;
+      s.style.opacity = '0';
+    });
+    setTimeout(() => s.remove(), 800);
+  }
+});
+document.addEventListener('touchmove', (e) => {
+  const touch = e.touches[0];
+  if (Math.random() > 0.7) {
+    const s = document.createElement('div');
+    s.style.cssText = `position:fixed;pointer-events:none;z-index:9999;font-size:${8+Math.random()*12}px;left:${touch.clientX}px;top:${touch.clientY}px;opacity:1;transition:all 0.8s ease-out;`;
+    s.textContent = ['\u2728','\u2B50','\uD83D\uDCAB','\uD83C\uDF1F','\uD83D\uDC96'][Math.floor(Math.random()*5)];
+    document.body.appendChild(s);
+    requestAnimationFrame(() => {
+      s.style.transform = `translateY(-${30+Math.random()*40}px) translateX(${(Math.random()-0.5)*30}px) scale(0)`;
+      s.style.opacity = '0';
+    });
+    setTimeout(() => s.remove(), 800);
+  }
+});
+
+// ===== HAPTIC FEEDBACK =====
+document.addEventListener('click', (e) => {
+  if (e.target.closest('button, .btn, a, [onclick], .item-btn, .option-item, .game-card, .quick-name, .enter-btn, .emoji-btn, .style-btn, .tag-btn')) {
+    try { navigator.vibrate?.(15); } catch(e) {}
+  }
 });
 </script>
 </body>

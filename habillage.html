@@ -33,9 +33,13 @@
 body{
   background:linear-gradient(135deg,#fbc2eb,#a18cd1,#ff6fd8,#fbc2eb);
   background-size:600% 600%;
-  animation:gradBG 12s ease infinite;
+  animation:gradBG 12s ease infinite, pageEnter 0.6s ease-out;
   min-height:100vh;font-family:'Quicksand',sans-serif;
   color:white;overflow-x:hidden;
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes gradBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
@@ -114,12 +118,12 @@ body{
 .mannequin{position:relative;z-index:2;text-align:center}
 @keyframes idleBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
-.m-layer{display:block;line-height:1;transition:.35s cubic-bezier(.34,1.56,.64,1)}
-.m-hat{font-size:2.6em;min-height:45px;margin-bottom:-8px}
-.m-head{font-size:3.6em}
-.m-body{font-size:4.2em}
-.m-legs{font-size:3em}
-.m-shoes{font-size:2.2em;min-height:35px}
+.m-layer{display:block;line-height:1;transition:.35s cubic-bezier(.34,1.56,.64,1);position:relative}
+.m-hat{font-size:2.6em;min-height:45px;margin-bottom:-12px;z-index:4}
+.m-head{font-size:3.6em;clip-path:ellipse(55% 42% at 50% 32%);margin-bottom:-8px;z-index:3}
+.m-body{font-size:4.2em;margin-bottom:-5px;z-index:2}
+.m-legs{font-size:3em;margin-bottom:-3px;z-index:1}
+.m-shoes{font-size:2.2em;min-height:35px;z-index:0}
 .m-accessory{font-size:2em;min-height:32px;margin-top:-4px}
 
 /* Sparkle on change */
@@ -239,6 +243,7 @@ body{
 }
 .gallery-card:hover{transform:scale(1.05);border-color:var(--gold)}
 .gallery-card .gc-mannequin{font-size:1.4em;line-height:1.1;margin:6px 0}
+.gallery-card .gc-mannequin .gc-head{display:inline-block;clip-path:ellipse(55% 42% at 50% 32%);margin-bottom:-4px}
 .gallery-card .gc-name{font-size:.8em;font-weight:600;color:var(--gold);margin-top:6px}
 .gallery-card .gc-theme{font-size:.7em;opacity:.7}
 .gallery-card .gc-score{font-size:.75em;color:var(--pink);margin-top:2px}
@@ -1273,7 +1278,7 @@ function openGallery() {
       card.className = `gallery-card ${o.score >= 80 ? 'golden-frame' : ''}`;
       card.style.position = 'relative';
       card.innerHTML = `
-        <div class="gc-mannequin">${hat}<br>${head}<br>${body}<br>${legs}<br>${shoes}${acc ? '<br>'+acc : ''}</div>
+        <div class="gc-mannequin">${hat}<br><span class="gc-head">${head}</span><br>${body}<br>${legs}<br>${shoes}${acc ? '<br>'+acc : ''}</div>
         <div class="gc-name">${o.name}</div>
         <div class="gc-theme">${THEMES[o.theme]?.label || o.theme}</div>
         <div class="gc-score">Score: ${o.score}/100</div>
@@ -1363,6 +1368,42 @@ document.getElementById('dailyTip').addEventListener('click', function(e) {
 
 // ─── START ───
 init();
+
+// ===== SPARKLE TRAIL =====
+document.addEventListener('mousemove', (e) => {
+  if (Math.random() > 0.7) {
+    const s = document.createElement('div');
+    s.style.cssText = `position:fixed;pointer-events:none;z-index:9999;font-size:${8+Math.random()*12}px;left:${e.clientX}px;top:${e.clientY}px;opacity:1;transition:all 0.8s ease-out;`;
+    s.textContent = ['\u2728','\u2B50','\uD83D\uDCAB','\uD83C\uDF1F','\uD83D\uDC96'][Math.floor(Math.random()*5)];
+    document.body.appendChild(s);
+    requestAnimationFrame(() => {
+      s.style.transform = `translateY(-${30+Math.random()*40}px) translateX(${(Math.random()-0.5)*30}px) scale(0)`;
+      s.style.opacity = '0';
+    });
+    setTimeout(() => s.remove(), 800);
+  }
+});
+document.addEventListener('touchmove', (e) => {
+  const touch = e.touches[0];
+  if (Math.random() > 0.7) {
+    const s = document.createElement('div');
+    s.style.cssText = `position:fixed;pointer-events:none;z-index:9999;font-size:${8+Math.random()*12}px;left:${touch.clientX}px;top:${touch.clientY}px;opacity:1;transition:all 0.8s ease-out;`;
+    s.textContent = ['\u2728','\u2B50','\uD83D\uDCAB','\uD83C\uDF1F','\uD83D\uDC96'][Math.floor(Math.random()*5)];
+    document.body.appendChild(s);
+    requestAnimationFrame(() => {
+      s.style.transform = `translateY(-${30+Math.random()*40}px) translateX(${(Math.random()-0.5)*30}px) scale(0)`;
+      s.style.opacity = '0';
+    });
+    setTimeout(() => s.remove(), 800);
+  }
+});
+
+// ===== HAPTIC FEEDBACK =====
+document.addEventListener('click', (e) => {
+  if (e.target.closest('button, .btn, a, [onclick], .item-btn, .option-item, .game-card, .quick-name, .enter-btn, .emoji-btn, .style-btn, .tag-btn')) {
+    try { navigator.vibrate?.(15); } catch(e) {}
+  }
+});
 
 /* ===== PWA: SERVICE WORKER ===== */
 if('serviceWorker' in navigator){

@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Pet K-Pop — École Saint-Esprit</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<meta name="description" content="Adopte et prends soin de ton animal K-Pop virtuel !">
+<meta name="author" content="K-Pop Star Academy">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Mon Pet K-Pop — École Saint-Esprit">
+<meta property="og:description" content="Adopte et prends soin de ton animal K-Pop virtuel !">
+<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:type" content="website">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:linear-gradient(135deg,#a18cd1,#fbc2eb,#ff6fd8,#a18cd1);
+  background-size:400% 400%;
+  animation:gradBG 8s ease infinite;
+  min-height:100vh;
+  font-family:'Quicksand',sans-serif;
+  display:flex;flex-direction:column;align-items:center;
+  padding:12px;overflow-x:hidden;
+  color:#2d1b69;
+}
+@keyframes gradBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+a.back-btn{
+  position:fixed;top:12px;left:12px;z-index:100;
+  background:rgba(255,255,255,.25);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.4);
+  color:#fff;text-decoration:none;padding:8px 16px;border-radius:20px;
+  font-weight:700;font-size:.85em;transition:.3s;
+}
+a.back-btn:hover{background:rgba(255,255,255,.45);transform:scale(1.05)}
+
+h1{
+  font-size:1.5em;font-weight:800;color:#fff;text-align:center;
+  text-shadow:0 2px 15px rgba(161,140,209,.6);
+  margin:8px 0 4px;
+}
+.subtitle{font-size:.85em;color:rgba(255,255,255,.8);margin-bottom:10px;text-align:center}
+
+/* Glass panel */
+.glass{
+  background:rgba(255,255,255,.2);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.35);border-radius:20px;
+  padding:18px;width:100%;max-width:480px;margin-bottom:12px;
+}
+
+/* ── ADOPT SCREEN ── */
+#adoptScreen{text-align:center}
+#adoptScreen h2{font-size:1.3em;color:#fff;margin-bottom:14px}
+.pet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.pet-option{
+  background:rgba(255,255,255,.25);backdrop-filter:blur(8px);
+  border:2px solid rgba(255,255,255,.3);border-radius:16px;
+  padding:14px 6px;cursor:pointer;transition:.3s;text-align:center;
+}
+.pet-option:hover{transform:scale(1.08);border-color:#fff;background:rgba(255,255,255,.4)}
+.pet-option .emoji{font-size:3em;display:block;margin-bottom:4px}
+.pet-option .pname{font-weight:700;font-size:.85em;color:#2d1b69}
+
+.name-input{
+  width:80%;max-width:260px;padding:10px 16px;border-radius:30px;border:2px solid rgba(255,255,255,.5);
+  background:rgba(255,255,255,.3);backdrop-filter:blur(8px);
+  font-family:inherit;font-size:1em;text-align:center;color:#2d1b69;
+  outline:none;margin-bottom:10px;
+}
+.name-input::placeholder{color:rgba(45,27,105,.5)}
+.name-input:focus{border-color:#ff6fd8;background:rgba(255,255,255,.5)}
+
+.adopt-btn{
+  background:linear-gradient(135deg,#ff6fd8,#a18cd1);
+  color:#fff;border:none;padding:12px 36px;border-radius:30px;
+  font-family:inherit;font-size:1.1em;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 20px rgba(255,111,216,.4);transition:.3s;
+}
+.adopt-btn:hover{transform:scale(1.06);box-shadow:0 6px 30px rgba(255,111,216,.6)}
+.adopt-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ── MAIN PET VIEW ── */
+#petView{display:none}
+
+.top-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:6px;margin-bottom:6px;
+}
+.pet-name-display{font-size:1.15em;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.level-badge{
+  background:linear-gradient(135deg,#ffd700,#ff6fd8);
+  color:#fff;padding:3px 12px;border-radius:20px;
+  font-weight:800;font-size:.85em;
+  box-shadow:0 2px 10px rgba(255,215,0,.4);
+}
+.streak-badge{
+  background:linear-gradient(135deg,#ff6f61,#ff9a76);
+  color:#fff;padding:3px 12px;border-radius:20px;
+  font-weight:700;font-size:.8em;
+}
+
+/* XP bar */
+.xp-bar-wrap{
+  width:100%;height:10px;background:rgba(255,255,255,.2);border-radius:10px;
+  overflow:hidden;margin-bottom:8px;
+}
+.xp-bar-fill{
+  height:100%;background:linear-gradient(90deg,#ffd700,#ff6fd8);
+  border-radius:10px;transition:width .5s;
+}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.stat-item{display:flex;align-items:center;gap:6px}
+.stat-icon{font-size:1.3em;flex-shrink:0}
+.stat-info{flex:1;min-width:0}
+.stat-label{font-size:.7em;font-weight:700;color:rgba(45,27,105,.7)}
+.stat-bar{
+  width:100%;height:8px;background:rgba(255,255,255,.25);border-radius:8px;
+  overflow:hidden;
+}
+.stat-fill{height:100%;border-radius:8px;transition:width .4s}
+.stat-fill.hunger{background:linear-gradient(90deg,#ff6b6b,#ffa07a)}
+.stat-fill.happiness{background:linear-gradient(90deg,#ff6fd8,#ee82ee)}
+.stat-fill.energy{background:linear-gradient(90deg,#ffd700,#ffaa00)}
+.stat-fill.style{background:linear-gradient(90deg,#00d2ff,#7b68ee)}
+.stat-val{font-size:.65em;font-weight:700;color:rgba(45,27,105,.6);text-align:right}
+
+/* Pet arena */
+.pet-arena{
+  position:relative;width:100%;height:260px;border-radius:18px;
+  overflow:hidden;margin-bottom:10px;
+  display:flex;align-items:center;justify-content:center;
+}
+.room-bg{
+  position:absolute;inset:0;z-index:0;transition:background .5s;
+}
+.room-bg.bedroom{background:linear-gradient(180deg,#1a1a3e 0%,#2d1b69 40%,#4a2c8a 100%)}
+.room-bg.garden{background:linear-gradient(180deg,#87ceeb 0%,#98fb98 60%,#228b22 100%)}
+.room-bg.stage{background:linear-gradient(180deg,#0a0a1a 0%,#1a0a2e 40%,#2d0a4e 100%)}
+.room-bg.space{background:linear-gradient(180deg,#000022 0%,#0a0a3a 50%,#1a0a4e 100%)}
+
+.room-decor{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.pet-container{position:relative;z-index:5;text-align:center}
+.pet-emoji{
+  font-size:8em;display:block;
+  animation:petFloat 3s ease-in-out infinite;
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.3));
+  transition:filter .3s;
+}
+@keyframes petFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+.mood-indicator{
+  font-size:2em;display:block;margin-bottom:-8px;
+  animation:moodPulse 2s ease-in-out infinite;
+}
+@keyframes moodPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+.costume-overlay{
+  position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+  font-size:1.4em;opacity:.9;
+}
+
+/* Animations */
+.pet-emoji.bounce{animation:petBounce .5s ease 3}
+@keyframes petBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+.pet-emoji.sleep{animation:petSleep 2s ease-in-out infinite;filter:brightness(.7) drop-shadow(0 8px 20px rgba(0,0,0,.3))}
+@keyframes petSleep{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(3px) rotate(3deg)}}
+.pet-emoji.shake{animation:petShake .3s ease infinite}
+@keyframes petShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pet-emoji.sad{filter:brightness(.6) saturate(.5) drop-shadow(0 8px 20px rgba(0,0,0,.3))}
+
+/* Floating particles */
+.float-particle{
+  position:absolute;z-index:10;pointer-events:none;
+  font-size:1.6em;
+  animation:floatUp 1.2s ease forwards;
+}
+@keyframes floatUp{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-80px) scale(.4)}
+}
+
+/* Action buttons */
+.actions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.action-btn{
+  background:rgba(255,255,255,.25);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(255,255,255,.35);border-radius:14px;
+  padding:10px 4px;cursor:pointer;transition:.3s;
+  text-align:center;font-family:inherit;color:#2d1b69;
+  position:relative;overflow:hidden;
+}
+.action-btn:hover:not(:disabled){transform:scale(1.05);background:rgba(255,255,255,.4);border-color:#fff}
+.action-btn:active:not(:disabled){transform:scale(.95)}
+.action-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.action-btn .aicon{font-size:1.8em;display:block}
+.action-btn .alabel{font-size:.72em;font-weight:700;display:block;margin-top:2px}
+.action-btn .cooldown-bar{
+  position:absolute;bottom:0;left:0;height:3px;
+  background:linear-gradient(90deg,#ff6fd8,#a18cd1);
+  border-radius:0 0 14px 14px;transition:width linear;
+}
+
+/* Room & costume pickers */
+.picker-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:8px}
+.picker-btn{
+  background:rgba(255,255,255,.2);backdrop-filter:blur(6px);
+  border:2px solid rgba(255,255,255,.3);border-radius:12px;
+  padding:6px 12px;cursor:pointer;font-family:inherit;
+  font-size:.75em;font-weight:700;color:#2d1b69;transition:.3s;
+}
+.picker-btn:hover{border-color:#fff;background:rgba(255,255,255,.4)}
+.picker-btn.active{border-color:#ff6fd8;background:rgba(255,111,216,.25)}
+
+.section-label{font-size:.8em;font-weight:800;color:rgba(255,255,255,.8);margin-bottom:6px;text-align:center}
+
+/* Outfit modal */
+.outfit-modal{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;
+}
+.outfit-modal.show{display:flex}
+.outfit-panel{
+  background:rgba(255,255,255,.25);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.4);border-radius:24px;
+  padding:24px;width:90%;max-width:360px;text-align:center;
+}
+.outfit-panel h3{color:#fff;margin-bottom:14px;font-size:1.1em}
+.outfit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.outfit-item{
+  font-size:2.2em;cursor:pointer;padding:8px;border-radius:12px;
+  background:rgba(255,255,255,.15);border:2px solid transparent;
+  transition:.3s;
+}
+.outfit-item:hover{background:rgba(255,255,255,.35);transform:scale(1.1)}
+.outfit-item.active{border-color:#ffd700;background:rgba(255,215,0,.2)}
+.outfit-item.locked{opacity:.35;cursor:not-allowed;position:relative}
+.outfit-item.locked::after{
+  content:'🔒';position:absolute;bottom:-2px;right:-2px;font-size:.4em;
+}
+.close-modal{
+  background:linear-gradient(135deg,#ff6fd8,#a18cd1);
+  color:#fff;border:none;padding:8px 28px;border-radius:20px;
+  font-family:inherit;font-weight:700;cursor:pointer;
+}
+
+/* Level up overlay */
+.levelup-overlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+}
+.levelup-overlay.show{display:flex}
+.levelup-card{
+  background:linear-gradient(135deg,#ffd700,#ff6fd8,#a18cd1);
+  border-radius:28px;padding:30px;text-align:center;
+  animation:levelPop .5s ease;color:#fff;
+  box-shadow:0 10px 60px rgba(255,215,0,.5);
+}
+@keyframes levelPop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.levelup-card h2{font-size:2em;margin-bottom:6px}
+.levelup-card .lv-num{font-size:3em;font-weight:800}
+.levelup-card .lv-msg{font-size:.9em;margin:8px 0 14px;opacity:.9}
+.levelup-card button{
+  background:#fff;color:#ff6fd8;border:none;padding:10px 30px;
+  border-radius:20px;font-family:inherit;font-weight:800;font-size:1em;cursor:pointer;
+}
+
+/* Warning pulse */
+.warning-pulse{animation:warnPulse 1s ease infinite}
+@keyframes warnPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,50,50,.4)}50%{box-shadow:0 0 20px 8px rgba(255,50,50,.6)}}
+
+/* Decor elements */
+.decor-star{
+  position:absolute;color:rgba(255,255,255,.6);font-size:.8em;
+  animation:twinkle 2s ease-in-out infinite;
+}
+@keyframes twinkle{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+
+@media(max-width:400px){
+  .pet-emoji{font-size:5.5em}
+  .actions-grid{grid-template-columns:repeat(3,1fr);gap:6px}
+  .pet-arena{height:200px}
+  h1{font-size:1.2em}
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">Retour</a>
+
+<h1>Mon Pet K-Pop</h1>
+<p class="subtitle">Adopte et prends soin de ton compagnon star !</p>
+
+<!-- ── ADOPT SCREEN ── -->
+<div id="adoptScreen" class="glass">
+  <h2>Choisis ton compagnon !</h2>
+  <div class="pet-grid">
+    <div class="pet-option" onclick="selectPetType(this,'cat')" data-type="cat">
+      <span class="emoji">🐱</span>
+      <span class="pname">Kitty Star</span>
+    </div>
+    <div class="pet-option" onclick="selectPetType(this,'rabbit')" data-type="rabbit">
+      <span class="emoji">🐰</span>
+      <span class="pname">Bunny Pop</span>
+    </div>
+    <div class="pet-option" onclick="selectPetType(this,'panda')" data-type="panda">
+      <span class="emoji">🐼</span>
+      <span class="pname">Panda Beat</span>
+    </div>
+    <div class="pet-option" onclick="selectPetType(this,'fox')" data-type="fox">
+      <span class="emoji">🦊</span>
+      <span class="pname">Foxy Tune</span>
+    </div>
+    <div class="pet-option" onclick="selectPetType(this,'dog')" data-type="dog">
+      <span class="emoji">🐶</span>
+      <span class="pname">Puppy Dance</span>
+    </div>
+    <div class="pet-option" onclick="selectPetType(this,'unicorn')" data-type="unicorn">
+      <span class="emoji">🦄</span>
+      <span class="pname">Unicorn Dream</span>
+    </div>
+  </div>
+  <input class="name-input" id="petNameInput" placeholder="Donne-lui un nom..." maxlength="16">
+  <br>
+  <button class="adopt-btn" id="adoptBtn" onclick="adoptPet()" disabled>Adopter !</button>
+</div>
+
+<!-- ── MAIN PET VIEW ── -->
+<div id="petView">
+  <!-- Top bar -->
+  <div class="glass" style="padding:12px 16px">
+    <div class="top-bar">
+      <span class="pet-name-display" id="petNameDisp">—</span>
+      <span class="level-badge" id="levelBadge">Lv.1</span>
+      <span class="streak-badge" id="streakBadge">Jour 1</span>
+    </div>
+    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBar" style="width:0%"></div></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="glass" style="padding:12px 16px">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-icon">💖</span>
+        <div class="stat-info">
+          <div class="stat-label">Bonheur</div>
+          <div class="stat-bar"><div class="stat-fill happiness" id="barHappiness" style="width:100%"></div></div>
+        </div>
+        <span class="stat-val" id="valHappiness">100</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">🍕</span>
+        <div class="stat-info">
+          <div class="stat-label">Faim</div>
+          <div class="stat-bar"><div class="stat-fill hunger" id="barHunger" style="width:100%"></div></div>
+        </div>
+        <span class="stat-val" id="valHunger">100</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">⚡</span>
+        <div class="stat-info">
+          <div class="stat-label">Énergie</div>
+          <div class="stat-bar"><div class="stat-fill energy" id="barEnergy" style="width:100%"></div></div>
+        </div>
+        <span class="stat-val" id="valEnergy">100</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">✨</span>
+        <div class="stat-info">
+          <div class="stat-label">Style</div>
+          <div class="stat-bar"><div class="stat-fill style" id="barStyle" style="width:100%"></div></div>
+        </div>
+        <span class="stat-val" id="valStyle">100</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pet Arena -->
+  <div class="glass" style="padding:0;overflow:hidden">
+    <div class="pet-arena" id="petArena">
+      <div class="room-bg bedroom" id="roomBg"></div>
+      <div class="room-decor" id="roomDecor"></div>
+      <div class="pet-container">
+        <span class="mood-indicator" id="moodFace">😍</span>
+        <span class="pet-emoji" id="petEmoji">🐱</span>
+        <span class="costume-overlay" id="costumeDisplay"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="glass">
+    <div class="actions-grid">
+      <button class="action-btn" id="btnFeed" onclick="doAction('feed')">
+        <span class="aicon">🍕</span><span class="alabel">Nourrir</span>
+        <div class="cooldown-bar" style="width:0%"></div>
+      </button>
+      <button class="action-btn" id="btnPlay" onclick="doAction('play')">
+        <span class="aicon">🎮</span><span class="alabel">Jouer</span>
+        <div class="cooldown-bar" style="width:0%"></div>
+      </button>
+      <button class="action-btn" id="btnSleep" onclick="doAction('sleep')">
+        <span class="aicon">😴</span><span class="alabel">Dormir</span>
+        <div class="cooldown-bar" style="width:0%"></div>
+      </button>
+      <button class="action-btn" id="btnGroom" onclick="doAction('groom')">
+        <span class="aicon">🛁</span><span class="alabel">Toiletter</span>
+        <div class="cooldown-bar" style="width:0%"></div>
+      </button>
+      <button class="action-btn" id="btnSing" onclick="doAction('sing')">
+        <span class="aicon">🎵</span><span class="alabel">Chanter</span>
+        <div class="cooldown-bar" style="width:0%"></div>
+      </button>
+      <button class="action-btn" id="btnDress" onclick="openOutfitPicker()">
+        <span class="aicon">👗</span><span class="alabel">Habiller</span>
+        <div class="cooldown-bar" style="width:0%"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Room picker -->
+  <div class="glass" style="padding:12px">
+    <div class="section-label">Chambre</div>
+    <div class="picker-row" id="roomPicker">
+      <button class="picker-btn active" onclick="setRoom('bedroom')">🛏️ Chambre</button>
+      <button class="picker-btn" onclick="setRoom('garden')">🌸 Jardin</button>
+      <button class="picker-btn" onclick="setRoom('stage')">🎤 Scène</button>
+      <button class="picker-btn" onclick="setRoom('space')">🚀 Espace</button>
+    </div>
+  </div>
+</div>
+
+<!-- Outfit Modal -->
+<div class="outfit-modal" id="outfitModal">
+  <div class="outfit-panel">
+    <h3>Choisir une tenue</h3>
+    <div class="outfit-grid" id="outfitGrid"></div>
+    <button class="close-modal" onclick="closeOutfitPicker()">Fermer</button>
+  </div>
+</div>
+
+<!-- Level Up Overlay -->
+<div class="levelup-overlay" id="levelupOverlay">
+  <div class="levelup-card">
+    <h2>Level Up !</h2>
+    <div class="lv-num" id="lvNum">2</div>
+    <div class="lv-msg" id="lvMsg">Nouvelle tenue débloquée !</div>
+    <button onclick="closeLevelUp()">Super !</button>
+  </div>
+</div>
+
+<script>
+// ─── AUDIO CONTEXT ───
+const AudioCtx=window.AudioContext||window.webkitAudioContext;
+let actx;
+function ensureAudio(){if(!actx)actx=new AudioCtx()}
+
+function playTone(freq,dur,type='sine',vol=.15){
+  ensureAudio();
+  const o=actx.createOscillator(),g=actx.createGain();
+  o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(vol,actx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+dur);
+  o.connect(g);g.connect(actx.destination);
+  o.start();o.stop(actx.currentTime+dur);
+}
+
+function sfxFeed(){playTone(300,.08,'square',.12);setTimeout(()=>playTone(400,.08,'square',.1),100);setTimeout(()=>playTone(350,.1,'square',.1),200)}
+function sfxPlay(){playTone(523,.1,'sine',.12);setTimeout(()=>playTone(659,.1,'sine',.12),120);setTimeout(()=>playTone(784,.15,'sine',.1),240)}
+function sfxSleep(){playTone(262,.4,'sine',.08);setTimeout(()=>playTone(247,.5,'sine',.06),400)}
+function sfxGroom(){playTone(1200,.06,'sine',.08);setTimeout(()=>playTone(1500,.06,'sine',.08),80);setTimeout(()=>playTone(1800,.08,'sine',.06),160)}
+function sfxSing(){[523,587,659,784,880].forEach((f,i)=>setTimeout(()=>playTone(f,.15,'sine',.1),i*130))}
+function sfxLevelUp(){
+  [523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.2,'square',.1),i*150));
+  setTimeout(()=>playTone(1047,.4,'sine',.12),600);
+}
+
+// ─── CONFIG ───
+const PET_TYPES={
+  cat:{emoji:'🐱',name:'Kitty Star'},
+  rabbit:{emoji:'🐰',name:'Bunny Pop'},
+  panda:{emoji:'🐼',name:'Panda Beat'},
+  fox:{emoji:'🦊',name:'Foxy Tune'},
+  dog:{emoji:'🐶',name:'Puppy Dance'},
+  unicorn:{emoji:'🦄',name:'Unicorn Dream'}
+};
+
+const COSTUMES=[
+  {emoji:'👑',name:'Couronne',unlockLv:1},
+  {emoji:'🎀',name:'Noeud',unlockLv:3},
+  {emoji:'🕶️',name:'Lunettes',unlockLv:5},
+  {emoji:'🎩',name:'Chapeau',unlockLv:8},
+  {emoji:'💎',name:'Diamant',unlockLv:12}
+];
+
+const DECAY={happiness:5,hunger:8,energy:3,style:4}; // per hour
+const COOLDOWNS={feed:8,play:12,sleep:20,groom:10,sing:15}; // seconds
+const XP_PER_LEVEL=50;
+
+const ACTIONS={
+  feed:{stats:{hunger:30},xp:8,particles:['🍕','🍔','🍩','🍪','🍰'],anim:'bounce',sfx:sfxFeed},
+  play:{stats:{happiness:25,energy:5},xp:10,particles:['⭐','🎮','🎯','🏀','🎪'],anim:'bounce',sfx:sfxPlay},
+  sleep:{stats:{energy:40},xp:6,particles:['💤','😴','🌙','⭐','☁️'],anim:'sleep',sfx:sfxSleep},
+  groom:{stats:{style:35},xp:8,particles:['✨','💫','🫧','🧼','💎'],anim:'bounce',sfx:sfxGroom},
+  sing:{stats:{happiness:15,style:10},xp:12,particles:['🎵','🎶','🎤','💜','🎼'],anim:'bounce',sfx:sfxSing}
+};
+
+const ROOM_DECOR={
+  bedroom:['⭐','🌙','💜','✨','🛏️'],
+  garden:['🌸','🌺','🌻','🦋','🌿'],
+  stage:['🎤','🎵','💡','⭐','🔥'],
+  space:['⭐','🌟','🪐','🚀','💫']
+};
+
+// ─── STATE ───
+let pet=null;
+let selectedType=null;
+let cooldowns={};
+let decayInterval=null;
+
+function getPlayer(){return new URLSearchParams(location.search).get('joueur')||localStorage.getItem('kpop_current_player')||'Joueur'}
+const PLAYER=getPlayer();
+
+function storageKey(){return 'kpop_pet_'+PLAYER}
+
+// ─── ADOPT ───
+function selectPetType(el,type){
+  selectedType=type;
+  document.querySelectorAll('.pet-option').forEach(o=>o.style.borderColor='rgba(255,255,255,.3)');
+  el.style.borderColor='#ff6fd8';
+  checkAdoptReady();
+}
+
+document.getElementById('petNameInput').addEventListener('input',checkAdoptReady);
+function checkAdoptReady(){
+  document.getElementById('adoptBtn').disabled=!(selectedType&&document.getElementById('petNameInput').value.trim());
+}
+
+function adoptPet(){
+  const name=document.getElementById('petNameInput').value.trim();
+  if(!selectedType||!name)return;
+  ensureAudio();
+  pet={
+    type:selectedType,
+    name:name,
+    stats:{happiness:100,hunger:100,energy:100,style:100},
+    level:1,xp:0,
+    room:'bedroom',
+    costume:-1,
+    streak:1,
+    lastVisit:Date.now(),
+    lastDecay:Date.now()
+  };
+  savePet();
+  sfxLevelUp();
+  showPetView();
+}
+
+// ─── PERSISTENCE ───
+function savePet(){
+  pet.lastDecay=Date.now();
+  localStorage.setItem(storageKey(),JSON.stringify(pet));
+}
+
+function loadPet(){
+  const raw=localStorage.getItem(storageKey());
+  if(!raw)return false;
+  pet=JSON.parse(raw);
+  // Apply time-based decay
+  const now=Date.now();
+  const hours=(now-pet.lastDecay)/(1000*3600);
+  if(hours>0.01){
+    for(const k in DECAY){
+      pet.stats[k]=Math.max(0,Math.round(pet.stats[k]-DECAY[k]*hours));
+    }
+  }
+  // Streak check
+  const lastDate=new Date(pet.lastVisit).toDateString();
+  const today=new Date().toDateString();
+  if(lastDate!==today){
+    const yesterday=new Date(Date.now()-86400000).toDateString();
+    if(lastDate===yesterday){
+      pet.streak=(pet.streak||1)+1;
+      // Daily bonus: refill a bit
+      for(const k in pet.stats) pet.stats[k]=Math.min(100,pet.stats[k]+10);
+    } else if(lastDate!==today){
+      pet.streak=1;
+    }
+    pet.lastVisit=now;
+  }
+  pet.lastDecay=now;
+  savePet();
+  return true;
+}
+
+// ─── SHOW PET ───
+function showPetView(){
+  document.getElementById('adoptScreen').style.display='none';
+  document.getElementById('petView').style.display='block';
+  renderPet();
+  renderRoomDecor();
+  startDecay();
+}
+
+function renderPet(){
+  const pt=PET_TYPES[pet.type];
+  document.getElementById('petEmoji').textContent=pt.emoji;
+  document.getElementById('petNameDisp').textContent=pet.name;
+  document.getElementById('levelBadge').textContent='Lv.'+pet.level;
+  document.getElementById('streakBadge').textContent='Jour '+pet.streak;
+  // XP
+  const xpNeeded=pet.level*XP_PER_LEVEL;
+  const pct=Math.min(100,Math.round(pet.xp/xpNeeded*100));
+  document.getElementById('xpBar').style.width=pct+'%';
+  // Costume
+  document.getElementById('costumeDisplay').textContent=pet.costume>=0?COSTUMES[pet.costume].emoji:'';
+  // Room
+  setRoom(pet.room,true);
+  // Stats
+  updateStatsUI();
+}
+
+function updateStatsUI(){
+  const s=pet.stats;
+  for(const k of ['happiness','hunger','energy','style']){
+    const v=Math.round(s[k]);
+    document.getElementById('bar'+capitalize(k)).style.width=v+'%';
+    document.getElementById('val'+capitalize(k)).textContent=v;
+  }
+  // Mood
+  const avg=(s.happiness+s.hunger+s.energy+s.style)/4;
+  const pe=document.getElementById('petEmoji');
+  const mf=document.getElementById('moodFace');
+  const arena=document.getElementById('petArena');
+  pe.className='pet-emoji';
+  arena.classList.remove('warning-pulse');
+
+  if(avg>=80){mf.textContent='😍';pe.classList.add('');spawnIdleHearts()}
+  else if(avg>=60){mf.textContent='😊'}
+  else if(avg>=40){mf.textContent='😐';pe.style.animationPlayState='paused'}
+  else if(avg>=20){mf.textContent='😢';pe.classList.add('sad')}
+  else{mf.textContent='😭';pe.classList.add('shake');arena.classList.add('warning-pulse')}
+  if(avg>=40)pe.style.animationPlayState='running';
+}
+
+function capitalize(s){return s[0].toUpperCase()+s.slice(1)}
+
+// ─── DECAY TIMER ───
+function startDecay(){
+  if(decayInterval)clearInterval(decayInterval);
+  decayInterval=setInterval(()=>{
+    // Decay per minute (rate/60)
+    for(const k in DECAY){
+      pet.stats[k]=Math.max(0,pet.stats[k]-DECAY[k]/60);
+    }
+    updateStatsUI();
+    savePet();
+  },60000); // every minute
+}
+
+// ─── ACTIONS ───
+function doAction(action){
+  if(cooldowns[action])return;
+  ensureAudio();
+  const cfg=ACTIONS[action];
+  // Apply stat changes
+  for(const k in cfg.stats){
+    pet.stats[k]=Math.min(100,pet.stats[k]+cfg.stats[k]);
+  }
+  // XP
+  pet.xp+=cfg.xp;
+  checkLevelUp();
+  // Animation
+  const pe=document.getElementById('petEmoji');
+  pe.className='pet-emoji';
+  void pe.offsetWidth; // reflow
+  pe.classList.add(cfg.anim);
+  if(cfg.anim==='sleep'){
+    setTimeout(()=>{pe.classList.remove('sleep');pe.className='pet-emoji'},3000);
+  } else {
+    setTimeout(()=>pe.className='pet-emoji',1500);
+  }
+  // Particles
+  spawnParticles(cfg.particles);
+  // Sound
+  cfg.sfx();
+  // Cooldown
+  startCooldown(action);
+  updateStatsUI();
+  savePet();
+  renderPet();
+}
+
+function startCooldown(action){
+  const dur=COOLDOWNS[action];
+  const btnId={feed:'btnFeed',play:'btnPlay',sleep:'btnSleep',groom:'btnGroom',sing:'btnSing'}[action];
+  if(!btnId)return;
+  const btn=document.getElementById(btnId);
+  const bar=btn.querySelector('.cooldown-bar');
+  btn.disabled=true;
+  cooldowns[action]=true;
+  bar.style.transition='none';
+  bar.style.width='100%';
+  void bar.offsetWidth;
+  bar.style.transition='width '+dur+'s linear';
+  bar.style.width='0%';
+  setTimeout(()=>{
+    btn.disabled=false;
+    cooldowns[action]=false;
+    bar.style.width='0%';
+  },dur*1000);
+}
+
+// ─── PARTICLES ───
+function spawnParticles(emojis){
+  const arena=document.getElementById('petArena');
+  for(let i=0;i<8;i++){
+    setTimeout(()=>{
+      const p=document.createElement('span');
+      p.className='float-particle';
+      p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      p.style.left=30+Math.random()*40+'%';
+      p.style.top=30+Math.random()*30+'%';
+      p.style.animationDuration=(.8+Math.random()*.8)+'s';
+      arena.appendChild(p);
+      p.addEventListener('animationend',()=>p.remove());
+    },i*120);
+  }
+}
+
+function spawnIdleHearts(){
+  if(Math.random()>.85)return;
+  const arena=document.getElementById('petArena');
+  const p=document.createElement('span');
+  p.className='float-particle';
+  p.textContent=['💖','💜','💗','✨'][Math.floor(Math.random()*4)];
+  p.style.left=40+Math.random()*20+'%';
+  p.style.top='40%';
+  arena.appendChild(p);
+  p.addEventListener('animationend',()=>p.remove());
+}
+setInterval(()=>{if(pet&&(pet.stats.happiness+pet.stats.hunger+pet.stats.energy+pet.stats.style)/4>=80)spawnIdleHearts()},3000);
+
+// ─── LEVEL UP ───
+function checkLevelUp(){
+  const needed=pet.level*XP_PER_LEVEL;
+  if(pet.xp>=needed&&pet.level<20){
+    pet.xp-=needed;
+    pet.level++;
+    sfxLevelUp();
+    showLevelUp();
+  }
+}
+
+function showLevelUp(){
+  const ov=document.getElementById('levelupOverlay');
+  document.getElementById('lvNum').textContent=pet.level;
+  const costume=COSTUMES.find(c=>c.unlockLv===pet.level);
+  document.getElementById('lvMsg').textContent=costume
+    ?'Tenue débloquée : '+costume.emoji+' '+costume.name+' !'
+    :'Continue comme ça, superstar !';
+  ov.classList.add('show');
+  // Fireworks
+  for(let i=0;i<20;i++){
+    setTimeout(()=>{
+      const s=document.createElement('span');
+      s.className='float-particle';
+      s.textContent=['🎉','⭐','🎊','💜','✨','🎵'][Math.floor(Math.random()*6)];
+      s.style.position='fixed';
+      s.style.left=Math.random()*80+10+'%';
+      s.style.top=Math.random()*60+20+'%';
+      s.style.zIndex='350';
+      s.style.fontSize='2em';
+      document.body.appendChild(s);
+      s.addEventListener('animationend',()=>s.remove());
+    },i*100);
+  }
+}
+function closeLevelUp(){document.getElementById('levelupOverlay').classList.remove('show')}
+
+// ─── ROOM ───
+function setRoom(room,silent){
+  pet.room=room;
+  const bg=document.getElementById('roomBg');
+  bg.className='room-bg '+room;
+  document.querySelectorAll('#roomPicker .picker-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#roomPicker .picker-btn').forEach(b=>{
+    if(b.textContent.toLowerCase().includes(room.substring(0,4)))b.classList.add('active');
+  });
+  renderRoomDecor();
+  if(!silent)savePet();
+}
+
+function renderRoomDecor(){
+  const container=document.getElementById('roomDecor');
+  container.innerHTML='';
+  const items=ROOM_DECOR[pet.room]||[];
+  for(let i=0;i<12;i++){
+    const d=document.createElement('span');
+    d.className='decor-star';
+    d.textContent=items[Math.floor(Math.random()*items.length)];
+    d.style.left=Math.random()*90+5+'%';
+    d.style.top=Math.random()*80+5+'%';
+    d.style.animationDelay=Math.random()*3+'s';
+    d.style.fontSize=(.6+Math.random()*.8)+'em';
+    container.appendChild(d);
+  }
+}
+
+// ─── OUTFIT ───
+function openOutfitPicker(){
+  ensureAudio();
+  const grid=document.getElementById('outfitGrid');
+  grid.innerHTML='';
+  COSTUMES.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='outfit-item';
+    const unlocked=pet.level>=c.unlockLv;
+    if(!unlocked)el.classList.add('locked');
+    if(pet.costume===i)el.classList.add('active');
+    el.textContent=c.emoji;
+    el.title=c.name+(unlocked?'':' (Lv.'+c.unlockLv+')');
+    if(unlocked){
+      el.onclick=()=>{
+        pet.costume=pet.costume===i?-1:i;
+        savePet();
+        renderPet();
+        openOutfitPicker(); // refresh
+        sfxGroom();
+      };
+    }
+    grid.appendChild(el);
+  });
+  // Add "no costume" option
+  const none=document.createElement('div');
+  none.className='outfit-item'+(pet.costume===-1?' active':'');
+  none.textContent='❌';
+  none.title='Aucune tenue';
+  none.onclick=()=>{pet.costume=-1;savePet();renderPet();openOutfitPicker()};
+  grid.appendChild(none);
+  document.getElementById('outfitModal').classList.add('show');
+}
+function closeOutfitPicker(){document.getElementById('outfitModal').classList.remove('show')}
+
+// ─── INIT ───
+(function init(){
+  if(loadPet()){
+    showPetView();
+  } else {
+    document.getElementById('adoptScreen').style.display='block';
+  }
+})();
+</script>
+</body>
+</html>

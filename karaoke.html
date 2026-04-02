@@ -27,6 +27,8 @@
 
 body {
   background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite, pageEnter 0.6s ease-out;
   min-height: 100vh;
   font-family: 'Quicksand', sans-serif;
   overflow: hidden;
@@ -633,6 +635,25 @@ body.shaking {
 .share-copy{background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.3)}
 .share-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#25D366;color:white;padding:10px 25px;border-radius:25px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s}
 .share-toast.show{opacity:1}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* === AAA MOBILE EFFECTS === */
+@keyframes emojiRain {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+@keyframes flashOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -1645,6 +1666,54 @@ if('serviceWorker' in navigator){
     console.log('SW registered',reg.scope);
   }).catch(err=>console.warn('SW failed',err));
 }
+
+// === AAA MOBILE EFFECTS ===
+// Sparkle trail
+document.addEventListener('mousemove', function(e) {
+  if (Math.random() > 0.7) createSparkleTrail(e.clientX, e.clientY);
+});
+document.addEventListener('touchmove', function(e) {
+  if (Math.random() > 0.7) createSparkleTrail(e.touches[0].clientX, e.touches[0].clientY);
+});
+function createSparkleTrail(x, y) {
+  var s = document.createElement('div');
+  s.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;font-size:' + (8 + Math.random() * 12) + 'px;left:' + x + 'px;top:' + y + 'px;opacity:1;transition:all 0.8s ease-out;';
+  s.textContent = ['\u2728','\u2B50','\uD83D\uDCAB','\uD83C\uDF1F','\uD83D\uDC96'][Math.floor(Math.random() * 5)];
+  document.body.appendChild(s);
+  requestAnimationFrame(function() {
+    s.style.transform = 'translateY(-' + (30 + Math.random() * 40) + 'px) translateX(' + ((Math.random() - 0.5) * 30) + 'px) scale(0)';
+    s.style.opacity = '0';
+  });
+  setTimeout(function() { s.remove(); }, 800);
+}
+
+// Mega celebration system
+function megaCelebration() {
+  var flash = document.createElement('div');
+  flash.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,215,0,0.3);z-index:9998;pointer-events:none;animation:flashOut 0.5s ease forwards;';
+  document.body.appendChild(flash);
+  setTimeout(function() { flash.remove(); }, 500);
+  var emojis = ['\uD83C\uDF1F','\uD83D\uDC96','\u2B50','\u2728','\uD83D\uDC51','\uD83D\uDC8E','\uD83C\uDF89','\uD83E\uDD84','\uD83C\uDF08','\uD83D\uDC9C'];
+  for (var i = 0; i < 50; i++) {
+    (function(idx) {
+      setTimeout(function() {
+        var e = document.createElement('div');
+        e.style.cssText = 'position:fixed;top:-20px;left:' + (Math.random() * 100) + 'vw;font-size:' + (20 + Math.random() * 20) + 'px;z-index:9997;pointer-events:none;animation:emojiRain ' + (2 + Math.random() * 3) + 's linear forwards;';
+        e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        document.body.appendChild(e);
+        setTimeout(function() { e.remove(); }, 5000);
+      }, idx * 50);
+    })(i);
+  }
+}
+
+// Haptic feedback on buttons
+document.addEventListener('click', function(e) {
+  if (e.target.matches('button, .btn, .key-btn, .answer-btn, .diff-btn, .p-btn, .item-btn, .card, [onclick]')) {
+    try { if (navigator.vibrate) navigator.vibrate(15); } catch(err) {}
+  }
+});
+
 </script>
 </body>
 </html>
