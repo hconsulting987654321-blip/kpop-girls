@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz K-Pop — École Saint-Esprit</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<meta name="description" content="Quiz K-Pop — 49 questions sur BTS, BLACKPINK et la K-Pop !">
+<meta name="author" content="K-Pop Star Academy">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Quiz K-Pop — École Saint-Esprit">
+<meta property="og:description" content="Quiz K-Pop — 49 questions sur BTS, BLACKPINK et la K-Pop !">
+<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
+<meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="icon-192.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -335,6 +352,13 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
   .result-card{padding:20px 15px}
   .stone{width:24px;height:24px;font-size:0.6em}
 }
+.share-row{display:flex;gap:10px;justify-content:center;margin-top:15px}
+.share-btn{padding:10px 20px;border-radius:25px;border:none;font-family:inherit;font-size:1em;font-weight:600;cursor:pointer;transition:transform .2s}
+.share-btn:hover{transform:scale(1.05)}
+.share-whatsapp{background:#25D366;color:white}
+.share-copy{background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.3)}
+.share-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#25D366;color:white;padding:10px 25px;border-radius:25px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s}
+.share-toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -410,9 +434,14 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
     <div class="result-stats" id="resultStats"></div>
     <div id="recordBadge"></div>
     <div class="result-details" id="resultDetails"></div>
+    <div class="share-row">
+      <button class="share-btn share-whatsapp" onclick="shareWhatsApp()">📱 WhatsApp</button>
+      <button class="share-btn share-copy" onclick="shareCopy()">📋 Copier</button>
+    </div>
     <button class="play-btn" onclick="goToMenu()">Rejouer</button>
   </div>
 </div>
+<div class="share-toast" id="shareToast">Copié !</div>
 
 <script>
 // ============================================================
@@ -479,6 +508,48 @@ const questionBank = [
   {cat:"girls",q:"Quelle membre de BLACKPINK est aussi actrice dans un drama coreen ?",a:["Lisa","Jennie","Rose","Jisoo"],correct:3,emoji:"🎬",hint:"C'est la plus agee du groupe",fact:"Jisoo a joue dans le drama 'Snowdrop' en 2021 et les fans ont adore !"},
   {cat:"culture",q:"Quel geste font les idols K-pop pour dire 'je t'aime' aux fans ?",a:["Lever le poing","Faire un coeur avec les bras","Agiter la main","Taper du pied"],correct:1,emoji:"🫶",hint:"Ils font un grand geste au dessus de leur tete",fact:"Le grand coeur avec les bras est devenu un symbole universel grace a la K-pop !"},
   {cat:"culture",q:"Quel mot coreen veut dire 'beau/belle' ?",a:["Aigoo","Yeppeo","Pali pali","Babo"],correct:1,emoji:"✨",hint:"Les fans le crient souvent aux idols",fact:"'Yeppeo' veut dire 'c'est joli/beau' — les fans le crient quand leur bias est magnifique !"},
+
+  // ---- 25 NEW FUN QUESTIONS ----
+  // Dance moves
+  {cat:"culture",q:"Comment s'appelle le mouvement de danse ou on fait des formes avec les mains et les bras ?",a:["Le moonwalk","Le tutting","Le breakdance","Le shuffle"],correct:1,emoji:"🤲",hint:"Ca ressemble a des formes geometriques avec les doigts",fact:"Le tutting vient des poses des pharaons egyptiens — plein d'idols K-pop l'utilisent dans leurs choregraphies !"},
+  {cat:"culture",q:"Quel mouvement de danse fait comme une vague avec le corps ?",a:["Le wave","Le spin","Le jump","Le clap"],correct:0,emoji:"🌊",hint:"Ca ondule du haut vers le bas",fact:"Le wave est un mouvement de base en K-pop — Lisa de BLACKPINK le fait super bien !"},
+  {cat:"culture",q:"Dans les choregraphies K-pop, que fait-on souvent a la fin de la chanson ?",a:["On court","On fait une pose finale","On salue","On saute"],correct:1,emoji:"📸",hint:"Tout le groupe se fige en meme temps !",fact:"La pose finale s'appelle 'ending fairy' — les cameras zooment sur un membre qui fait un clin d'oeil !"},
+
+  // Fashion & lightsticks
+  {cat:"culture",q:"Comment s'appelle le baton lumineux que les fans utilisent en concert ?",a:["Glowstick","Lightstick","Flashstick","Neonstick"],correct:1,emoji:"🪄",hint:"Chaque groupe a le sien avec un design unique",fact:"Le lightstick de TWICE s'appelle 'Candy Bong' et il ressemble a un bonbon !"},
+  {cat:"girls",q:"Quelle couleur de cheveux Lisa de BLACKPINK a-t-elle souvent portee ?",a:["Vert","Blond","Violet","Gris"],correct:1,emoji:"💇‍♀️",hint:"C'est une couleur claire et lumineuse",fact:"Les idols K-pop changent de couleur de cheveux presque a chaque comeback !"},
+  {cat:"culture",q:"Que portent souvent les idols K-pop sur scene ?",a:["Des costumes assortis","Des maillots de sport","Des pyjamas","Des uniformes scolaires"],correct:0,emoji:"👗",hint:"Tout le groupe est coordonne !",fact:"Les stylistes K-pop creent des tenues uniques pour chaque comeback — parfois plus de 10 looks differents !"},
+
+  // Fun facts about groups
+  {cat:"girls",q:"Quel est le slogan d'ITZY ?",a:["We are one","All in us","Forever young","Dream high"],correct:1,emoji:"💫",hint:"Ca veut dire que tout est EN nous",fact:"ITZY dit 'All in us!' pour montrer que la confiance en soi vient de l'interieur !"},
+  {cat:"boys",q:"Quel groupe a un membre qui s'appelle Felix et parle anglais ?",a:["BTS","EXO","Stray Kids","SEVENTEEN"],correct:2,emoji:"🦊",hint:"Le nom du groupe parle d'enfants perdus",fact:"Felix de Stray Kids vient d'Australie et a une voix super grave qui surprend tout le monde !"},
+  {cat:"girls",q:"Quel groupe a des avatars virtuels appeles 'ae' ?",a:["TWICE","BLACKPINK","aespa","ITZY"],correct:2,emoji:"🤖",hint:"Le nom du groupe contient le mot 'avatar'",fact:"Les avatars d'aespa vivent dans un monde virtuel appele 'KWANGYA' !"},
+  {cat:"girls",q:"Quel groupe chante 'Hype Boy' ?",a:["LE SSERAFIM","NewJeans","ITZY","aespa"],correct:1,emoji:"🎧",hint:"Le nom du groupe est une marque de vetements",fact:"NewJeans a battu des records des leur debut — 'Hype Boy' est devenue virale sur TikTok !"},
+  {cat:"girls",q:"Quel groupe a Sakura comme membre ?",a:["TWICE","aespa","LE SSERAFIM","NewJeans"],correct:2,emoji:"🌸",hint:"Le nom du groupe est un anagramme",fact:"LE SSERAFIM est un anagramme de 'I'm Fearless' — leur message c'est d'etre courageuse !"},
+
+  // Korean food
+  {cat:"culture",q:"Comment s'appelle le gateau de riz pimente que les idols adorent manger ?",a:["Bibimbap","Tteokbokki","Japchae","Bulgogi"],correct:1,emoji:"🌶️",hint:"C'est rouge et epice avec des petits cylindres de riz",fact:"Le tteokbokki est le snack prefere des etudiants coreens — les idols en mangent souvent dans leurs vlogs !"},
+  {cat:"culture",q:"Quel plat de nouilles instantanees les idols mangent-ils souvent la nuit ?",a:["Udon","Soba","Ramyeon","Pho"],correct:2,emoji:"🍜",hint:"On le voit dans presque tous les dramas coreens",fact:"En Coree, manger du ramyeon ensemble le soir est un signe d'amitie speciale !"},
+  {cat:"culture",q:"Quel aliment fermente est le plus celebre de Coree ?",a:["Le fromage","Le kimchi","Le yaourt","Le pain"],correct:1,emoji:"🥬",hint:"C'est fait avec du chou et du piment rouge",fact:"Le kimchi est tellement important en Coree qu'il y a un musee dedie au kimchi a Seoul !"},
+
+  // K-Pop show names
+  {cat:"culture",q:"Comment s'appelle l'emission musicale du vendredi en Coree ?",a:["M Countdown","Music Bank","Inkigayo","Show Champion"],correct:1,emoji:"📺",hint:"Le nom parle d'argent et de musique",fact:"Music Bank est diffuse sur KBS depuis 1998 — c'est l'une des plus vieilles emissions musicales K-pop !"},
+  {cat:"culture",q:"Quel show musical coreen passe le dimanche ?",a:["Music Bank","M Countdown","Inkigayo","Show! Music Core"],correct:2,emoji:"🎬",hint:"Le nom est coreen et commence par 'In'",fact:"Inkigayo veut dire 'chanson populaire' en coreen — les fans campent la nuit pour y assister !"},
+
+  // Easy Korean words
+  {cat:"culture",q:"Que veut dire 'omo' en coreen ?",a:["Bonjour","Oh mon dieu !","Merci","Bonne nuit"],correct:1,emoji:"😮",hint:"Tu le dis quand tu es surprise !",fact:"'Omo' est comme 'oh la la' en francais — les idols le disent tout le temps quand ils sont surpris !"},
+  {cat:"culture",q:"Que veut dire 'aigoo' en coreen ?",a:["Trop cool","Oh la la / Aie","Salut","Bravo"],correct:1,emoji:"😩",hint:"Tu le dis quand tu es fatigue ou attendri",fact:"'Aigoo' peut exprimer la fatigue, l'attendrissement ou la surprise — c'est le mot a tout faire en coreen !"},
+  {cat:"culture",q:"Que veut dire 'pali pali' en coreen ?",a:["Doucement","Vite vite !","Merci beaucoup","A bientot"],correct:1,emoji:"⚡",hint:"Les Coreens le disent quand ils sont presses",fact:"La Coree est connue pour sa culture du 'pali pali' (vite vite) — tout va tres vite la-bas !"},
+
+  // Music terminology
+  {cat:"culture",q:"Que veut dire 'debut' en K-pop ?",a:["Dernier concert","Premiere apparition du groupe","Vacances","Remise de prix"],correct:1,emoji:"🎉",hint:"C'est le TOUT premier moment sur scene",fact:"Le jour du debut est comme un anniversaire pour les groupes K-pop — ils le celebrent chaque annee !"},
+  {cat:"culture",q:"Qu'est-ce qu'un 'title track' en K-pop ?",a:["Une chanson cachee","La chanson principale de l'album","Un remix","Une reprise"],correct:1,emoji:"🎵",hint:"C'est LA chanson qui passe a la tele et a la radio",fact:"Le title track est la chanson qui a un clip video et pour laquelle le groupe fait la promo !"},
+  {cat:"culture",q:"Qu'est-ce qu'une 'b-side' en K-pop ?",a:["La chanson principale","Les autres chansons de l'album","Un solo","Un duo"],correct:1,emoji:"💿",hint:"Ce sont les chansons SAUF la principale",fact:"Les fans adorent les b-sides car elles montrent un cote different du groupe — parfois elles deviennent plus populaires que le title track !"},
+
+  // Fan culture
+  {cat:"culture",q:"Qu'est-ce qu'un 'fan chant' ?",a:["Un cri des fans pendant la chanson","Une lettre aux idols","Un cadeau","Un dessin"],correct:0,emoji:"📣",hint:"Les fans crient des mots precis pendant le concert",fact:"Chaque chanson a son propre fan chant — les fans apprennent par coeur quand crier le nom de chaque membre !"},
+  {cat:"culture",q:"Qu'est-ce qu'une 'photocard' en K-pop ?",a:["Une carte de visite","Une petite photo d'un idol dans l'album","Un poster","Un sticker"],correct:1,emoji:"🃏",hint:"C'est tout petit et on la collectionne",fact:"Les photocards sont tellement populaires que les fans echangent et collectionnent celles de leur bias !"},
+  {cat:"culture",q:"Que veut dire 'stan' en K-pop ?",a:["Detester","Etre un super fan","Ignorer","Critiquer"],correct:1,emoji:"💖",hint:"C'est plus fort que simplement 'aimer'",fact:"'Stan' vient de 'stalker + fan' mais aujourd'hui ca veut juste dire etre un fan tres dedie !"},
 ];
 
 // ============================================================
@@ -546,6 +617,17 @@ function showRecordBanner() {
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+}
+
+function shareWhatsApp(){
+  const pct=Math.round(correctCount/questions.length*100);
+  const msg=encodeURIComponent("J'ai eu "+pct+"% au Quiz K-Pop ! 🎵 Et toi ? https://hconsulting987654321-blip.github.io/kpop-girls/");
+  window.open("https://wa.me/?text="+msg,"_blank");
+}
+function shareCopy(){
+  const pct=Math.round(correctCount/questions.length*100);
+  const msg="J'ai eu "+pct+"% au Quiz K-Pop ! 🎵 Et toi ? https://hconsulting987654321-blip.github.io/kpop-girls/";
+  navigator.clipboard.writeText(msg).then(()=>{const t=document.getElementById('shareToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)});
 }
 
 function goToMenu(){
@@ -1025,6 +1107,13 @@ function playFanfare(){
 
 // Init on menu
 showScreen('menuScreen');
+
+/* ===== PWA: SERVICE WORKER ===== */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    console.log('SW registered',reg.scope);
+  }).catch(err=>console.warn('SW failed',err));
+}
 </script>
 </body>
 </html>

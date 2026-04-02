@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coloriage K-Pop — École Saint-Esprit</title>
+<meta name="description" content="Coloriage K-Pop — 6 dessins à colorier !">
+<meta name="author" content="K-Pop Star Academy">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Coloriage K-Pop — École Saint-Esprit">
+<meta property="og:description" content="Coloriage K-Pop — 6 dessins à colorier !">
+<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
+<meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="icon-192.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon-192.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -408,6 +425,13 @@ h1 {
   .color-circle { width: 28px; height: 28px; }
   .page-btn { font-size: 0.75em; padding: 6px 10px; }
 }
+.share-row{display:flex;gap:10px;justify-content:center;margin-top:15px}
+.share-btn{padding:10px 20px;border-radius:25px;border:none;font-family:inherit;font-size:1em;font-weight:600;cursor:pointer;transition:transform .2s}
+.share-btn:hover{transform:scale(1.05)}
+.share-whatsapp{background:#25D366;color:white}
+.share-copy{background:rgba(255,255,255,0.2);color:#333;border:2px solid rgba(0,0,0,0.1)}
+.share-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#25D366;color:white;padding:10px 25px;border-radius:25px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s}
+.share-toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -452,8 +476,13 @@ h1 {
   <h2>Bravo !</h2>
   <p id="trophyMsg">Tu as termine ton coloriage !</p>
   <div class="badge-line" id="trophyBadges"></div>
+  <div class="share-row">
+    <button class="share-btn share-whatsapp" onclick="shareWhatsAppColoriage()">📱 WhatsApp</button>
+    <button class="share-btn share-copy" onclick="shareCopyColoriage()">📋 Copier</button>
+  </div>
   <button onclick="closeTrophy()">Super !</button>
 </div>
+<div class="share-toast" id="shareToast">Copié !</div>
 
 <div class="confetti-overlay" id="confettiOverlay"></div>
 <div class="custom-cursor" id="customCursor"></div>
@@ -1222,6 +1251,17 @@ function closeTrophy() {
   document.getElementById('trophyPopup').classList.remove('show');
 }
 
+function shareWhatsAppColoriage(){
+  const pg=PAGES[currentPage];
+  const msg=encodeURIComponent("J'ai colorié "+pg.name+" ! 🎨 C'est trop beau ! https://hconsulting987654321-blip.github.io/kpop-girls/");
+  window.open("https://wa.me/?text="+msg,"_blank");
+}
+function shareCopyColoriage(){
+  const pg=PAGES[currentPage];
+  const msg="J'ai colorié "+pg.name+" ! 🎨 C'est trop beau ! https://hconsulting987654321-blip.github.io/kpop-girls/";
+  navigator.clipboard.writeText(msg).then(()=>{const t=document.getElementById('shareToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)});
+}
+
 function undo() {
   if (undoStack.length === 0) return;
   AudioEngine.undoSound();
@@ -1327,6 +1367,13 @@ function buildGallery() {
 // Start
 initPalette();
 loadPage();
+
+/* ===== PWA: SERVICE WORKER ===== */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    console.log('SW registered',reg.scope);
+  }).catch(err=>console.warn('SW failed',err));
+}
 </script>
 </body>
 </html>

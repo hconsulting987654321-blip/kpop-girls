@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6fd8"/>
+      <stop offset="100%" style="stop-color:#a18cd1"/>
+    </linearGradient>
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#f0e6ff"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="192" height="192" rx="40" fill="url(#bg)"/>
+  <!-- White star -->
+  <polygon points="96,28 112,68 156,68 120,94 134,138 96,114 58,138 72,94 36,68 80,68"
+           fill="url(#starGrad)" opacity="0.95"/>
+  <!-- Gold K -->
+  <text x="96" y="112" text-anchor="middle" font-family="'Arial Black',sans-serif" font-weight="900"
+        font-size="62" fill="#ffd700" stroke="#e6b800" stroke-width="1">K</text>
+  <!-- Sparkle dots -->
+  <circle cx="30" cy="30" r="3" fill="#fff" opacity="0.8"/>
+  <circle cx="162" cy="28" r="2.5" fill="#fff" opacity="0.7"/>
+  <circle cx="24" cy="150" r="2" fill="#ffd700" opacity="0.6"/>
+  <circle cx="168" cy="160" r="3" fill="#fff" opacity="0.75"/>
+  <circle cx="50" cy="18" r="1.5" fill="#ffd700" opacity="0.5"/>
+  <circle cx="145" cy="172" r="2" fill="#ffd700" opacity="0.6"/>
+  <circle cx="170" cy="90" r="1.5" fill="#fff" opacity="0.5"/>
+  <circle cx="20" cy="96" r="2" fill="#fff" opacity="0.55"/>
+</svg>

@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Dance Challenge — K-Pop Star Academy</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<meta name="description" content="Dance Challenge K-Pop — Jeu de rythme gratuit pour les filles !">
+<meta name="author" content="K-Pop Star Academy">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Dance Challenge — K-Pop Star Academy">
+<meta property="og:description" content="Dance Challenge K-Pop — Jeu de rythme gratuit pour les filles !">
+<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
+<meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="icon-192.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -228,6 +245,13 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
 /* ── RESPONSIVE ── */
 @media(max-height:650px){.header h1{font-size:1.3em}.score-bar{font-size:.9em;gap:12px}}
 @media(max-width:400px){.key-btn-4{width:68px;height:50px;font-size:1.2em}.lane-4{width:68px}}
+.share-row{display:flex;gap:10px;justify-content:center;margin-top:15px}
+.share-btn{padding:10px 20px;border-radius:25px;border:none;font-family:inherit;font-size:1em;font-weight:600;cursor:pointer;transition:transform .2s}
+.share-btn:hover{transform:scale(1.05)}
+.share-whatsapp{background:#25D366;color:white}
+.share-copy{background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.3)}
+.share-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#25D366;color:white;padding:10px 25px;border-radius:25px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s}
+.share-toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -298,8 +322,13 @@ body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh
     <div class="stat-item"><div class="num" id="statMiss">0</div><div class="label">Miss</div></div>
   </div>
   <p id="highScoreMsg" style="color:#ffd700;font-weight:700;display:none">Nouveau record !</p>
+  <div class="share-row">
+    <button class="share-btn share-whatsapp" onclick="shareWhatsApp()">📱 WhatsApp</button>
+    <button class="share-btn share-copy" onclick="shareCopy()">📋 Copier</button>
+  </div>
   <button class="play-btn" onclick="showStart()">Rejouer</button>
 </div>
+<div class="share-toast" id="shareToast">Copié !</div>
 
 <script>
 // ─── AUDIO CONTEXT ───
@@ -1149,6 +1178,15 @@ function endGame(){
   if(grade==='S'||grade==='A')spawnConfetti();
 }
 
+function shareWhatsApp(){
+  const msg=encodeURIComponent("J'ai scoré "+score+" pts au Dance Challenge K-Pop ! 💃 Tu peux faire mieux ? https://hconsulting987654321-blip.github.io/kpop-girls/");
+  window.open("https://wa.me/?text="+msg,"_blank");
+}
+function shareCopy(){
+  const msg="J'ai scoré "+score+" pts au Dance Challenge K-Pop ! 💃 Tu peux faire mieux ? https://hconsulting987654321-blip.github.io/kpop-girls/";
+  navigator.clipboard.writeText(msg).then(()=>{const t=document.getElementById('shareToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)});
+}
+
 function showStart(){
   document.getElementById('endScreen').classList.add('hidden');
   document.getElementById('startScreen').classList.remove('hidden');
@@ -1173,6 +1211,13 @@ document.addEventListener('keyup',e=>{
 
 // Prevent scrolling
 document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+
+/* ===== PWA: SERVICE WORKER ===== */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    console.log('SW registered',reg.scope);
+  }).catch(err=>console.warn('SW failed',err));
+}
 </script>
 </body>
 </html>

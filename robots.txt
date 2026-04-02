@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hconsulting987654321-blip.github.io/kpop-girls/sitemap.xml

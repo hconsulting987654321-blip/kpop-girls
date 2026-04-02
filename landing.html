@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Pop Star Academy — Le jeu #1 pour les fans de K-Pop</title>
+<meta name="description" content="10 mini-jeux magiques pour les fans de K-Pop. Gratuit, sans pub, sans collecte de donnees. Pour les enfants de 4 a 12 ans.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #1a1a2e;
+  --bg-light: #16213e;
+  --pink: #ff2d95;
+  --purple: #7b2ff7;
+  --gold: #ffd700;
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text: #f0f0f5;
+  --text-muted: #a0a0b8;
+  --radius: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Animated gradient bg */
+.gradient-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(123, 47, 247, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(255, 45, 149, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
+    var(--bg);
+  animation: gradientShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes gradientShift {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(20deg); }
+}
+
+/* Scroll animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nav */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(26, 26, 46, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-links { display: flex; gap: 24px; list-style: none; }
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--pink); }
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+}
+
+/* Container */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(255, 45, 149, 0.35);
+}
+.btn-primary:hover { box-shadow: 0 8px 32px rgba(255, 45, 149, 0.5); }
+
+.btn-secondary {
+  background: var(--glass);
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+}
+.btn-secondary:hover { border-color: var(--pink); }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  width: 100%;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 50px;
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--gold);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 215, 0, 0.25);
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 0%, #e0c3fc 50%, var(--pink) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.hero-tagline {
+  font-size: 0.95rem;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+
+.hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.hero-stats {
+  display: flex; gap: 32px; margin-top: 32px;
+}
+.hero-stat { text-align: center; }
+.hero-stat-number {
+  font-size: 1.5rem; font-weight: 700; color: var(--pink);
+}
+.hero-stat-label {
+  font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;
+}
+
+/* Phone mockup */
+.phone-mockup {
+  position: relative;
+  width: 280px;
+  height: 560px;
+  margin: 0 auto;
+  border-radius: 36px;
+  background: #0d0d1a;
+  border: 3px solid #333;
+  box-shadow:
+    0 0 0 2px #222,
+    0 20px 60px rgba(0,0,0,0.5),
+    0 0 80px rgba(123, 47, 247, 0.15);
+  overflow: hidden;
+  animation: phoneFloat 4s ease-in-out infinite;
+}
+
+@keyframes phoneFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+.phone-notch {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 28px;
+  background: #0d0d1a;
+  border-radius: 0 0 16px 16px;
+  z-index: 2;
+}
+
+.phone-screen {
+  position: absolute;
+  top: 12px; left: 12px; right: 12px; bottom: 12px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #2d1b69 0%, #1a1a2e 30%, #16213e 100%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 16px 16px;
+}
+
+.phone-screen-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.phone-screen-subtitle {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.phone-game-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.phone-game-card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.phone-game-card-emoji { font-size: 1.5rem; margin-bottom: 4px; }
+.phone-game-card-name { font-size: 0.6rem; color: #ccc; font-weight: 600; }
+
+/* Phone sparkles */
+.phone-mockup::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 60px; height: 60px;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+@media (max-width: 768px) {
+  .hero-inner { grid-template-columns: 1fr; text-align: center; }
+  .hero-buttons { justify-content: center; }
+  .hero-stats { justify-content: center; }
+  .phone-mockup { width: 220px; height: 440px; }
+  .phone-mockup { order: -1; }
+}
+
+/* ===== SECTION TITLES ===== */
+.section {
+  padding: 100px 0;
+}
+
+.section-title {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 48px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== FEATURES GRID ===== */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.feature-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s, border-color 0.3s;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--pink);
+}
+
+.feature-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+}
+
+.feature-icon.pink { background: rgba(255, 45, 149, 0.15); }
+.feature-icon.purple { background: rgba(123, 47, 247, 0.15); }
+.feature-icon.gold { background: rgba(255, 215, 0, 0.15); }
+.feature-icon.green { background: rgba(0, 200, 83, 0.15); }
+.feature-icon.blue { background: rgba(0, 150, 255, 0.15); }
+.feature-icon.red { background: rgba(255, 80, 80, 0.15); }
+
+.feature-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.feature-card p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* ===== GAMES SHOWCASE ===== */
+.games-scroll {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 8px 0 24px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.games-scroll::-webkit-scrollbar { height: 6px; }
+.games-scroll::-webkit-scrollbar-track { background: transparent; }
+.games-scroll::-webkit-scrollbar-thumb {
+  background: var(--purple);
+  border-radius: 3px;
+}
+
+.game-card {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s, border-color 0.3s;
+}
+.game-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--purple);
+}
+
+.game-card-emoji {
+  font-size: 2.8rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.game-card h3 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.game-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.testimonial-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  backdrop-filter: blur(12px);
+  position: relative;
+}
+
+.testimonial-stars {
+  color: var(--gold);
+  font-size: 1rem;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+.testimonial-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-style: italic;
+  color: #ddd;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.testimonial-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.testimonial-avatar.t1 { background: linear-gradient(135deg, var(--pink), var(--purple)); }
+.testimonial-avatar.t2 { background: linear-gradient(135deg, #0096ff, #7b2ff7); }
+.testimonial-avatar.t3 { background: linear-gradient(135deg, var(--gold), #ff8c00); }
+
+.testimonial-name { font-weight: 700; font-size: 0.95rem; }
+.testimonial-role { font-size: 0.8rem; color: var(--text-muted); }
+
+/* ===== PRICING ===== */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.pricing-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  position: relative;
+  transition: transform 0.3s;
+}
+.pricing-card:hover { transform: translateY(-4px); }
+
+.pricing-card.featured {
+  border-color: var(--gold);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.1);
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -14px; left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--gold), #ff8c00);
+  color: #1a1a2e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 5px 18px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pricing-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.pricing-price {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.pricing-price span {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.pricing-period {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.pricing-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 32px;
+}
+
+.pricing-features li {
+  padding: 8px 0;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pricing-features li::before {
+  content: '\2713';
+  color: #00c853;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ===== FAQ ===== */
+.faq-list {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 20px 24px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.3s;
+}
+.faq-question:hover { color: var(--pink); }
+
+.faq-arrow {
+  font-size: 0.8rem;
+  transition: transform 0.3s;
+  color: var(--text-muted);
+}
+
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 200px;
+}
+
+.faq-answer-inner {
+  padding: 0 24px 20px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* ===== CTA BANNER ===== */
+.cta-banner {
+  text-align: center;
+  padding: 80px 24px;
+  background: linear-gradient(135deg, rgba(123,47,247,0.15), rgba(255,45,149,0.15));
+  border-radius: var(--radius);
+  margin: 0 24px;
+}
+
+.cta-banner h2 {
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  margin-bottom: 12px;
+}
+
+.cta-banner p {
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  font-size: 1.05rem;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 48px 24px;
+  border-top: 1px solid var(--glass-border);
+  margin-top: 80px;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.footer-links { display: flex; gap: 24px; list-style: none; flex-wrap: wrap; }
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--pink); }
+
+.footer-copy {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.footer-social { display: flex; gap: 12px; }
+.footer-social a {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background 0.3s, border-color 0.3s;
+}
+.footer-social a:hover {
+  background: rgba(255, 45, 149, 0.15);
+  border-color: var(--pink);
+}
+
+@media (max-width: 640px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-links { justify-content: center; }
+  .footer-social { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="gradient-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">K-Pop Star Academy</div>
+  <ul class="nav-links">
+    <li><a href="#features">Avantages</a></li>
+    <li><a href="#games">Jeux</a></li>
+    <li><a href="#avis">Avis</a></li>
+    <li><a href="#prix">Prix</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="index.html" class="btn btn-primary" style="padding:8px 20px;font-size:0.85rem;">Jouer</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <span class="hero-badge">Nouveau : Mode Duo Karaoke</span>
+        <h1>K-Pop Star Academy</h1>
+        <p class="hero-subtitle">Le jeu #1 pour les fans de K-Pop &mdash; 10 mini-jeux magiques !</p>
+        <p class="hero-tagline">Cree par des parents, adore par les enfants</p>
+        <div class="hero-buttons">
+          <a href="index.html" class="btn btn-primary">Jouer Gratuitement</a>
+          <button class="btn btn-secondary" id="installBtn" style="display:none;">Installer l'App</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-number">10</div>
+            <div class="hero-stat-label">Mini-jeux</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-number">4-12</div>
+            <div class="hero-stat-label">ans</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-number">0</div>
+            <div class="hero-stat-label">Pub</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-number">100%</div>
+            <div class="hero-stat-label">Gratuit</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div>
+        <div class="phone-mockup">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-screen-title">K-Pop Star Academy</div>
+            <div class="phone-screen-subtitle">Choisis ton jeu !</div>
+            <div class="phone-game-grid">
+              <div class="phone-game-card">
+                <div class="phone-game-card-emoji">💃</div>
+                <div class="phone-game-card-name">Dance</div>
+              </div>
+              <div class="phone-game-card">
+                <div class="phone-game-card-emoji">🎤</div>
+                <div class="phone-game-card-name">Karaoke</div>
+              </div>
+              <div class="phone-game-card">
+                <div class="phone-game-card-emoji">🧩</div>
+                <div class="phone-game-card-name">Puzzle</div>
+              </div>
+              <div class="phone-game-card">
+                <div class="phone-game-card-emoji">🎨</div>
+                <div class="phone-game-card-name">Coloriage</div>
+              </div>
+              <div class="phone-game-card">
+                <div class="phone-game-card-emoji">🃏</div>
+                <div class="phone-game-card-name">Memory</div>
+              </div>
+              <div class="phone-game-card">
+                <div class="phone-game-card-emoji">❓</div>
+                <div class="phone-game-card-name">Quiz</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="container">
+    <h2 class="section-title reveal">Pourquoi les parents adorent</h2>
+    <p class="section-subtitle reveal">Un jeu concu pour le bonheur des enfants ET la tranquillite des parents.</p>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon pink">🎮</div>
+        <h3>10 Jeux Varies</h3>
+        <p>Dance, Quiz, Memory, Karaoke, Puzzle, Coloriage, Habillage, Collection de cartes et plus encore. Jamais de routine !</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon purple">👯</div>
+        <h3>Mode Duo</h3>
+        <p>Jouez a 2 en karaoke ! Partagez l'ecran et chantez ensemble vos chansons K-Pop preferees.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon green">🛡️</div>
+        <h3>100% Securise</h3>
+        <p>Zero pub, zero collecte de donnees, zero achat cache. Vos enfants jouent en toute securite.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon blue">📡</div>
+        <h3>Fonctionne Hors-Ligne</h3>
+        <p>Installez l'app et jouez partout &mdash; en voiture, dans l'avion, a la montagne. Pas besoin d'internet.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon gold">🏆</div>
+        <h3>Collection & Progression</h3>
+        <p>Stickers, trophees, niveaux, streaks... Votre enfant progresse et debloques des recompenses a chaque session.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon red">🇫🇷</div>
+        <h3>Fait en France</h3>
+        <p>Cree avec amour a l'Ecole Saint-Esprit. Un projet educatif et ludique, par des parents pour des parents.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAMES SHOWCASE -->
+<section class="section" id="games">
+  <div class="container">
+    <h2 class="section-title reveal">10 mini-jeux magiques</h2>
+    <p class="section-subtitle reveal">Chaque jeu est une aventure. Decouvrez-les tous !</p>
+    <div class="games-scroll reveal">
+      <div class="game-card">
+        <span class="game-card-emoji">💃</span>
+        <h3>Dance Battle</h3>
+        <p>Appuie sur les fleches au bon moment pour reproduire la choregraphie !</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">🎤</span>
+        <h3>Karaoke Star</h3>
+        <p>Chante en duo ou en solo avec les paroles qui defilent a l'ecran.</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">❓</span>
+        <h3>Quiz K-Pop</h3>
+        <p>Teste tes connaissances sur les groupes, les membres et les chansons.</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">🃏</span>
+        <h3>Memory Cards</h3>
+        <p>Retrouve les paires de cartes K-Pop. Entraine ta memoire !</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">🧩</span>
+        <h3>Puzzle Photo</h3>
+        <p>Reconstitue les images de tes stars preferees piece par piece.</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">🎨</span>
+        <h3>Coloriage</h3>
+        <p>Colorie des dessins exclusifs de tes idoles K-Pop.</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">👗</span>
+        <h3>Habillage</h3>
+        <p>Cree le look parfait pour ton avatar K-Pop avec des centaines de vetements.</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">🌟</span>
+        <h3>Collection Stars</h3>
+        <p>Collectionne les cartes de toutes les stars et complete ton album.</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">👤</span>
+        <h3>Avatar Creator</h3>
+        <p>Cree ton personnage K-Pop unique avec des dizaines d'options.</p>
+      </div>
+      <div class="game-card">
+        <span class="game-card-emoji">🃏</span>
+        <h3>Carte a Gratter</h3>
+        <p>Gratte et decouvre des surprises, des stickers et des bonus !</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" id="avis">
+  <div class="container">
+    <h2 class="section-title reveal">Les parents en parlent</h2>
+    <p class="section-subtitle reveal">Des milliers de familles ont deja adopte K-Pop Star Academy.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">&laquo; Mes filles de 6 et 10 ans adorent ! Elles y jouent tous les jours apres l'ecole. C'est devenu un rituel. &raquo;</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar t1">S</div>
+          <div>
+            <div class="testimonial-name">Sophie M.</div>
+            <div class="testimonial-role">Maman de 2 enfants</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">&laquo; Enfin un jeu sans pub et sans achats in-app ! Je peux laisser mon fils jouer sans m'inquieter. Bravo. &raquo;</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar t2">T</div>
+          <div>
+            <div class="testimonial-name">Thomas L.</div>
+            <div class="testimonial-role">Papa d'un garcon de 8 ans</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">&laquo; Ma fille a appris plein de choses sur la K-Pop et elle adore collectionner les cartes. Le mode karaoke est genial ! &raquo;</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar t3">N</div>
+          <div>
+            <div class="testimonial-name">Nadia K.</div>
+            <div class="testimonial-role">Maman d'une fille de 9 ans</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="prix">
+  <div class="container">
+    <h2 class="section-title reveal">Simple et transparent</h2>
+    <p class="section-subtitle reveal">Jouez gratuitement pour toujours, ou debloquez encore plus de contenu.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Gratuit</div>
+        <div class="pricing-price">0&euro;</div>
+        <div class="pricing-period">Pour toujours</div>
+        <ul class="pricing-features">
+          <li>10 mini-jeux complets</li>
+          <li>Mode Duo karaoke</li>
+          <li>Collection de stickers</li>
+          <li>Systeme de niveaux</li>
+          <li>Fonctionne hors-ligne</li>
+          <li>Zero pub, zero tracking</li>
+        </ul>
+        <a href="index.html" class="btn btn-primary" style="width:100%;justify-content:center;">Jouer Gratuitement</a>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="pricing-badge">Populaire</div>
+        <div class="pricing-name">Star VIP</div>
+        <div class="pricing-price">4,99&euro;</div>
+        <div class="pricing-period">Achat unique</div>
+        <ul class="pricing-features">
+          <li>Tout le contenu gratuit inclus</li>
+          <li>50 stickers exclusifs</li>
+          <li>5 themes premium</li>
+          <li>Avatar personnalise illimite</li>
+          <li>Chansons karaoke bonus</li>
+          <li>Niveaux de difficulte avances</li>
+          <li>Badge VIP dore</li>
+        </ul>
+        <a href="index.html" class="btn btn-primary" style="width:100%;justify-content:center;background:linear-gradient(135deg, var(--gold), #ff8c00);color:#1a1a2e;">Devenir VIP</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <h2 class="section-title reveal">Questions frequentes</h2>
+    <p class="section-subtitle reveal">Tout ce que vous devez savoir avant de laisser vos enfants jouer.</p>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-question">
+          C'est vraiment gratuit ?
+          <span class="faq-arrow">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Oui, 100% jouable gratuitement ! Les 10 mini-jeux sont accessibles sans rien payer. L'option Star VIP est un bonus optionnel pour les plus grands fans, mais elle n'est absolument pas necessaire pour profiter du jeu.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">
+          Y a-t-il des publicites ?
+          <span class="faq-arrow">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Non, zero publicite. Nous pensons que les enfants meritent une experience de jeu sans interruption ni distraction. Pas de bannieres, pas de videos forcees, pas de pop-ups.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">
+          C'est adapte a quel age ?
+          <span class="faq-arrow">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">K-Pop Star Academy est concu pour les enfants de 4 a 12 ans. Les jeux sont accessibles aux plus petits grace a des interfaces simples et colorees, tout en restant amusants pour les plus grands avec des niveaux de difficulte progressifs.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">
+          Ca marche sur quel appareil ?
+          <span class="faq-arrow">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Sur tous les appareils ! Telephone, tablette et ordinateur. Le jeu s'adapte automatiquement a la taille de l'ecran. Il fonctionne sur Chrome, Safari, Firefox et Edge. Vous pouvez aussi l'installer comme une app sur votre ecran d'accueil.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">
+          Les donnees sont-elles securisees ?
+          <span class="faq-arrow">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Absolument. Toutes les donnees (progression, scores, parametres) sont stockees localement sur l'appareil de votre enfant. Rien n'est envoye a un serveur. Nous ne collectons aucune information personnelle. La vie privee de votre famille est notre priorite.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="section">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <h2>Pret a lancer l'aventure K-Pop ?</h2>
+      <p>Gratuit, sans pub, sans inscription. Votre enfant joue en 10 secondes.</p>
+      <a href="index.html" class="btn btn-primary">Jouer Maintenant</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <ul class="footer-links">
+      <li><a href="index.html">Jouer</a></li>
+      <li><a href="mailto:contact@kpop-star-academy.fr">Contact</a></li>
+      <li><a href="#">Mentions legales</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2024 K-Pop Star Academy &mdash; Ecole Saint-Esprit</p>
+    <div class="footer-social">
+      <a href="https://wa.me/?text=Decouvre%20K-Pop%20Star%20Academy%20!%20https://kpop-star-academy.fr" target="_blank" rel="noopener" title="Partager sur WhatsApp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://kpop-star-academy.fr" target="_blank" rel="noopener" title="Partager sur Facebook">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://twitter.com/intent/tweet?text=Decouvre%20K-Pop%20Star%20Academy%20!&url=https://kpop-star-academy.fr" target="_blank" rel="noopener" title="Partager sur Twitter">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+
+// PWA install
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'inline-flex';
+});
+
+installBtn.addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    if (outcome === 'accepted') installBtn.style.display = 'none';
+  }
+});
+</script>
+
+</body>
+</html>

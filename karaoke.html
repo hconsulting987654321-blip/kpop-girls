@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Karaoké Star — École Saint-Esprit</title>
+<meta name="description" content="Karaoké Star — Chante 8 chansons K-Pop !">
+<meta name="author" content="K-Pop Star Academy">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Karaoké Star — École Saint-Esprit">
+<meta property="og:description" content="Karaoké Star — Chante 8 chansons K-Pop !">
+<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
+<meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="icon-192.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon-192.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -609,6 +626,13 @@ body.shaking {
   .singer-silhouette { font-size: 80px; }
   .spotlight-cone { border-left-width: 60px; border-right-width: 60px; border-bottom-width: 160px; }
 }
+.share-row{display:flex;gap:10px;justify-content:center;margin-top:15px}
+.share-btn{padding:10px 20px;border-radius:25px;border:none;font-family:inherit;font-size:1em;font-weight:600;cursor:pointer;transition:transform .2s}
+.share-btn:hover{transform:scale(1.05)}
+.share-whatsapp{background:#25D366;color:white}
+.share-copy{background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.3)}
+.share-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#25D366;color:white;padding:10px 25px;border-radius:25px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s}
+.share-toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -713,12 +737,17 @@ body.shaking {
     <div class="end-score">Score : <span id="endScore">0</span></div>
     <div class="end-msg" id="endMsg"></div>
     <div id="endAchievement"></div>
+    <div class="share-row">
+      <button class="share-btn share-whatsapp" onclick="shareWhatsAppKaraoke()">📱 WhatsApp</button>
+      <button class="share-btn share-copy" onclick="shareCopyKaraoke()">📋 Copier</button>
+    </div>
     <div style="margin-top: 14px;">
       <button class="btn" onclick="showSongSelect()">Autre chanson</button>
       <button class="btn secondary" onclick="replaySong()">Rejouer</button>
     </div>
   </div>
 </div>
+<div class="share-toast" id="shareToast">Copié !</div>
 
 <script>
 // ==================== DATA ====================
@@ -863,6 +892,78 @@ const songs = [
       { t: 18, text: "On brille comme des diamants" },
       { t: 20, text: "Encore encore encore" },
       { t: 22, text: "La fête dure pour toujours" }
+    ]
+  },
+  {
+    title: "Danse des Licornes", icon: "🦄", difficulty: 1, info: "Magique et doux",
+    preview: "Les licornes dansent ce soir...",
+    scale: [262, 330, 392, 440, 523, 440, 392, 330],
+    lyrics: [
+      { t: 0, text: "Les licornes dansent ce soir" },
+      { t: 3, text: "Dans un ciel plein d'étoiles" },
+      { t: 6, text: "Leurs crinières arc-en-ciel" },
+      { t: 9, text: "Brillent comme des opales" },
+      { t: 12, text: "Un pas deux pas on tourne" },
+      { t: 15, text: "La magie nous entoure" },
+      { t: 18, text: "Paillettes et poussière d'or" },
+      { t: 21, text: "On vole encore encore" },
+      { t: 24, text: "Ferme les yeux et rêve" },
+      { t: 27, text: "La danse ne s'arrête jamais" },
+      { t: 30, text: "Licornes pour toujours" }
+    ]
+  },
+  {
+    title: "Mode Princesse", icon: "👑", difficulty: 1, info: "Fashion et fun",
+    preview: "Aujourd'hui je suis une princesse...",
+    scale: [330, 392, 440, 494, 523, 494, 440, 392],
+    lyrics: [
+      { t: 0, text: "Aujourd'hui je suis une princesse" },
+      { t: 3, text: "Ma robe brille de mille feux" },
+      { t: 6, text: "Des paillettes plein mes tresses" },
+      { t: 9, text: "Je suis la reine du jeu" },
+      { t: 12, text: "Talons roses et diadème" },
+      { t: 15, text: "Mon style est un poème" },
+      { t: 18, text: "Je défile dans le salon" },
+      { t: 21, text: "C'est ma fashion explosion" },
+      { t: 24, text: "Tourne pirouette et pose" },
+      { t: 27, text: "Mode princesse en rose" }
+    ]
+  },
+  {
+    title: "Super Héroïne", icon: "🦸‍♀️", difficulty: 2, info: "Puissant et cool",
+    preview: "Je suis une super héroïne...",
+    scale: [349, 440, 523, 587, 659, 587, 523, 440],
+    lyrics: [
+      { t: 0, text: "Je suis une super héroïne" },
+      { t: 2.5, text: "Mon pouvoir c'est mon courage" },
+      { t: 5, text: "Je protège mes copines" },
+      { t: 7.5, text: "Je suis forte à tout âge" },
+      { t: 10, text: "Ma cape vole dans le vent" },
+      { t: 12.5, text: "Je cours plus vite qu'avant" },
+      { t: 15, text: "Les méchants ont pas de chance" },
+      { t: 17.5, text: "Avec moi c'est girl puissance" },
+      { t: 20, text: "Je saute par-dessus les toits" },
+      { t: 22.5, text: "Rien ne fait peur à moi" },
+      { t: 25, text: "Super héroïne c'est moi" },
+      { t: 27.5, text: "Et je chante avec toi" }
+    ]
+  },
+  {
+    title: "Nuit Étoilée", icon: "🌙", difficulty: 1, info: "Doux et rêveur",
+    preview: "Sous la lune douce et brillante...",
+    scale: [262, 294, 330, 349, 392, 349, 330, 294],
+    lyrics: [
+      { t: 0, text: "Sous la lune douce et brillante" },
+      { t: 3, text: "Les étoiles chantent pour moi" },
+      { t: 6, text: "La nuit est si apaisante" },
+      { t: 9, text: "Je rêve blottie contre toi" },
+      { t: 12, text: "Mille lumières dans le ciel" },
+      { t: 15, text: "Comme un ballet éternel" },
+      { t: 18, text: "Ferme les yeux doucement" },
+      { t: 21, text: "Fais un voeu en souriant" },
+      { t: 24, text: "Bonne nuit petite étoile" },
+      { t: 27, text: "Demain on lève le voile" },
+      { t: 30, text: "Sur un nouveau jour magique" }
     ]
   }
 ];
@@ -1397,6 +1498,19 @@ function showComboFlash(n) {
 }
 
 // ==================== END SONG ====================
+function shareWhatsAppKaraoke(){
+  const song=songs[currentSong];
+  const starCount=songStars[currentSong]||0;
+  const msg=encodeURIComponent("J'ai chanté "+song.title+" et j'ai eu "+starCount+" étoiles ! 🎤 https://hconsulting987654321-blip.github.io/kpop-girls/");
+  window.open("https://wa.me/?text="+msg,"_blank");
+}
+function shareCopyKaraoke(){
+  const song=songs[currentSong];
+  const starCount=songStars[currentSong]||0;
+  const msg="J'ai chanté "+song.title+" et j'ai eu "+starCount+" étoiles ! 🎤 https://hconsulting987654321-blip.github.io/kpop-girls/";
+  navigator.clipboard.writeText(msg).then(()=>{const t=document.getElementById('shareToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)});
+}
+
 function endSong() {
   const song = songs[currentSong];
   songsCompleted.add(currentSong);
@@ -1524,6 +1638,13 @@ for (let i = 0; i < 15; i++) createSparkle();
 
 // ==================== INIT ====================
 buildSongList();
+
+/* ===== PWA: SERVICE WORKER ===== */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    console.log('SW registered',reg.scope);
+  }).catch(err=>console.warn('SW failed',err));
+}
 </script>
 </body>
 </html>

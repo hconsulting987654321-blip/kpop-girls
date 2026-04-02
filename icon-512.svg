@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6fd8"/>
+      <stop offset="100%" style="stop-color:#a18cd1"/>
+    </linearGradient>
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#f0e6ff"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="outerGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="url(#bg)"/>
+  <!-- Outer glow ring -->
+  <rect x="8" y="8" width="496" height="496" rx="96" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" filter="url(#outerGlow)"/>
+  <!-- White star with glow -->
+  <polygon points="256,65 298,175 416,175 322,245 358,362 256,296 154,362 190,245 96,175 214,175"
+           fill="url(#starGrad)" opacity="0.95" filter="url(#glow)"/>
+  <!-- Gold K -->
+  <text x="256" y="300" text-anchor="middle" font-family="'Arial Black',sans-serif" font-weight="900"
+        font-size="170" fill="#ffd700" stroke="#e6b800" stroke-width="2">K</text>
+  <!-- Decorative stars -->
+  <text x="420" y="120" font-family="sans-serif" font-size="40" fill="#ffd700" opacity="0.8">&#9733;</text>
+  <text x="70" y="440" font-family="sans-serif" font-size="32" fill="#ffd700" opacity="0.6">&#9733;</text>
+  <text x="400" y="430" font-family="sans-serif" font-size="24" fill="#fff" opacity="0.5">&#9733;</text>
+  <!-- Musical note in corner -->
+  <text x="440" y="470" font-family="sans-serif" font-size="36" fill="#fff" opacity="0.45">&#9834;</text>
+  <!-- Sparkle dots -->
+  <circle cx="75" cy="75" r="6" fill="#fff" opacity="0.8"/>
+  <circle cx="440" cy="65" r="5" fill="#fff" opacity="0.7"/>
+  <circle cx="55" cy="400" r="4" fill="#ffd700" opacity="0.6"/>
+  <circle cx="460" cy="350" r="5" fill="#fff" opacity="0.65"/>
+  <circle cx="130" cy="50" r="3" fill="#ffd700" opacity="0.5"/>
+  <circle cx="390" cy="480" r="4" fill="#ffd700" opacity="0.55"/>
+  <circle cx="470" cy="200" r="3.5" fill="#fff" opacity="0.5"/>
+  <circle cx="42" cy="250" r="4" fill="#fff" opacity="0.55"/>
+  <circle cx="256" cy="30" r="3" fill="#fff" opacity="0.6"/>
+  <circle cx="480" cy="256" r="2.5" fill="#ffd700" opacity="0.45"/>
+  <circle cx="30" cy="140" r="3" fill="#fff" opacity="0.4"/>
+  <circle cx="320" cy="480" r="3" fill="#fff" opacity="0.5"/>
+</svg>

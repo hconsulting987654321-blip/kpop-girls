@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Habillage K-Pop — École Saint-Esprit</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<meta name="description" content="Habillage K-Pop — Habille ta star pour le concert !">
+<meta name="author" content="K-Pop Star Academy">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Habillage K-Pop — École Saint-Esprit">
+<meta property="og:description" content="Habillage K-Pop — Habille ta star pour le concert !">
+<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
+<meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="icon-192.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -405,6 +422,13 @@ body{
   .mannequin-panel{max-width:100%;width:100%}
   .wardrobe{max-height:none}
 }
+.share-row{display:flex;gap:10px;justify-content:center;margin-top:15px}
+.share-btn{padding:10px 20px;border-radius:25px;border:none;font-family:inherit;font-size:1em;font-weight:600;cursor:pointer;transition:transform .2s}
+.share-btn:hover{transform:scale(1.05)}
+.share-whatsapp{background:#25D366;color:white}
+.share-copy{background:rgba(255,255,255,0.2);color:#333;border:2px solid rgba(0,0,0,0.1)}
+.share-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#25D366;color:white;padding:10px 25px;border-radius:25px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s}
+.share-toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -468,9 +492,14 @@ body{
     <div class="r-stars" id="ratingStars">⭐⭐⭐</div>
     <p id="ratingMsg"></p>
     <p id="ratingScore"></p>
+    <div class="share-row">
+      <button class="share-btn share-whatsapp" onclick="shareWhatsAppHab()">📱 WhatsApp</button>
+      <button class="share-btn share-copy" onclick="shareCopyHab()">📋 Copier</button>
+    </div>
     <button class="rating-close" onclick="closeRating()">Merci !</button>
   </div>
 </div>
+<div class="share-toast" id="shareToast">Copié !</div>
 
 <!-- SAVE PROMPT -->
 <div class="save-prompt" id="savePrompt">
@@ -1183,6 +1212,17 @@ function rateOutfit() {
 }
 function closeRating() { document.getElementById('ratingPopup').classList.remove('show'); }
 
+function shareWhatsAppHab(){
+  const s=calcScore();
+  const msg=encodeURIComponent("Regarde ma tenue K-Pop ! Score style: "+s+"/100 👗 https://hconsulting987654321-blip.github.io/kpop-girls/");
+  window.open("https://wa.me/?text="+msg,"_blank");
+}
+function shareCopyHab(){
+  const s=calcScore();
+  const msg="Regarde ma tenue K-Pop ! Score style: "+s+"/100 👗 https://hconsulting987654321-blip.github.io/kpop-girls/";
+  navigator.clipboard.writeText(msg).then(()=>{const t=document.getElementById('shareToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)});
+}
+
 // ─── SAVE ───
 function openSavePrompt() {
   if (savedOutfits.length >= 5) {
@@ -1323,6 +1363,13 @@ document.getElementById('dailyTip').addEventListener('click', function(e) {
 
 // ─── START ───
 init();
+
+/* ===== PWA: SERVICE WORKER ===== */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    console.log('SW registered',reg.scope);
+  }).catch(err=>console.warn('SW failed',err));
+}
 </script>
 </body>
 </html>
