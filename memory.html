@@ -563,7 +563,7 @@ const DIFFICULTIES = [
 
 // ===== STATE =====
 let currentTheme = 'kpop';
-let currentPlayer = 'Ambre';
+let currentPlayer = new URLSearchParams(location.search).get('player') || localStorage.getItem('kpop_player') || 'Ambre';
 let currentSize = 8;
 let cards = [], flipped = [], matched = 0, moves = 0, locked = false;
 let totalPairs = 4, timerInterval, timeLeft, totalTime;
@@ -754,6 +754,13 @@ function setPlayer(btn, name) {
   btn.classList.add('active');
   updateHSDisplay();
   updateBestScoreStart();
+}
+
+// Auto-select player button from URL
+if (currentPlayer) {
+  document.querySelectorAll('#playerBar .pill').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === currentPlayer);
+  });
 }
 
 // ===== THEME =====

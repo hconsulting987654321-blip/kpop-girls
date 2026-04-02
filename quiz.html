@@ -569,7 +569,7 @@ const questionBank = [
 // ============================================================
 //  STATE
 // ============================================================
-let currentPlayer = 'Ambre';
+let currentPlayer = new URLSearchParams(location.search).get('player') || localStorage.getItem('kpop_player') || 'Ambre';
 let selectedCat = 'boys';
 let questions = [];
 let currentQ = 0;
@@ -658,6 +658,13 @@ function setPlayer(btn,name){
   document.querySelectorAll('.p-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   updateHS();
+}
+
+// Auto-select player button from URL
+if (currentPlayer) {
+  document.querySelectorAll('.p-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === currentPlayer);
+  });
 }
 
 function setCat(btn,cat){

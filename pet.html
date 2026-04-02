@@ -528,7 +528,7 @@ let selectedType=null;
 let cooldowns={};
 let decayInterval=null;
 
-function getPlayer(){return new URLSearchParams(location.search).get('joueur')||localStorage.getItem('kpop_current_player')||'Joueur'}
+function getPlayer(){return new URLSearchParams(location.search).get('player')||localStorage.getItem('kpop_player')||'Joueur'}
 const PLAYER=getPlayer();
 
 function storageKey(){return 'kpop_pet_'+PLAYER}

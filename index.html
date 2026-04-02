@@ -202,34 +202,80 @@ body::before {
 }
 .welcome-input::placeholder{color:rgba(255,255,255,.25);}
 
-.quick-names{display:flex;gap:12px;justify-content:center;margin:18px 0;}
+.quick-names{display:flex;gap:16px;justify-content:center;margin:22px 0;flex-wrap:wrap;}
 .quick-btn{
-  background:linear-gradient(145deg,rgba(255,111,216,.1),rgba(180,77,255,.1));
-  border:2px solid rgba(255,255,255,.2);
-  color:#fff;padding:12px 28px;border-radius:25px;font-family:inherit;
-  font-size:1.05em;font-weight:600;cursor:pointer;
+  border:2px solid rgba(255,255,255,.25);
+  color:#fff;padding:14px 32px;border-radius:30px;font-family:inherit;
+  font-size:1.2em;font-weight:700;cursor:pointer;
   transition:all .3s cubic-bezier(.25,.8,.25,1);
+  position:relative;overflow:hidden;
+  text-shadow:0 1px 3px rgba(0,0,0,.3);
+  letter-spacing:.5px;
+}
+.quick-btn[data-name="Ambre"]{
+  background:linear-gradient(145deg,#ff6fd8,#ff9ecf,#ff6fa0);
+  border-color:rgba(255,111,216,.5);
+  box-shadow:0 4px 20px rgba(255,111,216,.3);
+}
+.quick-btn[data-name="Eden"]{
+  background:linear-gradient(145deg,#b44dff,#9b30ff,#7b2dcc);
+  border-color:rgba(180,77,255,.5);
+  box-shadow:0 4px 20px rgba(180,77,255,.3);
+}
+.quick-btn[data-name="Louise"]{
+  background:linear-gradient(145deg,#ffd700,#ffaa00,#ff8c00);
+  border-color:rgba(255,215,0,.5);
+  box-shadow:0 4px 20px rgba(255,215,0,.3);
+  color:#1a1028;
+  text-shadow:0 1px 2px rgba(255,255,255,.3);
 }
 .quick-btn:hover{
-  background:linear-gradient(145deg,rgba(255,111,216,.25),rgba(180,77,255,.25));
-  border-color:var(--pink);transform:scale(1.08) translateY(-2px);
-  box-shadow:0 6px 20px rgba(255,111,216,.2);
+  transform:scale(1.12) translateY(-3px);
+  filter:brightness(1.15);
+}
+.quick-btn.picked{
+  animation:btnBounce .5s cubic-bezier(.25,.8,.25,1);
+}
+@keyframes btnBounce{
+  0%{transform:scale(1);}
+  30%{transform:scale(1.25);}
+  50%{transform:scale(0.95);}
+  70%{transform:scale(1.1);}
+  100%{transform:scale(1);}
+}
+.quick-btn .sparkle-burst{
+  position:absolute;pointer-events:none;
+  width:6px;height:6px;border-radius:50%;
+  background:#fff;
+  animation:sparkleFly .6s ease-out forwards;
+}
+@keyframes sparkleFly{
+  0%{opacity:1;transform:translate(0,0) scale(1);}
+  100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(0);}
 }
 
 .enter-btn{
-  background:linear-gradient(145deg,var(--pink),var(--purple));
-  color:#fff;border:none;padding:20px 70px;font-size:1.5em;
+  background:linear-gradient(145deg,var(--pink),var(--purple),#ff6fa0);
+  background-size:200% 200%;
+  color:#fff;border:none;padding:24px 90px;font-size:1.7em;
   border-radius:50px;cursor:pointer;font-family:inherit;font-weight:700;
-  box-shadow:0 8px 40px rgba(180,77,255,.35);
-  transition:all .3s cubic-bezier(.25,.8,.25,1);margin-top:18px;
-  animation:enterPulse 2s ease-in-out infinite;
-  letter-spacing:1px;
+  box-shadow:0 8px 40px rgba(180,77,255,.35),0 0 60px rgba(255,111,216,.2);
+  transition:all .3s cubic-bezier(.25,.8,.25,1);margin-top:22px;
+  animation:enterPulse 2s ease-in-out infinite, enterGradient 3s ease infinite;
+  letter-spacing:2px;
+  text-shadow:0 2px 8px rgba(0,0,0,.3);
+  position:relative;
 }
 @keyframes enterPulse{
-  0%,100%{box-shadow:0 8px 40px rgba(180,77,255,.35),0 0 0 0 rgba(180,77,255,.3);}
-  50%{box-shadow:0 12px 50px rgba(180,77,255,.5),0 0 0 12px rgba(180,77,255,0);}
+  0%,100%{box-shadow:0 8px 40px rgba(180,77,255,.35),0 0 0 0 rgba(180,77,255,.4),0 0 60px rgba(255,111,216,.2);}
+  50%{box-shadow:0 14px 60px rgba(180,77,255,.6),0 0 0 18px rgba(180,77,255,0),0 0 80px rgba(255,111,216,.35);}
 }
-.enter-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 14px 60px rgba(180,77,255,.6);}
+@keyframes enterGradient{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.enter-btn:hover{transform:translateY(-4px) scale(1.08);box-shadow:0 16px 70px rgba(180,77,255,.7),0 0 90px rgba(255,111,216,.3);}
 .enter-btn:disabled{opacity:.35;cursor:default;transform:none;box-shadow:none;animation:none;}
 
 /* ===== DAILY REWARD OVERLAY ===== */
@@ -260,6 +306,45 @@ body::before {
   transition:transform .2s;
 }
 .claim-btn:hover{transform:scale(1.05);}
+
+/* ===== WELCOME CELEBRATION ===== */
+.welcome-celebration{
+  position:fixed;inset:0;z-index:910;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .4s;
+}
+.welcome-celebration.show{opacity:1;}
+.welcome-celebration.hide{opacity:0;}
+.celebration-text{
+  font-size:clamp(2em,6vw,3.5em);font-weight:700;
+  background:linear-gradient(135deg,var(--pink),var(--gold),var(--purple));
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:titleShimmer 2s linear infinite;
+  filter:drop-shadow(0 4px 16px rgba(255,111,216,.5));
+  text-align:center;
+  animation:celebPop .6s cubic-bezier(.17,.67,.35,1.3);
+}
+@keyframes celebPop{
+  0%{transform:scale(0);opacity:0;}
+  60%{transform:scale(1.2);}
+  100%{transform:scale(1);opacity:1;}
+}
+.confetti-piece{
+  position:fixed;
+  width:10px;height:10px;
+  top:-20px;
+  z-index:911;
+  pointer-events:none;
+  animation:confettiFall var(--dur) linear forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  80%{opacity:1;}
+  100%{transform:translateY(110vh) rotate(var(--rot));opacity:0;}
+}
 
 /* ===== MAIN CONTAINER ===== */
 .main{display:none;flex-direction:column;align-items:center;width:100%;padding-bottom:40px;}
@@ -885,12 +970,17 @@ body::before {
     <label data-i18n="welcome_label">Comment tu t'appelles ?</label>
     <input type="text" class="welcome-input" id="nameInput" data-i18n-placeholder="welcome_placeholder" placeholder="Ton prénom..." maxlength="20" autocomplete="off">
     <div class="quick-names">
-      <button class="quick-btn" onclick="pickName('Ambre')">Ambre</button>
-      <button class="quick-btn" onclick="pickName('Eden')">Eden</button>
-      <button class="quick-btn" onclick="pickName('Louise')">Louise</button>
+      <button class="quick-btn" data-name="Ambre" onclick="pickName('Ambre',this)">Ambre</button>
+      <button class="quick-btn" data-name="Eden" onclick="pickName('Eden',this)">Eden</button>
+      <button class="quick-btn" data-name="Louise" onclick="pickName('Louise',this)">Louise</button>
     </div>
     <button class="enter-btn" id="enterBtn" disabled onclick="enterApp()" data-i18n="enter_btn">C'est parti !</button>
   </div>
+</div>
+
+<!-- ===== WELCOME CELEBRATION ===== -->
+<div class="welcome-celebration" id="welcomeCelebration">
+  <div class="celebration-text" id="celebrationText"></div>
 </div>
 
 <!-- ===== MAIN ===== -->
@@ -1086,6 +1176,9 @@ const TRANSLATIONS = {
       'studio.html': {title:'Studio Musical', desc:'Crée tes propres beats et mélodies !', badge:'Musique'},
       'photobooth.html': {title:'Photo Booth', desc:'Crée tes photos avec des stickers K-Pop !', badge:'Créatif'},
       'pet.html': {title:'Mon Pet K-Pop', desc:'Adopte et prends soin de ton animal virtuel !', badge:'Pet'},
+      'course.html': {title:'Course K-Pop', desc:'Cours, saute et collecte des étoiles !', badge:'Action'},
+      'defile.html': {title:'Mode Défilé', desc:'Prépare ta tenue et défile sur le podium !', badge:'Mode'},
+      'achievements.html': {title:'Mes Succès', desc:'50 succès à débloquer dans tous les jeux !', badge:'Succès'},
     },
     trophies: {
       first_game: {name:'Première partie', desc:'Joue ton premier jeu'},
@@ -1196,6 +1289,9 @@ const TRANSLATIONS = {
       'studio.html': {title:'Music Studio', desc:'Create your own beats and melodies!', badge:'Music'},
       'photobooth.html': {title:'Photo Booth', desc:'Create photos with K-Pop stickers!', badge:'Creative'},
       'pet.html': {title:'My K-Pop Pet', desc:'Adopt and take care of your virtual pet!', badge:'Pet'},
+      'course.html': {title:'K-Pop Run', desc:'Run, jump and collect stars!', badge:'Action'},
+      'defile.html': {title:'Fashion Runway', desc:'Prepare your outfit and walk the runway!', badge:'Fashion'},
+      'achievements.html': {title:'Achievements', desc:'50 achievements to unlock across all games!', badge:'Achievements'},
     },
     trophies: {
       first_game: {name:'First Game', desc:'Play your first game'},
@@ -1306,6 +1402,9 @@ const GAMES = [
   {file:'studio.html',icon:'🎹',difficulty:2,time:'5 min',isNew:true},
   {file:'photobooth.html',icon:'📸',difficulty:1,time:'5 min',isNew:true},
   {file:'pet.html',icon:'🐱',difficulty:1,time:'∞',isNew:true},
+  {file:'course.html',icon:'🏃‍♀️',difficulty:2,time:'3 min',isNew:true,hs:'course'},
+  {file:'defile.html',icon:'👗',difficulty:2,time:'5 min',isNew:true,hs:'defile'},
+  {file:'achievements.html',icon:'🏆',difficulty:1,time:'∞',isNew:false},
 ];
 
 const TROPHIES = [
@@ -1456,7 +1555,26 @@ const enterBtn = document.getElementById('enterBtn');
 nameInput.addEventListener('input',()=>{enterBtn.disabled=!nameInput.value.trim();});
 nameInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&nameInput.value.trim())enterApp();});
 
-function pickName(n){nameInput.value=n;enterBtn.disabled=false;nameInput.focus();}
+function pickName(n,btn){
+  nameInput.value=n;enterBtn.disabled=false;nameInput.focus();
+  if(btn){
+    // Remove picked from siblings
+    document.querySelectorAll('.quick-btn').forEach(b=>b.classList.remove('picked'));
+    btn.classList.add('picked');
+    // Sparkle burst
+    for(let i=0;i<8;i++){
+      const s=document.createElement('span');
+      s.className='sparkle-burst';
+      const angle=(i/8)*Math.PI*2;
+      s.style.setProperty('--sx',(Math.cos(angle)*30)+'px');
+      s.style.setProperty('--sy',(Math.sin(angle)*30)+'px');
+      s.style.left='50%';s.style.top='50%';
+      btn.appendChild(s);
+      setTimeout(()=>s.remove(),600);
+    }
+    playPop();
+  }
+}
 
 function enterApp(){
   playerName=nameInput.value.trim();
@@ -1468,13 +1586,68 @@ function enterApp(){
 
   playWhoosh();
   document.getElementById('welcome').classList.add('exit');
+
+  // Celebration
+  setTimeout(()=>{
+    const celeb=document.getElementById('welcomeCelebration');
+    const celebText=document.getElementById('celebrationText');
+    celebText.textContent='Bienvenue '+playerName+' !';
+    celeb.classList.add('show');
+    launchConfetti();
+    playCelebSound();
+    setTimeout(()=>{
+      celeb.classList.remove('show');
+      celeb.classList.add('hide');
+    },1800);
+  },300);
+
   setTimeout(()=>{
     document.getElementById('main').classList.add('show');
     initMain();
     checkDailyReward();
     updateStreak();
     checkStreakRewards();
-  },400);
+  },500);
+}
+
+function launchConfetti(){
+  const colors=['#ff6fd8','#b44dff','#ffd700','#4ecdc4','#ff9ecf','#ff6fa0','#7b2dcc','#ffaa00'];
+  const shapes=['circle','square'];
+  for(let i=0;i<60;i++){
+    setTimeout(()=>{
+      const c=document.createElement('div');
+      c.className='confetti-piece';
+      c.style.left=Math.random()*100+'%';
+      c.style.setProperty('--dur',(2+Math.random()*2)+'s');
+      c.style.setProperty('--rot',(360+Math.random()*720)+'deg');
+      c.style.background=colors[Math.floor(Math.random()*colors.length)];
+      const size=6+Math.random()*8;
+      c.style.width=size+'px';
+      c.style.height=shapes[Math.floor(Math.random()*2)]==='circle'?size+'px':size*1.5+'px';
+      c.style.borderRadius=Math.random()>.5?'50%':'2px';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(),4000);
+    },i*30);
+  }
+}
+
+function playCelebSound(){
+  try{
+    const ctx=ensureAudioCtx();
+    // Rising sparkle arpeggio
+    const notes=[523.25,659.25,783.99,1046.50,1318.51];
+    notes.forEach((freq,i)=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(freq,ctx.currentTime+i*0.08);
+      gain.gain.setValueAtTime(0.08,ctx.currentTime+i*0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.08+0.3);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(ctx.currentTime+i*0.08);
+      osc.stop(ctx.currentTime+i*0.08+0.35);
+    });
+  }catch(e){}
 }
 
 /* ===== STREAK SYSTEM ===== */
@@ -2103,20 +2276,21 @@ document.addEventListener('click', (e) => {
 (function(){
   const container = document.getElementById('welcomeEmojis');
   if(!container) return;
-  const emojis = ['\uD83C\uDFA4','\u2B50','\uD83D\uDC96','\uD83C\uDFB5','\uD83C\uDF1F','\uD83D\uDCAB','\uD83C\uDFB6','\uD83E\uDDE1'];
+  const emojis = ['\uD83C\uDFA4','\uD83D\uDC83','\u2B50','\uD83C\uDF1F','\uD83D\uDC51','\uD83D\uDC96','\uD83C\uDFB5','\uD83E\uDD84','\uD83C\uDF08','\uD83C\uDFB6','\uD83D\uDCAB','\uD83E\uDDE1','\uD83D\uDC9C','\uD83C\uDF1F','\u2728','\uD83C\uDF89'];
   function spawnEmoji(){
     const el = document.createElement('div');
     el.className = 'falling-emoji';
     el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
     el.style.left = Math.random()*100 + '%';
-    el.style.animationDuration = (5+Math.random()*8) + 's';
-    el.style.animationDelay = (Math.random()*2) + 's';
-    el.style.fontSize = (1.2+Math.random()*1.5) + 'em';
+    el.style.animationDuration = (4+Math.random()*6) + 's';
+    el.style.animationDelay = (Math.random()*1) + 's';
+    el.style.fontSize = (1.4+Math.random()*1.8) + 'em';
+    el.style.opacity = (0.12+Math.random()*0.15);
     container.appendChild(el);
-    setTimeout(()=>el.remove(), 15000);
+    setTimeout(()=>el.remove(), 12000);
   }
-  for(let i=0;i<15;i++) setTimeout(()=>spawnEmoji(), i*300);
-  setInterval(spawnEmoji, 1200);
+  for(let i=0;i<25;i++) setTimeout(()=>spawnEmoji(), i*200);
+  setInterval(spawnEmoji, 600);
 })();
 
 // ===== SECTION REVEAL ON SCROLL =====

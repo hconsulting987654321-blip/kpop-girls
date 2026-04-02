@@ -398,7 +398,7 @@ const POWER_UP_TYPES=[
 let score=0,combo=0,maxCombo=0,missCount=0,perfectCount=0,goodCount=0;
 let notes=[],powerUps=[];
 let gameRunning=false,gameTimer=null,spawnTimer=null,timerInterval=null;
-let currentPlayer='',currentDiff='medium';
+let currentPlayer=new URLSearchParams(location.search).get('player')||'',currentDiff='medium';
 let noteSpeed=3800,elapsedMs=0;
 let feverActive=false,feverComboThresh=15;
 let missForgiveness=3,missForgivenessLeft=3;
@@ -430,6 +430,8 @@ function selectDiff(d){
   updateBestStats();
 }
 function checkReady(){document.getElementById('startBtn').disabled=!currentPlayer}
+// Auto-select player button from URL
+if(currentPlayer){document.querySelectorAll('.player-btn').forEach(b=>{if(b.textContent.trim()===currentPlayer)b.classList.add('active')});checkReady();updateBestStats()}
 
 // ─── BEST STATS ON START SCREEN ───
 function updateBestStats(){

@@ -468,7 +468,7 @@ function getAllItems() {
 }
 
 // ===== GAME STATE =====
-let currentPlayer = '';
+let currentPlayer = new URLSearchParams(location.search).get('player') || localStorage.getItem('kpop_player') || '';
 let currentMode = '';
 let score = 0;
 let lives = 5;
@@ -581,6 +581,15 @@ function updateBestScoresForPlayer() {
     const el = document.getElementById('best' + mode.charAt(0).toUpperCase() + mode.slice(1));
     if (el) el.textContent = s > 0 ? ('Record ' + currentPlayer + ': ' + s) : '';
   });
+}
+
+// Auto-select player button from URL
+if (currentPlayer) {
+  document.querySelectorAll('.player-btn').forEach(b => {
+    if (b.dataset.player === currentPlayer) { b.classList.add('active'); }
+  });
+  checkReady();
+  updateBestScoresForPlayer();
 }
 
 document.querySelectorAll('.mode-btn').forEach(btn => {
