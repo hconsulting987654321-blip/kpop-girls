@@ -764,6 +764,26 @@ body::before {
     <div class="games-grid" id="gamesGrid"></div>
   </div>
 
+  <!-- Achievements Link -->
+  <div style="text-align:center;margin:10px 0 16px;position:relative;z-index:2;">
+    <a id="achievementsLink" href="achievements.html" style="
+      display:inline-flex;align-items:center;gap:10px;
+      background:linear-gradient(145deg,rgba(255,215,0,.15),rgba(180,77,255,.15));
+      border:2px solid rgba(255,215,0,.3);border-radius:30px;
+      padding:12px 28px;color:#fff;text-decoration:none;
+      font-family:inherit;font-size:1.1em;font-weight:700;
+      transition:all .3s;
+      box-shadow:0 0 20px rgba(255,215,0,.1);
+    " onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 0 30px rgba(255,215,0,.25)'" onmouseout="this.style.transform='';this.style.boxShadow='0 0 20px rgba(255,215,0,.1)'">
+      <span style="font-size:1.3em">🏆</span>
+      <span data-i18n="achievements_btn">Mes Succes</span>
+      <span id="achCountBadge" style="
+        background:linear-gradient(145deg,var(--pink),var(--purple));
+        padding:2px 10px;border-radius:12px;font-size:.75em;
+      ">0/50</span>
+    </a>
+  </div>
+
   <!-- Trophies -->
   <div class="trophies-section">
     <h2 data-i18n="trophies_title">🏅 Mes Trophées</h2>
@@ -1538,6 +1558,16 @@ function initMain(){
 
   // Collection
   buildCollection();
+
+  // Achievements link
+  try{
+    const achData=JSON.parse(localStorage.getItem('kpop_achievements_'+playerName)||'{}');
+    const achCount=Object.keys(achData).length;
+    const achBadge=document.getElementById('achCountBadge');
+    if(achBadge) achBadge.textContent=achCount+'/50';
+    const achLink=document.getElementById('achievementsLink');
+    if(achLink) achLink.href='achievements.html?player='+encodeURIComponent(playerName);
+  }catch(e){}
 
   // Mystery box
   checkMysteryBox();
