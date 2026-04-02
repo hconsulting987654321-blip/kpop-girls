@@ -80,6 +80,10 @@ h1 { font-size: 2em; color: white; text-shadow: 3px 3px 6px rgba(0,0,0,0.2); mar
 .stage-bg.bg-1 { background: linear-gradient(180deg, #ff6fd8, #ffd700); }
 .stage-bg.bg-2 { background: linear-gradient(180deg, #00c9ff, #92fe9d); }
 .stage-bg.bg-3 { background: linear-gradient(180deg, #fc466b, #3f5efb); }
+.stage-bg.bg-4 { background: linear-gradient(180deg, #f7971e, #ffd200); }
+.stage-bg.bg-5 { background: linear-gradient(180deg, #e0c3fc, #8ec5fc); }
+.stage-bg.bg-6 { background: linear-gradient(180deg, #ffecd2, #fcb69f); }
+.stage-bg.bg-7 { background: linear-gradient(180deg, #a8edea, #fed6e3); }
 
 .spotlight {
   position: absolute;
@@ -271,6 +275,10 @@ h1 { font-size: 2em; color: white; text-shadow: 3px 3px 6px rgba(0,0,0,0.2); mar
       <div class="items-row" id="bodyItems"></div>
     </div>
     <div class="wardrobe-section">
+      <div class="section-title">Pantalon / Jupe</div>
+      <div class="items-row" id="legsItems"></div>
+    </div>
+    <div class="wardrobe-section">
       <div class="section-title">Chaussures</div>
       <div class="items-row" id="shoeItems"></div>
     </div>
@@ -296,20 +304,21 @@ const playerName = new URLSearchParams(window.location.search).get('player') || 
 document.getElementById('playerInfo').textContent = `Styliste : ${playerName}`;
 
 const ITEMS = {
-  hat: ['','👑','🎀','🌸','🎩','🧢','🪖','🎧','🌺','💎','⭐','🦋'],
-  head: ['👩','👩‍🦰','👩‍🦱','👧','👩‍🦳','🧝‍♀️','👸','💆‍♀️','🧑‍🎤'],
-  body: ['👗','👘','🥻','👚','🎽','👔','🧥','💃','👙','🩱'],
-  shoes: ['👠','👟','👢','🩰','👡','🥿','👞','🩴'],
-  bg: [0, 1, 2, 3],
+  hat: ['','👑','🎀','🌸','🎩','🧢','🪖','🎧','🌺','💎','⭐','🦋','🎭','🪷','🌻','🧣','🎪','💐'],
+  head: ['👩','👩‍🦰','👩‍🦱','👧','👩‍🦳','🧝‍♀️','👸','💆‍♀️','🧑‍🎤','🧜‍♀️','🧚‍♀️','👩‍🎤','🧛‍♀️','🦸‍♀️'],
+  body: ['👗','👘','🥻','👚','🎽','👔','🧥','💃','🩱','👕','🥼','🦺','🧶','👙','🎀'],
+  legs: ['🦵','👖','🩳','🩲','🥿','🧦','🩰','👢','🦿','🩹'],
+  shoes: ['👠','👟','👢','🩰','👡','🥿','👞','🩴','🥾','👣','🧲','💎'],
+  bg: [0, 1, 2, 3, 4, 5, 6, 7],
 };
 
-const bgEmojis = ['🌙','🌟','🌈','💜'];
-const outfitNames = ['Tenue de concert','Look de star','Style casual','Tenue de gala','Mode streetwear','Look tropical','Elegance pure','Style sport','Reine de la scene','Fashion queen'];
+const bgEmojis = ['🌙','🌟','🌈','💜','🔥','❄️','🌸','🎪'];
+const outfitNames = ['Tenue de concert','Look de star','Style casual','Tenue de gala','Mode streetwear','Look tropical','Elegance pure','Style sport','Reine de la scene','Fashion queen','K-Pop Vibes','Idol Style','Princess Look','Diva Mode'];
 
-let current = { hat: 0, head: 0, body: 0, shoes: 0, bg: 0 };
+let current = { hat: 0, head: 0, body: 0, legs: 0, shoes: 0, bg: 0 };
 
 function renderItems() {
-  ['hat','head','body','shoes'].forEach(cat => {
+  ['hat','head','body','legs','shoes'].forEach(cat => {
     const el = document.getElementById(cat + 'Items');
     el.innerHTML = '';
     ITEMS[cat].forEach((item, i) => {
@@ -336,6 +345,7 @@ function update() {
   document.getElementById('mHat').textContent = ITEMS.hat[current.hat];
   document.getElementById('mHead').textContent = ITEMS.head[current.head];
   document.getElementById('mBody').textContent = ITEMS.body[current.body];
+  document.getElementById('mLegs').textContent = ITEMS.legs[current.legs];
   document.getElementById('mShoes').textContent = ITEMS.shoes[current.shoes];
   document.getElementById('stageBg').className = `stage-bg bg-${current.bg}`;
   document.getElementById('outfitName').textContent = outfitNames[Math.floor(Math.random() * outfitNames.length)];
@@ -350,6 +360,7 @@ function randomOutfit() {
   current.hat = Math.floor(Math.random() * ITEMS.hat.length);
   current.head = Math.floor(Math.random() * ITEMS.head.length);
   current.body = Math.floor(Math.random() * ITEMS.body.length);
+  current.legs = Math.floor(Math.random() * ITEMS.legs.length);
   current.shoes = Math.floor(Math.random() * ITEMS.shoes.length);
   current.bg = Math.floor(Math.random() * ITEMS.bg.length);
   update();
