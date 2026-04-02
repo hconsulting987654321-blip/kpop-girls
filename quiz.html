@@ -3,470 +3,772 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz K-Pop - K-Pop Games</title>
+<title>Quiz K-Pop — École Saint-Esprit</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
-* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
 
-body {
-  background: linear-gradient(135deg, #a18cd1, #fbc2eb, #ff6fd8, #a18cd1);
-  background-size: 400% 400%;
-  animation: gradientBG 8s ease infinite;
-  min-height: 100vh;
-  font-family: 'Quicksand', sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
+body{
+  background:linear-gradient(135deg,#a18cd1,#fbc2eb,#ff6fd8,#a18cd1);
+  background-size:400% 400%;
+  animation:gradientBG 8s ease infinite;
+  min-height:100vh;
+  font-family:'Quicksand',sans-serif;
+  display:flex;flex-direction:column;align-items:center;
+  padding:15px;
+  overflow-x:hidden;
 }
 
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-.back-btn {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  background: rgba(255,255,255,0.3);
-  color: white;
-  border: 2px solid rgba(255,255,255,0.5);
-  padding: 6px 16px;
-  border-radius: 30px;
-  font-family: inherit;
-  font-size: 0.9em;
-  cursor: pointer;
-  text-decoration: none;
-  z-index: 100;
-}
+.back-btn{position:fixed;top:10px;left:10px;background:rgba(255,255,255,0.3);color:white;border:2px solid rgba(255,255,255,0.5);padding:6px 16px;border-radius:30px;font-family:inherit;font-size:0.9em;cursor:pointer;text-decoration:none;z-index:100;transition:all 0.3s}
+.back-btn:hover{background:rgba(255,255,255,0.5)}
 
-h1 {
-  font-size: 2.2em;
-  color: white;
-  text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
-  margin: 15px 0 10px;
-}
+h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px 0 5px;text-align:center}
+.subtitle{color:rgba(255,255,255,0.8);font-size:0.95em;margin-bottom:12px;font-weight:600}
 
-.player-bar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+/* ========== SCREENS ========== */
+.screen{display:none;width:100%;max-width:620px;flex-direction:column;align-items:center}
+.screen.active{display:flex}
 
-.p-btn {
-  background: rgba(255,255,255,0.25);
-  border: 2px solid rgba(255,255,255,0.5);
-  color: white;
-  padding: 8px 20px;
-  border-radius: 25px;
-  font-family: inherit;
-  font-size: 1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-}
+/* ========== MENU SCREEN ========== */
+.menu-card{background:rgba(255,255,255,0.18);backdrop-filter:blur(12px);border:2px solid rgba(255,255,255,0.3);border-radius:28px;padding:30px 25px;width:100%;text-align:center;animation:popIn 0.5s ease}
 
-.p-btn.active {
-  background: white;
-  color: #a18cd1;
-}
+.player-bar{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.p-btn{background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);color:white;padding:10px 22px;border-radius:25px;font-family:inherit;font-size:1em;font-weight:700;cursor:pointer;transition:all 0.3s}
+.p-btn.active{background:white;color:#a18cd1;transform:scale(1.05);box-shadow:0 4px 15px rgba(161,140,209,0.4)}
+.p-btn:hover{transform:scale(1.05)}
 
-/* Progress */
-.progress {
-  width: 100%;
-  max-width: 600px;
-  height: 10px;
-  background: rgba(255,255,255,0.3);
-  border-radius: 10px;
-  margin-bottom: 20px;
-  overflow: hidden;
-}
+.section-label{color:white;font-size:1.1em;font-weight:700;margin:18px 0 10px;text-shadow:1px 1px 3px rgba(0,0,0,0.2)}
 
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #ffd700, #ff6fd8);
-  border-radius: 10px;
-  transition: width 0.5s ease;
-}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.cat-btn{background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);color:white;padding:16px 10px;border-radius:18px;font-family:inherit;font-size:1em;font-weight:700;cursor:pointer;transition:all 0.3s;text-shadow:1px 1px 3px rgba(0,0,0,0.15)}
+.cat-btn:hover{background:rgba(255,255,255,0.35);transform:scale(1.04)}
+.cat-btn.selected{background:rgba(255,255,255,0.45);border-color:white;transform:scale(1.04)}
+.cat-btn .cat-emoji{font-size:1.8em;display:block;margin-bottom:5px}
+.cat-btn.mix-btn{grid-column:1/-1}
 
-.score-display {
-  color: white;
-  font-size: 1.2em;
-  font-weight: 700;
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-}
+.hs-display{color:rgba(255,255,255,0.85);font-size:0.95em;margin-top:10px;font-weight:600}
+
+.start-btn{background:linear-gradient(145deg,#a18cd1,#ff6fd8);color:white;border:none;padding:16px 50px;font-size:1.3em;border-radius:50px;cursor:pointer;font-family:inherit;font-weight:800;margin-top:18px;transition:all 0.3s;box-shadow:0 6px 20px rgba(255,111,216,0.4)}
+.start-btn:hover{transform:scale(1.06);box-shadow:0 8px 25px rgba(255,111,216,0.5)}
+
+/* ========== GAME SCREEN ========== */
+.game-header{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:10px}
+
+.timer-ring-wrap{position:relative;width:70px;height:70px;margin-bottom:8px}
+.timer-ring{transform:rotate(-90deg)}
+.timer-ring circle{fill:none;stroke-width:5}
+.timer-ring .bg{stroke:rgba(255,255,255,0.2)}
+.timer-ring .fg{stroke:white;stroke-linecap:round;transition:stroke-dashoffset 0.3s linear,stroke 0.3s}
+.timer-ring .fg.warn{stroke:#ffcc00}
+.timer-ring .fg.danger{stroke:#ff4444}
+.timer-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:1.3em;font-weight:800;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}
+
+.info-row{display:flex;justify-content:space-between;width:100%;max-width:620px;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.score-display{color:white;font-size:1.05em;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.2)}
+.streak-display{color:#ffd700;font-size:1em;font-weight:700;min-width:80px;text-align:right}
+.streak-display.on{animation:streakPulse 0.4s ease}
+@keyframes streakPulse{50%{transform:scale(1.3);color:#ff6fd8}}
+
+/* Progress stepping stones */
+.progress-path{display:flex;gap:4px;justify-content:center;margin-bottom:12px}
+.stone{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.7em;color:rgba(255,255,255,0.5);font-weight:700;transition:all 0.4s}
+.stone.done-correct{background:rgba(76,217,100,0.6);border-color:#4cd964;color:white}
+.stone.done-wrong{background:rgba(255,59,48,0.5);border-color:#ff3b30;color:white}
+.stone.done-skip{background:rgba(255,204,0,0.5);border-color:#ffcc00;color:white}
+.stone.current{background:rgba(255,255,255,0.4);border-color:white;transform:scale(1.2);color:white}
+
+/* Lifelines */
+.lifelines{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.ll-btn{background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);color:white;padding:8px 14px;border-radius:14px;font-family:inherit;font-size:0.85em;font-weight:700;cursor:pointer;transition:all 0.3s}
+.ll-btn:hover:not(:disabled){background:rgba(255,255,255,0.35);transform:scale(1.05)}
+.ll-btn:disabled{opacity:0.35;cursor:default}
+.ll-btn .ll-icon{font-size:1.2em}
 
 /* Question card */
-.question-card {
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 24px;
-  padding: 30px;
-  max-width: 600px;
-  width: 100%;
-  text-align: center;
-  animation: slideIn 0.4s ease;
-}
+.question-card{background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.3);border-radius:24px;padding:25px 20px;max-width:620px;width:100%;text-align:center}
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.card-anim-left{animation:slideInLeft 0.4s ease}
+.card-anim-right{animation:slideInRight 0.4s ease}
 
-.q-emoji {
-  font-size: 3em;
-  margin-bottom: 10px;
-}
+.q-number-badge{display:inline-block;background:rgba(255,255,255,0.25);color:white;padding:4px 14px;border-radius:20px;font-size:0.85em;font-weight:700;margin-bottom:8px}
+.q-emoji{font-size:2.8em;margin-bottom:8px}
+.q-text{font-size:1.3em;color:white;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,0.2);margin-bottom:8px;line-height:1.4}
+.q-hint{color:rgba(255,255,255,0.85);font-size:0.95em;font-weight:600;margin-bottom:12px;font-style:italic;display:none;animation:slideInUp 0.3s ease}
+.q-hint.show{display:block}
 
-.q-text {
-  font-size: 1.4em;
-  color: white;
-  font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-  margin-bottom: 25px;
-  line-height: 1.4;
-}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-.answers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
+.answer-btn{background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);color:white;padding:14px 10px;border-radius:16px;font-family:inherit;font-size:1.05em;font-weight:600;cursor:pointer;transition:all 0.3s;text-shadow:1px 1px 3px rgba(0,0,0,0.2);position:relative;overflow:hidden}
+.answer-btn:hover:not(:disabled){background:rgba(255,255,255,0.35);transform:scale(1.03)}
+.answer-btn .ans-emoji{margin-right:4px}
+.answer-btn.correct{background:rgba(76,217,100,0.5)!important;border-color:#4cd964!important;animation:correctPulse 0.5s ease}
+.answer-btn.wrong{background:rgba(255,59,48,0.5)!important;border-color:#ff3b30!important;animation:shake 0.5s ease}
+.answer-btn.highlight-correct{background:rgba(76,217,100,0.35)!important;border-color:#4cd964!important}
+.answer-btn.hidden-5050{opacity:0;pointer-events:none;transform:scale(0.8)}
+.answer-btn:disabled{cursor:default}
 
-.answer-btn {
-  background: rgba(255,255,255,0.2);
-  border: 2px solid rgba(255,255,255,0.4);
-  color: white;
-  padding: 16px;
-  border-radius: 16px;
-  font-family: inherit;
-  font-size: 1.1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-}
+@keyframes correctPulse{50%{transform:scale(1.08)}}
+@keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-5px)}}
 
-.answer-btn:hover {
-  background: rgba(255,255,255,0.35);
-  transform: scale(1.03);
-}
+/* Fun fact */
+.funfact-bar{background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.25);border-radius:16px;padding:12px 16px;margin-top:14px;color:white;font-size:0.95em;font-weight:600;line-height:1.4;display:none;animation:slideInUp 0.4s ease}
+.funfact-bar.show{display:block}
+.funfact-bar .ff-label{color:#ffd700;font-weight:800;margin-right:5px}
 
-.answer-btn.correct {
-  background: rgba(76, 217, 100, 0.5) !important;
-  border-color: #4cd964 !important;
-  animation: correctPulse 0.5s ease;
-}
+/* ========== RESULT SCREEN ========== */
+.result-card{background:rgba(255,255,255,0.95);border-radius:28px;padding:30px 20px;width:100%;text-align:center;animation:popIn 0.5s ease;max-height:85vh;overflow-y:auto}
+@keyframes popIn{0%{transform:scale(0)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 
-.answer-btn.wrong {
-  background: rgba(255, 59, 48, 0.5) !important;
-  border-color: #ff3b30 !important;
-  animation: shake 0.5s ease;
-}
+.result-grade{font-size:4em;font-weight:800;margin:5px 0}
+.grade-S{color:#ffd700;text-shadow:0 0 20px rgba(255,215,0,0.5)}
+.grade-A{color:#ff6fd8;text-shadow:0 0 15px rgba(255,111,216,0.4)}
+.grade-B{color:#a18cd1}
+.grade-C{color:#88aacc}
+.grade-try{color:#aaa}
 
-@keyframes correctPulse {
-  50% { transform: scale(1.08); }
-}
+.result-title{font-size:1.6em;color:#a18cd1;font-weight:800;margin-bottom:5px}
+.result-score-big{font-size:2.5em;color:#ff6fd8;font-weight:800;margin:8px 0}
+.result-stats{color:#888;font-size:0.95em;margin-bottom:15px}
+.result-stats span{font-weight:700}
 
-@keyframes shake {
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-}
+.result-details{text-align:left;margin:15px 0}
+.rd-item{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:12px;margin-bottom:6px;font-size:0.9em}
+.rd-item.rd-correct{background:rgba(76,217,100,0.1)}
+.rd-item.rd-wrong{background:rgba(255,59,48,0.08)}
+.rd-item.rd-skip{background:rgba(255,204,0,0.1)}
+.rd-icon{font-size:1.3em;flex-shrink:0;margin-top:2px}
+.rd-content{flex:1}
+.rd-q{color:#555;font-weight:700}
+.rd-a{color:#888;font-size:0.88em;margin-top:2px}
 
-.answer-btn:disabled {
-  cursor: default;
-  opacity: 0.7;
-}
+.play-btn{background:linear-gradient(145deg,#a18cd1,#ff6fd8);color:white;border:none;padding:14px 40px;font-size:1.2em;border-radius:50px;cursor:pointer;font-family:inherit;font-weight:800;margin-top:15px;transition:all 0.3s}
+.play-btn:hover{transform:scale(1.05)}
 
-/* Result overlay */
-.result-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7);
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-}
+/* Confetti */
+.confetti{position:fixed;font-size:2em;animation:confFall linear forwards;z-index:300;pointer-events:none}
+@keyframes confFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
-.result-overlay.show { display: flex; }
+/* Streak banner */
+.streak-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(145deg,#ffd700,#ff6fd8);color:white;padding:15px 35px;border-radius:20px;font-size:1.5em;font-weight:800;z-index:400;pointer-events:none;animation:streakBannerAnim 1.2s ease forwards;box-shadow:0 10px 30px rgba(255,111,216,0.5)}
+@keyframes streakBannerAnim{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}40%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-60%) scale(0.8)}}
 
-.result-box {
-  background: white;
-  border-radius: 30px;
-  padding: 40px 50px;
-  text-align: center;
-  animation: popIn 0.5s ease;
-  max-width: 500px;
-  width: 90%;
-}
-
-@keyframes popIn {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-.result-box h2 { font-size: 2em; color: #a18cd1; margin-bottom: 5px; }
-.result-box .big-score { font-size: 3.5em; color: #ff6fd8; font-weight: 700; margin: 10px 0; }
-.result-box p { font-size: 1.1em; color: #666; margin: 5px 0; }
-.result-box .stars { font-size: 2.5em; margin: 10px 0; }
-
-.play-btn {
-  background: linear-gradient(145deg, #a18cd1, #ff6fd8);
-  color: white;
-  border: none;
-  padding: 14px 40px;
-  font-size: 1.3em;
-  border-radius: 50px;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: 700;
-  margin-top: 15px;
-}
-.play-btn:hover { transform: scale(1.05); }
-
-.confetti {
-  position: fixed;
-  font-size: 2em;
-  animation: confFall linear forwards;
-  z-index: 300;
-  pointer-events: none;
-}
-
-@keyframes confFall {
-  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-}
-
-@media (max-width: 500px) {
-  .answers { grid-template-columns: 1fr; }
-  .q-text { font-size: 1.2em; }
+@media(max-width:500px){
+  .answers{grid-template-columns:1fr}
+  .q-text{font-size:1.15em}
+  .cat-grid{grid-template-columns:1fr}
+  .cat-btn.mix-btn{grid-column:auto}
+  .result-card{padding:20px 15px}
+  .stone{width:24px;height:24px;font-size:0.6em}
 }
 </style>
 </head>
 <body>
 
 <a href="index.html" class="back-btn">Retour</a>
-
 <h1>Quiz K-Pop</h1>
+<div class="subtitle">Ecole Saint-Esprit</div>
 
-<div class="player-bar">
-  <button class="p-btn active" onclick="setPlayer(this,'Ambre')">Ambre</button>
-  <button class="p-btn" onclick="setPlayer(this,'Eden')">Eden</button>
-  <button class="p-btn" onclick="setPlayer(this,'Louise')">Louise</button>
+<!-- ========== MENU SCREEN ========== -->
+<div class="screen active" id="menuScreen">
+  <div class="menu-card">
+    <div class="section-label">Qui joue ?</div>
+    <div class="player-bar">
+      <button class="p-btn active" onclick="setPlayer(this,'Ambre')">Ambre</button>
+      <button class="p-btn" onclick="setPlayer(this,'Eden')">Eden</button>
+      <button class="p-btn" onclick="setPlayer(this,'Louise')">Louise</button>
+    </div>
+
+    <div class="section-label">Choisis ta categorie !</div>
+    <div class="cat-grid">
+      <button class="cat-btn selected" onclick="setCat(this,'boys')"><span class="cat-emoji">💜</span>BTS & Boys</button>
+      <button class="cat-btn" onclick="setCat(this,'girls')"><span class="cat-emoji">🖤</span>BLACKPINK & Girls</button>
+      <button class="cat-btn" onclick="setCat(this,'culture')"><span class="cat-emoji">🌏</span>K-Pop Culture</button>
+      <button class="cat-btn mix-btn" onclick="setCat(this,'mix')"><span class="cat-emoji">🎲</span>Mix — Un peu de tout !</button>
+    </div>
+
+    <div class="hs-display" id="hsDisplay"></div>
+    <button class="start-btn" onclick="startQuiz()">C'est parti !</button>
+  </div>
 </div>
 
-<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
-<div class="score-display">Question <span id="qNum">1</span>/10 — Score: <span id="score">0</span></div>
+<!-- ========== GAME SCREEN ========== -->
+<div class="screen" id="gameScreen">
+  <div class="game-header">
+    <div class="timer-ring-wrap">
+      <svg class="timer-ring" viewBox="0 0 80 80" width="70" height="70">
+        <circle class="bg" cx="40" cy="40" r="34"/>
+        <circle class="fg" id="timerCircle" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-text" id="timerText">20</div>
+    </div>
+    <div class="info-row">
+      <div class="score-display">Score: <span id="score">0</span></div>
+      <div class="streak-display" id="streakDisplay"></div>
+    </div>
+    <div class="progress-path" id="progressPath"></div>
+    <div class="lifelines">
+      <button class="ll-btn" id="ll5050" onclick="useLifeline('5050')"><span class="ll-icon">5050</span></button>
+      <button class="ll-btn" id="llSkip" onclick="useLifeline('skip')"><span class="ll-icon">⏭️</span> Passer</button>
+      <button class="ll-btn" id="llHint" onclick="useLifeline('hint')"><span class="ll-icon">💡</span> Indice</button>
+    </div>
+  </div>
 
-<div class="question-card" id="questionCard">
-  <div class="q-emoji" id="qEmoji"></div>
-  <div class="q-text" id="qText"></div>
-  <div class="answers" id="answers"></div>
+  <div class="question-card" id="questionCard">
+    <div class="q-number-badge" id="qBadge">Question 1/10</div>
+    <div class="q-emoji" id="qEmoji"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="q-hint" id="qHint"></div>
+    <div class="answers" id="answers"></div>
+    <div class="funfact-bar" id="funFact"><span class="ff-label">Tu savais que ?</span> <span id="ffText"></span></div>
+  </div>
 </div>
 
-<div class="result-overlay" id="resultOverlay">
-  <div class="result-box">
-    <h2 id="resultTitle"></h2>
-    <div class="stars" id="resultStars"></div>
-    <div class="big-score" id="resultScore"></div>
-    <p id="resultMsg"></p>
-    <p id="resultDetails"></p>
-    <button class="play-btn" onclick="startQuiz()">Rejouer</button>
+<!-- ========== RESULT SCREEN ========== -->
+<div class="screen" id="resultScreen">
+  <div class="result-card">
+    <div class="result-grade" id="resultGrade"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-score-big" id="resultScoreBig"></div>
+    <div class="result-stats" id="resultStats"></div>
+    <div class="result-details" id="resultDetails"></div>
+    <button class="play-btn" onclick="goToMenu()">Rejouer</button>
   </div>
 </div>
 
 <script>
-const allQuestions = [
-  { q: "Quel groupe a chante 'Dynamite' ?", a: ["BTS", "BLACKPINK", "EXO", "TWICE"], correct: 0, emoji: "💣" },
-  { q: "Combien de membres a BLACKPINK ?", a: ["3", "4", "5", "6"], correct: 1, emoji: "🖤" },
-  { q: "De quel pays vient la K-pop ?", a: ["Japon", "Chine", "Coree du Sud", "Thailande"], correct: 2, emoji: "🌏" },
-  { q: "Quel est le vrai nom de groupe de BTS ?", a: ["Bangtan Sonyeondan", "Beautiful Singing", "Big Time Stars", "Best Team Seven"], correct: 0, emoji: "💜" },
-  { q: "Qui est la plus jeune de BLACKPINK ?", a: ["Jisoo", "Jennie", "Rose", "Lisa"], correct: 3, emoji: "👑" },
-  { q: "Quel groupe chante 'How You Like That' ?", a: ["TWICE", "BLACKPINK", "Red Velvet", "ITZY"], correct: 1, emoji: "🎤" },
-  { q: "Que veut dire 'aegyo' ?", a: ["Danse", "Faire mignon", "Chanter", "Saluer"], correct: 1, emoji: "🥰" },
-  { q: "Quel membre de BTS s'appelle aussi V ?", a: ["Jungkook", "Suga", "Taehyung", "Jin"], correct: 2, emoji: "✌️" },
-  { q: "Que veut dire 'maknae' ?", a: ["Le leader", "Le plus jeune", "Le chanteur", "Le danseur"], correct: 1, emoji: "👶" },
-  { q: "Quel groupe a 9 membres et chante 'FANCY' ?", a: ["BLACKPINK", "BTS", "TWICE", "ITZY"], correct: 2, emoji: "🎀" },
-  { q: "De quelle couleur est le lightstick de BTS ?", a: ["Rose", "Violet", "Bleu", "Vert"], correct: 1, emoji: "🔮" },
-  { q: "Qui chante 'Ice Cream' avec BLACKPINK ?", a: ["Ariana Grande", "Selena Gomez", "Dua Lipa", "Lady Gaga"], correct: 1, emoji: "🍦" },
-  { q: "Comment s'appelle les fans de BTS ?", a: ["BLINK", "ARMY", "ONCE", "STAY"], correct: 1, emoji: "💪" },
-  { q: "Comment s'appelle les fans de BLACKPINK ?", a: ["ARMY", "ONCE", "BLINK", "MIDZY"], correct: 2, emoji: "💖" },
-  { q: "Que veut dire 'sasaeng' ?", a: ["Fan trop obsede", "Un danseur", "Une chanson", "Un concert"], correct: 0, emoji: "😱" },
-  { q: "Quel membre de BTS est le leader ?", a: ["Jin", "Suga", "RM", "J-Hope"], correct: 2, emoji: "⭐" },
-  { q: "Quel groupe chante 'DDU-DU DDU-DU' ?", a: ["TWICE", "Red Velvet", "BLACKPINK", "aespa"], correct: 2, emoji: "🔫" },
-  { q: "Combien de membres a BTS ?", a: ["5", "6", "7", "8"], correct: 2, emoji: "7️⃣" },
-  { q: "Que signifie 'comeback' en K-pop ?", a: ["Un retour de concert", "Un nouveau single/album", "Un fan meeting", "Un award"], correct: 1, emoji: "🎵" },
-  { q: "Quel animal represente TWICE ?", a: ["Chat", "Lapin", "Chien", "Papillon"], correct: 0, emoji: "🐱" },
-  { q: "Qui chante 'SOLO' ?", a: ["Lisa", "Rose", "Jennie", "Jisoo"], correct: 2, emoji: "🎤" },
-  { q: "Que veut dire 'bias' en K-pop ?", a: ["Le groupe prefere", "Le membre prefere", "La chanson preferee", "L'album prefere"], correct: 1, emoji: "💘" },
-  { q: "Quel groupe chante 'Butter' ?", a: ["BLACKPINK", "BTS", "Stray Kids", "NCT"], correct: 1, emoji: "🧈" },
-  { q: "Qui est la danseuse principale de BLACKPINK ?", a: ["Jennie", "Jisoo", "Rose", "Lisa"], correct: 3, emoji: "💃" },
-  { q: "Que veut dire 'fighting' en coreen ?", a: ["Se battre", "Encourager quelqu'un", "Danser", "Chanter fort"], correct: 1, emoji: "✊" },
-  { q: "Quelle couleur prefere BLACKPINK ?", a: ["Bleu", "Vert", "Rose et Noir", "Jaune"], correct: 2, emoji: "🖤" },
-  { q: "Que fait un 'trainee' en K-pop ?", a: ["Il chante en concert", "Il s'entraine pour devenir idol", "Il vend des albums", "Il danse dans la rue"], correct: 1, emoji: "🏋️" },
-  { q: "Comment dit-on 'je t'aime' en coreen ?", a: ["Annyeong", "Saranghae", "Kamsahamnida", "Aigoo"], correct: 1, emoji: "💕" },
-  { q: "Quel groupe chante 'Boombayah' ?", a: ["BTS", "TWICE", "BLACKPINK", "Red Velvet"], correct: 2, emoji: "💥" },
-  { q: "Que veut dire 'annyeong' ?", a: ["Merci", "Bonjour / Au revoir", "Bravo", "Pardon"], correct: 1, emoji: "👋" },
-  { q: "Quel est l'instrument principal de la K-pop ?", a: ["Guitare", "Piano", "La danse et le chant", "Batterie"], correct: 2, emoji: "🎹" },
-  { q: "Que porte les fans en concert K-pop ?", a: ["Un chapeau", "Un lightstick", "Des lunettes", "Un masque"], correct: 1, emoji: "🔦" },
-  { q: "Quel animal est la mascotte de BTS ?", a: ["Un chat", "Un lapin (BT21)", "Un chien", "Un lion"], correct: 1, emoji: "🐰" },
-  { q: "Combien de membres a TWICE ?", a: ["7", "8", "9", "10"], correct: 2, emoji: "9️⃣" },
+// ============================================================
+//  QUESTION BANK
+// ============================================================
+const questionBank = [
+  // ---- BOYS ----
+  {cat:"boys",q:"Quel groupe a chante 'Dynamite' ?",a:["BTS","BLACKPINK","EXO","TWICE"],correct:0,emoji:"💣",hint:"Le nom du groupe veut dire 'Bulletproof Boy Scouts'",fact:"'Dynamite' a ete la premiere chanson de BTS entierement en anglais !"},
+  {cat:"boys",q:"Quel est le vrai nom de groupe de BTS ?",a:["Bangtan Sonyeondan","Beautiful Singing","Big Time Stars","Best Team Seven"],correct:0,emoji:"💜",hint:"C'est en coreen et ca parle de protection",fact:"'Bangtan Sonyeondan' veut dire 'Scouts a l'epreuve des balles' en coreen !"},
+  {cat:"boys",q:"Quel membre de BTS s'appelle aussi V ?",a:["Jungkook","Suga","Taehyung","Jin"],correct:2,emoji:"✌️",hint:"Son prenom commence par 'Tae'",fact:"V a choisi ce nom parce qu'il voulait representer la 'Victoire' !"},
+  {cat:"boys",q:"Combien de membres a BTS ?",a:["5","6","7","8"],correct:2,emoji:"7️⃣",hint:"C'est un chiffre porte-bonheur",fact:"Les 7 membres de BTS sont ensemble depuis 2013 !"},
+  {cat:"boys",q:"Quel membre de BTS est le leader ?",a:["Jin","Suga","RM","J-Hope"],correct:2,emoji:"⭐",hint:"Ses initiales veulent dire 'Rap Monster'",fact:"RM parle couramment anglais, il l'a appris en regardant la serie Friends !"},
+  {cat:"boys",q:"Quel groupe chante 'Butter' ?",a:["BLACKPINK","BTS","Stray Kids","NCT"],correct:1,emoji:"🧈",hint:"Ce groupe a 7 membres et adore le violet",fact:"'Butter' est reste numero 1 aux USA pendant 10 semaines !"},
+  {cat:"boys",q:"De quelle couleur est le lightstick de BTS ?",a:["Rose","Violet","Bleu","Vert"],correct:1,emoji:"🔮",hint:"C'est aussi la couleur preferee du groupe",fact:"Le lightstick de BTS s'appelle 'ARMY Bomb' !"},
+  {cat:"boys",q:"Quel animal est la mascotte de BTS ?",a:["Un chat","Un lapin (BT21)","Un chien","Un lion"],correct:1,emoji:"🐰",hint:"Jungkook adore cet animal",fact:"Chaque membre de BTS a cree son propre personnage BT21 !"},
+  {cat:"boys",q:"Comment s'appelle les fans de BTS ?",a:["BLINK","ARMY","ONCE","STAY"],correct:1,emoji:"💪",hint:"C'est un mot anglais qui veut dire 'armee'",fact:"ARMY veut dire 'Adorable Representative MC for Youth' !"},
+  {cat:"boys",q:"Quel membre de BTS est le plus jeune ?",a:["Jin","V","Jimin","Jungkook"],correct:3,emoji:"👶",hint:"Son surnom est 'Golden Maknae'",fact:"Jungkook est ne en 1997 et est entre chez Big Hit a seulement 15 ans !"},
+  {cat:"boys",q:"Combien de membres a le groupe Stray Kids ?",a:["6","7","8","9"],correct:2,emoji:"🌟",hint:"C'est le meme nombre que BTS",fact:"Le nom Stray Kids represente des jeunes qui trouvent leur propre chemin !"},
+  {cat:"boys",q:"Quel membre de BTS est connu pour sa danse ?",a:["RM","Jin","J-Hope","Suga"],correct:2,emoji:"💃",hint:"Son nom parle d'espoir",fact:"J-Hope etait un danseur de rue celebre avant de rejoindre BTS !"},
+
+  // ---- GIRLS ----
+  {cat:"girls",q:"Combien de membres a BLACKPINK ?",a:["3","4","5","6"],correct:1,emoji:"🖤",hint:"C'est le meme nombre que les saisons",fact:"BLACKPINK est le plus grand groupe de filles K-pop au monde !"},
+  {cat:"girls",q:"Qui est la plus jeune de BLACKPINK ?",a:["Jisoo","Jennie","Rose","Lisa"],correct:3,emoji:"👑",hint:"Elle vient de Thailande",fact:"Lisa est nee en Thailande et parle 4 langues : thai, coreen, anglais et japonais !"},
+  {cat:"girls",q:"Quel groupe chante 'How You Like That' ?",a:["TWICE","BLACKPINK","Red Velvet","ITZY"],correct:1,emoji:"🎤",hint:"Leur nom melange deux couleurs",fact:"Le clip de 'How You Like That' a battu le record de vues en 24h sur YouTube !"},
+  {cat:"girls",q:"Qui chante 'Ice Cream' avec BLACKPINK ?",a:["Ariana Grande","Selena Gomez","Dua Lipa","Lady Gaga"],correct:1,emoji:"🍦",hint:"Elle est aussi actrice et a joue dans une serie Disney",fact:"Selena Gomez a dit que BLACKPINK etait son groupe prefere !"},
+  {cat:"girls",q:"Comment s'appelle les fans de BLACKPINK ?",a:["ARMY","ONCE","BLINK","MIDZY"],correct:2,emoji:"💖",hint:"Ca veut dire 'clin d'oeil' en anglais",fact:"BLINK est un melange de 'BLACKPINK' et 'link' (lien) !"},
+  {cat:"girls",q:"Quel groupe chante 'DDU-DU DDU-DU' ?",a:["TWICE","Red Velvet","BLACKPINK","aespa"],correct:2,emoji:"🔫",hint:"Ce groupe a 4 membres",fact:"'DDU-DU DDU-DU' a ete le premier clip K-pop a depasser 1 milliard de vues !"},
+  {cat:"girls",q:"Qui chante 'SOLO' ?",a:["Lisa","Rose","Jennie","Jisoo"],correct:2,emoji:"🎤",hint:"Elle est aussi rappeuse dans le groupe",fact:"Jennie a ete la premiere membre de BLACKPINK a sortir un titre solo !"},
+  {cat:"girls",q:"Qui est la danseuse principale de BLACKPINK ?",a:["Jennie","Jisoo","Rose","Lisa"],correct:3,emoji:"💃",hint:"Elle a grandi en Thailande",fact:"Lisa a commence la danse a l'age de 4 ans !"},
+  {cat:"girls",q:"Quelle couleur represente BLACKPINK ?",a:["Bleu et vert","Violet et or","Rose et Noir","Jaune et rouge"],correct:2,emoji:"🖤",hint:"C'est dans le nom du groupe !",fact:"BLACKPINK veut dire que la beaute n'est pas que jolie — elle est aussi forte !"},
+  {cat:"girls",q:"Quel groupe chante 'Boombayah' ?",a:["BTS","TWICE","BLACKPINK","Red Velvet"],correct:2,emoji:"💥",hint:"C'etait leur toute premiere chanson",fact:"'Boombayah' etait le titre de debut de BLACKPINK en 2016 !"},
+  {cat:"girls",q:"Combien de membres a TWICE ?",a:["7","8","9","10"],correct:2,emoji:"9️⃣",hint:"C'est 3 fois 3",fact:"Les 9 membres de TWICE viennent de 3 pays differents : Coree, Japon et Taiwan !"},
+  {cat:"girls",q:"Quel groupe a 9 membres et chante 'FANCY' ?",a:["BLACKPINK","BTS","TWICE","ITZY"],correct:2,emoji:"🎀",hint:"Leur mascotte est un chat",fact:"TWICE a ete forme grace a l'emission de television 'Sixteen' !"},
+  {cat:"girls",q:"Quel animal represente TWICE ?",a:["Chat","Lapin","Chien","Papillon"],correct:0,emoji:"🐱",hint:"Cet animal fait 'miaou'",fact:"La mascotte de TWICE s'appelle 'Lovely' et c'est un petit chat rose !"},
+  {cat:"girls",q:"De quel pays vient Lisa de BLACKPINK ?",a:["Coree du Sud","Japon","Thailande","Chine"],correct:2,emoji:"🇹🇭",hint:"C'est un pays d'Asie du Sud-Est connu pour ses plages",fact:"Le vrai nom de Lisa est Lalisa Manobal !"},
+
+  // ---- CULTURE ----
+  {cat:"culture",q:"De quel pays vient la K-pop ?",a:["Japon","Chine","Coree du Sud","Thailande"],correct:2,emoji:"🌏",hint:"Ce pays a un drapeau rouge, bleu et blanc",fact:"La K-pop existe depuis les annees 1990 !"},
+  {cat:"culture",q:"Que veut dire 'aegyo' ?",a:["Danse","Faire mignon","Chanter","Saluer"],correct:1,emoji:"🥰",hint:"Les idols font ca pour etre adorables",fact:"Faire de l'aegyo, c'est prendre des poses et faire des voix mignonnes pour les fans !"},
+  {cat:"culture",q:"Que veut dire 'maknae' ?",a:["Le leader","Le plus jeune","Le chanteur","Le danseur"],correct:1,emoji:"👶",hint:"C'est le bebe du groupe !",fact:"Le maknae est souvent le plus chouchoute par les autres membres !"},
+  {cat:"culture",q:"Que signifie 'comeback' en K-pop ?",a:["Un retour de concert","Un nouveau single/album","Un fan meeting","Un award"],correct:1,emoji:"🎵",hint:"C'est quand le groupe revient avec de la nouvelle musique",fact:"Les comebacks K-pop sont de vrais evenements avec des teasers pendant des semaines !"},
+  {cat:"culture",q:"Que veut dire 'bias' en K-pop ?",a:["Le groupe prefere","Le membre prefere","La chanson preferee","L'album prefere"],correct:1,emoji:"💘",hint:"C'est CETTE personne du groupe que tu adores le plus",fact:"Quand ton bias change, on appelle ca un 'bias wrecker' !"},
+  {cat:"culture",q:"Que veut dire 'fighting' en coreen ?",a:["Se battre","Encourager quelqu'un","Danser","Chanter fort"],correct:1,emoji:"✊",hint:"On le dit pour donner du courage",fact:"En coreen, on dit 'hwaiting' ! C'est un mot d'encouragement !"},
+  {cat:"culture",q:"Que fait un 'trainee' en K-pop ?",a:["Il chante en concert","Il s'entraine pour devenir idol","Il vend des albums","Il danse dans la rue"],correct:1,emoji:"🏋️",hint:"C'est un apprenti qui travaille tres dur",fact:"Les trainees s'entrainent souvent pendant 3 a 7 ans avant de debuter !"},
+  {cat:"culture",q:"Comment dit-on 'je t'aime' en coreen ?",a:["Annyeong","Saranghae","Kamsahamnida","Aigoo"],correct:1,emoji:"💕",hint:"Ca commence par 'Sara...'",fact:"Les fans crient souvent 'saranghae' a leurs idols pendant les concerts !"},
+  {cat:"culture",q:"Que veut dire 'annyeong' ?",a:["Merci","Bonjour / Au revoir","Bravo","Pardon"],correct:1,emoji:"👋",hint:"Tu le dis quand tu arrives ET quand tu pars",fact:"'Annyeong' est la version informelle — entre amis. Pour etre poli, on dit 'annyeonghaseyo' !"},
+  {cat:"culture",q:"Quel est l'art principal de la K-pop ?",a:["Guitare","Piano","La danse et le chant","Batterie"],correct:2,emoji:"🎹",hint:"Les idols font ces deux choses en meme temps !",fact:"Les idols K-pop doivent savoir chanter, danser, rapper et meme jouer la comedie !"},
+  {cat:"culture",q:"Que porte les fans en concert K-pop ?",a:["Un chapeau","Un lightstick","Des lunettes","Un masque"],correct:1,emoji:"🔦",hint:"Ca brille et chaque groupe a le sien !",fact:"Les lightsticks peuvent changer de couleur et se synchroniser avec la musique du concert !"},
+  {cat:"culture",q:"Que veut dire 'sasaeng' ?",a:["Fan trop obsede","Un danseur","Une chanson","Un concert"],correct:0,emoji:"😱",hint:"C'est un fan qui va BEAUCOUP trop loin",fact:"Les sasaeng sont des fans obsessifs — les idols sont proteges contre eux !"},
+
+  // ---- 15 NEW EASY QUESTIONS ----
+  {cat:"culture",q:"Comment dit-on 'merci' en coreen ?",a:["Saranghae","Kamsahamnida","Annyeong","Aigoo"],correct:1,emoji:"🙏",hint:"C'est un mot assez long !",fact:"'Kamsahamnida' est la facon polie de dire merci en coreen !"},
+  {cat:"culture",q:"Que veut dire le coeur fait avec les doigts en K-pop ?",a:["Bravo","Je t'aime","Au revoir","Merci"],correct:1,emoji:"🫰",hint:"C'est un mini coeur avec le pouce et l'index",fact:"Le 'finger heart' a ete invente en Coree et est devenu celebre dans le monde entier !"},
+  {cat:"culture",q:"Quel emoji represente souvent BTS ?",a:["💜","❤️","💚","🧡"],correct:0,emoji:"💜",hint:"C'est la couleur preferee du groupe",fact:"BTS dit souvent 'I purple you' a leurs fans — ca veut dire 'je vous aimerai toujours' !"},
+  {cat:"boys",q:"Quel membre de BTS a le surnom 'Worldwide Handsome' ?",a:["Jimin","Jin","Suga","RM"],correct:1,emoji:"😎",hint:"C'est le plus age du groupe",fact:"Jin se presente toujours en disant qu'il est le plus beau du monde — et les fans adorent !"},
+  {cat:"girls",q:"Quelle chanson BLACKPINK chante-t-elle avec la danse du feu ?",a:["Playing With Fire","As If It's Your Last","Kill This Love","Whistle"],correct:0,emoji:"🔥",hint:"Le titre parle de jouer avec quelque chose de chaud",fact:"'Playing With Fire' etait le debut de la celebrite mondiale de BLACKPINK !"},
+  {cat:"culture",q:"Combien de membres a le groupe aespa ?",a:["3","4","5","6"],correct:1,emoji:"🤖",hint:"C'est le meme nombre que BLACKPINK",fact:"aespa a des avatars virtuels — chaque membre a un double numerique !"},
+  {cat:"culture",q:"Que fait-on lors d'un 'fan meeting' ?",a:["On mange ensemble","On rencontre les idols","On achete des albums","On fait un concert"],correct:1,emoji:"🤝",hint:"C'est l'occasion de voir tes idols de pres !",fact:"Lors des fan meetings, tu peux parfois parler directement a ton idol pendant quelques secondes !"},
+  {cat:"boys",q:"Quel membre de BTS est connu pour aimer les chats ?",a:["Suga","Jungkook","V","J-Hope"],correct:0,emoji:"🐱",hint:"Son nom d'artiste est un mot doux en anglais",fact:"Suga a un chat qui s'appelle 'Holly' — non attends, c'est un chien ! Mais il adore les chats aussi !"},
+  {cat:"girls",q:"Quelle membre de BLACKPINK a grandi en Australie ?",a:["Jisoo","Jennie","Rose","Lisa"],correct:2,emoji:"🇦🇺",hint:"Elle est connue pour sa voix puissante",fact:"Rose est nee en Nouvelle-Zelande et a grandi a Melbourne, en Australie !"},
+  {cat:"culture",q:"Que veut dire 'daebak' en coreen ?",a:["Pas bien","C'est genial !","Bonsoir","A table"],correct:1,emoji:"🤩",hint:"Tu le dis quand quelque chose est incroyable",fact:"'Daebak' est le mot que les Coreens utilisent le plus quand ils sont impressionnes !"},
+  {cat:"culture",q:"Que mange-t-on souvent en Coree ?",a:["Des sushis","Du kimchi","Des croissants","Des tacos"],correct:1,emoji:"🥬",hint:"C'est fait avec du chou pimente",fact:"Le kimchi est un plat coreen a base de legumes fermentes — les idols en mangent tous les jours !"},
+  {cat:"boys",q:"Quelle danse de BTS est devenue virale sur TikTok ?",a:["La danse de Dynamite","La danse de Butter","La danse de Permission to Dance","Toutes !"],correct:3,emoji:"📱",hint:"BTS est PARTOUT sur TikTok",fact:"Les danses BTS sont parmi les plus reproduites sur TikTok avec des milliards de vues !"},
+  {cat:"girls",q:"Quelle membre de BLACKPINK est aussi actrice dans un drama coreen ?",a:["Lisa","Jennie","Rose","Jisoo"],correct:3,emoji:"🎬",hint:"C'est la plus agee du groupe",fact:"Jisoo a joue dans le drama 'Snowdrop' en 2021 et les fans ont adore !"},
+  {cat:"culture",q:"Quel geste font les idols K-pop pour dire 'je t'aime' aux fans ?",a:["Lever le poing","Faire un coeur avec les bras","Agiter la main","Taper du pied"],correct:1,emoji:"🫶",hint:"Ils font un grand geste au dessus de leur tete",fact:"Le grand coeur avec les bras est devenu un symbole universel grace a la K-pop !"},
+  {cat:"culture",q:"Quel mot coreen veut dire 'beau/belle' ?",a:["Aigoo","Yeppeo","Pali pali","Babo"],correct:1,emoji:"✨",hint:"Les fans le crient souvent aux idols",fact:"'Yeppeo' veut dire 'c'est joli/beau' — les fans le crient quand leur bias est magnifique !"},
 ];
 
+// ============================================================
+//  STATE
+// ============================================================
+let currentPlayer = 'Ambre';
+let selectedCat = 'boys';
 let questions = [];
 let currentQ = 0;
 let score = 0;
-let currentPlayer = 'Ambre';
+let streak = 0;
+let bestStreak = 0;
+let correctCount = 0;
 let answered = false;
+let results = []; // {q, userAnswer, correct, wasCorrect, skipped, points}
+let timerInterval = null;
+let timeLeft = 20;
+let usedLifelines = {5050:false, skip:false, hint:false};
+let audioCtx = null;
 
-function setPlayer(btn, name) {
-  currentPlayer = name;
-  document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+// ============================================================
+//  NAVIGATION
+// ============================================================
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goToMenu(){
+  stopTimer();
+  showScreen('menuScreen');
+  updateHS();
+}
+
+// ============================================================
+//  PLAYER & CATEGORY
+// ============================================================
+function setPlayer(btn,name){
+  currentPlayer=name;
+  document.querySelectorAll('.p-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  updateHS();
 }
 
-function shuffle(a) {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+function setCat(btn,cat){
+  selectedCat=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateHS();
+}
+
+function updateHS(){
+  const key='kpop_hs_quiz_'+currentPlayer;
+  const hs=localStorage.getItem(key);
+  const el=document.getElementById('hsDisplay');
+  el.textContent=hs?`Meilleur score de ${currentPlayer} : ${hs} pts`:'';
+}
+updateHS();
+
+// ============================================================
+//  SHUFFLE
+// ============================================================
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+// ============================================================
+//  START
+// ============================================================
+function startQuiz(){
+  let pool;
+  if(selectedCat==='mix') pool=[...questionBank];
+  else pool=questionBank.filter(q=>q.cat===selectedCat);
+
+  questions=shuffle([...pool]).slice(0,10);
+  // If not enough, fill from all
+  if(questions.length<10){
+    const extra=shuffle(questionBank.filter(q=>!questions.includes(q))).slice(0,10-questions.length);
+    questions=questions.concat(extra);
   }
-  return a;
-}
 
-function startQuiz() {
-  document.getElementById('resultOverlay').classList.remove('show');
-  questions = shuffle([...allQuestions]).slice(0, 10);
-  currentQ = 0;
-  score = 0;
+  currentQ=0;score=0;streak=0;bestStreak=0;correctCount=0;
+  results=[];
+  usedLifelines={5050:false,skip:false,hint:false};
+  document.getElementById('ll5050').disabled=false;
+  document.getElementById('llSkip').disabled=false;
+  document.getElementById('llHint').disabled=false;
+
+  buildProgressPath();
+  showScreen('gameScreen');
   showQuestion();
 }
 
-function showQuestion() {
-  answered = false;
-  const q = questions[currentQ];
+// ============================================================
+//  PROGRESS PATH
+// ============================================================
+function buildProgressPath(){
+  const el=document.getElementById('progressPath');
+  el.innerHTML='';
+  for(let i=0;i<10;i++){
+    const s=document.createElement('div');
+    s.className='stone'+(i===0?' current':'');
+    s.textContent=i+1;
+    s.id='stone'+i;
+    el.appendChild(s);
+  }
+}
 
-  document.getElementById('qNum').textContent = currentQ + 1;
-  document.getElementById('score').textContent = score;
-  document.getElementById('progressFill').style.width = ((currentQ) / questions.length * 100) + '%';
-  document.getElementById('qEmoji').textContent = q.emoji;
-  document.getElementById('qText').textContent = q.q;
+function updateStone(i,type){
+  const s=document.getElementById('stone'+i);
+  if(!s)return;
+  s.classList.remove('current');
+  s.classList.add('done-'+type);
+  s.textContent=type==='correct'?'✓':type==='wrong'?'✗':'⏭';
+  // Highlight next
+  const next=document.getElementById('stone'+(i+1));
+  if(next)next.classList.add('current');
+}
 
-  // Re-animate card
-  const card = document.getElementById('questionCard');
-  card.style.animation = 'none';
-  card.offsetHeight;
-  card.style.animation = 'slideIn 0.4s ease';
+// ============================================================
+//  TIMER
+// ============================================================
+const CIRCUMFERENCE=2*Math.PI*34; // ~213.6
 
-  const answersEl = document.getElementById('answers');
-  answersEl.innerHTML = '';
+function startTimer(){
+  timeLeft=20;
+  updateTimerVisual();
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timeLeft-=0.1;
+    if(timeLeft<=0){timeLeft=0;clearInterval(timerInterval);timeUp();}
+    updateTimerVisual();
+  },100);
+}
 
-  q.a.forEach((a, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'answer-btn';
-    btn.textContent = a;
-    btn.onclick = () => checkAnswer(i, btn);
+function stopTimer(){clearInterval(timerInterval)}
+
+function updateTimerVisual(){
+  const pct=timeLeft/20;
+  const offset=CIRCUMFERENCE*(1-pct);
+  const circle=document.getElementById('timerCircle');
+  circle.style.strokeDashoffset=offset;
+  circle.classList.remove('warn','danger');
+  if(timeLeft<=5)circle.classList.add('danger');
+  else if(timeLeft<=10)circle.classList.add('warn');
+  document.getElementById('timerText').textContent=Math.ceil(timeLeft);
+}
+
+function timeUp(){
+  if(answered)return;
+  answered=true;
+  const q=questions[currentQ];
+  const btns=document.querySelectorAll('.answer-btn');
+  btns.forEach(b=>b.disabled=true);
+  btns[q.correct].classList.add('highlight-correct');
+  streak=0;
+  updateStreakDisplay();
+  results.push({q:q.q,userAnswer:'Temps ecoule',correctAnswer:q.a[q.correct],wasCorrect:false,skipped:false,points:0});
+  updateStone(currentQ,'wrong');
+  showFunFact(q);
+  playWrongSound();
+  setTimeout(()=>nextQuestion(),2200);
+}
+
+// ============================================================
+//  SHOW QUESTION
+// ============================================================
+function showQuestion(){
+  answered=false;
+  const q=questions[currentQ];
+
+  document.getElementById('score').textContent=score;
+  document.getElementById('qBadge').textContent=`Question ${currentQ+1}/10`;
+  document.getElementById('qEmoji').textContent=q.emoji;
+  document.getElementById('qText').textContent=q.q;
+  document.getElementById('qHint').classList.remove('show');
+  document.getElementById('qHint').textContent='';
+  document.getElementById('funFact').classList.remove('show');
+
+  // Animate card
+  const card=document.getElementById('questionCard');
+  const anim=currentQ%2===0?'card-anim-left':'card-anim-right';
+  card.className='question-card '+anim;
+
+  const answersEl=document.getElementById('answers');
+  answersEl.innerHTML='';
+
+  const ansEmojis=['🅰️','🅱️','©️','🅳'];
+  q.a.forEach((a,i)=>{
+    const btn=document.createElement('button');
+    btn.className='answer-btn';
+    btn.innerHTML=`<span class="ans-emoji">${ansEmojis[i]}</span> ${a}`;
+    btn.dataset.index=i;
+    btn.onclick=()=>checkAnswer(i,btn);
     answersEl.appendChild(btn);
+  });
+
+  startTimer();
+}
+
+// ============================================================
+//  CHECK ANSWER
+// ============================================================
+function checkAnswer(index,btn){
+  if(answered)return;
+  answered=true;
+  stopTimer();
+
+  const q=questions[currentQ];
+  const btns=document.querySelectorAll('.answer-btn');
+  btns.forEach(b=>b.disabled=true);
+
+  if(index===q.correct){
+    btn.classList.add('correct');
+    // Calculate points: 10 base + speed bonus
+    let speedBonus=0;
+    if(timeLeft>=15)speedBonus=10;
+    else if(timeLeft>=10)speedBonus=7;
+    else if(timeLeft>=5)speedBonus=4;
+    else speedBonus=1;
+    let pts=10+speedBonus;
+
+    streak++;
+    if(streak>bestStreak)bestStreak=streak;
+    correctCount++;
+
+    // Streak bonus
+    if(streak>=3 && streak%3===0){
+      pts+=5;
+      showStreakBanner(streak);
+      playStreakSound();
+    } else {
+      playCorrectSound();
+    }
+
+    score+=pts;
+    document.getElementById('score').textContent=score;
+    updateStreakDisplay();
+    updateStone(currentQ,'correct');
+    miniConfetti();
+    results.push({q:q.q,userAnswer:q.a[index],correctAnswer:q.a[q.correct],wasCorrect:true,skipped:false,points:pts});
+  } else {
+    btn.classList.add('wrong');
+    btns[q.correct].classList.add('highlight-correct');
+    streak=0;
+    updateStreakDisplay();
+    updateStone(currentQ,'wrong');
+    playWrongSound();
+    results.push({q:q.q,userAnswer:q.a[index],correctAnswer:q.a[q.correct],wasCorrect:false,skipped:false,points:0});
+  }
+
+  showFunFact(q);
+  setTimeout(()=>nextQuestion(),2500);
+}
+
+function nextQuestion(){
+  currentQ++;
+  if(currentQ>=questions.length)showResult();
+  else showQuestion();
+}
+
+// ============================================================
+//  LIFELINES
+// ============================================================
+function useLifeline(type){
+  if(answered)return;
+  if(usedLifelines[type])return;
+  usedLifelines[type]=true;
+
+  if(type==='5050'){
+    document.getElementById('ll5050').disabled=true;
+    const q=questions[currentQ];
+    const btns=[...document.querySelectorAll('.answer-btn')];
+    // Pick 2 wrong answers to hide
+    let wrongIndices=[];
+    btns.forEach((b,i)=>{if(i!==q.correct)wrongIndices.push(i)});
+    shuffle(wrongIndices);
+    const toHide=wrongIndices.slice(0,2);
+    toHide.forEach(i=>btns[i].classList.add('hidden-5050'));
+    playSound(600,0.08);setTimeout(()=>playSound(800,0.08),100);
+  }
+  else if(type==='skip'){
+    document.getElementById('llSkip').disabled=true;
+    answered=true;
+    stopTimer();
+    updateStone(currentQ,'skip');
+    results.push({q:questions[currentQ].q,userAnswer:'Passe',correctAnswer:questions[currentQ].a[questions[currentQ].correct],wasCorrect:false,skipped:true,points:0});
+    streak=0;
+    updateStreakDisplay();
+    playSound(500,0.06);
+    setTimeout(()=>nextQuestion(),600);
+  }
+  else if(type==='hint'){
+    document.getElementById('llHint').disabled=true;
+    const q=questions[currentQ];
+    const hintEl=document.getElementById('qHint');
+    hintEl.textContent='💡 '+q.hint;
+    hintEl.classList.add('show');
+    playSound(700,0.06);setTimeout(()=>playSound(900,0.06),80);
+  }
+}
+
+// ============================================================
+//  STREAK
+// ============================================================
+function updateStreakDisplay(){
+  const el=document.getElementById('streakDisplay');
+  if(streak>=2){
+    el.textContent='🔥 x'+streak;
+    el.classList.add('on');
+    setTimeout(()=>el.classList.remove('on'),400);
+  } else {
+    el.textContent='';
+  }
+}
+
+function showStreakBanner(n){
+  const b=document.createElement('div');
+  b.className='streak-banner';
+  b.textContent='🔥 STREAK x'+n+' ! +5 BONUS 🔥';
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),1500);
+}
+
+// ============================================================
+//  FUN FACT
+// ============================================================
+function showFunFact(q){
+  const el=document.getElementById('funFact');
+  document.getElementById('ffText').textContent=q.fact;
+  el.classList.add('show');
+}
+
+// ============================================================
+//  CONFETTI
+// ============================================================
+function miniConfetti(){
+  const emojis=['⭐','💖','✨','🎵','💜'];
+  for(let i=0;i<6;i++){
+    setTimeout(()=>{
+      const c=document.createElement('div');
+      c.className='confetti';
+      c.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      c.style.left=Math.random()*100+'vw';
+      c.style.animationDuration=(2+Math.random()*2)+'s';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(),4000);
+    },i*50);
+  }
+}
+
+function bigConfetti(){
+  const emojis=['🎉','💖','⭐','🌟','🎀','✨','💜','🎵','👑','🦋'];
+  for(let i=0;i<30;i++){
+    setTimeout(()=>{
+      const c=document.createElement('div');
+      c.className='confetti';
+      c.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      c.style.left=Math.random()*100+'vw';
+      c.style.animationDuration=(2+Math.random()*3)+'s';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(),5000);
+    },i*60);
+  }
+}
+
+// ============================================================
+//  RESULT
+// ============================================================
+function showResult(){
+  stopTimer();
+
+  const pct=Math.round(correctCount/questions.length*100);
+  let grade,gradeClass,title,msg;
+
+  if(pct===100){grade='S';gradeClass='grade-S';title='PARFAIT !!!';msg=`${currentPlayer} est une VRAIE experte K-pop !`}
+  else if(pct>=80){grade='A';gradeClass='grade-A';title='INCROYABLE !';msg=`${currentPlayer} connait super bien la K-pop !`}
+  else if(pct>=60){grade='B';gradeClass='grade-B';title='SUPER !';msg=`${currentPlayer} est une vraie fan !`}
+  else if(pct>=40){grade='C';gradeClass='grade-C';title='Pas mal !';msg=`Continue ${currentPlayer}, tu progresses !`}
+  else{grade='D';gradeClass='grade-try';title='Continue !';msg=`${currentPlayer}, tu vas devenir experte !`}
+
+  document.getElementById('resultGrade').textContent=grade;
+  document.getElementById('resultGrade').className='result-grade '+gradeClass;
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultScoreBig').textContent=score+' pts';
+  document.getElementById('resultStats').innerHTML=`<span>${correctCount}</span>/${questions.length} bonnes reponses — Meilleur streak : <span>🔥x${bestStreak}</span>`;
+
+  // Detailed results
+  const det=document.getElementById('resultDetails');
+  det.innerHTML='';
+  results.forEach((r,i)=>{
+    const cls=r.wasCorrect?'rd-correct':r.skipped?'rd-skip':'rd-wrong';
+    const icon=r.wasCorrect?'✅':r.skipped?'⏭️':'❌';
+    let ansText;
+    if(r.wasCorrect) ansText=`Ta reponse : ${r.userAnswer} (+${r.points} pts)`;
+    else if(r.skipped) ansText=`Passee — Reponse : ${r.correctAnswer}`;
+    else ansText=`Ta reponse : ${r.userAnswer} — Bonne reponse : ${r.correctAnswer}`;
+    det.innerHTML+=`<div class="rd-item ${cls}"><div class="rd-icon">${icon}</div><div class="rd-content"><div class="rd-q">${i+1}. ${r.q}</div><div class="rd-a">${ansText}</div></div></div>`;
+  });
+
+  // Save high score
+  const key='kpop_hs_quiz_'+currentPlayer;
+  const prev=parseInt(localStorage.getItem(key))||0;
+  if(score>prev)localStorage.setItem(key,score);
+
+  showScreen('resultScreen');
+
+  // Effects
+  if(pct>=80){bigConfetti();playFanfare();}
+  else if(pct>=60){miniConfetti();playCorrectSound();}
+}
+
+// ============================================================
+//  AUDIO
+// ============================================================
+function playSound(freq,dur){
+  try{
+    const ctx=getAudioCtx();
+    const o=ctx.createOscillator();const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.value=freq;o.type='sine';
+    g.gain.setValueAtTime(0.15,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    o.start();o.stop(ctx.currentTime+dur);
+  }catch(e){}
+}
+
+function playCorrectSound(){
+  playSound(523,0.1);
+  setTimeout(()=>playSound(659,0.1),80);
+  setTimeout(()=>playSound(784,0.15),160);
+}
+
+function playWrongSound(){
+  try{
+    const ctx=getAudioCtx();
+    const o=ctx.createOscillator();const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.value=300;o.type='sine';
+    g.gain.setValueAtTime(0.12,ctx.currentTime);
+    o.frequency.linearRampToValueAtTime(200,ctx.currentTime+0.3);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+    o.start();o.stop(ctx.currentTime+0.4);
+  }catch(e){}
+}
+
+function playStreakSound(){
+  [523,659,784,1047].forEach((f,i)=>{
+    setTimeout(()=>playSound(f,0.12),i*80);
   });
 }
 
-function checkAnswer(index, btn) {
-  if (answered) return;
-  answered = true;
-
-  const q = questions[currentQ];
-  const btns = document.querySelectorAll('.answer-btn');
-  btns.forEach(b => b.disabled = true);
-
-  if (index === q.correct) {
-    btn.classList.add('correct');
-    score += 10;
-    document.getElementById('score').textContent = score;
-    playSound(800, 0.1);
-
-    // Mini confetti
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        const c = document.createElement('div');
-        c.className = 'confetti';
-        c.textContent = ['⭐','💖','✨'][Math.floor(Math.random()*3)];
-        c.style.left = Math.random() * 100 + 'vw';
-        c.style.animationDuration = (2 + Math.random() * 2) + 's';
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 4000);
-      }, i * 60);
-    }
-  } else {
-    btn.classList.add('wrong');
-    btns[q.correct].classList.add('correct');
-    playSound(300, 0.15);
-  }
-
-  setTimeout(() => {
-    currentQ++;
-    if (currentQ >= questions.length) {
-      showResult();
-    } else {
-      showQuestion();
-    }
-  }, 1200);
+function playFanfare(){
+  const notes=[523,659,784,880,1047,1175,1319,1568];
+  notes.forEach((f,i)=>{
+    setTimeout(()=>playSound(f,0.15),i*100);
+  });
 }
 
-function showResult() {
-  document.getElementById('progressFill').style.width = '100%';
-
-  let title, stars, msg;
-  const pct = score / (questions.length * 10) * 100;
-
-  if (pct >= 80) { title = 'INCROYABLE !!!'; stars = '⭐⭐⭐'; msg = `${currentPlayer} est une VRAIE experte K-pop !`; }
-  else if (pct >= 50) { title = 'SUPER !!'; stars = '⭐⭐'; msg = `${currentPlayer} connait bien la K-pop !`; }
-  else if (pct >= 30) { title = 'Bien !'; stars = '⭐'; msg = `Pas mal ${currentPlayer}, continue d'apprendre !`; }
-  else { title = 'Continue !'; stars = '🌟'; msg = `${currentPlayer}, tu vas t'ameliorer !`; }
-
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultStars').textContent = stars;
-  document.getElementById('resultScore').textContent = score + '/' + (questions.length * 10);
-  document.getElementById('resultMsg').textContent = msg;
-  document.getElementById('resultDetails').textContent = `${Math.round(pct)}% de bonnes réponses`;
-  document.getElementById('resultOverlay').classList.add('show');
-
-  // Big confetti
-  if (pct >= 70) {
-    const emojis = ['🎉','💖','⭐','🌟','🎀','✨','💜','🎵'];
-    for (let i = 0; i < 20; i++) {
-      setTimeout(() => {
-        const c = document.createElement('div');
-        c.className = 'confetti';
-        c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        c.style.left = Math.random() * 100 + 'vw';
-        c.style.animationDuration = (2 + Math.random() * 3) + 's';
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 5000);
-      }, i * 80);
-    }
-  }
-}
-
-function playSound(freq, dur) {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = freq; o.type = 'sine';
-    g.gain.setValueAtTime(0.2, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    o.start(); o.stop(ctx.currentTime + dur);
-  } catch(e) {}
-}
-
-startQuiz();
+// Init on menu
+showScreen('menuScreen');
 </script>
 </body>
 </html>

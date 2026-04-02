@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Karaoke Star - K-Pop Games</title>
+<title>Karaoké Star — École Saint-Esprit</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -18,6 +18,58 @@ body {
   align-items: center;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Animated stage background */
+.stage-bg {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden;
+  pointer-events: none;
+}
+.stage-light {
+  position: absolute; width: 200px; height: 600px;
+  opacity: 0.08; filter: blur(40px); border-radius: 50%;
+}
+.stage-light:nth-child(1) {
+  background: #ff6fd8; left: 10%; top: -100px;
+  animation: lightSway 4s ease-in-out infinite alternate;
+}
+.stage-light:nth-child(2) {
+  background: #cd77ff; left: 40%; top: -100px;
+  animation: lightSway 5s ease-in-out infinite alternate-reverse;
+}
+.stage-light:nth-child(3) {
+  background: #84fab0; right: 10%; top: -100px;
+  animation: lightSway 3.5s ease-in-out infinite alternate;
+}
+.stage-light:nth-child(4) {
+  background: #ffd700; right: 35%; top: -100px;
+  animation: lightSway 4.5s ease-in-out infinite alternate-reverse;
+}
+@keyframes lightSway {
+  0% { transform: rotate(-15deg) translateX(-30px); opacity: 0.06; }
+  100% { transform: rotate(15deg) translateX(30px); opacity: 0.12; }
+}
+
+/* Screen edge glow */
+.edge-glow {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  box-shadow: inset 0 0 80px rgba(255,111,216,0.0);
+  transition: box-shadow 0.15s;
+}
+.edge-glow.pulse {
+  box-shadow: inset 0 0 80px rgba(255,111,216,0.25), inset 0 0 120px rgba(205,119,255,0.15);
+}
+
+/* Singer silhouette */
+.singer-silhouette {
+  position: fixed; bottom: -10px; left: 50%; transform: translateX(-50%);
+  z-index: 2; pointer-events: none; font-size: 120px;
+  opacity: 0.12; filter: blur(1px);
+  animation: singerBob 2s ease-in-out infinite;
+}
+@keyframes singerBob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
 }
 
 .back-btn {
@@ -43,81 +95,182 @@ body {
 #combo { color: #ffd700; }
 #score-val { color: #ff6fd8; }
 
+/* Player indicator in game */
+.player-indicator {
+  color: #84fab0; font-size: 0.95em; font-weight: 700;
+  text-shadow: 0 0 10px rgba(132,250,176,0.5);
+  min-height: 24px; z-index: 10;
+}
+
 /* Screens */
-.screen { display: none; flex-direction: column; align-items: center; z-index: 10; }
+.screen { display: none; flex-direction: column; align-items: center; z-index: 10; width: 100%; }
 .screen.active { display: flex; }
 
+/* Player Select */
+.player-select { padding: 20px; width: 100%; max-width: 420px; }
+.player-select h2 { color: white; text-align: center; margin-bottom: 16px; font-size: 1.3em; }
+.player-card {
+  background: linear-gradient(135deg, rgba(132,250,176,0.15), rgba(161,140,209,0.15));
+  border: 2px solid rgba(132,250,176,0.3); border-radius: 16px;
+  padding: 14px 20px; margin: 8px 0; cursor: pointer;
+  color: white; transition: all 0.3s; text-align: center;
+  font-size: 1.15em; font-weight: 600;
+}
+.player-card:hover, .player-card:active {
+  background: linear-gradient(135deg, rgba(132,250,176,0.3), rgba(161,140,209,0.3));
+  transform: scale(1.04); border-color: #84fab0;
+}
+.player-card .emoji { font-size: 1.5em; margin-right: 8px; }
+
+/* Mode select */
+.mode-select { padding: 10px 20px; width: 100%; max-width: 420px; }
+.mode-select h2 { color: white; text-align: center; margin-bottom: 12px; font-size: 1.2em; }
+.mode-card {
+  background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,111,216,0.15));
+  border: 2px solid rgba(255,215,0,0.3); border-radius: 16px;
+  padding: 14px 20px; margin: 8px 0; cursor: pointer;
+  color: white; transition: all 0.3s; text-align: center;
+}
+.mode-card:hover { transform: scale(1.04); border-color: #ffd700; }
+.mode-card .title { font-size: 1.1em; font-weight: 700; }
+.mode-card .info { font-size: 0.8em; color: #cd77ff; margin-top: 3px; }
+
 /* Song select */
-.song-select { padding: 20px; width: 100%; max-width: 500px; }
+.song-select {
+  padding: 10px 20px; width: 100%; max-width: 500px;
+  max-height: calc(100vh - 160px); overflow-y: auto;
+}
+.song-select::-webkit-scrollbar { width: 6px; }
+.song-select::-webkit-scrollbar-thumb { background: rgba(255,111,216,0.4); border-radius: 3px; }
 .song-card {
-  background: linear-gradient(135deg, rgba(255,111,216,0.2), rgba(161,140,209,0.2));
-  border: 2px solid rgba(255,111,216,0.4); border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,111,216,0.15), rgba(161,140,209,0.15));
+  border: 2px solid rgba(255,111,216,0.3); border-radius: 16px;
   padding: 14px 18px; margin: 8px 0; cursor: pointer;
   color: white; transition: all 0.3s;
 }
 .song-card:hover, .song-card:active {
-  background: linear-gradient(135deg, rgba(255,111,216,0.4), rgba(161,140,209,0.4));
+  background: linear-gradient(135deg, rgba(255,111,216,0.35), rgba(161,140,209,0.35));
   transform: scale(1.03); border-color: #ff6fd8;
 }
+.song-card .top-row { display: flex; align-items: center; justify-content: space-between; }
 .song-card .title { font-size: 1.15em; font-weight: 700; }
-.song-card .info { font-size: 0.85em; color: #cd77ff; margin-top: 3px; }
+.song-card .difficulty { font-size: 0.85em; }
+.song-card .preview {
+  font-size: 0.8em; color: rgba(255,255,255,0.5); margin-top: 5px;
+  font-style: italic;
+}
+.song-card .info { font-size: 0.82em; color: #cd77ff; margin-top: 3px; }
 
-/* Lyrics area */
+/* Karaoke bar for lyrics */
 .lyrics-zone {
-  width: 100%; max-width: 600px; text-align: center;
-  padding: 20px; min-height: 200px;
+  width: 100%; max-width: 620px; text-align: center;
+  padding: 16px 20px; min-height: 180px;
   display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 12px;
+  justify-content: center; gap: 10px;
+  position: relative;
 }
-.lyric-line {
-  color: rgba(255,255,255,0.3); font-size: 1.3em; font-weight: 600;
-  transition: all 0.4s; line-height: 1.5;
-}
-.lyric-line.active {
-  color: white; font-size: 1.7em;
-  text-shadow: 0 0 20px #ff6fd8, 0 0 40px #cd77ff;
-  animation: pulse 0.6s ease infinite alternate;
-}
-.lyric-line.done { color: rgba(161,140,209,0.5); font-size: 1.1em; }
 
-@keyframes pulse { to { text-shadow: 0 0 30px #ff6fd8, 0 0 60px #cd77ff; } }
+.karaoke-bar {
+  background: linear-gradient(180deg, rgba(255,111,216,0.12), rgba(161,140,209,0.08), rgba(0,0,0,0.2));
+  border: 1px solid rgba(255,111,216,0.2);
+  border-radius: 20px; padding: 20px 16px;
+  width: 100%; min-height: 160px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.lyric-line {
+  color: rgba(255,255,255,0.25); font-size: 1.15em; font-weight: 600;
+  transition: all 0.4s; line-height: 1.5;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+}
+.lyric-line .word {
+  transition: all 0.25s; display: inline-block;
+}
+.lyric-line.active { color: rgba(255,255,255,0.5); }
+.lyric-line.active .word.current {
+  color: white; font-size: 1.35em;
+  text-shadow: 0 0 20px #ff6fd8, 0 0 40px #cd77ff;
+  animation: wordPulse 0.5s ease infinite alternate;
+  transform: scale(1.1);
+}
+.lyric-line.active .word.sung {
+  color: rgba(205,119,255,0.8);
+}
+.lyric-line.done { color: rgba(161,140,209,0.35); font-size: 0.95em; }
+
+@keyframes wordPulse {
+  0% { text-shadow: 0 0 15px #ff6fd8, 0 0 30px #cd77ff; }
+  100% { text-shadow: 0 0 30px #ff6fd8, 0 0 60px #cd77ff, 0 0 80px #a18cd1; }
+}
+
+/* Duet indicator */
+.duet-label {
+  font-size: 0.75em; font-weight: 700; padding: 2px 8px;
+  border-radius: 10px; margin-bottom: 2px; display: inline-block;
+}
+.duet-p1 { background: rgba(255,111,216,0.3); color: #ff9ee8; }
+.duet-p2 { background: rgba(132,250,176,0.3); color: #84fab0; }
 
 /* Sing button */
 .sing-btn {
-  width: 140px; height: 140px; border-radius: 50%;
+  width: 130px; height: 130px; border-radius: 50%;
   background: linear-gradient(135deg, #ff6fd8, #cd77ff);
   border: 4px solid rgba(255,255,255,0.5);
   color: white; font-size: 2.5em; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.1s; margin: 20px 0;
+  transition: transform 0.1s; margin: 14px 0;
   box-shadow: 0 0 30px rgba(255,111,216,0.5);
   -webkit-tap-highlight-color: transparent;
+  position: relative; z-index: 10;
 }
-.sing-btn:active { transform: scale(0.9); }
+.sing-btn:active { transform: scale(0.88); }
 .sing-btn.glow {
   box-shadow: 0 0 50px rgba(255,111,216,0.8), 0 0 80px rgba(205,119,255,0.5);
 }
+.sing-btn.bounce {
+  animation: micBounce 0.2s ease;
+}
+@keyframes micBounce {
+  0% { transform: scale(0.82); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
 
-/* Progress bar */
+/* Progress bar — music staff style */
 .progress-wrap {
-  width: 80%; max-width: 400px; height: 8px;
-  background: rgba(255,255,255,0.15); border-radius: 10px;
-  overflow: hidden; margin: 10px 0;
+  width: 85%; max-width: 420px; height: 18px;
+  background: rgba(255,255,255,0.08); border-radius: 10px;
+  overflow: hidden; margin: 8px 0; z-index: 10;
+  position: relative; border: 1px solid rgba(255,255,255,0.1);
+}
+.progress-wrap .staff-lines {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: space-evenly;
+  pointer-events: none;
+}
+.progress-wrap .staff-lines div {
+  height: 1px; background: rgba(255,255,255,0.1);
 }
 .progress-fill {
   height: 100%; width: 0%; border-radius: 10px;
-  background: linear-gradient(90deg, #ff6fd8, #cd77ff, #a18cd1);
-  transition: width 0.3s;
+  background: linear-gradient(90deg, #ff6fd8, #cd77ff, #a18cd1, #84fab0);
+  transition: width 0.3s; position: relative; z-index: 1;
+}
+.progress-note {
+  position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; z-index: 2;
 }
 
 /* Floating notes */
 .float-note {
   position: fixed; font-size: 2em; pointer-events: none; z-index: 50;
-  animation: floatUp 1.2s ease-out forwards;
+  animation: floatUp 1.3s ease-out forwards;
 }
 @keyframes floatUp {
   0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
-  100% { opacity: 0; transform: translateY(-120px) scale(1.5) rotate(20deg); }
+  100% { opacity: 0; transform: translateY(-140px) scale(1.6) rotate(25deg); }
 }
 
 /* Combo flash */
@@ -137,21 +290,37 @@ body {
 .end-box {
   background: linear-gradient(135deg, rgba(255,111,216,0.2), rgba(161,140,209,0.2));
   border: 2px solid rgba(255,111,216,0.4); border-radius: 20px;
-  padding: 30px; text-align: center; color: white; max-width: 400px;
+  padding: 28px; text-align: center; color: white; max-width: 420px;
 }
 .end-box h2 { font-size: 1.8em; margin-bottom: 10px; text-shadow: 0 0 15px #ff6fd8; }
-.end-stars { font-size: 2.5em; margin: 15px 0; }
-.end-msg { font-size: 1.1em; color: #cd77ff; margin: 10px 0; }
+.end-stars { font-size: 2.5em; margin: 12px 0; }
+.end-msg { font-size: 1.05em; color: #cd77ff; margin: 10px 0; }
 .end-score { font-size: 1.5em; color: #ff6fd8; font-weight: 700; }
+.end-achievement {
+  margin-top: 12px; padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,111,216,0.2));
+  border: 1px solid rgba(255,215,0,0.4); border-radius: 12px;
+  font-size: 1em; color: #ffd700; font-weight: 700;
+  animation: achievePop 0.6s ease;
+}
+@keyframes achievePop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
 
 .btn {
   background: linear-gradient(135deg, #ff6fd8, #cd77ff);
-  color: white; border: none; padding: 12px 30px;
-  border-radius: 30px; font-family: inherit; font-size: 1.05em;
-  font-weight: 600; cursor: pointer; margin: 8px;
+  color: white; border: none; padding: 12px 28px;
+  border-radius: 30px; font-family: inherit; font-size: 1.02em;
+  font-weight: 600; cursor: pointer; margin: 6px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,111,216,0.5); }
+.btn.secondary {
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.1));
+  border: 2px solid rgba(255,255,255,0.3);
+}
 
 /* Confetti */
 .confetti {
@@ -178,22 +347,70 @@ body {
 
 @media (max-width: 500px) {
   .header h1 { font-size: 1.4em; }
-  .lyric-line { font-size: 1.1em; }
-  .lyric-line.active { font-size: 1.4em; }
+  .lyric-line { font-size: 1em; }
+  .lyric-line.active .word.current { font-size: 1.2em; }
   .sing-btn { width: 110px; height: 110px; font-size: 2em; }
+  .song-select { max-height: calc(100vh - 140px); }
+  .singer-silhouette { font-size: 80px; }
 }
 </style>
 </head>
 <body>
+
+<!-- Stage background lights -->
+<div class="stage-bg">
+  <div class="stage-light"></div>
+  <div class="stage-light"></div>
+  <div class="stage-light"></div>
+  <div class="stage-light"></div>
+</div>
+
+<!-- Edge glow -->
+<div class="edge-glow" id="edgeGlow"></div>
+
+<!-- Singer silhouette -->
+<div class="singer-silhouette">🧑‍🎤</div>
+
 <a href="index.html" class="back-btn">← Retour</a>
 
 <div class="header">
-  <h1>🎤 Karaoke Star 🎤</h1>
-  <div class="sub">Chante avec <span id="player-name">Star</span> !</div>
+  <h1>🎤 Karaoké Star 🎤</h1>
+  <div class="sub">École Saint-Esprit</div>
+</div>
+
+<!-- Player Select Screen -->
+<div id="playerScreen" class="screen active">
+  <div class="player-select">
+    <h2>Qui chante ?</h2>
+    <div class="player-card" onclick="selectPlayer('Ambre')">
+      <span class="emoji">🌸</span> Ambre
+    </div>
+    <div class="player-card" onclick="selectPlayer('Eden')">
+      <span class="emoji">🦋</span> Eden
+    </div>
+    <div class="player-card" onclick="selectPlayer('Louise')">
+      <span class="emoji">⭐</span> Louise
+    </div>
+  </div>
+</div>
+
+<!-- Mode Select Screen -->
+<div id="modeScreen" class="screen">
+  <div class="mode-select">
+    <h2>Comment jouer ?</h2>
+    <div class="mode-card" onclick="selectMode('solo')">
+      <div class="title">🎤 Solo</div>
+      <div class="info">Je chante toute seule !</div>
+    </div>
+    <div class="mode-card" onclick="selectMode('duet')">
+      <div class="title">🎤🎤 Duo</div>
+      <div class="info">On alterne les lignes à deux !</div>
+    </div>
+  </div>
 </div>
 
 <!-- Song Select Screen -->
-<div id="selectScreen" class="screen active">
+<div id="selectScreen" class="screen">
   <div class="song-select" id="songList"></div>
 </div>
 
@@ -203,8 +420,16 @@ body {
     <span>Score : <span id="score-val">0</span></span>
     <span id="combo"></span>
   </div>
-  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="lyrics-zone" id="lyricsZone"></div>
+  <div class="player-indicator" id="playerIndicator"></div>
+  <div class="progress-wrap">
+    <div class="staff-lines"><div></div><div></div><div></div><div></div></div>
+    <div class="progress-fill" id="progressFill">
+      <span class="progress-note">🎵</span>
+    </div>
+  </div>
+  <div class="lyrics-zone">
+    <div class="karaoke-bar" id="karaokeBar"></div>
+  </div>
   <button class="sing-btn" id="singBtn">🎤</button>
 </div>
 
@@ -215,107 +440,285 @@ body {
     <div class="end-stars" id="endStars"></div>
     <div class="end-score">Score : <span id="endScore">0</span></div>
     <div class="end-msg" id="endMsg"></div>
-    <button class="btn" onclick="showSelect()">Autre chanson</button>
-    <button class="btn" onclick="replaySong()">Rejouer</button>
+    <div id="endAchievement"></div>
+    <div style="margin-top: 14px;">
+      <button class="btn" onclick="showSongSelect()">Autre chanson</button>
+      <button class="btn secondary" onclick="replaySong()">Rejouer</button>
+    </div>
   </div>
 </div>
 
 <script>
-const player = new URLSearchParams(window.location.search).get('player')
-  || localStorage.getItem('kpop_player') || 'Star';
-document.getElementById('player-name').textContent = player;
+// ==================== DATA ====================
+const noteEmojis = ['🎵','🎶','💖','✨','🌟','💜','🎀','💫','🦋','💗','🎤','🎧','🎹','🎼','💎'];
 
-const noteEmojis = ['🎵','🎶','💖','✨','🌟','💜','🎀','💫','🦋','💗'];
 const songs = [
-  { title: "Danse Avec Moi", icon: "💃", bpm: 110, info: "Pop dance ~ facile",
+  {
+    title: "Danse Avec Moi", icon: "💃", difficulty: 1, info: "Pop dance",
+    preview: "Danse avec moi ce soir...",
+    scale: [262, 294, 330, 349, 392, 440, 494, 523],
     lyrics: [
       { t: 0, text: "Danse avec moi ce soir" },
-      { t: 3, text: "Sous les lumieres on brille" },
-      { t: 6, text: "Tourne et saute en rythme" },
-      { t: 9, text: "On est des stars qui scintillent" },
-      { t: 12, text: "La musique nous emporte" },
-      { t: 15, text: "Nos coeurs battent ensemble" },
-      { t: 18, text: "Danse danse encore" },
-      { t: 21, text: "Ce moment nous ressemble" },
-      { t: 24, text: "Un deux trois on tourne !" },
-      { t: 27, text: "La scene est a nous !" }
-    ]},
-  { title: "Meilleures Amies", icon: "💕", bpm: 100, info: "Ballade amitie ~ facile",
+      { t: 3.5, text: "Sous les lumières on brille" },
+      { t: 7, text: "Tourne et saute en rythme" },
+      { t: 10.5, text: "On est des stars qui scintillent" },
+      { t: 14, text: "La musique nous emporte" },
+      { t: 17.5, text: "Nos coeurs battent ensemble" },
+      { t: 21, text: "Danse danse encore" },
+      { t: 24.5, text: "Ce moment nous ressemble" },
+      { t: 28, text: "Un deux trois on tourne" },
+      { t: 31.5, text: "La scène est à nous" }
+    ]
+  },
+  {
+    title: "Meilleures Amies", icon: "💕", difficulty: 1, info: "Ballade amitié",
+    preview: "Toi et moi pour toujours...",
+    scale: [262, 330, 392, 523, 392, 330, 262, 330],
     lyrics: [
       { t: 0, text: "Toi et moi pour toujours" },
-      { t: 3, text: "Meilleures amies chaque jour" },
-      { t: 6, text: "On partage nos secrets" },
-      { t: 9, text: "Et nos reves les plus vrais" },
-      { t: 12, text: "Ensemble on est fortes" },
-      { t: 15, text: "Rien ne nous arrete" },
-      { t: 18, text: "Main dans la main on avance" },
-      { t: 21, text: "Avec toi tout est une chance" },
-      { t: 24, text: "Amies pour la vie !" },
-      { t: 27, text: "Je t aime mon amie !" }
-    ]},
-  { title: "Etoile Magique", icon: "⭐", bpm: 120, info: "Energique ~ moyen",
+      { t: 3.5, text: "Meilleures amies chaque jour" },
+      { t: 7, text: "On partage nos secrets" },
+      { t: 10.5, text: "Et nos rêves les plus vrais" },
+      { t: 14, text: "Ensemble on est fortes" },
+      { t: 17.5, text: "Rien ne nous arrête" },
+      { t: 21, text: "Main dans la main on avance" },
+      { t: 24.5, text: "Avec toi tout est une chance" },
+      { t: 28, text: "Amies pour la vie" },
+      { t: 31.5, text: "Je t'aime mon amie" }
+    ]
+  },
+  {
+    title: "Étoile Magique", icon: "✨", difficulty: 2, info: "Énergique",
+    preview: "Je suis une étoile magique...",
+    scale: [330, 392, 440, 494, 523, 587, 659, 698],
     lyrics: [
-      { t: 0, text: "Je suis une etoile magique" },
-      { t: 2.5, text: "Qui brille dans la nuit" },
-      { t: 5, text: "Mon pouvoir est fantastique" },
-      { t: 7.5, text: "La scene est mon paradis" },
-      { t: 10, text: "Spotlight sur moi" },
-      { t: 12.5, text: "Je chante de toute ma voix" },
-      { t: 15, text: "Les fans crient mon nom" },
-      { t: 17.5, text: "C est ma plus belle chanson" },
-      { t: 20, text: "Etoile etoile brille" },
-      { t: 22.5, text: "Mille feux mille scintilles" },
-      { t: 25, text: "Ce soir on est magiques !" }
-    ]},
-  { title: "K-Pop Princess", icon: "👑", bpm: 115, info: "K-Pop style ~ moyen",
+      { t: 0, text: "Je suis une étoile magique" },
+      { t: 2.8, text: "Qui brille dans la nuit" },
+      { t: 5.6, text: "Mon pouvoir est fantastique" },
+      { t: 8.4, text: "La scène est mon paradis" },
+      { t: 11.2, text: "Spotlight sur moi" },
+      { t: 14, text: "Je chante de toute ma voix" },
+      { t: 16.8, text: "Les fans crient mon nom" },
+      { t: 19.6, text: "C'est ma plus belle chanson" },
+      { t: 22.4, text: "Étoile étoile brille" },
+      { t: 25.2, text: "Mille feux mille scintilles" },
+      { t: 28, text: "Ce soir on est magiques" }
+    ]
+  },
+  {
+    title: "K-Pop Princess", icon: "👑", difficulty: 2, info: "K-Pop style",
+    preview: "K-Pop princess c'est moi...",
+    scale: [349, 440, 523, 587, 659, 698, 784, 880],
     lyrics: [
-      { t: 0, text: "K-Pop princess c est moi" },
-      { t: 2.5, text: "Sur scene je suis la reine" },
+      { t: 0, text: "K-Pop princess c'est moi" },
+      { t: 2.5, text: "Sur scène je suis la reine" },
       { t: 5, text: "Chaque pas est une joie" },
       { t: 7.5, text: "La danse coule dans mes veines" },
-      { t: 10, text: "Aegyo power activate !" },
+      { t: 10, text: "Aegyo power activate" },
       { t: 12.5, text: "Mon coeur fait boum boum" },
       { t: 15, text: "Les lightsticks illuminent" },
-      { t: 17.5, text: "Toute la salle s enflamme" },
-      { t: 20, text: "Saranghae les fans !" },
-      { t: 22.5, text: "Fighting on y va !" },
-      { t: 25, text: "K-Pop forever yeah !" }
-    ]},
-  { title: "Arc-en-ciel Dream", icon: "🌈", bpm: 95, info: "Doux et magique ~ facile",
+      { t: 17.5, text: "Toute la salle s'enflamme" },
+      { t: 20, text: "Saranghae les fans" },
+      { t: 22.5, text: "Fighting on y va" },
+      { t: 25, text: "K-Pop forever yeah" }
+    ]
+  },
+  {
+    title: "Arc-en-ciel Dream", icon: "🌈", difficulty: 1, info: "Doux et magique",
+    preview: "Dans un monde de couleurs...",
+    scale: [262, 330, 392, 440, 392, 330, 294, 262],
     lyrics: [
       { t: 0, text: "Dans un monde de couleurs" },
-      { t: 3.5, text: "Ou tout est doux et beau" },
+      { t: 3.5, text: "Où tout est doux et beau" },
       { t: 7, text: "Je chante avec mon coeur" },
       { t: 10.5, text: "Des mots comme des cadeaux" },
       { t: 14, text: "Rose violet et bleu" },
-      { t: 17.5, text: "L arc-en-ciel est en feu" },
-      { t: 21, text: "Reve avec moi ce soir" },
-      { t: 24.5, text: "Tout est possible a croire" },
-      { t: 28, text: "Dream dream dream !" }
-    ]}
+      { t: 17.5, text: "L'arc-en-ciel est en feu" },
+      { t: 21, text: "Rêve avec moi ce soir" },
+      { t: 24.5, text: "Tout est possible à croire" },
+      { t: 28, text: "Dream dream dream" }
+    ]
+  },
+  {
+    title: "Super Girl Power", icon: "💪", difficulty: 2, info: "Upbeat et fort",
+    preview: "Je suis forte je suis brave...",
+    scale: [349, 392, 440, 523, 587, 659, 523, 440],
+    lyrics: [
+      { t: 0, text: "Je suis forte je suis brave" },
+      { t: 2.8, text: "Rien ne peut m'arrêter" },
+      { t: 5.6, text: "Super girl power activate" },
+      { t: 8.4, text: "Le monde va m'écouter" },
+      { t: 11.2, text: "Je cours je saute je vole" },
+      { t: 14, text: "Plus haut que les étoiles" },
+      { t: 16.8, text: "Mon énergie est folle" },
+      { t: 19.6, text: "Je brille comme un cristal" },
+      { t: 22.4, text: "Girls power ensemble" },
+      { t: 25.2, text: "On est invincibles" },
+      { t: 28, text: "Super girl power yeah" }
+    ]
+  },
+  {
+    title: "Mon Chat Kawaii", icon: "🐱", difficulty: 1, info: "Mignon et doux",
+    preview: "Mon petit chat kawaii...",
+    scale: [523, 494, 440, 392, 349, 330, 294, 262],
+    lyrics: [
+      { t: 0, text: "Mon petit chat kawaii" },
+      { t: 3.5, text: "Avec ses yeux tout ronds" },
+      { t: 7, text: "Il ronronne sur mon lit" },
+      { t: 10.5, text: "C'est le plus mignon du monde" },
+      { t: 14, text: "Miaou miaou il chante" },
+      { t: 17.5, text: "Sa petite voix m'enchante" },
+      { t: 21, text: "Pattes de velours si douces" },
+      { t: 24.5, text: "Kawaii kawaii ma peluche" },
+      { t: 28, text: "Mon chat mon trésor" },
+      { t: 31.5, text: "Je t'aime encore encore" }
+    ]
+  },
+  {
+    title: "Fête des Étoiles", icon: "🎉", difficulty: 3, info: "Rapide et festif",
+    preview: "Ce soir c'est la fête...",
+    scale: [440, 494, 523, 587, 659, 698, 784, 880],
+    lyrics: [
+      { t: 0, text: "Ce soir c'est la fête" },
+      { t: 2, text: "Les étoiles dansent dans le ciel" },
+      { t: 4, text: "Lève les mains en l'air" },
+      { t: 6, text: "Tout est étincelant" },
+      { t: 8, text: "Confettis partout" },
+      { t: 10, text: "La musique explose de joie" },
+      { t: 12, text: "On tourne on saute on rit" },
+      { t: 14, text: "C'est la plus belle nuit" },
+      { t: 16, text: "Fête des étoiles" },
+      { t: 18, text: "On brille comme des diamants" },
+      { t: 20, text: "Encore encore encore" },
+      { t: 22, text: "La fête dure pour toujours" }
+    ]
+  }
 ];
 
-let currentSong = null, score = 0, combo = 0, maxCombo = 0;
+// ==================== STATE ====================
+let currentPlayer = '';
+let gameMode = 'solo'; // 'solo' or 'duet'
+let currentSong = null;
+let score = 0, combo = 0, maxCombo = 0;
 let gameTimer = null, startTime = 0, taps = 0, gameRunning = false;
 let audioCtx = null;
+let songsCompleted = new Set();
+let currentWordIdx = 0, wordTimers = [];
 
-// Build song list
-const songList = document.getElementById('songList');
-songs.forEach((s, i) => {
-  const card = document.createElement('div');
-  card.className = 'song-card';
-  card.innerHTML = `<div class="title">${s.icon} ${s.title}</div><div class="info">${s.info}</div>`;
-  card.onclick = () => startSong(i);
-  songList.appendChild(card);
-});
+// ==================== PLAYER SELECT ====================
+function selectPlayer(name) {
+  currentPlayer = name;
+  localStorage.setItem('kpop_player', name);
+  showScreen('modeScreen');
+}
 
+// Check for saved player
+const savedPlayer = new URLSearchParams(window.location.search).get('player')
+  || localStorage.getItem('kpop_player');
+if (savedPlayer) {
+  currentPlayer = savedPlayer;
+}
+
+// ==================== MODE SELECT ====================
+function selectMode(mode) {
+  gameMode = mode;
+  showSongSelect();
+}
+
+// ==================== SONG SELECT ====================
+function buildSongList() {
+  const songList = document.getElementById('songList');
+  songList.innerHTML = '';
+  songs.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'song-card';
+    const stars = '⭐'.repeat(s.difficulty);
+    card.innerHTML = `
+      <div class="top-row">
+        <div class="title">${s.icon} ${s.title}</div>
+        <div class="difficulty">${stars}</div>
+      </div>
+      <div class="info">${s.info}${songsCompleted.has(i) ? ' ✅' : ''}</div>
+      <div class="preview">"${s.preview}"</div>
+    `;
+    card.onclick = () => startSong(i);
+    songList.appendChild(card);
+  });
+}
+
+function showSongSelect() {
+  buildSongList();
+  showScreen('selectScreen');
+}
+
+// ==================== SCREEN NAV ====================
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-function showSelect() { showScreen('selectScreen'); }
+// ==================== AUDIO ====================
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
 
+function playNote(freq, dur, type = 'sine', vol = 0.18) {
+  if (!audioCtx) return;
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + dur);
+  } catch(e) {}
+}
+
+function playChord(freqs, dur) {
+  freqs.forEach(f => playNote(f, dur, 'triangle', 0.1));
+}
+
+function playCountdownBeep(n) {
+  playNote(440 + n * 150, 0.15, 'sine', 0.2);
+}
+
+function playCrowdCheer() {
+  // Simulate a cheer with noise + filtered harmonics
+  if (!audioCtx) return;
+  try {
+    const bufferSize = audioCtx.sampleRate * 1.5;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 0.5);
+    }
+    const source = audioCtx.createBufferSource();
+    source.buffer = buffer;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 2000;
+    filter.Q.value = 0.5;
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    source.start();
+  } catch(e) {}
+}
+
+function playComboChord() {
+  playChord([262, 330, 392], 0.4); // C major
+  setTimeout(() => playChord([349, 440, 523], 0.5), 150); // F major
+}
+
+// ==================== GAME START ====================
 function replaySong() {
   if (currentSong !== null) startSong(currentSong);
 }
@@ -323,19 +726,27 @@ function replaySong() {
 function startSong(idx) {
   currentSong = idx;
   const song = songs[idx];
-  score = 0; combo = 0; maxCombo = 0; taps = 0;
+  score = 0; combo = 0; maxCombo = 0; taps = 0; currentWordIdx = 0;
+  wordTimers = [];
   document.getElementById('score-val').textContent = '0';
   document.getElementById('combo').textContent = '';
   document.getElementById('progressFill').style.width = '0%';
 
-  showScreen('gameScreen');
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // Player indicator
+  const indic = document.getElementById('playerIndicator');
+  if (gameMode === 'duet') {
+    indic.textContent = '🎤🎤 Mode Duo';
+  } else {
+    indic.textContent = currentPlayer ? `🎤 ${currentPlayer}` : '';
+  }
 
-  // Build lyrics
-  const zone = document.getElementById('lyricsZone');
-  zone.innerHTML = '<div class="countdown" id="cdText">3</div>';
+  showScreen('gameScreen');
+  ensureAudio();
 
   // Countdown
+  const bar = document.getElementById('karaokeBar');
+  bar.innerHTML = '<div class="countdown" id="cdText">3</div>';
+
   let cd = 3;
   const cdEl = document.getElementById('cdText');
   const cdInterval = setInterval(() => {
@@ -345,13 +756,13 @@ function startSong(idx) {
       cdEl.style.animation = 'none';
       void cdEl.offsetWidth;
       cdEl.style.animation = 'countPop 0.8s ease-out';
-      playNote(440 + cd * 100, 0.15);
+      playCountdownBeep(cd);
     } else if (cd === 0) {
       cdEl.textContent = '🎤';
       cdEl.style.animation = 'none';
       void cdEl.offsetWidth;
       cdEl.style.animation = 'countPop 0.8s ease-out';
-      playNote(880, 0.25);
+      playNote(880, 0.3, 'sine', 0.25);
     } else {
       clearInterval(cdInterval);
       beginSong(song);
@@ -359,31 +770,51 @@ function startSong(idx) {
   }, 800);
 }
 
+// ==================== GAME LOOP ====================
 function beginSong(song) {
-  const zone = document.getElementById('lyricsZone');
-  zone.innerHTML = '';
+  const bar = document.getElementById('karaokeBar');
+  bar.innerHTML = '';
   gameRunning = true;
 
-  // Create lyric elements
+  // Create lyric line elements with individual words
   const lines = song.lyrics.map((l, i) => {
-    const el = document.createElement('div');
-    el.className = 'lyric-line';
-    el.textContent = l.text;
-    zone.appendChild(el);
-    return { el, time: l.t, done: false };
+    const lineEl = document.createElement('div');
+    lineEl.className = 'lyric-line';
+
+    // Duet labels
+    if (gameMode === 'duet') {
+      const label = document.createElement('span');
+      label.className = 'duet-label ' + (i % 2 === 0 ? 'duet-p1' : 'duet-p2');
+      label.textContent = i % 2 === 0 ? 'J1' : 'J2';
+      lineEl.appendChild(label);
+      lineEl.appendChild(document.createTextNode(' '));
+    }
+
+    const words = l.text.split(' ');
+    const wordEls = words.map(w => {
+      const span = document.createElement('span');
+      span.className = 'word';
+      span.textContent = w;
+      lineEl.appendChild(span);
+      return span;
+    });
+
+    bar.appendChild(lineEl);
+    return { el: lineEl, time: l.t, words: wordEls, wordTexts: words, done: false };
   });
 
   const lastTime = song.lyrics[song.lyrics.length - 1].t;
   const totalDuration = lastTime + 4;
   startTime = Date.now();
   let currentLine = -1;
+  let activeWordInLine = -1;
 
   gameTimer = setInterval(() => {
     const elapsed = (Date.now() - startTime) / 1000;
     const progress = Math.min(100, (elapsed / totalDuration) * 100);
     document.getElementById('progressFill').style.width = progress + '%';
 
-    // Update active line
+    // Find current line
     let newLine = -1;
     for (let i = lines.length - 1; i >= 0; i--) {
       if (elapsed >= lines[i].time) { newLine = i; break; }
@@ -393,11 +824,44 @@ function beginSong(song) {
       if (currentLine >= 0) {
         lines[currentLine].el.classList.remove('active');
         lines[currentLine].el.classList.add('done');
+        // Mark all words as sung
+        lines[currentLine].words.forEach(w => {
+          w.classList.remove('current');
+          w.classList.add('sung');
+        });
       }
       currentLine = newLine;
+      activeWordInLine = 0;
       if (currentLine >= 0) {
         lines[currentLine].el.classList.add('active');
+        if (lines[currentLine].words[0]) {
+          lines[currentLine].words[0].classList.add('current');
+        }
         lines[currentLine].el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // Advance word within line based on timing
+    if (currentLine >= 0 && currentLine < lines.length) {
+      const line = lines[currentLine];
+      const nextLineTime = currentLine + 1 < lines.length ? lines[currentLine + 1].time : line.time + 4;
+      const lineDuration = nextLineTime - line.time;
+      const lineElapsed = elapsed - line.time;
+      const wordCount = line.words.length;
+      const targetWord = Math.min(wordCount - 1, Math.floor((lineElapsed / lineDuration) * wordCount));
+
+      if (targetWord > activeWordInLine) {
+        // Advance
+        for (let w = activeWordInLine; w < targetWord; w++) {
+          if (line.words[w]) {
+            line.words[w].classList.remove('current');
+            line.words[w].classList.add('sung');
+          }
+        }
+        activeWordInLine = targetWord;
+        if (line.words[activeWordInLine]) {
+          line.words[activeWordInLine].classList.add('current');
+        }
       }
     }
 
@@ -413,28 +877,30 @@ function beginSong(song) {
   }, 50);
 }
 
-// Sing button
+// ==================== SING BUTTON ====================
 const singBtn = document.getElementById('singBtn');
+
 function onSing(e) {
   e.preventDefault();
   if (!gameRunning) return;
   taps++;
 
-  // Score: more points if lyrics are active
+  ensureAudio();
+
   const elapsed = (Date.now() - startTime) / 1000;
   const song = songs[currentSong];
   let onBeat = false;
   for (const l of song.lyrics) {
-    if (Math.abs(elapsed - l.t) < 1.5) { onBeat = true; break; }
+    if (Math.abs(elapsed - l.t) < 1.8) { onBeat = true; break; }
   }
 
   if (onBeat) {
-    score += 15 + combo * 2;
+    score += 20 + combo * 2;
     combo++;
     if (combo > maxCombo) maxCombo = combo;
   } else {
     score += 5;
-    // Don't break combo for kids - very forgiving!
+    // Combo doesn't break — kids never feel bad
   }
 
   document.getElementById('score-val').textContent = score;
@@ -443,25 +909,34 @@ function onSing(e) {
   if (combo >= 3) {
     document.getElementById('combo').textContent = 'Combo x' + combo + ' 🔥';
   }
-  if (combo > 0 && combo % 10 === 0) showComboFlash(combo);
+  if (combo > 0 && combo % 10 === 0) {
+    showComboFlash(combo);
+    playComboChord();
+  }
 
   // Floating note emoji
   spawnFloatNote(e);
 
-  // Play a melodic note
-  const notes = [262, 294, 330, 349, 392, 440, 494, 523];
-  playNote(notes[taps % notes.length], 0.15);
+  // Edge glow pulse
+  const glow = document.getElementById('edgeGlow');
+  glow.classList.add('pulse');
+  setTimeout(() => glow.classList.remove('pulse'), 200);
 
-  // Button feedback
-  singBtn.style.transform = 'scale(0.85)';
-  setTimeout(() => singBtn.style.transform = '', 100);
+  // Melodic note from song scale
+  const scale = song.scale || [262, 294, 330, 349, 392, 440, 494, 523];
+  playNote(scale[taps % scale.length], 0.18);
+
+  // Mic bounce animation
+  singBtn.classList.remove('bounce');
+  void singBtn.offsetWidth;
+  singBtn.classList.add('bounce');
 }
 
 singBtn.addEventListener('mousedown', onSing);
 singBtn.addEventListener('touchstart', onSing, { passive: false });
 
-// Also allow spacebar and any key
 document.addEventListener('keydown', (e) => {
+  if (e.repeat) return;
   if (e.code === 'Space' || e.code === 'Enter') {
     e.preventDefault();
     if (!gameRunning) return;
@@ -469,16 +944,17 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ==================== EFFECTS ====================
 function spawnFloatNote(e) {
   const el = document.createElement('div');
   el.className = 'float-note';
   el.textContent = noteEmojis[Math.floor(Math.random() * noteEmojis.length)];
-  const x = (e.clientX || e.touches?.[0]?.clientX || window.innerWidth / 2) + (Math.random() - 0.5) * 80;
+  const x = (e.clientX || e.touches?.[0]?.clientX || window.innerWidth / 2) + (Math.random() - 0.5) * 100;
   const y = (e.clientY || e.touches?.[0]?.clientY || window.innerHeight * 0.7) - 20;
   el.style.left = x + 'px';
   el.style.top = y + 'px';
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 1200);
+  setTimeout(() => el.remove(), 1300);
 }
 
 function showComboFlash(n) {
@@ -489,62 +965,64 @@ function showComboFlash(n) {
   setTimeout(() => el.remove(), 800);
 }
 
-function playNote(freq, dur) {
-  if (!audioCtx) return;
-  try {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + dur);
-  } catch(e) {}
-}
-
+// ==================== END SONG ====================
 function endSong() {
   const song = songs[currentSong];
-  const maxScore = song.lyrics.length * 15 * 3;
+  songsCompleted.add(currentSong);
+
+  const maxScore = song.lyrics.length * 20 * 3;
   const ratio = Math.min(1, score / Math.max(1, maxScore));
 
-  let stars, msg, title;
-  if (ratio >= 0.8) {
-    stars = '⭐⭐⭐⭐⭐';
-    msg = 'Tu es une VRAIE K-Pop Star ! Incroyable !';
+  // Always at least 2 stars (encouraging for kids)
+  let starCount, msg, title;
+  if (ratio >= 0.75) {
+    starCount = 5;
+    msg = `Incroyable ${currentPlayer} ! Tu es une VRAIE star !`;
     title = 'PARFAIT !';
-    launchConfetti();
   } else if (ratio >= 0.5) {
-    stars = '⭐⭐⭐⭐';
-    msg = 'Super performance ' + player + ' ! Tu chantes trop bien !';
+    starCount = 4;
+    msg = `Super performance ${currentPlayer} ! Tu chantes trop bien !`;
     title = 'Super !';
-    launchConfetti();
-  } else if (ratio >= 0.3) {
-    stars = '⭐⭐⭐';
-    msg = 'Tres bien ! Continue comme ca !';
+  } else if (ratio >= 0.25) {
+    starCount = 3;
+    msg = `Très bien ${currentPlayer} ! Continue comme ça !`;
     title = 'Bravo !';
-  } else if (ratio >= 0.15) {
-    stars = '⭐⭐';
-    msg = 'Bon debut ! Essaie de taper plus vite !';
-    title = 'Bien !';
   } else {
-    stars = '⭐';
-    msg = 'N hesite pas a taper le micro ! Tu vas y arriver !';
-    title = 'Continue !';
+    starCount = 2; // Minimum 2 stars
+    msg = `Bon début ${currentPlayer} ! Tu vas devenir une star !`;
+    title = 'Bien !';
   }
+
+  const stars = '⭐'.repeat(starCount);
+
+  // Crowd cheer
+  playCrowdCheer();
+
+  // Confetti for 4+ stars
+  if (starCount >= 4) launchConfetti();
 
   document.getElementById('endTitle').textContent = title;
   document.getElementById('endStars').textContent = stars;
   document.getElementById('endScore').textContent = score;
   document.getElementById('endMsg').textContent = msg;
+
+  // Achievement check: "Chanteuse Pro" if 5 songs completed
+  const achDiv = document.getElementById('endAchievement');
+  if (songsCompleted.size >= 5) {
+    achDiv.innerHTML = '<div class="end-achievement">🏆 Chanteuse Pro ! 5 chansons terminées !</div>';
+    // Extra celebration
+    setTimeout(() => playChord([523, 659, 784], 0.8), 500);
+  } else {
+    achDiv.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.85em;margin-top:8px;">${songsCompleted.size}/5 chansons pour le trophée 🏆</div>`;
+  }
+
   showScreen('endScreen');
 }
 
+// ==================== CONFETTI ====================
 function launchConfetti() {
-  const colors = ['#ff6fd8','#cd77ff','#a18cd1','#ffd700','#ff9a9e','#84fab0','#fff'];
-  for (let i = 0; i < 60; i++) {
+  const colors = ['#ff6fd8','#cd77ff','#a18cd1','#ffd700','#ff9a9e','#84fab0','#fff','#87ceeb'];
+  for (let i = 0; i < 70; i++) {
     setTimeout(() => {
       const el = document.createElement('div');
       el.className = 'confetti';
@@ -556,26 +1034,29 @@ function launchConfetti() {
       el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 4000);
-    }, i * 30);
+    }, i * 25);
   }
 }
 
-// Background sparkles
+// ==================== BACKGROUND SPARKLES ====================
 function createSparkle() {
   const el = document.createElement('div');
   el.style.cssText = `position:fixed;pointer-events:none;z-index:0;font-size:${10+Math.random()*14}px;
     left:${Math.random()*100}vw;top:${Math.random()*100}vh;opacity:0;
-    animation:sparkleGlow ${2+Math.random()*3}s ease-in-out infinite;`;
-  el.textContent = ['✨','💫','🌟','⭐'][Math.floor(Math.random()*4)];
+    animation:sparkleGlow ${2+Math.random()*3}s ease-in-out infinite ${Math.random()*2}s;`;
+  el.textContent = ['✨','💫','🌟','⭐','🎵'][Math.floor(Math.random()*5)];
   document.body.appendChild(el);
 }
-const style = document.createElement('style');
-style.textContent = `@keyframes sparkleGlow {
+const sparkleStyle = document.createElement('style');
+sparkleStyle.textContent = `@keyframes sparkleGlow {
   0%,100% { opacity:0; transform:scale(0.5); }
-  50% { opacity:0.6; transform:scale(1.2); }
+  50% { opacity:0.5; transform:scale(1.2); }
 }`;
-document.head.appendChild(style);
-for (let i = 0; i < 12; i++) createSparkle();
+document.head.appendChild(sparkleStyle);
+for (let i = 0; i < 15; i++) createSparkle();
+
+// ==================== INIT ====================
+buildSongList();
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ma Carte K-Pop - K-Pop Star Academy</title>
+<title>Ma Carte K-Pop — Ecole Saint-Esprit</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,206 +30,247 @@ body {
 h1 {
   font-size: 2em; color: white;
   text-shadow: 0 0 20px #ff6fd8;
-  margin: 10px 0 20px;
+  margin: 10px 0 8px;
 }
 
-/* Card */
-.kpop-card {
-  width: 360px;
-  min-height: 500px;
-  border-radius: 24px;
+.subtitle {
+  color: rgba(255,255,255,0.5); font-size: 0.85em;
+  margin-bottom: 18px; letter-spacing: 2px; text-transform: uppercase;
+}
+
+/* Card scene (3D flip) */
+.card-scene {
+  width: 360px; height: 520px;
+  perspective: 1200px;
+  margin-bottom: 20px;
+}
+
+.card-flipper {
+  width: 100%; height: 100%;
   position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.card-flipper.flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute; width: 100%; height: 100%;
+  backface-visibility: hidden;
+  border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 10px 50px rgba(0,0,0,0.5), 0 0 40px rgba(255,111,216,0.3);
-  animation: cardFloat 4s ease-in-out infinite;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(145deg, #2d1b69, #1a1a2e);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.card-back-pattern {
+  font-size: 5em; opacity: 0.15; position: absolute;
+  width: 100%; height: 100%; display: flex;
+  align-items: center; justify-content: center;
+  flex-wrap: wrap; line-height: 1.2;
+}
+.card-back-logo {
+  font-size: 3em; z-index: 2;
+  text-shadow: 0 0 30px rgba(255,215,0,0.5);
+}
+.card-back-text {
+  color: rgba(255,255,255,0.4); font-size: 0.9em;
+  z-index: 2; margin-top: 10px; letter-spacing: 3px;
+}
+
+.card-front {
+  position: relative;
 }
 
 @keyframes cardFloat {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(0.5deg); }
+  50% { transform: translateY(-6px) rotate(0.3deg); }
+}
+
+.card-scene:not(.no-float) .card-flipper:not(.flipped) {
+  animation: cardFloat 4s ease-in-out infinite;
 }
 
 .card-bg {
-  position: absolute;
-  width: 100%; height: 100%;
-  z-index: 0;
+  position: absolute; width: 100%; height: 100%; z-index: 0;
 }
 
+/* 8 gradient styles */
 .card-bg.style-0 { background: linear-gradient(145deg, #ff6fd8, #cd77ff, #8c6fff); }
 .card-bg.style-1 { background: linear-gradient(145deg, #ffd700, #ff6fd8, #cd77ff); }
 .card-bg.style-2 { background: linear-gradient(145deg, #00c9ff, #92fe9d, #00c9ff); }
 .card-bg.style-3 { background: linear-gradient(145deg, #fc466b, #3f5efb); }
 .card-bg.style-4 { background: linear-gradient(145deg, #0f0c29, #302b63, #24243e); }
 .card-bg.style-5 { background: linear-gradient(145deg, #f7971e, #ffd200); }
+.card-bg.style-6 { background: linear-gradient(145deg, #ee9ca7, #ffdde1, #ee9ca7); }
+.card-bg.style-7 { background: linear-gradient(145deg, #43e97b, #38f9d7); }
 
-/* Holographic effect */
+/* Holographic rainbow effect */
 .card-holo {
-  position: absolute;
-  width: 100%; height: 100%;
-  background: linear-gradient(135deg,
+  position: absolute; width: 100%; height: 100%;
+  background: linear-gradient(
+    135deg,
     transparent 0%,
-    rgba(255,255,255,0.1) 25%,
-    rgba(255,255,255,0.3) 50%,
-    rgba(255,255,255,0.1) 75%,
+    rgba(255,0,0,0.08) 15%,
+    rgba(255,165,0,0.08) 25%,
+    rgba(255,255,0,0.12) 35%,
+    rgba(0,255,0,0.08) 45%,
+    rgba(0,200,255,0.12) 55%,
+    rgba(130,0,255,0.08) 65%,
+    rgba(255,0,200,0.1) 75%,
     transparent 100%
   );
-  background-size: 200% 200%;
-  animation: holoShine 3s ease-in-out infinite;
-  z-index: 1;
-  pointer-events: none;
+  background-size: 300% 300%;
+  animation: holoRainbow 3s ease-in-out infinite;
+  z-index: 1; pointer-events: none;
+  mix-blend-mode: screen;
 }
 
-@keyframes holoShine {
-  0% { background-position: -100% -100%; }
-  100% { background-position: 200% 200%; }
+@keyframes holoRainbow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
 }
+
+/* Rarity glow */
+.rarity-normal .card-face { box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+.rarity-rare .card-face {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 25px rgba(0,150,255,0.4);
+}
+.rarity-epic .card-face {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 35px rgba(180,0,255,0.5);
+}
+.rarity-legendary .card-face {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 50px rgba(255,215,0,0.6), 0 0 80px rgba(255,215,0,0.2);
+}
+
+@keyframes legendaryPulse {
+  0%, 100% { box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 50px rgba(255,215,0,0.6); }
+  50% { box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 70px rgba(255,215,0,0.8), 0 0 100px rgba(255,215,0,0.3); }
+}
+.rarity-legendary .card-front { animation: legendaryPulse 2s ease-in-out infinite; }
+
+.rarity-badge {
+  position: absolute; top: 12px; right: 12px; z-index: 5;
+  padding: 4px 12px; border-radius: 12px;
+  font-size: 0.7em; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.rarity-badge.normal { background: rgba(255,255,255,0.2); color: white; }
+.rarity-badge.rare { background: rgba(0,150,255,0.4); color: #7dd3fc; border: 1px solid rgba(0,150,255,0.5); }
+.rarity-badge.epic { background: rgba(180,0,255,0.4); color: #d8b4fe; border: 1px solid rgba(180,0,255,0.5); }
+.rarity-badge.legendary { background: rgba(255,215,0,0.3); color: #ffd700; border: 1px solid rgba(255,215,0,0.5); }
 
 .card-content {
-  position: relative;
-  z-index: 2;
-  padding: 25px;
-  color: white;
-  text-align: center;
+  position: relative; z-index: 2;
+  padding: 22px; color: white; text-align: center;
+  height: 100%; display: flex; flex-direction: column;
 }
 
 .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
 }
-
 .card-label {
-  font-size: 0.7em;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  opacity: 0.8;
+  font-size: 0.65em; letter-spacing: 3px;
+  text-transform: uppercase; opacity: 0.8;
 }
-
 .card-school {
-  font-size: 0.65em;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  opacity: 0.7;
+  font-size: 0.6em; letter-spacing: 2px;
+  text-transform: uppercase; opacity: 0.7;
   background: rgba(255,255,255,0.15);
-  padding: 3px 10px;
-  border-radius: 10px;
+  padding: 3px 10px; border-radius: 10px;
 }
 
 .card-avatar {
-  width: 120px; height: 120px;
-  border-radius: 50%;
+  width: 110px; height: 110px; border-radius: 50%;
   background: rgba(255,255,255,0.15);
   border: 4px solid rgba(255,255,255,0.5);
-  margin: 10px auto;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 4em;
+  margin: 6px auto; display: flex; align-items: center; justify-content: center;
+  font-size: 3.5em;
   box-shadow: 0 5px 25px rgba(0,0,0,0.3);
 }
 
 .card-player-name {
-  font-size: 2.2em;
-  font-weight: 700;
+  font-size: 2em; font-weight: 700;
   text-shadow: 0 0 20px rgba(255,255,255,0.5), 2px 2px 4px rgba(0,0,0,0.3);
-  margin: 10px 0 5px;
+  margin: 6px 0 2px;
 }
 
 .card-title {
-  font-size: 1em;
-  opacity: 0.8;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
+  font-size: 0.9em; opacity: 0.8;
+  letter-spacing: 2px; margin-bottom: 6px;
+}
+
+.card-talent {
+  font-size: 0.8em; margin-bottom: 10px;
+  background: rgba(255,255,255,0.1);
+  padding: 5px 14px; border-radius: 12px;
+  display: inline-block;
+  border: 1px solid rgba(255,255,255,0.15);
 }
 
 .card-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 15px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6px; margin-bottom: 8px; flex: 1;
 }
 
 .card-stat {
   background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 12px;
-  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px; padding: 8px;
 }
-
 .stat-label {
-  font-size: 0.75em;
-  opacity: 0.7;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-size: 0.7em; opacity: 0.7;
+  letter-spacing: 1px; text-transform: uppercase;
 }
-
-.stat-value {
-  font-size: 1.5em;
-  font-weight: 700;
-}
-
+.stat-value { font-size: 1.4em; font-weight: 700; }
 .stat-bar {
-  height: 4px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 4px;
-  margin-top: 5px;
-  overflow: hidden;
+  height: 4px; background: rgba(255,255,255,0.2);
+  border-radius: 4px; margin-top: 4px; overflow: hidden;
 }
-
 .stat-bar-fill {
-  height: 100%;
-  border-radius: 4px;
+  height: 100%; border-radius: 4px;
   background: linear-gradient(90deg, #ffd700, #ff6fd8);
-  transition: width 1s ease;
+  transition: width 0.8s ease;
 }
 
 .card-id {
-  font-size: 0.7em;
-  opacity: 0.5;
-  margin-top: 10px;
-  font-family: monospace;
+  font-size: 0.65em; opacity: 0.4;
+  margin-top: 6px; font-family: monospace;
 }
 
 /* Controls */
 .controls {
-  margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  align-items: center;
-  max-width: 400px;
-  width: 100%;
+  margin-top: 10px;
+  display: flex; flex-direction: column; gap: 12px;
+  align-items: center; max-width: 420px; width: 100%;
 }
 
 .control-group {
   width: 100%;
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 16px;
-  padding: 15px;
+  border-radius: 16px; padding: 14px;
 }
-
 .control-label {
   color: rgba(255,255,255,0.7);
-  font-size: 0.9em;
-  margin-bottom: 8px;
+  font-size: 0.85em; margin-bottom: 8px;
 }
 
-.style-options {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+.style-options { display: flex; gap: 7px; flex-wrap: wrap; }
 
 .style-btn {
-  width: 45px; height: 45px;
-  border-radius: 12px;
-  border: 3px solid transparent;
-  cursor: pointer;
+  width: 42px; height: 42px; border-radius: 10px;
+  border: 3px solid transparent; cursor: pointer;
   transition: all 0.2s;
 }
-
 .style-btn:hover { transform: scale(1.1); }
-.style-btn.selected { border-color: white; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+.style-btn.selected { border-color: white; box-shadow: 0 0 12px rgba(255,255,255,0.5); }
 
 .style-btn.s0 { background: linear-gradient(145deg, #ff6fd8, #8c6fff); }
 .style-btn.s1 { background: linear-gradient(145deg, #ffd700, #ff6fd8); }
@@ -237,88 +278,113 @@ h1 {
 .style-btn.s3 { background: linear-gradient(145deg, #fc466b, #3f5efb); }
 .style-btn.s4 { background: linear-gradient(145deg, #0f0c29, #302b63); }
 .style-btn.s5 { background: linear-gradient(145deg, #f7971e, #ffd200); }
+.style-btn.s6 { background: linear-gradient(145deg, #ee9ca7, #ffdde1); }
+.style-btn.s7 { background: linear-gradient(145deg, #43e97b, #38f9d7); }
 
-.emoji-options {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
+.emoji-options { display: flex; gap: 5px; flex-wrap: wrap; }
 
 .emoji-btn {
-  width: 42px; height: 42px;
-  border-radius: 10px;
+  width: 40px; height: 40px; border-radius: 10px;
   background: rgba(255,255,255,0.1);
-  border: 2px solid transparent;
-  font-size: 1.5em;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
+  border: 2px solid transparent; font-size: 1.4em;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-
 .emoji-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
 .emoji-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); }
 
-.title-options {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+.title-options, .talent-options, .rarity-options {
+  display: flex; gap: 5px; flex-wrap: wrap;
 }
 
-.title-btn {
+.tag-btn {
   background: rgba(255,255,255,0.1);
   border: 2px solid rgba(255,255,255,0.2);
-  color: white;
-  padding: 6px 14px;
-  border-radius: 15px;
-  font-family: inherit;
-  font-size: 0.9em;
-  cursor: pointer;
-  transition: all 0.2s;
+  color: white; padding: 5px 12px; border-radius: 14px;
+  font-family: inherit; font-size: 0.8em;
+  cursor: pointer; transition: all 0.2s;
 }
-
-.title-btn:hover { background: rgba(255,255,255,0.2); }
-.title-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); }
+.tag-btn:hover { background: rgba(255,255,255,0.2); }
+.tag-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); }
 
 .action-btns {
-  display: flex;
-  gap: 10px;
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
 }
 
-.save-card-btn {
-  background: linear-gradient(145deg, #4ecdc4, #2bcbba);
+.act-btn {
   color: white; border: none;
-  padding: 14px 30px; border-radius: 25px;
-  font-family: inherit; font-size: 1.1em;
+  padding: 12px 24px; border-radius: 22px;
+  font-family: inherit; font-size: 1em;
   font-weight: 700; cursor: pointer;
+  transition: transform 0.15s;
+}
+.act-btn:hover { transform: scale(1.05); }
+
+.btn-save { background: linear-gradient(145deg, #4ecdc4, #2bcbba); }
+.btn-random { background: linear-gradient(145deg, #ff6fd8, #cd77ff); }
+.btn-share { background: linear-gradient(145deg, #6c5ce7, #a18cd1); }
+.btn-daily { background: linear-gradient(145deg, #ffd700, #ffaa00); color: #333; }
+
+/* Collection */
+.collection-section {
+  width: 100%; max-width: 900px; margin-top: 25px;
+}
+.collection-title {
+  color: white; font-size: 1.15em; font-weight: 700;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+  margin-bottom: 12px; text-align: center;
+}
+.collection-grid {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
 }
 
-.share-btn {
-  background: linear-gradient(145deg, #ff6fd8, #cd77ff);
-  color: white; border: none;
-  padding: 14px 30px; border-radius: 25px;
-  font-family: inherit; font-size: 1.1em;
-  font-weight: 700; cursor: pointer;
+.mini-card {
+  width: 110px; border-radius: 14px; overflow: hidden;
+  cursor: pointer; transition: transform 0.2s;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
+.mini-card:hover { transform: scale(1.08); }
 
-.save-card-btn:hover, .share-btn:hover { transform: scale(1.05); }
+.mini-card-inner {
+  padding: 10px; text-align: center; color: white;
+  min-height: 140px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.mini-card .mc-avatar { font-size: 2.2em; margin-bottom: 4px; }
+.mini-card .mc-name { font-size: 0.7em; font-weight: 700; }
+.mini-card .mc-rarity { font-size: 0.55em; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+.mini-card .mc-delete {
+  position: absolute; top: 4px; right: 6px;
+  color: rgba(255,255,255,0.4); font-size: 0.8em; cursor: pointer;
+}
+.mini-card .mc-delete:hover { color: #ff6b6b; }
+
+.collection-empty {
+  color: rgba(255,255,255,0.4); text-align: center; padding: 20px;
+  font-size: 0.9em;
+}
 
 .toast {
-  position: fixed;
-  bottom: 30px; left: 50%;
+  position: fixed; bottom: 30px; left: 50%;
   transform: translateX(-50%) translateY(100px);
-  background: rgba(0,0,0,0.85);
-  color: white;
-  padding: 15px 30px;
-  border-radius: 15px;
-  font-size: 1.1em;
-  z-index: 500;
+  background: rgba(0,0,0,0.85); color: white;
+  padding: 15px 30px; border-radius: 15px;
+  font-size: 1.1em; z-index: 500;
   transition: transform 0.4s ease;
 }
-
 .toast.show { transform: translateX(-50%) translateY(0); }
 
+/* Entrance animation */
+@keyframes cardEntrance {
+  0% { transform: rotateY(180deg) scale(0.8); opacity: 0; }
+  60% { transform: rotateY(-10deg) scale(1.05); opacity: 1; }
+  100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+}
+.card-entrance { animation: cardEntrance 0.9s cubic-bezier(0.175,0.885,0.32,1.275) forwards; }
+
 @media (max-width: 400px) {
-  .kpop-card { width: 95vw; }
+  .card-scene { width: 95vw; height: auto; min-height: 480px; }
 }
 </style>
 </head>
@@ -327,59 +393,72 @@ h1 {
 <a href="index.html" class="back-btn">Retour</a>
 
 <h1>Ma Carte K-Pop</h1>
+<div class="subtitle">Ecole Saint-Esprit</div>
 
-<!-- THE CARD -->
-<div class="kpop-card" id="kpopCard">
-  <div class="card-bg style-0" id="cardBg"></div>
-  <div class="card-holo"></div>
-  <div class="card-content">
-    <div class="card-header">
-      <span class="card-label">K-POP STAR CARD</span>
-      <span class="card-school">Saint-Esprit</span>
-    </div>
-    <div class="card-avatar" id="cardAvatar">👸</div>
-    <div class="card-player-name" id="cardName">Star</div>
-    <div class="card-title" id="cardTitle">K-Pop Princess</div>
-
-    <div class="card-stats">
-      <div class="card-stat">
-        <div class="stat-label">Danse</div>
-        <div class="stat-value" id="statDance">95</div>
-        <div class="stat-bar"><div class="stat-bar-fill" id="barDance" style="width:95%"></div></div>
-      </div>
-      <div class="card-stat">
-        <div class="stat-label">Style</div>
-        <div class="stat-value" id="statStyle">88</div>
-        <div class="stat-bar"><div class="stat-bar-fill" id="barStyle" style="width:88%"></div></div>
-      </div>
-      <div class="card-stat">
-        <div class="stat-label">Chant</div>
-        <div class="stat-value" id="statSing">92</div>
-        <div class="stat-bar"><div class="stat-bar-fill" id="barSing" style="width:92%"></div></div>
-      </div>
-      <div class="card-stat">
-        <div class="stat-label">Charisme</div>
-        <div class="stat-value" id="statCharisma">97</div>
-        <div class="stat-bar"><div class="stat-bar-fill" id="barCharisma" style="width:97%"></div></div>
-      </div>
+<!-- Card with 3D flip -->
+<div class="card-scene rarity-normal" id="cardScene">
+  <div class="card-flipper" id="cardFlipper">
+    <!-- Back -->
+    <div class="card-face card-back">
+      <div class="card-back-pattern">&#x2728;&#x1F31F;&#x2B50;&#x1F496;&#x2728;&#x1F31F;&#x2B50;&#x1F496;&#x2728;&#x1F31F;&#x2B50;&#x1F496;</div>
+      <div class="card-back-logo">&#x1F451;</div>
+      <div class="card-back-text">K-POP STAR CARD</div>
     </div>
 
-    <div class="card-id" id="cardId">ID #0001 — K-POP STAR ACADEMY</div>
+    <!-- Front -->
+    <div class="card-face card-front card-entrance" id="cardFront">
+      <div class="card-bg style-0" id="cardBg"></div>
+      <div class="card-holo"></div>
+      <div class="rarity-badge normal" id="rarityBadge">Normal</div>
+      <div class="card-content">
+        <div class="card-header">
+          <span class="card-label">K-POP STAR CARD</span>
+          <span class="card-school">Saint-Esprit</span>
+        </div>
+        <div class="card-avatar" id="cardAvatar">&#x1F478;</div>
+        <div class="card-player-name" id="cardName">Star</div>
+        <div class="card-title" id="cardTitle">K-Pop Princess</div>
+        <div class="card-talent" id="cardTalent">&#x2728; Aegyo Master</div>
+
+        <div class="card-stats">
+          <div class="card-stat">
+            <div class="stat-label">Danse</div>
+            <div class="stat-value" id="statDance">95</div>
+            <div class="stat-bar"><div class="stat-bar-fill" id="barDance" style="width:95%"></div></div>
+          </div>
+          <div class="card-stat">
+            <div class="stat-label">Style</div>
+            <div class="stat-value" id="statStyle">88</div>
+            <div class="stat-bar"><div class="stat-bar-fill" id="barStyle" style="width:88%"></div></div>
+          </div>
+          <div class="card-stat">
+            <div class="stat-label">Chant</div>
+            <div class="stat-value" id="statSing">92</div>
+            <div class="stat-bar"><div class="stat-bar-fill" id="barSing" style="width:92%"></div></div>
+          </div>
+          <div class="card-stat">
+            <div class="stat-label">Charisme</div>
+            <div class="stat-value" id="statCharisma">97</div>
+            <div class="stat-bar"><div class="stat-bar-fill" id="barCharisma" style="width:97%"></div></div>
+          </div>
+        </div>
+
+        <div class="card-id" id="cardId">ID #0001 — K-POP STAR ACADEMY</div>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- Controls -->
 <div class="controls">
   <div class="control-group">
+    <div class="control-label">Rarete</div>
+    <div class="rarity-options" id="rarityOptions"></div>
+  </div>
+
+  <div class="control-group">
     <div class="control-label">Style de carte</div>
-    <div class="style-options">
-      <div class="style-btn s0 selected" onclick="setStyle(0,this)"></div>
-      <div class="style-btn s1" onclick="setStyle(1,this)"></div>
-      <div class="style-btn s2" onclick="setStyle(2,this)"></div>
-      <div class="style-btn s3" onclick="setStyle(3,this)"></div>
-      <div class="style-btn s4" onclick="setStyle(4,this)"></div>
-      <div class="style-btn s5" onclick="setStyle(5,this)"></div>
-    </div>
+    <div class="style-options" id="styleOptions"></div>
   </div>
 
   <div class="control-group">
@@ -392,10 +471,23 @@ h1 {
     <div class="title-options" id="titleOptions"></div>
   </div>
 
-  <div class="action-btns">
-    <button class="save-card-btn" onclick="saveCard()">💾 Sauvegarder</button>
-    <button class="share-btn" onclick="randomStats()">🎲 Stats</button>
+  <div class="control-group">
+    <div class="control-label">Talent Special</div>
+    <div class="talent-options" id="talentOptions"></div>
   </div>
+
+  <div class="action-btns">
+    <button class="act-btn btn-save" onclick="saveCard()">Sauvegarder</button>
+    <button class="act-btn btn-random" onclick="randomStats()">Lancer Stats</button>
+    <button class="act-btn btn-daily" onclick="carteDuJour()">Carte du Jour</button>
+    <button class="act-btn btn-share" onclick="shareCard()">Partager</button>
+  </div>
+</div>
+
+<!-- Collection -->
+<div class="collection-section">
+  <div class="collection-title">Ma Collection (max 8)</div>
+  <div class="collection-grid" id="collectionGrid"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -403,63 +495,157 @@ h1 {
 <script>
 const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
 
-const avatars = ['👸','🧑‍🎤','💃','🦄','🌟','👑','🎤','🦋','🐱','🐰','🌸','💖','🎀','💎','🧜‍♀️','🧚‍♀️','🦊','🐼','🦁','🎭','🧝‍♀️','🦸‍♀️','🧛‍♀️','👩‍🎤'];
-const titles = ['K-Pop Princess','Dance Queen','Star Supreme','Idol No.1','Main Vocal','Lead Dancer','Visual Queen','Center Stage','Fan Favorite','Rising Star','Rap Queen','Cute Maknae','Girl Crush','Mega Idol','Dream Star','Stage Killer'];
+const avatars = [
+  '\uD83D\uDC78','\uD83E\uDDD1\u200D\uD83C\uDFA4','\uD83D\uDC83','\uD83E\uDD84','\uD83C\uDF1F',
+  '\uD83D\uDC51','\uD83C\uDFA4','\uD83E\uDD8B','\uD83D\uDC31','\uD83D\uDC30',
+  '\uD83C\uDF38','\uD83D\uDC96','\uD83C\uDF80','\uD83D\uDC8E','\uD83E\uDDDC\u200D\u2640\uFE0F',
+  '\uD83E\uDDDA\u200D\u2640\uFE0F','\uD83E\uDD8A','\uD83D\uDC3C','\uD83E\uDD81','\uD83C\uDFAD',
+  '\uD83E\uDDDD\u200D\u2640\uFE0F','\uD83E\uDDB8\u200D\u2640\uFE0F','\uD83E\uDDDB\u200D\u2640\uFE0F','\uD83D\uDC69\u200D\uD83C\uDFA4',
+  '\uD83E\uDD85','\uD83E\uDDA9','\uD83C\uDF3C','\uD83C\uDF3B'
+];
+
+const titles = [
+  'K-Pop Princess','Dance Queen','Star Supreme','Idol No.1',
+  'Main Vocal','Lead Dancer','Visual Queen','Center Stage',
+  'Fan Favorite','Rising Star','Rap Queen','Cute Maknae',
+  'Girl Crush','Mega Idol','Dream Star','Stage Killer',
+  'Sunshine Idol','Queen Bee'
+];
+
+const talents = [
+  'Aegyo Master', 'Smile Queen', 'Dance Machine', 'Vocal Goddess',
+  'Fashion Icon', 'Funny Unnie', 'Fan Service Queen', 'Stage Presence',
+  'Rap Fire', 'Selca Queen', 'Variety Star', 'Girl Crush',
+  'Cute Overload', 'Charisma Bomb', 'High Note Queen', 'Choreography Genius'
+];
+
+const rarities = [
+  { key: 'normal', label: 'Normal', cls: 'normal' },
+  { key: 'rare', label: 'Rare', cls: 'rare' },
+  { key: 'epic', label: 'Epique', cls: 'epic' },
+  { key: 'legendary', label: 'Legendaire', cls: 'legendary' },
+];
 
 let currentStyle = 0;
 let currentAvatar = 0;
 let currentTitle = 0;
+let currentTalent = 0;
+let currentRarity = 0;
 let stats = { dance: 95, style: 88, sing: 92, charisma: 97 };
 
 // Init
 document.getElementById('cardName').textContent = playerName;
-document.getElementById('cardId').textContent = `ID #${String(Math.floor(Math.random()*9999)+1).padStart(4,'0')} — K-POP STAR ACADEMY`;
+document.getElementById('cardId').textContent = 'ID #' + String(Math.floor(Math.random()*9999)+1).padStart(4,'0') + ' \u2014 K-POP STAR ACADEMY';
+
+// Render rarity options
+function renderRarityOptions() {
+  const el = document.getElementById('rarityOptions');
+  el.innerHTML = '';
+  rarities.forEach((r, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn' + (i === currentRarity ? ' selected' : '');
+    btn.textContent = r.label;
+    btn.onclick = () => {
+      currentRarity = i;
+      applyRarity();
+      renderRarityOptions();
+    };
+    el.appendChild(btn);
+  });
+}
+
+function applyRarity() {
+  const scene = document.getElementById('cardScene');
+  scene.className = 'card-scene rarity-' + rarities[currentRarity].key;
+  const badge = document.getElementById('rarityBadge');
+  badge.className = 'rarity-badge ' + rarities[currentRarity].cls;
+  badge.textContent = rarities[currentRarity].label;
+}
+
+// Render style options
+function renderStyleOptions() {
+  const el = document.getElementById('styleOptions');
+  el.innerHTML = '';
+  for (let i = 0; i < 8; i++) {
+    const btn = document.createElement('div');
+    btn.className = 'style-btn s' + i + (i === currentStyle ? ' selected' : '');
+    btn.onclick = () => {
+      currentStyle = i;
+      document.getElementById('cardBg').className = 'card-bg style-' + i;
+      renderStyleOptions();
+    };
+    el.appendChild(btn);
+  }
+}
 
 // Render avatar options
-const avEl = document.getElementById('avatarOptions');
-avatars.forEach((a, i) => {
-  const btn = document.createElement('div');
-  btn.className = `emoji-btn ${i === 0 ? 'selected' : ''}`;
-  btn.textContent = a;
-  btn.onclick = () => {
-    currentAvatar = i;
-    document.getElementById('cardAvatar').textContent = avatars[i];
-    document.querySelectorAll('#avatarOptions .emoji-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-  };
-  avEl.appendChild(btn);
-});
+function renderAvatarOptions() {
+  const el = document.getElementById('avatarOptions');
+  el.innerHTML = '';
+  avatars.forEach((a, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'emoji-btn' + (i === currentAvatar ? ' selected' : '');
+    btn.textContent = a;
+    btn.onclick = () => {
+      currentAvatar = i;
+      document.getElementById('cardAvatar').textContent = avatars[i];
+      renderAvatarOptions();
+    };
+    el.appendChild(btn);
+  });
+}
 
 // Render title options
-const tiEl = document.getElementById('titleOptions');
-titles.forEach((t, i) => {
-  const btn = document.createElement('button');
-  btn.className = `title-btn ${i === 0 ? 'selected' : ''}`;
-  btn.textContent = t;
-  btn.onclick = () => {
-    currentTitle = i;
-    document.getElementById('cardTitle').textContent = titles[i];
-    document.querySelectorAll('.title-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-  };
-  tiEl.appendChild(btn);
-});
+function renderTitleOptions() {
+  const el = document.getElementById('titleOptions');
+  el.innerHTML = '';
+  titles.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn' + (i === currentTitle ? ' selected' : '');
+    btn.textContent = t;
+    btn.onclick = () => {
+      currentTitle = i;
+      document.getElementById('cardTitle').textContent = titles[i];
+      renderTitleOptions();
+    };
+    el.appendChild(btn);
+  });
+}
 
-function setStyle(n, btn) {
-  currentStyle = n;
-  const bg = document.getElementById('cardBg');
-  bg.className = `card-bg style-${n}`;
-  document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+// Render talent options
+function renderTalentOptions() {
+  const el = document.getElementById('talentOptions');
+  el.innerHTML = '';
+  talents.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn' + (i === currentTalent ? ' selected' : '');
+    btn.textContent = t;
+    btn.onclick = () => {
+      currentTalent = i;
+      document.getElementById('cardTalent').textContent = '\u2728 ' + talents[i];
+      renderTalentOptions();
+    };
+    el.appendChild(btn);
+  });
 }
 
 function randomStats() {
+  // Stats always high: 80-100
   stats = {
-    dance: 70 + Math.floor(Math.random() * 31),
-    style: 70 + Math.floor(Math.random() * 31),
-    sing: 70 + Math.floor(Math.random() * 31),
-    charisma: 70 + Math.floor(Math.random() * 31),
+    dance: 80 + Math.floor(Math.random() * 21),
+    style: 80 + Math.floor(Math.random() * 21),
+    sing: 80 + Math.floor(Math.random() * 21),
+    charisma: 80 + Math.floor(Math.random() * 21),
   };
+  applyStats();
+
+  // Flip card for effect
+  const flipper = document.getElementById('cardFlipper');
+  flipper.classList.add('flipped');
+  setTimeout(() => flipper.classList.remove('flipped'), 800);
+}
+
+function applyStats() {
   document.getElementById('statDance').textContent = stats.dance;
   document.getElementById('statStyle').textContent = stats.style;
   document.getElementById('statSing').textContent = stats.sing;
@@ -470,21 +656,181 @@ function randomStats() {
   document.getElementById('barCharisma').style.width = stats.charisma + '%';
 }
 
-function saveCard() {
-  const data = { style: currentStyle, avatar: currentAvatar, title: currentTitle, stats };
-  localStorage.setItem(`kpop_carte_${playerName}`, JSON.stringify(data));
+function carteDuJour() {
+  // Full random card with flip
+  currentStyle = Math.floor(Math.random() * 8);
+  currentAvatar = Math.floor(Math.random() * avatars.length);
+  currentTitle = Math.floor(Math.random() * titles.length);
+  currentTalent = Math.floor(Math.random() * talents.length);
+  // Weighted rarity: 50% normal, 25% rare, 15% epic, 10% legendary
+  const roll = Math.random();
+  if (roll < 0.10) currentRarity = 3;
+  else if (roll < 0.25) currentRarity = 2;
+  else if (roll < 0.50) currentRarity = 1;
+  else currentRarity = 0;
 
-  let trophies = JSON.parse(localStorage.getItem(`kpop_trophies_${playerName}`) || '[]');
+  stats = {
+    dance: 80 + Math.floor(Math.random() * 21),
+    style: 80 + Math.floor(Math.random() * 21),
+    sing: 80 + Math.floor(Math.random() * 21),
+    charisma: 80 + Math.floor(Math.random() * 21),
+  };
+
+  // Flip animation
+  const flipper = document.getElementById('cardFlipper');
+  flipper.classList.add('flipped');
+  setTimeout(() => {
+    document.getElementById('cardBg').className = 'card-bg style-' + currentStyle;
+    document.getElementById('cardAvatar').textContent = avatars[currentAvatar];
+    document.getElementById('cardTitle').textContent = titles[currentTitle];
+    document.getElementById('cardTalent').textContent = '\u2728 ' + talents[currentTalent];
+    applyRarity();
+    applyStats();
+    renderAll();
+    flipper.classList.remove('flipped');
+    showToast('Carte du jour generee ! ' + rarities[currentRarity].label + ' !');
+  }, 800);
+}
+
+function shareCard() {
+  const desc = [
+    'Ma Carte K-Pop !',
+    'Nom: ' + playerName,
+    'Titre: ' + titles[currentTitle],
+    'Talent: ' + talents[currentTalent],
+    'Rarete: ' + rarities[currentRarity].label,
+    'Danse: ' + stats.dance + ' | Style: ' + stats.style,
+    'Chant: ' + stats.sing + ' | Charisme: ' + stats.charisma,
+    '--- Ecole Saint-Esprit ---'
+  ].join('\n');
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(desc).then(() => showToast('Carte copiee !'));
+  } else {
+    showToast('Partage non disponible');
+  }
+}
+
+function saveCard() {
+  const data = {
+    style: currentStyle, avatar: currentAvatar,
+    title: currentTitle, talent: currentTalent,
+    rarity: currentRarity, stats: {...stats}
+  };
+
+  // Collection (max 8)
+  let collection = JSON.parse(localStorage.getItem('kpop_card_collection_' + playerName) || '[]');
+  if (collection.length >= 8) collection.shift();
+  collection.push({ data: data, date: Date.now() });
+  localStorage.setItem('kpop_card_collection_' + playerName, JSON.stringify(collection));
+
+  // Also save main card
+  localStorage.setItem('kpop_carte_' + playerName, JSON.stringify(data));
+
+  // Trophies
+  let trophies = JSON.parse(localStorage.getItem('kpop_trophies_' + playerName) || '[]');
   if (!trophies.includes('carte_created')) {
     trophies.push('carte_created');
-    localStorage.setItem(`kpop_trophies_${playerName}`, JSON.stringify(trophies));
+    localStorage.setItem('kpop_trophies_' + playerName, JSON.stringify(trophies));
   }
 
-  let stars = parseInt(localStorage.getItem(`kpop_stars_${playerName}`) || '0');
-  stars += 30;
-  localStorage.setItem(`kpop_stars_${playerName}`, stars);
+  let starCount = parseInt(localStorage.getItem('kpop_stars_' + playerName) || '0');
+  starCount += 30;
+  localStorage.setItem('kpop_stars_' + playerName, String(starCount));
 
-  showToast(`Carte de ${playerName} sauvegardee ! +30 ⭐`);
+  showToast('Carte sauvegardee ! +30 etoiles');
+  renderCollection();
+}
+
+function renderCollection() {
+  const grid = document.getElementById('collectionGrid');
+  const collection = JSON.parse(localStorage.getItem('kpop_card_collection_' + playerName) || '[]');
+  grid.innerHTML = '';
+
+  if (collection.length === 0) {
+    grid.innerHTML = '<div class="collection-empty">Aucune carte sauvegardee. Cree ta premiere !</div>';
+    return;
+  }
+
+  collection.forEach((card, idx) => {
+    const mini = document.createElement('div');
+    mini.className = 'mini-card';
+
+    const bgClasses = ['style-0','style-1','style-2','style-3','style-4','style-5','style-6','style-7'];
+    const bgStyle = bgClasses[card.data.style] || 'style-0';
+
+    // Get gradient colors from CSS
+    const gradients = [
+      '#ff6fd8, #cd77ff', '#ffd700, #ff6fd8', '#00c9ff, #92fe9d', '#fc466b, #3f5efb',
+      '#0f0c29, #302b63', '#f7971e, #ffd200', '#ee9ca7, #ffdde1', '#43e97b, #38f9d7'
+    ];
+
+    const inner = document.createElement('div');
+    inner.className = 'mini-card-inner';
+    inner.style.background = 'linear-gradient(145deg, ' + (gradients[card.data.style] || gradients[0]) + ')';
+
+    const av = document.createElement('div');
+    av.className = 'mc-avatar';
+    av.textContent = avatars[card.data.avatar] || avatars[0];
+    inner.appendChild(av);
+
+    const nm = document.createElement('div');
+    nm.className = 'mc-name';
+    nm.textContent = playerName;
+    inner.appendChild(nm);
+
+    const rar = document.createElement('div');
+    rar.className = 'mc-rarity';
+    rar.textContent = rarities[card.data.rarity || 0].label;
+    inner.appendChild(rar);
+
+    mini.appendChild(inner);
+
+    const del = document.createElement('div');
+    del.className = 'mc-delete';
+    del.textContent = '\u2716';
+    del.onclick = (e) => {
+      e.stopPropagation();
+      collection.splice(idx, 1);
+      localStorage.setItem('kpop_card_collection_' + playerName, JSON.stringify(collection));
+      renderCollection();
+    };
+    mini.appendChild(del);
+
+    // Click to load
+    mini.onclick = () => {
+      currentStyle = card.data.style;
+      currentAvatar = card.data.avatar;
+      currentTitle = card.data.title;
+      currentTalent = card.data.talent || 0;
+      currentRarity = card.data.rarity || 0;
+      stats = card.data.stats || stats;
+
+      document.getElementById('cardBg').className = 'card-bg style-' + currentStyle;
+      document.getElementById('cardAvatar').textContent = avatars[currentAvatar];
+      document.getElementById('cardTitle').textContent = titles[currentTitle];
+      document.getElementById('cardTalent').textContent = '\u2728 ' + talents[currentTalent];
+      applyRarity();
+      applyStats();
+      renderAll();
+      showToast('Carte chargee !');
+
+      // Flip effect
+      const flipper = document.getElementById('cardFlipper');
+      flipper.classList.add('flipped');
+      setTimeout(() => flipper.classList.remove('flipped'), 600);
+    };
+
+    grid.appendChild(mini);
+  });
+}
+
+function renderAll() {
+  renderRarityOptions();
+  renderStyleOptions();
+  renderAvatarOptions();
+  renderTitleOptions();
+  renderTalentOptions();
 }
 
 function showToast(msg) {
@@ -494,23 +840,30 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// Load saved
-const saved = localStorage.getItem(`kpop_carte_${playerName}`);
+// Load saved card
+const saved = localStorage.getItem('kpop_carte_' + playerName);
 if (saved) {
   try {
     const d = JSON.parse(saved);
-    if (d.style !== undefined) setStyle(d.style, document.querySelectorAll('.style-btn')[d.style]);
-    if (d.avatar !== undefined) {
-      currentAvatar = d.avatar;
-      document.getElementById('cardAvatar').textContent = avatars[d.avatar];
-    }
-    if (d.title !== undefined) {
-      currentTitle = d.title;
-      document.getElementById('cardTitle').textContent = titles[d.title];
-    }
-    if (d.stats) { stats = d.stats; randomStats(); Object.assign(stats, d.stats); }
+    if (d.style !== undefined) currentStyle = d.style;
+    if (d.avatar !== undefined) currentAvatar = d.avatar;
+    if (d.title !== undefined) currentTitle = d.title;
+    if (d.talent !== undefined) currentTalent = d.talent;
+    if (d.rarity !== undefined) currentRarity = d.rarity;
+    if (d.stats) stats = d.stats;
+
+    document.getElementById('cardBg').className = 'card-bg style-' + currentStyle;
+    document.getElementById('cardAvatar').textContent = avatars[currentAvatar];
+    document.getElementById('cardTitle').textContent = titles[currentTitle];
+    document.getElementById('cardTalent').textContent = '\u2728 ' + talents[currentTalent];
+    applyRarity();
+    applyStats();
   } catch(e) {}
 }
+
+// Initial render
+renderAll();
+renderCollection();
 </script>
 </body>
 </html>

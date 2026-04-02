@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cree ton Idol K-Pop</title>
+<title>Cree ton Idol — Ecole Saint-Esprit</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,6 +26,21 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.5); }
+}
+
 .back-btn {
   position: fixed; top: 12px; left: 12px;
   background: rgba(255,255,255,0.3);
@@ -36,7 +51,7 @@ body {
 }
 
 h1 {
-  font-size: 2em; color: white;
+  font-size: 1.9em; color: white;
   text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
   margin: 10px 0 5px;
 }
@@ -44,16 +59,29 @@ h1 {
 .player-name-display {
   color: #ffd700; font-size: 1.1em; font-weight: 700;
   text-shadow: 0 0 10px rgba(255,215,0,0.5);
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+}
+
+.tabs {
+  display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center;
+}
+
+.tab-btn {
+  background: rgba(255,255,255,0.15);
+  color: white; border: 2px solid rgba(255,255,255,0.2);
+  padding: 8px 16px; border-radius: 20px;
+  font-family: inherit; font-size: 0.85em; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.3); }
+.tab-btn.active {
+  background: rgba(255,215,0,0.3); border-color: #ffd700;
+  box-shadow: 0 0 12px rgba(255,215,0,0.3);
 }
 
 .creator {
-  display: flex;
-  gap: 25px;
-  max-width: 900px;
-  width: 100%;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: flex; gap: 20px; max-width: 950px; width: 100%;
+  flex-wrap: wrap; justify-content: center;
 }
 
 /* Preview */
@@ -62,150 +90,222 @@ h1 {
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255,255,255,0.3);
   border-radius: 24px;
-  padding: 25px;
-  text-align: center;
-  min-width: 280px;
-  flex: 0 0 280px;
+  padding: 20px; text-align: center;
+  min-width: 280px; flex: 0 0 290px;
 }
 
 .avatar-preview {
-  width: 220px; height: 280px;
-  margin: 0 auto 15px;
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
+  width: 220px; height: 300px;
+  margin: 0 auto 12px; position: relative;
+  border-radius: 20px; overflow: hidden;
   background: linear-gradient(180deg, #ffecd2, #fcb69f);
+  animation: bounce 3s ease-in-out infinite;
 }
 
 .avatar-layer {
-  position: absolute;
-  width: 100%; height: 100%;
+  position: absolute; width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1em;
-  transition: all 0.3s;
+  font-size: 1em; transition: all 0.3s;
+  pointer-events: none;
 }
 
-.av-bg { font-size: 15em; opacity: 0.15; }
-.av-body { font-size: 8em; top: 25%; }
-.av-hair { font-size: 5em; top: 2%; }
-.av-face { font-size: 3em; top: 28%; }
-.av-outfit { font-size: 5em; top: 55%; }
-.av-accessory { font-size: 3em; top: 8%; left: 60%; }
+.av-bg { font-size: 14em; opacity: 0.12; }
+.av-body { font-size: 7em; top: 22%; }
+.av-hair { font-size: 4.5em; top: 1%; }
+.av-face { font-size: 3em; top: 26%; }
+.av-top { font-size: 4em; top: 48%; }
+.av-bottom { font-size: 3.5em; top: 65%; }
+.av-shoes { font-size: 2.5em; top: 82%; }
+.av-accessory { font-size: 2.8em; top: 6%; left: 60%; }
+.av-effect { font-size: 2em; opacity: 0.7; }
+
+.effect-particle {
+  position: absolute; font-size: 1.4em; pointer-events: none;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.idol-name-input {
+  width: 80%; padding: 8px 16px; border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.2);
+  color: white; font-family: inherit; font-size: 1.1em;
+  font-weight: 700; text-align: center; outline: none;
+  margin-bottom: 10px;
+}
+.idol-name-input::placeholder { color: rgba(255,255,255,0.5); }
 
 .avatar-name-tag {
   background: linear-gradient(145deg, #ff6fd8, #ffd700);
-  color: white;
-  padding: 8px 25px;
-  border-radius: 20px;
-  font-size: 1.2em;
-  font-weight: 700;
-  display: inline-block;
-  margin-bottom: 10px;
+  color: white; padding: 8px 22px; border-radius: 20px;
+  font-size: 1.15em; font-weight: 700; display: inline-block;
+  margin-bottom: 8px;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
-.save-btn {
-  background: linear-gradient(145deg, #4ecdc4, #2bcbba);
-  color: white; border: none;
-  padding: 12px 30px; border-radius: 25px;
-  font-family: inherit; font-size: 1.1em;
-  font-weight: 700; cursor: pointer;
-  margin: 5px;
-  box-shadow: 0 4px 15px rgba(78,205,196,0.3);
+.btn-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 5px 0; }
+
+.action-btn {
+  color: white; border: none; padding: 10px 20px; border-radius: 22px;
+  font-family: inherit; font-size: 0.95em; font-weight: 700;
+  cursor: pointer; transition: transform 0.15s;
+}
+.action-btn:hover { transform: scale(1.06); }
+
+.btn-save { background: linear-gradient(145deg, #4ecdc4, #2bcbba); }
+.btn-random { background: linear-gradient(145deg, #ff6fd8, #cd77ff); }
+.btn-photo { background: linear-gradient(145deg, #ffd700, #ffaa00); color: #333; }
+.btn-export { background: linear-gradient(145deg, #6c5ce7, #a18cd1); }
+
+.random-themes { display: flex; gap: 5px; justify-content: center; margin-top: 6px; flex-wrap: wrap; }
+.theme-btn {
+  background: rgba(255,255,255,0.15); color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 5px 12px; border-radius: 15px;
+  font-family: inherit; font-size: 0.8em; cursor: pointer;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.3); }
+
+/* Photo booth overlay */
+.photo-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7); z-index: 200;
+  align-items: center; justify-content: center;
+}
+.photo-overlay.active { display: flex; }
+
+.photo-frame {
+  background: white; border-radius: 20px; padding: 20px;
+  text-align: center; position: relative;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  animation: bounce 0.5s ease;
+}
+.photo-frame .frame-deco {
+  position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+  font-size: 2em;
+}
+.photo-avatar-box {
+  width: 240px; height: 320px; border-radius: 16px;
+  position: relative; overflow: hidden; margin: 15px auto 10px;
+}
+.photo-avatar-box .avatar-layer {
+  position: absolute; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-name {
+  font-size: 1.3em; font-weight: 700;
+  color: #ff6fd8; margin: 5px 0;
+}
+.photo-close {
+  background: #ff6fd8; color: white; border: none;
+  padding: 10px 28px; border-radius: 20px;
+  font-family: inherit; font-size: 1em; font-weight: 700;
+  cursor: pointer; margin-top: 8px;
 }
 
-.save-btn:hover { transform: scale(1.05); }
+/* Gallery */
+.gallery-section {
+  width: 100%; max-width: 950px; margin-top: 20px;
+}
+.gallery-title {
+  color: white; font-size: 1.2em; font-weight: 700;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  margin-bottom: 10px; text-align: center;
+}
+.gallery-grid {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+}
+.gallery-card {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 16px; padding: 12px;
+  text-align: center; width: 130px; cursor: pointer;
+  transition: transform 0.2s;
+}
+.gallery-card:hover { transform: scale(1.05); }
+.gallery-card .mini-preview {
+  width: 100px; height: 120px; border-radius: 12px;
+  margin: 0 auto 6px; position: relative; overflow: hidden;
+  font-size: 0.6em;
+}
+.gallery-card .mini-preview .avatar-layer { position: absolute; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center; }
+.gallery-card .gname { color: white; font-size: 0.85em; font-weight: 700; }
+.gallery-card .gdelete {
+  color: rgba(255,255,255,0.5); font-size: 0.7em; cursor: pointer; margin-top: 4px;
+}
+.gallery-card .gdelete:hover { color: #ff6b6b; }
 
-.random-btn {
-  background: linear-gradient(145deg, #ff6fd8, #cd77ff);
-  color: white; border: none;
-  padding: 12px 30px; border-radius: 25px;
-  font-family: inherit; font-size: 1.1em;
-  font-weight: 700; cursor: pointer;
-  margin: 5px;
+.gallery-empty {
+  color: rgba(255,255,255,0.5); font-size: 0.95em; text-align: center; padding: 20px;
 }
 
 /* Options */
-.options-panel {
-  flex: 1;
-  min-width: 300px;
-}
+.options-panel { flex: 1; min-width: 300px; }
 
 .option-group {
   background: rgba(255,255,255,0.12);
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 16px;
-  padding: 15px;
-  margin-bottom: 12px;
+  border-radius: 16px; padding: 14px; margin-bottom: 10px;
+  display: none;
 }
+.option-group.visible { display: block; }
 
 .option-label {
-  color: white;
-  font-size: 1.1em;
-  font-weight: 700;
-  margin-bottom: 10px;
+  color: white; font-size: 1.05em; font-weight: 700;
+  margin-bottom: 8px;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
-.option-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+.option-items { display: flex; flex-wrap: wrap; gap: 7px; }
 
 .option-item {
-  width: 50px; height: 50px;
-  border-radius: 12px;
+  width: 48px; height: 48px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.8em;
-  cursor: pointer;
+  font-size: 1.7em; cursor: pointer;
   background: rgba(255,255,255,0.15);
-  border: 2px solid transparent;
-  transition: all 0.2s;
+  border: 2px solid transparent; transition: all 0.2s;
 }
-
 .option-item:hover { transform: scale(1.1); background: rgba(255,255,255,0.3); }
 .option-item.selected {
-  border-color: #ffd700;
-  background: rgba(255,215,0,0.2);
-  box-shadow: 0 0 15px rgba(255,215,0,0.3);
+  border-color: #ffd700; background: rgba(255,215,0,0.2);
+  box-shadow: 0 0 12px rgba(255,215,0,0.3);
 }
 
 .color-item {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 3px solid transparent;
-  transition: all 0.2s;
+  width: 38px; height: 38px; border-radius: 50%;
+  cursor: pointer; border: 3px solid transparent; transition: all 0.2s;
 }
-
 .color-item:hover { transform: scale(1.15); }
 .color-item.selected {
-  border-color: white;
-  box-shadow: 0 0 15px rgba(255,255,255,0.5);
+  border-color: white; box-shadow: 0 0 12px rgba(255,255,255,0.5);
 }
 
-/* Saved toast */
+.swatch-item {
+  width: 44px; height: 44px; border-radius: 12px;
+  cursor: pointer; border: 3px solid transparent; transition: all 0.2s;
+  position: relative;
+}
+.swatch-item:hover { transform: scale(1.1); }
+.swatch-item.selected {
+  border-color: #ffd700; box-shadow: 0 0 12px rgba(255,215,0,0.4);
+}
+
 .toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
+  position: fixed; bottom: 30px; left: 50%;
   transform: translateX(-50%) translateY(100px);
-  background: rgba(0,0,0,0.8);
-  color: white;
-  padding: 15px 30px;
-  border-radius: 15px;
-  font-size: 1.1em;
-  z-index: 500;
+  background: rgba(0,0,0,0.8); color: white;
+  padding: 15px 30px; border-radius: 15px;
+  font-size: 1.1em; z-index: 500;
   transition: transform 0.4s ease;
 }
-
 .toast.show { transform: translateX(-50%) translateY(0); }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .creator { flex-direction: column; align-items: center; }
   .preview-panel { min-width: auto; flex: none; width: 100%; }
+  .options-panel { min-width: auto; width: 100%; }
 }
 </style>
 </head>
@@ -213,197 +313,512 @@ h1 {
 
 <a href="index.html" class="back-btn">Retour</a>
 
-<h1>Cree ton Idol K-Pop</h1>
+<h1>Cree ton Idol</h1>
 <div class="player-name-display" id="playerDisplay"></div>
+
+<div class="tabs" id="tabsBar"></div>
 
 <div class="creator">
   <div class="preview-panel">
     <div class="avatar-preview" id="avatarPreview">
       <div class="avatar-layer av-bg" id="avBg"></div>
-      <div class="avatar-layer av-body" id="avBody">👤</div>
+      <div class="avatar-layer av-body" id="avBody"></div>
       <div class="avatar-layer av-hair" id="avHair"></div>
       <div class="avatar-layer av-face" id="avFace"></div>
-      <div class="avatar-layer av-outfit" id="avOutfit"></div>
+      <div class="avatar-layer av-top" id="avTop"></div>
+      <div class="avatar-layer av-bottom" id="avBottom"></div>
+      <div class="avatar-layer av-shoes" id="avShoes"></div>
       <div class="avatar-layer av-accessory" id="avAccessory"></div>
+      <div class="avatar-layer av-effect" id="avEffect"></div>
     </div>
+
+    <input type="text" class="idol-name-input" id="idolNameInput" placeholder="Nom de ton idol..." maxlength="16">
     <div class="avatar-name-tag" id="nameTag">Ma Star</div>
-    <br>
-    <button class="random-btn" onclick="randomize()">🎲 Aleatoire</button>
-    <button class="save-btn" onclick="saveAvatar()">💾 Sauvegarder</button>
+
+    <div class="btn-row">
+      <button class="action-btn btn-save" onclick="saveAvatar()">Sauvegarder</button>
+      <button class="action-btn btn-photo" onclick="openPhotoBooth()">Photo Booth</button>
+    </div>
+    <div class="btn-row">
+      <button class="action-btn btn-export" onclick="exportDescription()">Partager</button>
+    </div>
+    <div class="random-themes">
+      <button class="theme-btn" onclick="randomTheme('cute')">Aleatoire Cute</button>
+      <button class="theme-btn" onclick="randomTheme('cool')">Aleatoire Cool</button>
+      <button class="theme-btn" onclick="randomTheme('princess')">Aleatoire Princesse</button>
+    </div>
   </div>
 
-  <div class="options-panel">
-    <div class="option-group">
-      <div class="option-label">Peau</div>
-      <div class="option-items" id="skinOptions"></div>
-    </div>
+  <div class="options-panel" id="optionsPanel"></div>
+</div>
 
-    <div class="option-group">
-      <div class="option-label">Cheveux</div>
-      <div class="option-items" id="hairOptions"></div>
-    </div>
+<div class="gallery-section">
+  <div class="gallery-title">Ma Collection d'Idols (max 5)</div>
+  <div class="gallery-grid" id="galleryGrid"></div>
+</div>
 
-    <div class="option-group">
-      <div class="option-label">Couleur cheveux</div>
-      <div class="option-items" id="hairColorOptions"></div>
-    </div>
-
-    <div class="option-group">
-      <div class="option-label">Visage</div>
-      <div class="option-items" id="faceOptions"></div>
-    </div>
-
-    <div class="option-group">
-      <div class="option-label">Tenue</div>
-      <div class="option-items" id="outfitOptions"></div>
-    </div>
-
-    <div class="option-group">
-      <div class="option-label">Accessoire</div>
-      <div class="option-items" id="accessoryOptions"></div>
-    </div>
-
-    <div class="option-group">
-      <div class="option-label">Fond</div>
-      <div class="option-items" id="bgOptions"></div>
-    </div>
+<!-- Photo booth -->
+<div class="photo-overlay" id="photoOverlay">
+  <div class="photo-frame">
+    <div class="frame-deco">&#x1F4F8;</div>
+    <div class="photo-avatar-box" id="photoBox"></div>
+    <div class="photo-name" id="photoName"></div>
+    <div style="color:#999;font-size:0.85em;">Ecole Saint-Esprit</div>
+    <button class="photo-close" onclick="closePhotoBooth()">Fermer</button>
   </div>
 </div>
 
-<div class="toast" id="toast">Sauvegarde !</div>
+<div class="toast" id="toast"></div>
 
 <script>
+const CATEGORIES = [
+  { key: 'skin', label: 'Peau', tab: 'Peau' },
+  { key: 'hair', label: 'Style de cheveux', tab: 'Cheveux' },
+  { key: 'hairColor', label: 'Couleur cheveux', tab: 'Cheveux' },
+  { key: 'face', label: 'Visage / Expression', tab: 'Visage' },
+  { key: 'top', label: 'Tenue haut', tab: 'Tenue' },
+  { key: 'bottom', label: 'Tenue bas', tab: 'Tenue' },
+  { key: 'shoes', label: 'Chaussures', tab: 'Chaussures' },
+  { key: 'accessory', label: 'Accessoire', tab: 'Accessoire' },
+  { key: 'bg', label: 'Fond', tab: 'Fond' },
+  { key: 'effect', label: 'Effet special', tab: 'Effet' },
+];
+
 const OPTIONS = {
-  skin: ['🧑','🧑🏻','🧑🏼','🧑🏽','🧑🏾','🧑🏿'],
-  hair: ['💇‍♀️','👩‍🦰','👩‍🦱','👩','👩‍🦳','💆‍♀️','🧝‍♀️','👸','🧑‍🎤','👩‍🎤','🧜‍♀️','🧚‍♀️'],
+  skin: ['&#x1F9D1;','&#x1F9D1;&#x1F3FB;','&#x1F9D1;&#x1F3FC;','&#x1F9D1;&#x1F3FD;','&#x1F9D1;&#x1F3FE;','&#x1F9D1;&#x1F3FF;','&#x1F467;','&#x1F467;&#x1F3FB;'],
+  hair: ['\uD83D\uDC87\u200D\u2640\uFE0F','\uD83D\uDC69\u200D\uD83E\uDDB0','\uD83D\uDC69\u200D\uD83E\uDDB1','\uD83D\uDC69','\uD83D\uDC69\u200D\uD83E\uDDB3','\uD83D\uDC86\u200D\u2640\uFE0F','\uD83E\uDDDD\u200D\u2640\uFE0F','\uD83D\uDC78','\uD83E\uDDD1\u200D\uD83C\uDFA4','\uD83D\uDC69\u200D\uD83C\uDFA4','\uD83E\uDDDC\u200D\u2640\uFE0F','\uD83E\uDDDA\u200D\u2640\uFE0F','\uD83D\uDC71\u200D\u2640\uFE0F','\uD83E\uDDD5','\uD83E\uDDD1\u200D\uD83E\uDDB1'],
   hairColor: [
     { color: '#1a1a1a', name: 'Noir' },
+    { color: '#5C3317', name: 'Brun fonce' },
     { color: '#8B4513', name: 'Brun' },
-    { color: '#DAA520', name: 'Blond' },
+    { color: '#C68642', name: 'Chatain' },
+    { color: '#DAA520', name: 'Blond dore' },
+    { color: '#FFFACD', name: 'Blond platine' },
     { color: '#FF4500', name: 'Roux' },
     { color: '#FF69B4', name: 'Rose' },
+    { color: '#FF1493', name: 'Magenta' },
     { color: '#8A2BE2', name: 'Violet' },
     { color: '#00CED1', name: 'Bleu' },
-    { color: '#FF1493', name: 'Magenta' },
     { color: '#32CD32', name: 'Vert' },
-    { color: '#FF6347', name: 'Corail' },
     { color: '#C0C0C0', name: 'Argent' },
     { color: '#FFD700', name: 'Or' },
   ],
-  face: ['😊','😎','🥰','😇','🤩','😘','😋','🥳','😍','🤗','😜','🤪','😺','🦊'],
-  outfit: ['👗','👘','🥻','👔','🎽','👚','🧥','💃','👕','🩱','🧶','🦺','👙','🎀'],
-  accessory: ['👑','🎀','🌸','🦋','⭐','💎','🌟','🎧','🕶️','💜','✨','🌺','🪷','💐','🧣','🎭','🪄','🎪','💫','🌻'],
-  bg: ['🌸','⭐','💜','🌈','🦋','✨','🎵','💖','🔮','🌙','🌊','🍀','🎪','🏰'],
+  face: ['\uD83D\uDE0A','\uD83D\uDE0E','\uD83E\uDD70','\uD83D\uDE07','\uD83E\uDD29','\uD83D\uDE18','\uD83D\uDE0B','\uD83E\uDD73','\uD83D\uDE0D','\uD83E\uDD17','\uD83D\uDE1C','\uD83E\uDD2A','\uD83D\uDE3A','\uD83E\uDD8A','\uD83D\uDE42','\uD83D\uDE09'],
+  top: ['\uD83D\uDC57','\uD83D\uDC58','\uD83E\uDD7B','\uD83D\uDC54','\uD83C\uDFBD','\uD83D\uDC5A','\uD83E\uDDE5','\uD83D\uDC83','\uD83D\uDC55','\uD83E\uDE74','\uD83E\uDDE6','\uD83E\uDDBA','\uD83C\uDF80','\uD83E\uDD4B','\uD83D\uDC59'],
+  bottom: ['\uD83D\uDC56','\uD83E\uDE73','\uD83D\uDC57','\uD83C\uDF80','\uD83E\uDDE3','\uD83E\uDDE6','\uD83C\uDFBD','\uD83D\uDC59','\uD83E\uDD7B','\uD83D\uDC96','\uD83D\uDC9C','\uD83E\uDDE1'],
+  shoes: ['\uD83D\uDC60','\uD83D\uDC61','\uD83D\uDC62','\uD83E\uDD7E','\uD83E\uDD7F','\uD83D\uDC5F','\uD83E\uDE74','\uD83D\uDC5E','\uD83E\uDDE6','\uD83C\uDFC3\u200D\u2640\uFE0F'],
+  accessory: ['\uD83D\uDC51','\uD83C\uDF80','\uD83C\uDF38','\uD83E\uDD8B','\u2B50','\uD83D\uDC8E','\uD83C\uDF1F','\uD83C\uDFA7','\uD83D\uDD76\uFE0F','\uD83D\uDC9C','\u2728','\uD83C\uDF3A','\uD83E\uDEB7','\uD83D\uDC90','\uD83E\uDDE3','\uD83C\uDFAD','\uD83E\uDE84','\uD83C\uDFAA','\uD83D\uDCAB','\uD83C\uDF3B'],
+  bg: [
+    { emoji: '\uD83C\uDF38', gradient: ['#ffecd2','#fcb69f'] },
+    { emoji: '\u2B50', gradient: ['#ffecd2','#ffd700'] },
+    { emoji: '\uD83D\uDC9C', gradient: ['#e8d5f5','#a18cd1'] },
+    { emoji: '\uD83C\uDF08', gradient: ['#ffecd2','#ff9a9e'] },
+    { emoji: '\uD83E\uDD8B', gradient: ['#d4fc79','#96e6a1'] },
+    { emoji: '\u2728', gradient: ['#fbc2eb','#a18cd1'] },
+    { emoji: '\uD83C\uDFB5', gradient: ['#89f7fe','#66a6ff'] },
+    { emoji: '\uD83D\uDC96', gradient: ['#ffecd2','#ff6fd8'] },
+    { emoji: '\uD83D\uDD2E', gradient: ['#a18cd1','#6c5ce7'] },
+    { emoji: '\uD83C\uDF19', gradient: ['#0f0c29','#302b63'] },
+    { emoji: '\uD83C\uDF0A', gradient: ['#667db6','#0082c8'] },
+    { emoji: '\uD83C\uDF40', gradient: ['#56ab2f','#a8e063'] },
+    { emoji: '\uD83C\uDFAA', gradient: ['#fc5c7d','#6a82fb'] },
+    { emoji: '\uD83C\uDFF0', gradient: ['#f5af19','#f12711'] },
+  ],
+  effect: [
+    { name: 'Aucun', particles: [] },
+    { name: 'Etoiles', particles: ['\u2B50','\uD83C\uDF1F','\u2728','\u2B50','\uD83C\uDF1F'] },
+    { name: 'Coeurs', particles: ['\uD83D\uDC96','\uD83D\uDC95','\uD83D\uDC93','\u2764\uFE0F','\uD83D\uDC97'] },
+    { name: 'Fleurs', particles: ['\uD83C\uDF38','\uD83C\uDF3A','\uD83C\uDF3C','\uD83C\uDF3B','\uD83C\uDF37'] },
+    { name: 'Papillons', particles: ['\uD83E\uDD8B','\uD83E\uDD8B','\uD83C\uDF3F','\uD83E\uDD8B','\uD83C\uDF43'] },
+    { name: 'Diamants', particles: ['\uD83D\uDC8E','\uD83D\uDCAB','\u2728','\uD83D\uDC8E','\uD83D\uDCAB'] },
+    { name: 'Musique', particles: ['\uD83C\uDFB5','\uD83C\uDFB6','\uD83C\uDFB5','\uD83C\uDFB6','\uD83C\uDFB5'] },
+    { name: 'Arc-en-ciel', particles: ['\uD83C\uDF08','\u2728','\uD83C\uDF1F','\uD83C\uDF08','\u2728'] },
+  ],
 };
 
 let current = {
-  skin: 0, hair: 0, hairColor: 1, face: 0,
-  outfit: 0, accessory: 0, bg: 0
+  skin: 0, hair: 0, hairColor: 2, face: 0,
+  top: 0, bottom: 0, shoes: 0, accessory: 0, bg: 0, effect: 0
 };
 
-const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
-document.getElementById('playerDisplay').textContent = `L'idol de ${playerName}`;
-document.getElementById('nameTag').textContent = `${playerName} Star`;
+let activeTab = 'Peau';
 
-function renderOptions() {
-  // Skin
-  renderEmojiOptions('skinOptions', OPTIONS.skin, 'skin');
-  // Hair
-  renderEmojiOptions('hairOptions', OPTIONS.hair, 'hair');
-  // Hair color
-  const hcEl = document.getElementById('hairColorOptions');
-  hcEl.innerHTML = '';
-  OPTIONS.hairColor.forEach((hc, i) => {
-    const d = document.createElement('div');
-    d.className = `color-item ${i === current.hairColor ? 'selected' : ''}`;
-    d.style.background = hc.color;
-    d.title = hc.name;
-    d.onclick = () => { current.hairColor = i; updateAll(); };
-    hcEl.appendChild(d);
+const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
+document.getElementById('playerDisplay').textContent = "L'idol de " + playerName;
+
+// Tabs
+const allTabs = [...new Set(CATEGORIES.map(c => c.tab))];
+
+function renderTabs() {
+  const bar = document.getElementById('tabsBar');
+  bar.innerHTML = '';
+  allTabs.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'tab-btn' + (t === activeTab ? ' active' : '');
+    b.textContent = t;
+    b.onclick = () => { activeTab = t; renderTabs(); showTab(); };
+    bar.appendChild(b);
   });
-  // Face
+}
+
+function showTab() {
+  document.querySelectorAll('.option-group').forEach(g => {
+    g.classList.toggle('visible', g.dataset.tab === activeTab);
+  });
+}
+
+function buildOptionsPanel() {
+  const panel = document.getElementById('optionsPanel');
+  panel.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const group = document.createElement('div');
+    group.className = 'option-group' + (cat.tab === activeTab ? ' visible' : '');
+    group.dataset.tab = cat.tab;
+
+    const label = document.createElement('div');
+    label.className = 'option-label';
+    label.textContent = cat.label;
+    group.appendChild(label);
+
+    const items = document.createElement('div');
+    items.className = 'option-items';
+    items.id = cat.key + 'Options';
+    group.appendChild(items);
+
+    panel.appendChild(group);
+  });
+}
+
+function renderAllOptions() {
+  renderEmojiOptions('skinOptions', OPTIONS.skin, 'skin');
+  renderEmojiOptions('hairOptions', OPTIONS.hair, 'hair');
+  renderColorOptions('hairColorOptions', OPTIONS.hairColor, 'hairColor');
   renderEmojiOptions('faceOptions', OPTIONS.face, 'face');
-  // Outfit
-  renderEmojiOptions('outfitOptions', OPTIONS.outfit, 'outfit');
-  // Accessory
+  renderEmojiOptions('topOptions', OPTIONS.top, 'top');
+  renderEmojiOptions('bottomOptions', OPTIONS.bottom, 'bottom');
+  renderEmojiOptions('shoesOptions', OPTIONS.shoes, 'shoes');
   renderEmojiOptions('accessoryOptions', OPTIONS.accessory, 'accessory');
-  // Bg
-  renderEmojiOptions('bgOptions', OPTIONS.bg, 'bg');
+  renderBgOptions();
+  renderEffectOptions();
 }
 
 function renderEmojiOptions(containerId, items, key) {
   const el = document.getElementById(containerId);
+  if (!el) return;
   el.innerHTML = '';
   items.forEach((item, i) => {
     const d = document.createElement('div');
-    d.className = `option-item ${i === current[key] ? 'selected' : ''}`;
-    d.textContent = item;
+    d.className = 'option-item' + (i === current[key] ? ' selected' : '');
+    d.innerHTML = item;
     d.onclick = () => { current[key] = i; updateAll(); };
     el.appendChild(d);
   });
 }
 
-function updatePreview() {
-  document.getElementById('avBody').textContent = OPTIONS.skin[current.skin];
-  document.getElementById('avHair').textContent = OPTIONS.hair[current.hair];
-  document.getElementById('avHair').style.filter = `drop-shadow(0 0 8px ${OPTIONS.hairColor[current.hairColor].color})`;
-  document.getElementById('avFace').textContent = OPTIONS.face[current.face];
-  document.getElementById('avOutfit').textContent = OPTIONS.outfit[current.outfit];
-  document.getElementById('avAccessory').textContent = OPTIONS.accessory[current.accessory];
-  document.getElementById('avBg').textContent = OPTIONS.bg[current.bg];
+function renderColorOptions(containerId, items, key) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '';
+  items.forEach((hc, i) => {
+    const d = document.createElement('div');
+    d.className = 'color-item' + (i === current[key] ? ' selected' : '');
+    d.style.background = hc.color;
+    d.title = hc.name;
+    d.onclick = () => { current[key] = i; updateAll(); };
+    el.appendChild(d);
+  });
+}
 
-  // Bg gradient based on selection
-  const bgColors = [
-    ['#ffecd2','#fcb69f'], ['#ffecd2','#ffd700'], ['#e8d5f5','#a18cd1'],
-    ['#ffecd2','#ff9a9e'], ['#d4fc79','#96e6a1'], ['#fbc2eb','#a18cd1'],
-    ['#89f7fe','#66a6ff'], ['#ffecd2','#ff6fd8'], ['#a18cd1','#6c5ce7'], ['#0f0c29','#302b63']
-  ];
-  const [c1, c2] = bgColors[current.bg] || bgColors[0];
-  document.getElementById('avatarPreview').style.background = `linear-gradient(180deg, ${c1}, ${c2})`;
+function renderBgOptions() {
+  const el = document.getElementById('bgOptions');
+  if (!el) return;
+  el.innerHTML = '';
+  OPTIONS.bg.forEach((bg, i) => {
+    const d = document.createElement('div');
+    d.className = 'swatch-item' + (i === current.bg ? ' selected' : '');
+    d.style.background = 'linear-gradient(135deg, ' + bg.gradient[0] + ', ' + bg.gradient[1] + ')';
+    d.title = bg.emoji;
+    d.innerHTML = '<span style="font-size:1.4em;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">' + bg.emoji + '</span>';
+    d.style.position = 'relative';
+    d.onclick = () => { current.bg = i; updateAll(); };
+    el.appendChild(d);
+  });
+}
+
+function renderEffectOptions() {
+  const el = document.getElementById('effectOptions');
+  if (!el) return;
+  el.innerHTML = '';
+  OPTIONS.effect.forEach((eff, i) => {
+    const d = document.createElement('div');
+    d.className = 'option-item' + (i === current.effect ? ' selected' : '');
+    d.textContent = eff.particles[0] || '\u274C';
+    d.title = eff.name;
+    d.onclick = () => { current.effect = i; updateAll(); };
+    el.appendChild(d);
+  });
+}
+
+function updatePreview() {
+  document.getElementById('avBody').innerHTML = OPTIONS.skin[current.skin];
+  document.getElementById('avHair').textContent = OPTIONS.hair[current.hair];
+  document.getElementById('avHair').style.filter = 'drop-shadow(0 0 8px ' + OPTIONS.hairColor[current.hairColor].color + ')';
+  document.getElementById('avFace').textContent = OPTIONS.face[current.face];
+  document.getElementById('avTop').textContent = OPTIONS.top[current.top];
+  document.getElementById('avBottom').textContent = OPTIONS.bottom[current.bottom];
+  document.getElementById('avShoes').textContent = OPTIONS.shoes[current.shoes];
+  document.getElementById('avAccessory').textContent = OPTIONS.accessory[current.accessory];
+
+  const bgData = OPTIONS.bg[current.bg];
+  document.getElementById('avBg').textContent = bgData.emoji;
+  document.getElementById('avatarPreview').style.background =
+    'linear-gradient(180deg, ' + bgData.gradient[0] + ', ' + bgData.gradient[1] + ')';
+
+  // Effect particles
+  const effectEl = document.getElementById('avEffect');
+  effectEl.innerHTML = '';
+  const eff = OPTIONS.effect[current.effect];
+  if (eff.particles.length > 0) {
+    eff.particles.forEach((p, i) => {
+      const span = document.createElement('span');
+      span.className = 'effect-particle';
+      span.textContent = p;
+      span.style.left = (10 + Math.random() * 80) + '%';
+      span.style.top = (5 + Math.random() * 85) + '%';
+      span.style.animationDelay = (i * 0.4) + 's';
+      effectEl.appendChild(span);
+    });
+  }
+
+  // Name tag
+  const idolName = document.getElementById('idolNameInput').value || playerName + ' Star';
+  document.getElementById('nameTag').textContent = idolName;
 }
 
 function updateAll() {
-  renderOptions();
+  renderAllOptions();
   updatePreview();
 }
 
-function randomize() {
-  Object.keys(current).forEach(key => {
-    const max = key === 'hairColor' ? OPTIONS.hairColor.length : OPTIONS[key === 'hairColor' ? 'hairColor' : key].length;
-    const opts = key === 'hairColor' ? OPTIONS.hairColor : OPTIONS[key];
-    current[key] = Math.floor(Math.random() * opts.length);
-  });
+// Idol name input
+document.getElementById('idolNameInput').addEventListener('input', function() {
+  document.getElementById('nameTag').textContent = this.value || playerName + ' Star';
+});
+
+// Random with themes
+function randomTheme(theme) {
+  if (theme === 'cute') {
+    current.skin = Math.floor(Math.random() * OPTIONS.skin.length);
+    current.hair = pickRandom([3,6,7,11]);
+    current.hairColor = pickRandom([4,5,7,13]);
+    current.face = pickRandom([0,2,4,7,9]);
+    current.top = pickRandom([0,1,12]);
+    current.bottom = pickRandom([0,2,3]);
+    current.shoes = pickRandom([0,1]);
+    current.accessory = pickRandom([1,2,3,14]);
+    current.bg = pickRandom([0,3,7]);
+    current.effect = pickRandom([2,3]);
+  } else if (theme === 'cool') {
+    current.skin = Math.floor(Math.random() * OPTIONS.skin.length);
+    current.hair = pickRandom([8,9,0]);
+    current.hairColor = pickRandom([0,8,9,10]);
+    current.face = pickRandom([1,5,10,11]);
+    current.top = pickRandom([4,6,2]);
+    current.bottom = pickRandom([0,6]);
+    current.shoes = pickRandom([2,3,4]);
+    current.accessory = pickRandom([7,8,15,16]);
+    current.bg = pickRandom([8,9,12]);
+    current.effect = pickRandom([1,5]);
+  } else if (theme === 'princess') {
+    current.skin = Math.floor(Math.random() * OPTIONS.skin.length);
+    current.hair = pickRandom([7,6,11]);
+    current.hairColor = pickRandom([4,5,13]);
+    current.face = pickRandom([2,3,4,8]);
+    current.top = pickRandom([0,1,14]);
+    current.bottom = pickRandom([2,3]);
+    current.shoes = pickRandom([0,1]);
+    current.accessory = pickRandom([0,5,18]);
+    current.bg = pickRandom([1,13]);
+    current.effect = pickRandom([4,1,7]);
+  }
   updateAll();
+  showToast('Style ' + theme + ' genere !');
 }
 
-function saveAvatar() {
-  localStorage.setItem(`kpop_avatar_${playerName}`, JSON.stringify(current));
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-  // Unlock trophy
-  let trophies = JSON.parse(localStorage.getItem(`kpop_trophies_${playerName}`) || '[]');
-  if (!trophies.includes('avatar_created')) {
-    trophies.push('avatar_created');
-    localStorage.setItem(`kpop_trophies_${playerName}`, JSON.stringify(trophies));
+// Photo booth
+function openPhotoBooth() {
+  const overlay = document.getElementById('photoOverlay');
+  overlay.classList.add('active');
+  const box = document.getElementById('photoBox');
+  const bgData = OPTIONS.bg[current.bg];
+  box.style.background = 'linear-gradient(180deg, ' + bgData.gradient[0] + ', ' + bgData.gradient[1] + ')';
+  box.innerHTML = '';
+
+  // Rebuild layers in photo
+  const layers = [
+    { cls: 'av-bg', content: bgData.emoji },
+    { cls: 'av-body', content: OPTIONS.skin[current.skin], isHTML: true },
+    { cls: 'av-hair', content: OPTIONS.hair[current.hair], style: 'filter:drop-shadow(0 0 8px ' + OPTIONS.hairColor[current.hairColor].color + ')' },
+    { cls: 'av-face', content: OPTIONS.face[current.face] },
+    { cls: 'av-top', content: OPTIONS.top[current.top] },
+    { cls: 'av-bottom', content: OPTIONS.bottom[current.bottom] },
+    { cls: 'av-shoes', content: OPTIONS.shoes[current.shoes] },
+    { cls: 'av-accessory', content: OPTIONS.accessory[current.accessory] },
+  ];
+  layers.forEach(l => {
+    const div = document.createElement('div');
+    div.className = 'avatar-layer ' + l.cls;
+    if (l.isHTML) div.innerHTML = l.content; else div.textContent = l.content;
+    if (l.style) div.setAttribute('style', l.style);
+    box.appendChild(div);
+  });
+
+  const name = document.getElementById('idolNameInput').value || playerName + ' Star';
+  document.getElementById('photoName').textContent = name;
+}
+
+function closePhotoBooth() {
+  document.getElementById('photoOverlay').classList.remove('active');
+}
+
+// Export description
+function exportDescription() {
+  const name = document.getElementById('idolNameInput').value || playerName + ' Star';
+  const desc = [
+    'Mon Idol: ' + name,
+    'Peau: ' + OPTIONS.skin[current.skin],
+    'Cheveux: ' + OPTIONS.hair[current.hair] + ' (' + OPTIONS.hairColor[current.hairColor].name + ')',
+    'Expression: ' + OPTIONS.face[current.face],
+    'Haut: ' + OPTIONS.top[current.top],
+    'Bas: ' + OPTIONS.bottom[current.bottom],
+    'Chaussures: ' + OPTIONS.shoes[current.shoes],
+    'Accessoire: ' + OPTIONS.accessory[current.accessory],
+    'Fond: ' + OPTIONS.bg[current.bg].emoji,
+    'Effet: ' + (OPTIONS.effect[current.effect].name),
+    '--- Ecole Saint-Esprit ---'
+  ].join('\n');
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(desc).then(() => showToast('Description copiee !'));
+  } else {
+    showToast('Description: ' + name);
+  }
+}
+
+// Save / Gallery (max 5)
+function saveAvatar() {
+  const name = document.getElementById('idolNameInput').value || playerName + ' Star';
+  let gallery = JSON.parse(localStorage.getItem('kpop_idol_gallery_' + playerName) || '[]');
+
+  if (gallery.length >= 5) {
+    gallery.shift(); // remove oldest
   }
 
-  // Add stars
-  let stars = parseInt(localStorage.getItem(`kpop_stars_${playerName}`) || '0');
-  stars += 20;
-  localStorage.setItem(`kpop_stars_${playerName}`, stars);
+  gallery.push({ name: name, data: {...current}, date: Date.now() });
+  localStorage.setItem('kpop_idol_gallery_' + playerName, JSON.stringify(gallery));
 
-  const toast = document.getElementById('toast');
-  toast.textContent = `Avatar de ${playerName} sauvegarde ! +20 ⭐`;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2000);
+  // Also save as main avatar (backward compatible)
+  localStorage.setItem('kpop_avatar_' + playerName, JSON.stringify(current));
+
+  // Trophies
+  let trophies = JSON.parse(localStorage.getItem('kpop_trophies_' + playerName) || '[]');
+  if (!trophies.includes('avatar_created')) {
+    trophies.push('avatar_created');
+    localStorage.setItem('kpop_trophies_' + playerName, JSON.stringify(trophies));
+  }
+
+  let stars = parseInt(localStorage.getItem('kpop_stars_' + playerName) || '0');
+  stars += 20;
+  localStorage.setItem('kpop_stars_' + playerName, String(stars));
+
+  showToast(name + ' sauvegardee ! +20 etoiles');
+  renderGallery();
+}
+
+function renderGallery() {
+  const grid = document.getElementById('galleryGrid');
+  const gallery = JSON.parse(localStorage.getItem('kpop_idol_gallery_' + playerName) || '[]');
+  grid.innerHTML = '';
+
+  if (gallery.length === 0) {
+    grid.innerHTML = '<div class="gallery-empty">Aucune idol sauvegardee. Cree ta premiere !</div>';
+    return;
+  }
+
+  gallery.forEach((idol, idx) => {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+
+    const bgData = OPTIONS.bg[idol.data.bg] || OPTIONS.bg[0];
+    const preview = document.createElement('div');
+    preview.className = 'mini-preview';
+    preview.style.background = 'linear-gradient(180deg, ' + bgData.gradient[0] + ', ' + bgData.gradient[1] + ')';
+
+    // Mini layers
+    const face = document.createElement('div');
+    face.className = 'avatar-layer';
+    face.style.fontSize = '3em';
+    face.textContent = OPTIONS.face[idol.data.face] || OPTIONS.face[0];
+    preview.appendChild(face);
+
+    const acc = document.createElement('div');
+    acc.className = 'avatar-layer';
+    acc.style.fontSize = '1.5em';
+    acc.style.top = '-10px';
+    acc.textContent = OPTIONS.accessory[idol.data.accessory] || '';
+    preview.appendChild(acc);
+
+    card.appendChild(preview);
+
+    const gname = document.createElement('div');
+    gname.className = 'gname';
+    gname.textContent = idol.name;
+    card.appendChild(gname);
+
+    const del = document.createElement('div');
+    del.className = 'gdelete';
+    del.textContent = 'Supprimer';
+    del.onclick = (e) => {
+      e.stopPropagation();
+      gallery.splice(idx, 1);
+      localStorage.setItem('kpop_idol_gallery_' + playerName, JSON.stringify(gallery));
+      renderGallery();
+    };
+    card.appendChild(del);
+
+    // Click to load
+    card.onclick = () => {
+      Object.assign(current, idol.data);
+      document.getElementById('idolNameInput').value = idol.name;
+      updateAll();
+      showToast(idol.name + ' chargee !');
+    };
+
+    grid.appendChild(card);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
 }
 
 // Load saved avatar
-const saved = localStorage.getItem(`kpop_avatar_${playerName}`);
+const saved = localStorage.getItem('kpop_avatar_' + playerName);
 if (saved) {
   try { Object.assign(current, JSON.parse(saved)); } catch(e) {}
 }
 
+// Init
+buildOptionsPanel();
+renderTabs();
+showTab();
 updateAll();
+renderGallery();
 </script>
 </body>
 </html>

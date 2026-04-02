@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coloriage K-Pop - Ecole Saint-Esprit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: linear-gradient(135deg, #fce4f3, #e8d5f5, #d5e8f5, #fce4f3);
+  background-size: 400% 400%;
+  animation: bgShift 12s ease infinite;
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow-x: hidden;
+}
+
+@keyframes bgShift {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.back-btn {
+  position: fixed; top: 10px; left: 10px;
+  background: rgba(180,60,180,0.2);
+  color: #9b3dcc;
+  border: 2px solid rgba(180,60,180,0.35);
+  padding: 6px 16px; border-radius: 30px;
+  font-family: inherit; font-size: 0.9em; font-weight: 600;
+  cursor: pointer; text-decoration: none; z-index: 100;
+  backdrop-filter: blur(6px);
+  transition: all 0.3s;
+}
+.back-btn:hover { background: rgba(180,60,180,0.35); transform: scale(1.05); }
+
+h1 {
+  text-align: center;
+  color: #9b3dcc;
+  font-size: 1.8em;
+  margin: 15px 0 5px;
+  text-shadow: 0 2px 8px rgba(180,60,250,0.15);
+}
+.subtitle { text-align: center; color: #b06dd8; font-size: 0.95em; margin-bottom: 10px; }
+
+/* PAGE SELECTOR */
+.page-selector {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px; padding: 10px 15px; max-width: 700px; margin: 0 auto 10px;
+}
+.page-btn {
+  background: white; border: 3px solid #e0c0f0;
+  border-radius: 16px; padding: 8px 14px;
+  font-family: inherit; font-size: 0.85em; font-weight: 600;
+  color: #8b5cb8; cursor: pointer;
+  transition: all 0.3s; display: flex; align-items: center; gap: 5px;
+}
+.page-btn:hover { transform: scale(1.05); border-color: #c77dff; }
+.page-btn.active {
+  background: linear-gradient(135deg, #c77dff, #e040fb);
+  color: white; border-color: #c77dff;
+  box-shadow: 0 4px 15px rgba(199,125,255,0.4);
+}
+.page-btn .check { display: none; }
+.page-btn.completed .check { display: inline; }
+
+/* CANVAS AREA */
+.canvas-area {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 0 10px;
+}
+.svg-container {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(155,61,204,0.15);
+  padding: 15px;
+  max-width: 500px; width: 95%;
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.svg-container svg {
+  width: 100%; height: 100%;
+}
+.svg-container svg .zone {
+  stroke: #d0bfe0; stroke-width: 2;
+  fill: #f8f0ff; cursor: pointer;
+  transition: fill 0.4s ease, filter 0.2s;
+}
+.svg-container svg .zone:hover {
+  filter: brightness(1.08) drop-shadow(0 0 6px rgba(199,125,255,0.5));
+}
+.svg-container svg .zone.filling {
+  animation: fillPop 0.4s ease;
+}
+@keyframes fillPop {
+  0% { transform-origin: center; transform: scale(0.95); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* PROGRESS */
+.progress-bar {
+  width: 90%; max-width: 500px; margin: 10px auto 5px;
+  display: flex; align-items: center; gap: 10px;
+}
+.progress-track {
+  flex: 1; height: 12px; background: #e8d5f5;
+  border-radius: 6px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #c77dff, #e040fb, #ff6fd8);
+  border-radius: 6px; transition: width 0.5s ease;
+}
+.progress-text { font-weight: 700; color: #9b3dcc; font-size: 0.9em; min-width: 42px; text-align: right; }
+
+/* TOOLS */
+.tools-row {
+  display: flex; justify-content: center; gap: 8px;
+  margin: 8px 0;
+}
+.tool-btn {
+  background: white; border: 2px solid #e0c0f0;
+  border-radius: 12px; padding: 6px 14px;
+  font-family: inherit; font-size: 0.8em; font-weight: 600;
+  color: #8b5cb8; cursor: pointer; transition: all 0.3s;
+}
+.tool-btn.active {
+  background: linear-gradient(135deg, #c77dff, #e040fb);
+  color: white; border-color: #c77dff;
+}
+.tool-btn:hover { transform: scale(1.05); }
+
+.action-row {
+  display: flex; justify-content: center; gap: 8px; margin: 5px 0;
+}
+.action-btn {
+  background: rgba(255,255,255,0.7); border: 2px solid #e0c0f0;
+  border-radius: 12px; padding: 5px 12px;
+  font-family: inherit; font-size: 0.78em; font-weight: 600;
+  color: #8b5cb8; cursor: pointer; transition: all 0.3s;
+}
+.action-btn:hover { background: #f3e5ff; transform: scale(1.05); }
+
+/* PALETTE */
+.palette {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 6px; padding: 8px 15px; max-width: 500px; margin: 0 auto;
+}
+.color-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 3px solid transparent; cursor: pointer;
+  transition: all 0.2s; position: relative;
+}
+.color-circle:hover { transform: scale(1.2); }
+.color-circle.active {
+  border-color: #333;
+  box-shadow: 0 0 0 2px white, 0 0 12px rgba(0,0,0,0.3);
+  transform: scale(1.15);
+}
+.color-circle.metallic::after {
+  content: '';
+  position: absolute; inset: 3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, transparent 50%, rgba(255,255,255,0.3) 100%);
+}
+
+/* GALLERY */
+.gallery-toggle {
+  text-align: center; margin: 10px 0 5px;
+}
+.gallery-toggle button {
+  background: linear-gradient(135deg, #ff9fe0, #c77dff);
+  border: none; border-radius: 20px;
+  padding: 8px 20px; color: white;
+  font-family: inherit; font-size: 0.9em; font-weight: 700;
+  cursor: pointer; transition: all 0.3s;
+}
+.gallery-toggle button:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(199,125,255,0.4); }
+
+.gallery {
+  display: none; flex-wrap: wrap; justify-content: center;
+  gap: 12px; padding: 10px 15px; max-width: 600px; margin: 0 auto 20px;
+}
+.gallery.open { display: flex; }
+.gallery-item {
+  background: white; border-radius: 12px;
+  padding: 8px; box-shadow: 0 4px 12px rgba(155,61,204,0.1);
+  width: 100px; text-align: center;
+}
+.gallery-item svg { width: 80px; height: 80px; }
+.gallery-item .label { font-size: 0.7em; color: #8b5cb8; font-weight: 600; margin-top: 4px; }
+
+/* SPARKLE OVERLAY */
+.sparkle-pattern {
+  pointer-events: none;
+  position: absolute;
+}
+
+/* CONFETTI */
+.confetti-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; z-index: 200;
+}
+.confetti-piece {
+  position: absolute; width: 10px; height: 10px;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* TROPHY POPUP */
+.trophy-popup {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: white; border-radius: 24px;
+  padding: 30px; text-align: center;
+  box-shadow: 0 20px 60px rgba(155,61,204,0.3);
+  z-index: 300; transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.trophy-popup.show { transform: translate(-50%, -50%) scale(1); }
+.trophy-popup .emoji { font-size: 4em; }
+.trophy-popup h2 { color: #9b3dcc; margin: 10px 0; }
+.trophy-popup p { color: #b06dd8; }
+.trophy-popup button {
+  margin-top: 15px; background: linear-gradient(135deg, #c77dff, #e040fb);
+  border: none; color: white; padding: 10px 25px;
+  border-radius: 20px; font-family: inherit; font-size: 1em;
+  font-weight: 700; cursor: pointer;
+}
+
+@media (max-width: 500px) {
+  h1 { font-size: 1.4em; }
+  .color-circle { width: 28px; height: 28px; }
+  .page-btn { font-size: 0.75em; padding: 6px 10px; }
+}
+</style>
+</head>
+<body>
+<a class="back-btn" href="index.html">Retour</a>
+
+<h1>Coloriage K-Pop</h1>
+<p class="subtitle">Choisis un dessin et colorie-le !</p>
+
+<div class="page-selector" id="pageSelector"></div>
+
+<div class="canvas-area">
+  <div class="svg-container" id="svgContainer"></div>
+
+  <div class="progress-bar">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0%</div>
+  </div>
+
+  <div class="tools-row">
+    <button class="tool-btn active" data-tool="color">Couleur</button>
+    <button class="tool-btn" data-tool="wand">Baguette magique</button>
+    <button class="tool-btn" data-tool="sparkle">Paillettes</button>
+  </div>
+
+  <div class="palette" id="palette"></div>
+
+  <div class="action-row">
+    <button class="action-btn" onclick="undo()">Annuler</button>
+    <button class="action-btn" onclick="clearAll()">Tout effacer</button>
+  </div>
+</div>
+
+<div class="gallery-toggle">
+  <button onclick="toggleGallery()">Galerie</button>
+</div>
+<div class="gallery" id="gallery"></div>
+
+<div class="trophy-popup" id="trophyPopup">
+  <div class="emoji">🏆</div>
+  <h2>Bravo !</h2>
+  <p id="trophyMsg">Tu as termine ton coloriage !</p>
+  <button onclick="closeTrophy()">Super !</button>
+</div>
+
+<div class="confetti-overlay" id="confettiOverlay"></div>
+
+<script>
+const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
+
+const COLORS = [
+  '#FF69B4','#FF1493','#FF6EC7','#E040FB','#C77DFF',
+  '#9B3DCC','#6C5CE7','#74B9FF','#55EFC4','#00D2D3',
+  '#FDCB6E','#F39C12','#FF6B6B','#E17055','#FAB1A0',
+  '#DFE6E9','#FFEAA7','#A29BFE','#FD79A8','#636E72'
+];
+const METALLIC = [15,16,17]; // indices that get metallic sheen
+
+const PAGES = [
+  { id: 'idol', name: 'Idol sur scene', emoji: '🎤', zones: buildIdol },
+  { id: 'papillon', name: 'Papillon magique', emoji: '🦋', zones: buildPapillon },
+  { id: 'etoile', name: 'Etoile K-Pop', emoji: '⭐', zones: buildEtoile },
+  { id: 'jardin', name: 'Jardin fleuri', emoji: '🌸', zones: buildJardin },
+  { id: 'couronne', name: 'Couronne royale', emoji: '👑', zones: buildCouronne },
+  { id: 'notes', name: 'Notes de musique', emoji: '🎵', zones: buildNotes },
+];
+
+let currentPage = 0;
+let currentTool = 'color';
+let currentColor = COLORS[0];
+let undoStack = [];
+let savedColors = {};
+
+function getStorageKey(pageId) { return `kpop_coloriage_${playerName}_${pageId}`; }
+
+function loadSaved(pageId) {
+  try { return JSON.parse(localStorage.getItem(getStorageKey(pageId)) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveCurrent() {
+  const pg = PAGES[currentPage];
+  localStorage.setItem(getStorageKey(pg.id), JSON.stringify(savedColors));
+}
+
+// --- SVG DRAWING BUILDERS ---
+function buildIdol() {
+  return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Stage floor -->
+    <path class="zone" id="z0" d="M20,320 L380,320 L400,400 L0,400 Z"/>
+    <!-- Stage lights left -->
+    <circle class="zone" id="z1" cx="60" cy="40" r="30"/>
+    <!-- Stage lights right -->
+    <circle class="zone" id="z2" cx="340" cy="40" r="30"/>
+    <!-- Backdrop -->
+    <rect class="zone" id="z3" x="60" y="60" width="280" height="250" rx="15"/>
+    <!-- Body/dress -->
+    <path class="zone" id="z4" d="M160,220 L240,220 L260,320 L140,320 Z"/>
+    <!-- Dress detail -->
+    <path class="zone" id="z5" d="M170,260 L230,260 L240,320 L160,320 Z"/>
+    <!-- Head -->
+    <circle class="zone" id="z6" cx="200" cy="170" r="40"/>
+    <!-- Hair -->
+    <path class="zone" id="z7" d="M160,155 Q150,110 175,100 Q200,85 225,100 Q250,110 240,155 Q230,140 200,135 Q170,140 160,155 Z"/>
+    <!-- Left arm -->
+    <path class="zone" id="z8" d="M160,230 L120,280 L130,290 L165,245 Z"/>
+    <!-- Right arm (mic) -->
+    <path class="zone" id="z9" d="M240,230 L275,195 L285,205 L245,240 Z"/>
+    <!-- Microphone -->
+    <ellipse class="zone" id="z10" cx="280" cy="190" rx="12" ry="18"/>
+    <!-- Star left -->
+    <polygon class="zone" id="z11" points="80,280 86,296 104,296 90,306 95,322 80,312 65,322 70,306 56,296 74,296"/>
+    <!-- Star right -->
+    <polygon class="zone" id="z12" points="320,280 326,296 344,296 330,306 335,322 320,312 305,322 310,306 296,296 314,296"/>
+    <!-- Boots left -->
+    <path class="zone" id="z13" d="M165,310 L185,310 L185,340 L160,340 Z"/>
+    <!-- Boots right -->
+    <path class="zone" id="z14" d="M215,310 L235,310 L240,340 L215,340 Z"/>
+  </svg>`;
+}
+
+function buildPapillon() {
+  return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Body -->
+    <ellipse class="zone" id="z0" cx="200" cy="200" rx="12" ry="80"/>
+    <!-- Head -->
+    <circle class="zone" id="z1" cx="200" cy="110" r="18"/>
+    <!-- Left antenna -->
+    <path class="zone" id="z2" d="M193,95 Q160,50 145,55 Q140,45 150,42 Q165,38 195,90 Z"/>
+    <!-- Right antenna -->
+    <path class="zone" id="z3" d="M207,95 Q240,50 255,55 Q260,45 250,42 Q235,38 205,90 Z"/>
+    <!-- Upper left wing -->
+    <path class="zone" id="z4" d="M188,150 Q100,80 60,130 Q30,180 100,200 Q140,210 188,190 Z"/>
+    <!-- Upper right wing -->
+    <path class="zone" id="z5" d="M212,150 Q300,80 340,130 Q370,180 300,200 Q260,210 212,190 Z"/>
+    <!-- Lower left wing -->
+    <path class="zone" id="z6" d="M188,200 Q100,210 70,270 Q50,320 120,310 Q160,300 188,250 Z"/>
+    <!-- Lower right wing -->
+    <path class="zone" id="z7" d="M212,200 Q300,210 330,270 Q350,320 280,310 Q240,300 212,250 Z"/>
+    <!-- Wing spot UL -->
+    <circle class="zone" id="z8" cx="120" cy="155" r="22"/>
+    <!-- Wing spot UR -->
+    <circle class="zone" id="z9" cx="280" cy="155" r="22"/>
+    <!-- Wing spot LL -->
+    <circle class="zone" id="z10" cx="115" cy="265" r="16"/>
+    <!-- Wing spot LR -->
+    <circle class="zone" id="z11" cx="285" cy="265" r="16"/>
+    <!-- Heart left -->
+    <path class="zone" id="z12" d="M120,185 Q120,175 130,175 Q140,175 140,185 Q140,175 150,175 Q160,175 160,185 Q160,200 140,215 Q120,200 120,185 Z"/>
+    <!-- Heart right -->
+    <path class="zone" id="z13" d="M240,185 Q240,175 250,175 Q260,175 260,185 Q260,175 270,175 Q280,175 280,185 Q280,200 260,215 Q240,200 240,185 Z"/>
+  </svg>`;
+}
+
+function buildEtoile() {
+  return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background circle -->
+    <circle class="zone" id="z0" cx="200" cy="200" r="170"/>
+    <!-- Big star -->
+    <polygon class="zone" id="z1" points="200,40 230,150 350,150 255,215 285,330 200,265 115,330 145,215 50,150 170,150"/>
+    <!-- Star center -->
+    <circle class="zone" id="z2" cx="200" cy="190" r="40"/>
+    <!-- Note top-left -->
+    <path class="zone" id="z3" d="M80,70 L88,70 L88,105 Q88,115 78,115 Q68,115 68,105 Q68,95 78,95 Q83,95 85,98 L85,70 Z"/>
+    <!-- Note top-right -->
+    <path class="zone" id="z4" d="M310,60 L318,60 L318,95 Q318,105 308,105 Q298,105 298,95 Q298,85 308,85 Q313,85 315,88 L315,60 Z"/>
+    <!-- Double note bottom-left -->
+    <path class="zone" id="z5" d="M60,300 L68,300 L68,335 Q68,345 58,345 Q48,345 48,335 Q48,325 58,325 Q63,325 65,328 L65,300 L90,295 L90,330 Q90,340 80,340 Q70,340 70,330 Q70,320 80,320 Q85,320 87,323 L87,295 L60,300 Z"/>
+    <!-- Note bottom-right -->
+    <path class="zone" id="z6" d="M330,310 L338,310 L338,345 Q338,355 328,355 Q318,355 318,345 Q318,335 328,335 Q333,335 335,338 L335,310 Z"/>
+    <!-- Small star 1 -->
+    <polygon class="zone" id="z7" points="65,165 70,178 84,178 73,186 77,199 65,191 53,199 57,186 46,178 60,178"/>
+    <!-- Small star 2 -->
+    <polygon class="zone" id="z8" points="335,165 340,178 354,178 343,186 347,199 335,191 323,199 327,186 316,178 330,178"/>
+    <!-- Small star 3 -->
+    <polygon class="zone" id="z9" points="200,350 205,363 219,363 208,371 212,384 200,376 188,384 192,371 181,363 195,363"/>
+    <!-- Heart -->
+    <path class="zone" id="z10" d="M185,175 Q185,160 200,160 Q215,160 215,175 Q215,195 200,210 Q185,195 185,175 Z"/>
+    <!-- Ribbon left -->
+    <path class="zone" id="z11" d="M120,270 L150,250 L160,265 L130,285 Z"/>
+    <!-- Ribbon right -->
+    <path class="zone" id="z12" d="M280,270 L250,250 L240,265 L270,285 Z"/>
+  </svg>`;
+}
+
+function buildJardin() {
+  return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Ground -->
+    <path class="zone" id="z0" d="M0,330 Q100,310 200,330 Q300,350 400,330 L400,400 L0,400 Z"/>
+    <!-- Flower 1 center -->
+    <circle class="zone" id="z1" cx="100" cy="200" r="18"/>
+    <!-- Flower 1 petals -->
+    <path class="zone" id="z2" d="M100,165 Q115,175 118,182 Q122,175 125,165 Q115,155 100,155 Q85,155 75,165 Q78,175 82,182 Q85,175 100,165 Z M65,190 Q75,180 82,182 Q75,178 65,175 Q55,182 55,197 Q55,212 65,218 Q75,215 82,210 Q75,212 65,210 Z M100,235 Q85,225 82,218 Q78,225 75,235 Q85,245 100,245 Q115,245 125,235 Q122,225 118,218 Q115,225 100,235 Z M135,210 Q125,220 118,218 Q125,222 135,225 Q145,218 145,203 Q145,188 135,182 Q125,185 118,190 Q125,188 135,190 Z"/>
+    <!-- Flower 1 stem -->
+    <path class="zone" id="z3" d="M96,235 L96,340 L104,340 L104,235 Z"/>
+    <!-- Flower 2 center -->
+    <circle class="zone" id="z4" cx="280" cy="180" r="16"/>
+    <!-- Flower 2 petals -->
+    <path class="zone" id="z5" d="M280,148 Q295,158 298,165 Q302,158 305,148 Q295,138 280,138 Q265,138 255,148 Q258,158 262,165 Q265,158 280,148 Z M248,173 Q258,163 262,165 Q258,162 248,158 Q238,165 238,180 Q238,195 248,200 Q258,198 262,192 Q258,195 248,192 Z M280,212 Q265,202 262,195 Q258,202 255,212 Q265,222 280,222 Q295,222 305,212 Q302,202 298,195 Q295,202 280,212 Z M312,192 Q302,202 298,195 Q302,202 312,205 Q322,198 322,183 Q322,168 312,163 Q302,165 298,172 Q302,168 312,172 Z"/>
+    <!-- Flower 2 stem -->
+    <path class="zone" id="z6" d="M276,212 L276,345 L284,345 L284,212 Z"/>
+    <!-- Heart 1 -->
+    <path class="zone" id="z7" d="M185,140 Q185,120 200,120 Q215,120 215,140 Q215,165 200,180 Q185,165 185,140 Z"/>
+    <!-- Heart 2 -->
+    <path class="zone" id="z8" d="M155,280 Q155,265 167,265 Q179,265 179,280 Q179,300 167,310 Q155,300 155,280 Z"/>
+    <!-- Heart 3 -->
+    <path class="zone" id="z9" d="M310,260 Q310,248 320,248 Q330,248 330,260 Q330,278 320,286 Q310,278 310,260 Z"/>
+    <!-- Leaf left -->
+    <path class="zone" id="z10" d="M80,280 Q60,265 50,280 Q40,295 60,300 Q75,290 80,280 Z"/>
+    <!-- Leaf right -->
+    <path class="zone" id="z11" d="M300,290 Q310,275 325,280 Q340,290 325,305 Q310,305 300,290 Z"/>
+    <!-- Butterfly -->
+    <path class="zone" id="z12" d="M195,80 Q175,60 170,75 Q168,90 190,95 L190,90 Q180,85 178,78 Q180,68 195,80 Z M205,80 Q225,60 230,75 Q232,90 210,95 L210,90 Q220,85 222,78 Q220,68 205,80 Z"/>
+    <!-- Sun -->
+    <circle class="zone" id="z13" cx="350" cy="50" r="30"/>
+  </svg>`;
+}
+
+function buildCouronne() {
+  return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Cushion -->
+    <ellipse class="zone" id="z0" cx="200" cy="340" rx="140" ry="40"/>
+    <!-- Crown base -->
+    <path class="zone" id="z1" d="M80,250 L320,250 L320,300 L80,300 Z"/>
+    <!-- Crown body -->
+    <path class="zone" id="z2" d="M80,250 L60,130 L140,190 L200,100 L260,190 L340,130 L320,250 Z"/>
+    <!-- Gem center top -->
+    <path class="zone" id="z3" d="M190,140 L200,120 L210,140 L200,155 Z"/>
+    <!-- Gem left -->
+    <path class="zone" id="z4" d="M120,195 L130,180 L140,195 L130,210 Z"/>
+    <!-- Gem right -->
+    <path class="zone" id="z5" d="M260,195 L270,180 L280,195 L270,210 Z"/>
+    <!-- Band decoration -->
+    <rect class="zone" id="z6" x="90" y="260" width="220" height="25" rx="5"/>
+    <!-- Gem band left -->
+    <circle class="zone" id="z7" cx="130" cy="273" r="10"/>
+    <!-- Gem band center -->
+    <circle class="zone" id="z8" cx="200" cy="273" r="12"/>
+    <!-- Gem band right -->
+    <circle class="zone" id="z9" cx="270" cy="273" r="10"/>
+    <!-- Star left tip -->
+    <polygon class="zone" id="z10" points="90,135 96,148 110,148 99,156 103,169 90,161 77,169 81,156 70,148 84,148"/>
+    <!-- Star right tip -->
+    <polygon class="zone" id="z11" points="310,135 316,148 330,148 319,156 323,169 310,161 297,169 301,156 290,148 304,148"/>
+    <!-- Sparkle left -->
+    <path class="zone" id="z12" d="M55,220 L60,200 L65,220 L85,225 L65,230 L60,250 L55,230 L35,225 Z"/>
+    <!-- Sparkle right -->
+    <path class="zone" id="z13" d="M335,220 L340,200 L345,220 L365,225 L345,230 L340,250 L335,230 L315,225 Z"/>
+  </svg>`;
+}
+
+function buildNotes() {
+  return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background swirl -->
+    <path class="zone" id="z0" d="M50,200 Q100,50 200,100 Q300,150 350,50 Q400,150 350,200 Q300,250 350,350 Q250,300 200,350 Q150,400 50,350 Q0,300 50,200 Z"/>
+    <!-- Single note 1 -->
+    <path class="zone" id="z1" d="M90,120 L98,120 L98,180 Q98,195 83,195 Q68,195 68,180 Q68,165 83,165 Q90,165 94,170 L94,120 Z"/>
+    <!-- Double note 2 -->
+    <path class="zone" id="z2" d="M150,90 L158,90 L158,155 Q158,170 143,170 Q128,170 128,155 Q128,140 143,140 Q150,140 154,143 L154,90 L190,80 L190,145 Q190,160 175,160 Q160,160 160,145 Q160,130 175,130 Q182,130 186,133 L186,80 L150,90 Z"/>
+    <!-- Treble clef (simplified) -->
+    <path class="zone" id="z3" d="M200,80 Q215,90 220,120 Q225,160 210,200 Q200,230 210,260 Q220,280 215,300 Q210,315 195,310 Q180,305 185,285 Q190,270 200,270 Q205,272 205,280 Q200,290 195,285 Q192,275 200,270"/>
+    <!-- Note 3 big -->
+    <path class="zone" id="z4" d="M270,100 L280,100 L280,190 Q280,210 262,210 Q244,210 244,190 Q244,170 262,170 Q272,170 277,176 L277,100 Z"/>
+    <!-- Note 4 -->
+    <path class="zone" id="z5" d="M320,160 L328,160 L328,230 Q328,245 313,245 Q298,245 298,230 Q298,215 313,215 Q320,215 324,218 L324,160 Z"/>
+    <!-- Double note 5 -->
+    <path class="zone" id="z6" d="M60,250 L68,250 L68,310 Q68,325 53,325 Q38,325 38,310 Q38,295 53,295 Q60,295 64,298 L64,250 L100,240 L100,300 Q100,315 85,315 Q70,315 70,300 Q70,285 85,285 Q92,285 96,288 L96,240 L60,250 Z"/>
+    <!-- Note 6 -->
+    <path class="zone" id="z7" d="M160,260 L168,260 L168,325 Q168,340 153,340 Q138,340 138,325 Q138,310 153,310 Q160,310 164,313 L164,260 Z"/>
+    <!-- Star 1 -->
+    <polygon class="zone" id="z8" points="240,280 246,296 264,296 250,306 255,322 240,312 225,322 230,306 216,296 234,296"/>
+    <!-- Star 2 -->
+    <polygon class="zone" id="z9" points="330,290 335,302 348,302 337,310 341,322 330,314 319,322 323,310 312,302 325,302"/>
+    <!-- Heart -->
+    <path class="zone" id="z10" d="M285,320 Q285,305 300,305 Q315,305 315,320 Q315,340 300,355 Q285,340 285,320 Z"/>
+    <!-- Staff lines area -->
+    <rect class="zone" id="z11" x="30" y="370" width="340" height="25" rx="5"/>
+    <!-- Small note decoration -->
+    <path class="zone" id="z12" d="M350,60 L356,60 L356,90 Q356,100 346,100 Q336,100 336,90 Q336,80 346,80 Q350,80 353,83 L353,60 Z"/>
+  </svg>`;
+}
+
+// --- INIT ---
+function initPageSelector() {
+  const sel = document.getElementById('pageSelector');
+  sel.innerHTML = '';
+  PAGES.forEach((pg, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+    const saved = loadSaved(pg.id);
+    const zoneCount = countZones(pg);
+    const filledCount = Object.keys(saved).length;
+    if (filledCount >= zoneCount && zoneCount > 0) btn.classList.add('completed');
+    btn.innerHTML = `${pg.emoji} ${pg.name} <span class="check">&#10003;</span>`;
+    btn.onclick = () => { currentPage = i; loadPage(); };
+    sel.appendChild(btn);
+  });
+}
+
+function countZones(pg) {
+  const temp = document.createElement('div');
+  temp.innerHTML = pg.zones();
+  return temp.querySelectorAll('.zone').length;
+}
+
+function loadPage() {
+  const pg = PAGES[currentPage];
+  savedColors = loadSaved(pg.id);
+  undoStack = [];
+  const container = document.getElementById('svgContainer');
+  container.innerHTML = pg.zones();
+
+  // Apply saved colors
+  Object.entries(savedColors).forEach(([zoneId, data]) => {
+    const el = document.getElementById(zoneId);
+    if (!el) return;
+    if (data.type === 'color') el.style.fill = data.value;
+    else if (data.type === 'wand') applyGradient(el, data.value);
+    else if (data.type === 'sparkle') { el.style.fill = data.base || el.style.fill; addSparkleOverlay(el); }
+  });
+
+  // Attach click handlers
+  container.querySelectorAll('.zone').forEach(zone => {
+    zone.addEventListener('click', onZoneClick);
+    zone.addEventListener('touchstart', (e) => { e.preventDefault(); onZoneClick(e); }, {passive: false});
+  });
+
+  updateProgress();
+  initPageSelector();
+}
+
+function onZoneClick(e) {
+  const zone = e.target.closest('.zone');
+  if (!zone) return;
+  const zoneId = zone.id;
+
+  // Record undo
+  const prev = savedColors[zoneId] ? {...savedColors[zoneId]} : null;
+  undoStack.push({ zoneId, prev });
+  if (undoStack.length > 5) undoStack.shift();
+
+  if (currentTool === 'color') {
+    zone.style.fill = currentColor;
+    savedColors[zoneId] = { type: 'color', value: currentColor };
+  } else if (currentTool === 'wand') {
+    const gradId = applyGradient(zone);
+    savedColors[zoneId] = { type: 'wand', value: gradId };
+  } else if (currentTool === 'sparkle') {
+    if (!savedColors[zoneId]) {
+      zone.style.fill = currentColor;
+    }
+    savedColors[zoneId] = { type: 'sparkle', base: zone.style.fill || currentColor };
+    addSparkleOverlay(zone);
+  }
+
+  // Fill animation
+  zone.classList.remove('filling');
+  void zone.offsetWidth;
+  zone.classList.add('filling');
+
+  saveCurrent();
+  updateProgress();
+}
+
+let gradCounter = 0;
+function applyGradient(zone, existingId) {
+  const svg = document.querySelector('.svg-container svg');
+  let defs = svg.querySelector('defs');
+  if (!defs) { defs = document.createElementNS('http://www.w3.org/2000/svg','defs'); svg.prepend(defs); }
+
+  const id = existingId || `grad_${gradCounter++}`;
+  if (!existingId) {
+    const grad = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+    grad.id = id;
+    grad.setAttribute('x1','0%'); grad.setAttribute('y1','0%');
+    grad.setAttribute('x2','100%'); grad.setAttribute('y2','100%');
+    const rainbowColors = ['#FF69B4','#C77DFF','#74B9FF','#55EFC4','#FDCB6E','#FF6B6B'];
+    rainbowColors.forEach((c,i) => {
+      const stop = document.createElementNS('http://www.w3.org/2000/svg','stop');
+      stop.setAttribute('offset', (i/(rainbowColors.length-1)*100)+'%');
+      stop.setAttribute('stop-color', c);
+      grad.appendChild(stop);
+    });
+    defs.appendChild(grad);
+  }
+  zone.style.fill = `url(#${id})`;
+  return id;
+}
+
+function addSparkleOverlay(zone) {
+  const svg = document.querySelector('.svg-container svg');
+  let defs = svg.querySelector('defs');
+  if (!defs) { defs = document.createElementNS('http://www.w3.org/2000/svg','defs'); svg.prepend(defs); }
+
+  // Add sparkle filter if not exists
+  if (!svg.querySelector('#sparkleFilter')) {
+    const filter = document.createElementNS('http://www.w3.org/2000/svg','filter');
+    filter.id = 'sparkleFilter';
+    filter.innerHTML = `<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+      <feComponentTransfer in="mono" result="bright"><feFuncA type="discrete" tableValues="0 0 0 0 0 0 1 0 0 0"/></feComponentTransfer>
+      <feFlood flood-color="#ffffff" flood-opacity="0.7" result="white"/>
+      <feComposite in="white" in2="bright" operator="in" result="sparkles"/>
+      <feComposite in="SourceGraphic" in2="sparkles" operator="over"/>`;
+    defs.appendChild(filter);
+  }
+  zone.setAttribute('filter', 'url(#sparkleFilter)');
+}
+
+function updateProgress() {
+  const container = document.getElementById('svgContainer');
+  const zones = container.querySelectorAll('.zone');
+  const total = zones.length;
+  const filled = Object.keys(savedColors).length;
+  const pct = total > 0 ? Math.min(100, Math.round(filled / total * 100)) : 0;
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '%';
+
+  if (pct >= 100) onComplete();
+}
+
+function onComplete() {
+  const pg = PAGES[currentPage];
+  const key = `kpop_coloriage_done_${playerName}_${pg.id}`;
+  if (localStorage.getItem(key)) return; // already celebrated
+  localStorage.setItem(key, '1');
+
+  // Stars
+  let stars = parseInt(localStorage.getItem(`kpop_stars_${playerName}`) || '0');
+  stars += 25;
+  localStorage.setItem(`kpop_stars_${playerName}`, stars);
+
+  // Trophy on first completion
+  let trophies = JSON.parse(localStorage.getItem(`kpop_trophies_${playerName}`) || '[]');
+  if (!trophies.includes('coloriage_done')) {
+    trophies.push('coloriage_done');
+    localStorage.setItem(`kpop_trophies_${playerName}`, JSON.stringify(trophies));
+  }
+
+  // Confetti
+  launchConfetti();
+
+  // Trophy popup
+  document.getElementById('trophyMsg').textContent = `"${pg.name}" termine ! +25 etoiles !`;
+  document.getElementById('trophyPopup').classList.add('show');
+
+  initPageSelector();
+}
+
+function launchConfetti() {
+  const overlay = document.getElementById('confettiOverlay');
+  const colors = ['#FF69B4','#C77DFF','#74B9FF','#55EFC4','#FDCB6E','#FF6B6B','#E040FB','#FD79A8'];
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random()*100 + '%';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.width = (6 + Math.random()*8) + 'px';
+    piece.style.height = (6 + Math.random()*8) + 'px';
+    piece.style.animationDuration = (2 + Math.random()*2) + 's';
+    piece.style.animationDelay = (Math.random()*0.5) + 's';
+    overlay.appendChild(piece);
+  }
+  setTimeout(() => { overlay.innerHTML = ''; }, 5000);
+}
+
+function closeTrophy() {
+  document.getElementById('trophyPopup').classList.remove('show');
+}
+
+function undo() {
+  if (undoStack.length === 0) return;
+  const action = undoStack.pop();
+  const zone = document.getElementById(action.zoneId);
+  if (!zone) return;
+
+  if (action.prev) {
+    savedColors[action.zoneId] = action.prev;
+    if (action.prev.type === 'color') { zone.style.fill = action.prev.value; zone.removeAttribute('filter'); }
+    else if (action.prev.type === 'wand') { applyGradient(zone, action.prev.value); zone.removeAttribute('filter'); }
+    else if (action.prev.type === 'sparkle') { zone.style.fill = action.prev.base; addSparkleOverlay(zone); }
+  } else {
+    delete savedColors[action.zoneId];
+    zone.style.fill = '#f8f0ff';
+    zone.removeAttribute('filter');
+  }
+  saveCurrent();
+  updateProgress();
+}
+
+function clearAll() {
+  if (!confirm('Effacer tout le coloriage ?')) return;
+  savedColors = {};
+  undoStack = [];
+  const pg = PAGES[currentPage];
+  localStorage.removeItem(getStorageKey(pg.id));
+  localStorage.removeItem(`kpop_coloriage_done_${playerName}_${pg.id}`);
+  loadPage();
+}
+
+// Palette
+function initPalette() {
+  const pal = document.getElementById('palette');
+  pal.innerHTML = '';
+  COLORS.forEach((c, i) => {
+    const circle = document.createElement('div');
+    circle.className = 'color-circle' + (i === 0 ? ' active' : '') + (METALLIC.includes(i) ? ' metallic' : '');
+    circle.style.background = c;
+    circle.onclick = () => {
+      document.querySelectorAll('.color-circle').forEach(cc => cc.classList.remove('active'));
+      circle.classList.add('active');
+      currentColor = c;
+      // Switch to color tool when picking a color
+      currentTool = 'color';
+      document.querySelectorAll('.tool-btn').forEach(tb => tb.classList.remove('active'));
+      document.querySelector('[data-tool="color"]').classList.add('active');
+    };
+    pal.appendChild(circle);
+  });
+}
+
+// Tools
+document.querySelectorAll('.tool-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tool-btn').forEach(tb => tb.classList.remove('active'));
+    btn.classList.add('active');
+    currentTool = btn.dataset.tool;
+  });
+});
+
+// Gallery
+function toggleGallery() {
+  const gal = document.getElementById('gallery');
+  gal.classList.toggle('open');
+  if (gal.classList.contains('open')) buildGallery();
+}
+
+function buildGallery() {
+  const gal = document.getElementById('gallery');
+  gal.innerHTML = '';
+  PAGES.forEach((pg, i) => {
+    const saved = loadSaved(pg.id);
+    const zoneCount = countZones(pg);
+    const filled = Object.keys(saved).length;
+    if (filled === 0) return;
+
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.style.cursor = 'pointer';
+    item.onclick = () => { currentPage = i; loadPage(); gal.classList.remove('open'); };
+
+    // Mini SVG
+    const temp = document.createElement('div');
+    temp.innerHTML = pg.zones();
+    const svg = temp.querySelector('svg');
+    Object.entries(saved).forEach(([zoneId, data]) => {
+      const el = svg.querySelector(`#${zoneId}`);
+      if (el && data.type === 'color') el.setAttribute('fill', data.value);
+      else if (el && data.type === 'sparkle') el.setAttribute('fill', data.base || '#f8f0ff');
+    });
+    item.innerHTML = svg.outerHTML;
+    item.innerHTML += `<div class="label">${pg.emoji} ${filled >= zoneCount ? '100%' : Math.round(filled/zoneCount*100)+'%'}</div>`;
+    gal.appendChild(item);
+  });
+  if (gal.children.length === 0) {
+    gal.innerHTML = '<p style="color:#b06dd8;font-weight:600;width:100%;text-align:center;">Aucun coloriage encore !</p>';
+  }
+}
+
+// Start
+initPalette();
+loadPage();
+</script>
+</body>
+</html>
