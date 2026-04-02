@@ -3,25 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>K-Pop Star Academy — Le jeu #1 pour les fans de K-Pop</title>
-<meta name="description" content="10 mini-jeux magiques pour les fans de K-Pop. Gratuit, sans pub, sans collecte de donnees. Pour les enfants de 4 a 12 ans.">
+<title>K-Pop Star Academy — 16 Mini-Jeux Magiques</title>
+<meta name="description" content="16 mini-jeux magiques pour les fans de K-Pop. Gratuit, sans pub, hors-ligne. Pour les enfants de 4 a 12 ans.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #1a1a2e;
-  --bg-light: #16213e;
+  --bg: #0a0a1a;
   --pink: #ff2d95;
-  --purple: #7b2ff7;
+  --purple: #a855f7;
   --gold: #ffd700;
-  --glass: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --text: #f0f0f5;
-  --text-muted: #a0a0b8;
-  --radius: 16px;
+  --cyan: #06d6a0;
+  --text: #f0f0ff;
+  --muted: #8888aa;
+  --glass: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.12);
 }
 
 html { scroll-behavior: smooth; }
@@ -30,1082 +29,860 @@ body {
   font-family: 'Quicksand', sans-serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
   overflow-x: hidden;
+  line-height: 1.6;
 }
 
-/* Animated gradient bg */
-.gradient-bg {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(123, 47, 247, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(255, 45, 149, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
-    var(--bg);
-  animation: gradientShift 12s ease-in-out infinite alternate;
+/* ========== LOADER ========== */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .6s, visibility .6s;
+}
+#loader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-burst { position: relative; width: 80px; height: 80px; }
+.loader-burst span {
+  position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  animation: burstOut 1s ease-out infinite;
+}
+.loader-burst span:nth-child(1) { background: var(--pink); animation-delay: 0s; }
+.loader-burst span:nth-child(2) { background: var(--purple); animation-delay: .1s; }
+.loader-burst span:nth-child(3) { background: var(--gold); animation-delay: .2s; }
+.loader-burst span:nth-child(4) { background: var(--cyan); animation-delay: .3s; }
+.loader-burst span:nth-child(5) { background: #ff6b6b; animation-delay: .15s; }
+.loader-burst span:nth-child(6) { background: #4ecdc4; animation-delay: .25s; }
+@keyframes burstOut {
+  0% { top: 50%; left: 50%; opacity: 1; transform: scale(0); }
+  50% { opacity: 1; }
+  100% { top: calc(50% + var(--dy, 0px)); left: calc(50% + var(--dx, 0px)); opacity: 0; transform: scale(1.5); }
+}
+.loader-burst span:nth-child(1) { --dx: -30px; --dy: -30px; }
+.loader-burst span:nth-child(2) { --dx: 30px; --dy: -25px; }
+.loader-burst span:nth-child(3) { --dx: 0px; --dy: -35px; }
+.loader-burst span:nth-child(4) { --dx: -25px; --dy: 25px; }
+.loader-burst span:nth-child(5) { --dx: 30px; --dy: 20px; }
+.loader-burst span:nth-child(6) { --dx: 0px; --dy: 35px; }
+
+/* ========== AURORA BACKGROUND ========== */
+.aurora {
+  position: fixed; inset: 0; z-index: -2; overflow: hidden;
+}
+.aurora::before, .aurora::after {
+  content: ''; position: absolute; width: 200%; height: 200%;
+  top: -50%; left: -50%;
+  border-radius: 40%;
+  animation: auroraMove 20s ease-in-out infinite alternate;
+}
+.aurora::before {
+  background: radial-gradient(ellipse at 30% 40%, rgba(168,85,247,.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 60%, rgba(255,45,149,.08) 0%, transparent 50%);
+}
+.aurora::after {
+  background: radial-gradient(ellipse at 60% 30%, rgba(6,214,160,.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 20% 80%, rgba(255,215,0,.05) 0%, transparent 50%);
+  animation-delay: -10s;
+  animation-direction: alternate-reverse;
+}
+@keyframes auroraMove {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(15deg) scale(1.1); }
 }
 
-@keyframes gradientShift {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(20deg); }
+/* ========== STAR FIELD ========== */
+.stars { position: fixed; inset: 0; z-index: -1; }
+.star {
+  position: absolute; border-radius: 50%; background: #fff;
+  animation: twinkle var(--dur) ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0% { opacity: 0.2; transform: scale(.8); }
+  100% { opacity: 1; transform: scale(1.2); }
 }
 
-/* Scroll animations */
+/* ========== FLOATING EMOJIS ========== */
+.float-emoji {
+  position: fixed; font-size: 1.5rem; z-index: 0; pointer-events: none;
+  animation: floatDrift var(--dur) ease-in-out infinite alternate;
+  opacity: .5;
+}
+@keyframes floatDrift {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(var(--drift, -30px)) rotate(var(--rot, 15deg)); }
+}
+
+/* ========== SCROLL REVEAL ========== */
 .reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  opacity: 0; transform: translateY(50px);
+  transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
 }
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+.reveal-delay-4 { transition-delay: .4s; }
+.reveal-delay-5 { transition-delay: .5s; }
 
-/* Nav */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(26, 26, 46, 0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--glass-border);
-}
+/* ========== SECTION BASE ========== */
+section { padding: 100px 24px; max-width: 1100px; margin: 0 auto; position: relative; }
 
-.nav-logo {
-  font-weight: 700;
-  font-size: 1.2rem;
-  background: linear-gradient(135deg, var(--pink), var(--purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.nav-links { display: flex; gap: 24px; list-style: none; }
-.nav-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: color 0.3s;
-}
-.nav-links a:hover { color: var(--pink); }
-
-@media (max-width: 640px) {
-  .nav-links { display: none; }
-}
-
-/* Container */
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 32px;
-  border: none;
-  border-radius: 50px;
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 700;
-  font-size: 1.05rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.3s;
-}
-.btn:hover { transform: translateY(-2px); }
-.btn:active { transform: translateY(0); }
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--pink), var(--purple));
-  color: #fff;
-  box-shadow: 0 4px 24px rgba(255, 45, 149, 0.35);
-}
-.btn-primary:hover { box-shadow: 0 8px 32px rgba(255, 45, 149, 0.5); }
-
-.btn-secondary {
-  background: var(--glass);
-  color: var(--text);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(8px);
-}
-.btn-secondary:hover { border-color: var(--pink); }
-
-/* ===== HERO ===== */
+/* ========== HERO ========== */
 .hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding-top: 80px;
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding-top: 40px; gap: 28px;
 }
 
-.hero-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
-  width: 100%;
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 800; line-height: 1.1;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;
 }
-
-.hero-badge {
+.hero-title .letter {
   display: inline-block;
-  padding: 6px 16px;
-  border-radius: 50px;
-  background: rgba(255, 215, 0, 0.15);
-  color: var(--gold);
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  border: 1px solid rgba(255, 215, 0, 0.25);
-}
-
-.hero h1 {
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.15;
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, #fff 0%, #e0c3fc 50%, var(--pink) 100%);
-  -webkit-background-clip: text;
+  -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  animation: letterFloat 3s ease-in-out infinite alternate;
+  position: relative;
+}
+.hero-title .letter::after {
+  content: ''; position: absolute; top: -4px; right: -2px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold);
+  animation: sparkle 2s ease-in-out infinite;
+  opacity: 0;
+}
+.hero-title .letter:nth-child(3n)::after { animation-delay: .5s; }
+.hero-title .letter:nth-child(3n+1)::after { animation-delay: 1s; }
+
+@keyframes letterFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(var(--float-y, -8px)); }
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1.5); }
 }
 
-.hero-subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  color: var(--text-muted);
-  margin-bottom: 8px;
+.hero-sub {
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  font-weight: 700; color: var(--gold);
 }
-
-.hero-tagline {
-  font-size: 0.95rem;
-  color: var(--gold);
-  font-weight: 600;
-  margin-bottom: 32px;
-}
-
-.hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
-
-.hero-stats {
-  display: flex; gap: 32px; margin-top: 32px;
-}
-.hero-stat { text-align: center; }
-.hero-stat-number {
-  font-size: 1.5rem; font-weight: 700; color: var(--pink);
-}
-.hero-stat-label {
-  font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;
-}
+.hero-sub .count { display: inline-block; min-width: 2ch; }
 
 /* Phone mockup */
 .phone-mockup {
-  position: relative;
-  width: 280px;
-  height: 560px;
-  margin: 0 auto;
-  border-radius: 36px;
-  background: #0d0d1a;
-  border: 3px solid #333;
-  box-shadow:
-    0 0 0 2px #222,
-    0 20px 60px rgba(0,0,0,0.5),
-    0 0 80px rgba(123, 47, 247, 0.15);
-  overflow: hidden;
-  animation: phoneFloat 4s ease-in-out infinite;
+  width: 260px; height: 460px;
+  background: #111128;
+  border-radius: 32px;
+  border: 3px solid rgba(168,85,247,.4);
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 60px rgba(168,85,247,.25), 0 20px 60px rgba(0,0,0,.5);
+  animation: phoneFloat 4s ease-in-out infinite alternate;
 }
-
 @keyframes phoneFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
+  0% { transform: translateY(0) rotate(-1deg); }
+  100% { transform: translateY(-12px) rotate(1deg); }
 }
-
 .phone-notch {
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 120px; height: 28px;
-  background: #0d0d1a;
-  border-radius: 0 0 16px 16px;
-  z-index: 2;
+  width: 100px; height: 22px; background: #0a0a1a;
+  border-radius: 0 0 14px 14px; margin: 0 auto;
+  position: relative; z-index: 2;
 }
-
 .phone-screen {
-  position: absolute;
-  top: 12px; left: 12px; right: 12px; bottom: 12px;
-  border-radius: 24px;
-  background: linear-gradient(180deg, #2d1b69 0%, #1a1a2e 30%, #16213e 100%);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 16px 16px;
+  padding: 12px; display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; margin-top: 8px;
 }
-
-.phone-screen-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 4px;
-  text-align: center;
-}
-
-.phone-screen-subtitle {
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-}
-
-.phone-game-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  width: 100%;
-}
-
-.phone-game-card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 12px 8px;
-  text-align: center;
-  border: 1px solid rgba(255,255,255,0.06);
-}
-
-.phone-game-card-emoji { font-size: 1.5rem; margin-bottom: 4px; }
-.phone-game-card-name { font-size: 0.6rem; color: #ccc; font-weight: 600; }
-
-/* Phone sparkles */
-.phone-mockup::before {
-  content: '';
-  position: absolute;
-  top: -20px; right: -20px;
-  width: 60px; height: 60px;
-  background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
-  border-radius: 50%;
-  opacity: 0.4;
-  animation: sparkle 3s ease-in-out infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 0.6; transform: scale(1.2); }
-}
-
-@media (max-width: 768px) {
-  .hero-inner { grid-template-columns: 1fr; text-align: center; }
-  .hero-buttons { justify-content: center; }
-  .hero-stats { justify-content: center; }
-  .phone-mockup { width: 220px; height: 440px; }
-  .phone-mockup { order: -1; }
-}
-
-/* ===== SECTION TITLES ===== */
-.section {
-  padding: 100px 0;
-}
-
-.section-title {
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-.section-subtitle {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 1.05rem;
-  margin-bottom: 48px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ===== FEATURES GRID ===== */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.feature-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: 32px 24px;
-  backdrop-filter: blur(12px);
-  transition: transform 0.3s, border-color 0.3s;
-}
-.feature-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--pink);
-}
-
-.feature-icon {
-  width: 52px; height: 52px;
-  border-radius: 14px;
+.phone-card {
+  aspect-ratio: 1; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.6rem;
-  margin-bottom: 16px;
+  font-size: 1.8rem;
+  animation: cardPop .5s ease-out backwards;
+}
+.phone-card:nth-child(1) { background: linear-gradient(135deg, #ff6b9d, #c44dff); animation-delay: .1s; }
+.phone-card:nth-child(2) { background: linear-gradient(135deg, #ffd700, #ff8c00); animation-delay: .2s; }
+.phone-card:nth-child(3) { background: linear-gradient(135deg, #06d6a0, #00b4d8); animation-delay: .3s; }
+.phone-card:nth-child(4) { background: linear-gradient(135deg, #a855f7, #6366f1); animation-delay: .4s; }
+.phone-card:nth-child(5) { background: linear-gradient(135deg, #ff2d95, #ff6b6b); animation-delay: .5s; }
+.phone-card:nth-child(6) { background: linear-gradient(135deg, #22d3ee, #a78bfa); animation-delay: .6s; }
+.phone-card:nth-child(7) { background: linear-gradient(135deg, #f472b6, #fbbf24); animation-delay: .7s; }
+.phone-card:nth-child(8) { background: linear-gradient(135deg, #34d399, #60a5fa); animation-delay: .8s; }
+.phone-card:nth-child(9) { background: linear-gradient(135deg, #fb923c, #f43f5e); animation-delay: .9s; }
+@keyframes cardPop {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.phone-bottom-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 36px; background: rgba(255,255,255,.05);
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  font-size: .8rem; color: var(--muted);
 }
 
-.feature-icon.pink { background: rgba(255, 45, 149, 0.15); }
-.feature-icon.purple { background: rgba(123, 47, 247, 0.15); }
-.feature-icon.gold { background: rgba(255, 215, 0, 0.15); }
-.feature-icon.green { background: rgba(0, 200, 83, 0.15); }
-.feature-icon.blue { background: rgba(0, 150, 255, 0.15); }
-.feature-icon.red { background: rgba(255, 80, 80, 0.15); }
-
-.feature-card h3 {
-  font-size: 1.15rem;
-  margin-bottom: 8px;
-  font-weight: 700;
+/* CTA */
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 18px 40px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff; font-family: inherit;
+  font-size: 1.25rem; font-weight: 700;
+  border: none; border-radius: 60px;
+  cursor: pointer; text-decoration: none;
+  box-shadow: 0 4px 30px rgba(255,45,149,.4);
+  animation: pulse 2.5s ease-in-out infinite;
+  transition: transform .2s, box-shadow .2s;
+  position: relative; overflow: hidden;
+}
+.cta-btn::before {
+  content: ''; position: absolute; inset: -2px;
+  background: linear-gradient(135deg, var(--pink), var(--purple), var(--gold), var(--pink));
+  background-size: 300% 300%;
+  border-radius: 60px; z-index: -1;
+  animation: shimmer 3s linear infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+.cta-btn:hover { transform: scale(1.05); box-shadow: 0 6px 40px rgba(255,45,149,.6); }
+.cta-btn:active { transform: scale(.97); }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 4px 30px rgba(255,45,149,.4); }
+  50% { box-shadow: 0 4px 50px rgba(255,45,149,.7); }
 }
 
-.feature-card p {
-  color: var(--text-muted);
-  font-size: 0.92rem;
-  line-height: 1.5;
+.badges {
+  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+}
+.badge {
+  padding: 8px 18px; border-radius: 40px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  font-size: .9rem; font-weight: 600;
+  backdrop-filter: blur(10px);
 }
 
-/* ===== GAMES SHOWCASE ===== */
+/* ========== GAMES SHOWCASE ========== */
+.games-section { max-width: 100%; padding: 80px 0; }
+.games-section h2 {
+  text-align: center; font-size: clamp(1.8rem, 5vw, 2.8rem);
+  margin-bottom: 40px; padding: 0 24px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .games-scroll {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  padding: 8px 0 24px;
+  display: flex; gap: 20px; overflow-x: auto;
   scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+  padding: 20px 24px 40px;
+  -ms-overflow-style: none; scrollbar-width: none;
 }
-
-.games-scroll::-webkit-scrollbar { height: 6px; }
-.games-scroll::-webkit-scrollbar-track { background: transparent; }
-.games-scroll::-webkit-scrollbar-thumb {
-  background: var(--purple);
-  border-radius: 3px;
-}
+.games-scroll::-webkit-scrollbar { display: none; }
 
 .game-card {
-  flex: 0 0 220px;
-  scroll-snap-align: start;
-  background: var(--glass);
+  flex: 0 0 220px; scroll-snap-align: center;
+  border-radius: 24px; padding: 28px 20px;
+  text-align: center; position: relative;
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: 28px 20px;
-  text-align: center;
   backdrop-filter: blur(12px);
-  transition: transform 0.3s, border-color 0.3s;
+  transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s;
+  transform-style: preserve-3d; perspective: 600px;
+  cursor: default;
 }
 .game-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  border-color: var(--purple);
+  transform: translateY(-8px) rotateY(5deg) rotateX(3deg);
+  box-shadow: 0 20px 40px rgba(0,0,0,.4);
+}
+.game-card .emoji { font-size: 3em; display: block; margin-bottom: 12px; }
+.game-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+.game-card p { font-size: .8rem; color: var(--muted); margin-bottom: 10px; }
+.game-card .stars { color: var(--gold); font-size: .85rem; }
+.game-badge {
+  position: absolute; top: -8px; right: -8px;
+  background: linear-gradient(135deg, #ff2d95, #ff6b6b);
+  color: #fff; font-size: .65rem; font-weight: 800;
+  padding: 4px 10px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(255,45,149,.4);
 }
 
-.game-card-emoji {
-  font-size: 2.8rem;
-  margin-bottom: 12px;
-  display: block;
-}
-
-.game-card h3 {
-  font-size: 1rem;
-  margin-bottom: 6px;
-  font-weight: 700;
-}
-
-.game-card p {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-
-/* ===== TESTIMONIALS ===== */
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+/* ========== FEATURES ========== */
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
-
-.testimonial-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: 32px 28px;
+.feature-card {
+  padding: 36px 28px; border-radius: 24px;
+  background: var(--glass); border: 1px solid var(--glass-border);
   backdrop-filter: blur(12px);
-  position: relative;
-}
-
-.testimonial-stars {
-  color: var(--gold);
-  font-size: 1rem;
-  margin-bottom: 16px;
-  letter-spacing: 2px;
-}
-
-.testimonial-text {
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 20px;
-  font-style: italic;
-  color: #ddd;
-}
-
-.testimonial-author {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.testimonial-avatar {
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-.testimonial-avatar.t1 { background: linear-gradient(135deg, var(--pink), var(--purple)); }
-.testimonial-avatar.t2 { background: linear-gradient(135deg, #0096ff, #7b2ff7); }
-.testimonial-avatar.t3 { background: linear-gradient(135deg, var(--gold), #ff8c00); }
-
-.testimonial-name { font-weight: 700; font-size: 0.95rem; }
-.testimonial-role { font-size: 0.8rem; color: var(--text-muted); }
-
-/* ===== PRICING ===== */
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 28px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.pricing-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: 40px 32px;
   text-align: center;
-  backdrop-filter: blur(12px);
-  position: relative;
-  transition: transform 0.3s;
+  transition: transform .3s, border-color .3s;
 }
-.pricing-card:hover { transform: translateY(-4px); }
-
-.pricing-card.featured {
-  border-color: var(--gold);
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.1);
-}
-
-.pricing-badge {
-  position: absolute;
-  top: -14px; left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--gold), #ff8c00);
-  color: #1a1a2e;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 5px 18px;
-  border-radius: 50px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.pricing-name {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.pricing-price {
-  font-size: 2.8rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.pricing-price span {
-  font-size: 1rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.pricing-period {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 28px;
-}
-
-.pricing-features {
-  list-style: none;
-  text-align: left;
-  margin-bottom: 32px;
-}
-
-.pricing-features li {
-  padding: 8px 0;
-  font-size: 0.92rem;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pricing-features li::before {
-  content: '\2713';
-  color: #00c853;
-  font-weight: 700;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-/* ===== FAQ ===== */
-.faq-list {
-  max-width: 700px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.faq-item {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  overflow: hidden;
-  backdrop-filter: blur(12px);
-}
-
-.faq-question {
-  width: 100%;
-  background: none;
-  border: none;
-  color: var(--text);
-  font-family: 'Quicksand', sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 20px 24px;
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: color 0.3s;
-}
-.faq-question:hover { color: var(--pink); }
-
-.faq-arrow {
-  font-size: 0.8rem;
-  transition: transform 0.3s;
-  color: var(--text-muted);
-}
-
-.faq-item.open .faq-arrow { transform: rotate(180deg); }
-
-.faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, padding 0.3s ease;
-}
-
-.faq-item.open .faq-answer {
-  max-height: 200px;
-}
-
-.faq-answer-inner {
-  padding: 0 24px 20px;
-  color: var(--text-muted);
-  font-size: 0.92rem;
-  line-height: 1.6;
-}
-
-/* ===== CTA BANNER ===== */
-.cta-banner {
-  text-align: center;
-  padding: 80px 24px;
-  background: linear-gradient(135deg, rgba(123,47,247,0.15), rgba(255,45,149,0.15));
-  border-radius: var(--radius);
-  margin: 0 24px;
-}
-
-.cta-banner h2 {
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
-  margin-bottom: 12px;
-}
-
-.cta-banner p {
-  color: var(--text-muted);
-  margin-bottom: 28px;
-  font-size: 1.05rem;
-}
-
-/* ===== FOOTER ===== */
-footer {
-  padding: 48px 24px;
-  border-top: 1px solid var(--glass-border);
-  margin-top: 80px;
-}
-
-.footer-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 24px;
-}
-
-.footer-links { display: flex; gap: 24px; list-style: none; flex-wrap: wrap; }
-.footer-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.3s;
-}
-.footer-links a:hover { color: var(--pink); }
-
-.footer-copy {
-  color: var(--text-muted);
-  font-size: 0.82rem;
-}
-
-.footer-social { display: flex; gap: 12px; }
-.footer-social a {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  text-decoration: none;
-  transition: background 0.3s, border-color 0.3s;
-}
-.footer-social a:hover {
-  background: rgba(255, 45, 149, 0.15);
+.feature-card:hover {
+  transform: translateY(-6px);
   border-color: var(--pink);
 }
+.feature-card .icon {
+  font-size: 2.8rem; margin-bottom: 16px;
+  display: block;
+  animation: bounce 2s ease-in-out infinite;
+}
+.feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+.feature-card p { font-size: .9rem; color: var(--muted); }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
 
+/* ========== SOCIAL PROOF ========== */
+.social-section { text-align: center; }
+.social-section h2 {
+  font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 48px;
+  background: linear-gradient(135deg, var(--gold), #ff8c00);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.counter {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 800; margin-bottom: 48px;
+  background: linear-gradient(135deg, var(--pink), var(--gold));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.testimonials {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px; margin-bottom: 40px;
+}
+.testimonial {
+  padding: 28px; border-radius: 20px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px); text-align: left;
+}
+.testimonial .avatar { font-size: 2.5rem; margin-bottom: 12px; }
+.testimonial .t-stars { color: var(--gold); margin-bottom: 8px; }
+.testimonial q { font-style: italic; color: var(--muted); font-size: .95rem; }
+.testimonial .t-name { margin-top: 12px; font-weight: 700; font-size: .85rem; color: var(--purple); }
+.parent-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: 40px;
+  background: linear-gradient(135deg, rgba(6,214,160,.15), rgba(6,214,160,.05));
+  border: 1px solid rgba(6,214,160,.3);
+  font-weight: 700; font-size: 1rem;
+}
+
+/* ========== INSTALL ========== */
+.install-section { text-align: center; }
+.install-section h2 {
+  font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 48px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.steps {
+  display: flex; flex-wrap: wrap; gap: 32px;
+  justify-content: center; margin-bottom: 48px;
+}
+.step {
+  flex: 0 1 240px; text-align: center;
+  padding: 32px 20px; border-radius: 24px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+}
+.step .step-icon {
+  font-size: 3rem; margin-bottom: 16px; display: block;
+}
+.step .step-num {
+  display: inline-block; width: 32px; height: 32px; line-height: 32px;
+  border-radius: 50%; background: linear-gradient(135deg, var(--pink), var(--purple));
+  font-weight: 800; font-size: .9rem; margin-bottom: 12px;
+}
+.step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.step p { font-size: .85rem; color: var(--muted); }
+
+/* QR placeholder */
+.qr-area {
+  width: 160px; height: 160px; margin: 0 auto 32px;
+  border-radius: 16px; border: 2px solid var(--glass-border);
+  background: repeating-conic-gradient(var(--glass) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; color: var(--muted);
+  backdrop-filter: blur(6px);
+  position: relative;
+}
+.qr-area::after {
+  content: 'QR Code'; position: absolute;
+  font-weight: 700; font-size: .8rem;
+}
+
+/* Share */
+.share-row {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+}
+.share-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: 40px;
+  font-family: inherit; font-size: 1rem; font-weight: 700;
+  border: none; cursor: pointer; color: #fff;
+  transition: transform .2s, box-shadow .2s;
+  text-decoration: none;
+}
+.share-btn:hover { transform: scale(1.05); }
+.share-btn.whatsapp {
+  background: #25d366; box-shadow: 0 4px 20px rgba(37,211,102,.3);
+  font-size: 1.1rem; padding: 16px 36px;
+}
+.share-btn.copy {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+}
+.share-btn.facebook {
+  background: #1877f2; box-shadow: 0 4px 20px rgba(24,119,242,.3);
+}
+
+/* ========== FOOTER ========== */
+footer {
+  text-align: center; padding: 40px 24px;
+  color: var(--muted); font-size: .8rem;
+  border-top: 1px solid var(--glass-border);
+}
+footer a { color: var(--pink); text-decoration: none; }
+
+/* ========== CONFETTI ========== */
+.confetti-piece {
+  position: fixed; z-index: 9998; pointer-events: none;
+  width: 10px; height: 10px; border-radius: 2px;
+  animation: confettiFall var(--fall-dur, 2s) ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(var(--rot, 720deg)) scale(.3); }
+}
+
+/* ========== GRADIENT BORDER SECTIONS ========== */
+.glow-border {
+  position: relative;
+}
+.glow-border::before {
+  content: ''; position: absolute; inset: -1px;
+  border-radius: 28px; padding: 1px;
+  background: linear-gradient(135deg, var(--pink), var(--purple), var(--gold), var(--cyan));
+  background-size: 400% 400%;
+  animation: borderGlow 6s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events: none;
+}
+@keyframes borderGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ========== RESPONSIVE ========== */
 @media (max-width: 640px) {
-  .footer-inner {
-    flex-direction: column;
-    text-align: center;
-  }
-  .footer-links { justify-content: center; }
-  .footer-social { justify-content: center; }
+  .hero-title { font-size: clamp(2rem, 10vw, 3rem); }
+  .phone-mockup { width: 200px; height: 360px; }
+  .phone-card { font-size: 1.4rem; }
+  .phone-screen { gap: 6px; padding: 8px; }
+  .game-card { flex: 0 0 180px; padding: 20px 14px; }
+  section { padding: 60px 16px; }
+  .cta-btn { padding: 16px 32px; font-size: 1.1rem; }
 }
 </style>
 </head>
 <body>
 
-<div class="gradient-bg"></div>
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-burst">
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+  </div>
+</div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">K-Pop Star Academy</div>
-  <ul class="nav-links">
-    <li><a href="#features">Avantages</a></li>
-    <li><a href="#games">Jeux</a></li>
-    <li><a href="#avis">Avis</a></li>
-    <li><a href="#prix">Prix</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="index.html" class="btn btn-primary" style="padding:8px 20px;font-size:0.85rem;">Jouer</a></li>
-  </ul>
-</nav>
+<!-- Aurora background -->
+<div class="aurora"></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-inner">
-      <div class="hero-content">
-        <span class="hero-badge">Nouveau : Mode Duo Karaoke</span>
-        <h1>K-Pop Star Academy</h1>
-        <p class="hero-subtitle">Le jeu #1 pour les fans de K-Pop &mdash; 10 mini-jeux magiques !</p>
-        <p class="hero-tagline">Cree par des parents, adore par les enfants</p>
-        <div class="hero-buttons">
-          <a href="index.html" class="btn btn-primary">Jouer Gratuitement</a>
-          <button class="btn btn-secondary" id="installBtn" style="display:none;">Installer l'App</button>
-        </div>
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <div class="hero-stat-number">10</div>
-            <div class="hero-stat-label">Mini-jeux</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-number">4-12</div>
-            <div class="hero-stat-label">ans</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-number">0</div>
-            <div class="hero-stat-label">Pub</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-number">100%</div>
-            <div class="hero-stat-label">Gratuit</div>
-          </div>
-        </div>
-      </div>
+<!-- Star field (injected by JS) -->
+<div class="stars" id="stars"></div>
 
-      <!-- Phone mockup -->
-      <div>
-        <div class="phone-mockup">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="phone-screen-title">K-Pop Star Academy</div>
-            <div class="phone-screen-subtitle">Choisis ton jeu !</div>
-            <div class="phone-game-grid">
-              <div class="phone-game-card">
-                <div class="phone-game-card-emoji">💃</div>
-                <div class="phone-game-card-name">Dance</div>
-              </div>
-              <div class="phone-game-card">
-                <div class="phone-game-card-emoji">🎤</div>
-                <div class="phone-game-card-name">Karaoke</div>
-              </div>
-              <div class="phone-game-card">
-                <div class="phone-game-card-emoji">🧩</div>
-                <div class="phone-game-card-name">Puzzle</div>
-              </div>
-              <div class="phone-game-card">
-                <div class="phone-game-card-emoji">🎨</div>
-                <div class="phone-game-card-name">Coloriage</div>
-              </div>
-              <div class="phone-game-card">
-                <div class="phone-game-card-emoji">🃏</div>
-                <div class="phone-game-card-name">Memory</div>
-              </div>
-              <div class="phone-game-card">
-                <div class="phone-game-card-emoji">❓</div>
-                <div class="phone-game-card-name">Quiz</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- Floating emojis -->
+<div id="floating-emojis"></div>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="hero">
+  <div class="hero-title" id="hero-title"></div>
+
+  <div class="hero-sub reveal reveal-delay-1">
+    <span class="count" id="game-count">0</span> Mini-Jeux Magiques
+  </div>
+
+  <div class="phone-mockup reveal reveal-delay-2">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+      <div class="phone-card">🎤</div>
+      <div class="phone-card">💃</div>
+      <div class="phone-card">🎨</div>
+      <div class="phone-card">👗</div>
+      <div class="phone-card">⭐</div>
+      <div class="phone-card">🐱</div>
+      <div class="phone-card">🎵</div>
+      <div class="phone-card">💖</div>
+      <div class="phone-card">🏆</div>
+    </div>
+    <div class="phone-bottom-bar">
+      <span>K-Pop Star Academy</span>
+    </div>
+  </div>
+
+  <a href="index.html" class="cta-btn reveal reveal-delay-3" id="cta-main">
+    🎮 Jouer Maintenant — C'est Gratuit !
+  </a>
+
+  <div class="badges reveal reveal-delay-4">
+    <span class="badge">&#10003; Gratuit</span>
+    <span class="badge">&#10003; Sans pub</span>
+    <span class="badge">&#10003; Hors-ligne</span>
+  </div>
+</section>
+
+<!-- ==================== GAMES SHOWCASE ==================== -->
+<section class="games-section reveal">
+  <h2>Nos 16 Jeux</h2>
+  <div class="games-scroll" id="games-scroll">
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(255,45,149,.15),rgba(168,85,247,.1))">
+      <span class="game-badge">Nouveau</span>
+      <span class="emoji">🎤</span><h3>Karaoke Star</h3><p>Chante tes hits K-Pop</p><div class="stars">⭐⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,140,0,.08))">
+      <span class="emoji">💃</span><h3>Dance Battle</h3><p>Reproduis la choreo</p><div class="stars">⭐⭐⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(6,214,160,.12),rgba(0,180,216,.08))">
+      <span class="emoji">🎨</span><h3>Makeup Studio</h3><p>Maquillage de star</p><div class="stars">⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(99,102,241,.08))">
+      <span class="game-badge">Hot</span>
+      <span class="emoji">👗</span><h3>Fashion Show</h3><p>Defile de mode K-Pop</p><div class="stars">⭐⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(244,114,182,.12),rgba(251,191,36,.08))">
+      <span class="emoji">📸</span><h3>Photo Booth</h3><p>Selfies avec filtres</p><div class="stars">⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(255,107,107,.12),rgba(255,45,149,.08))">
+      <span class="emoji">🐱</span><h3>Pet Cafe</h3><p>Ton animal virtuel</p><div class="stars">⭐⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(167,139,250,.08))">
+      <span class="emoji">🎵</span><h3>Music Quiz</h3><p>Devine la chanson</p><div class="stars">⭐⭐⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(52,211,153,.12),rgba(96,165,250,.08))">
+      <span class="emoji">🏆</span><h3>Fan Challenge</h3><p>Quiz pour vrais fans</p><div class="stars">⭐⭐⭐⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(251,146,60,.12),rgba(244,63,94,.08))">
+      <span class="game-badge">Nouveau</span>
+      <span class="emoji">🎬</span><h3>MV Director</h3><p>Cree ton clip video</p><div class="stars">⭐⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(236,72,153,.08))">
+      <span class="emoji">💖</span><h3>Bias Picker</h3><p>Trouve ton bias ideal</p><div class="stars">⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(20,184,166,.12),rgba(56,189,248,.08))">
+      <span class="emoji">🎧</span><h3>DJ Remix</h3><p>Mixe tes propres sons</p><div class="stars">⭐⭐⭐</div>
+    </div>
+    <div class="game-card" style="background:linear-gradient(135deg,rgba(249,115,22,.12),rgba(234,179,8,.08))">
+      <span class="emoji">🌟</span><h3>Idol Trainer</h3><p>Entraine ton idol</p><div class="stars">⭐⭐⭐⭐</div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="section" id="features">
-  <div class="container">
-    <h2 class="section-title reveal">Pourquoi les parents adorent</h2>
-    <p class="section-subtitle reveal">Un jeu concu pour le bonheur des enfants ET la tranquillite des parents.</p>
-    <div class="features-grid">
-      <div class="feature-card reveal">
-        <div class="feature-icon pink">🎮</div>
-        <h3>10 Jeux Varies</h3>
-        <p>Dance, Quiz, Memory, Karaoke, Puzzle, Coloriage, Habillage, Collection de cartes et plus encore. Jamais de routine !</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon purple">👯</div>
-        <h3>Mode Duo</h3>
-        <p>Jouez a 2 en karaoke ! Partagez l'ecran et chantez ensemble vos chansons K-Pop preferees.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon green">🛡️</div>
-        <h3>100% Securise</h3>
-        <p>Zero pub, zero collecte de donnees, zero achat cache. Vos enfants jouent en toute securite.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon blue">📡</div>
-        <h3>Fonctionne Hors-Ligne</h3>
-        <p>Installez l'app et jouez partout &mdash; en voiture, dans l'avion, a la montagne. Pas besoin d'internet.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon gold">🏆</div>
-        <h3>Collection & Progression</h3>
-        <p>Stickers, trophees, niveaux, streaks... Votre enfant progresse et debloques des recompenses a chaque session.</p>
-      </div>
-      <div class="feature-card reveal">
-        <div class="feature-icon red">🇫🇷</div>
-        <h3>Fait en France</h3>
-        <p>Cree avec amour a l'Ecole Saint-Esprit. Un projet educatif et ludique, par des parents pour des parents.</p>
-      </div>
+<!-- ==================== FEATURES ==================== -->
+<section class="reveal">
+  <h2 style="text-align:center;font-size:clamp(1.8rem,5vw,2.8rem);margin-bottom:48px;background:linear-gradient(135deg,var(--cyan),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">
+    Pourquoi les Kids Adorent
+  </h2>
+  <div class="features-grid">
+    <div class="feature-card reveal reveal-delay-1">
+      <span class="icon">🎮</span><h3>16 Jeux Differents</h3><p>Jamais le temps de s'ennuyer</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <span class="icon">🐱</span><h3>Ton Animal Virtuel</h3><p>Nourris-le, habille-le, joue</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-3">
+      <span class="icon">🏆</span><h3>50 Succes a Debloquer</h3><p>Collectionne-les tous !</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-4">
+      <span class="icon">👗</span><h3>Mode & Defile</h3><p>Cree tes looks de star</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-5">
+      <span class="icon">🎤</span><h3>Karaoke & Studio</h3><p>Chante comme une idol</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="icon">📱</span><h3>Installe comme une App</h3><p>Sur ton ecran d'accueil</p>
     </div>
   </div>
 </section>
 
-<!-- GAMES SHOWCASE -->
-<section class="section" id="games">
-  <div class="container">
-    <h2 class="section-title reveal">10 mini-jeux magiques</h2>
-    <p class="section-subtitle reveal">Chaque jeu est une aventure. Decouvrez-les tous !</p>
-    <div class="games-scroll reveal">
-      <div class="game-card">
-        <span class="game-card-emoji">💃</span>
-        <h3>Dance Battle</h3>
-        <p>Appuie sur les fleches au bon moment pour reproduire la choregraphie !</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">🎤</span>
-        <h3>Karaoke Star</h3>
-        <p>Chante en duo ou en solo avec les paroles qui defilent a l'ecran.</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">❓</span>
-        <h3>Quiz K-Pop</h3>
-        <p>Teste tes connaissances sur les groupes, les membres et les chansons.</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">🃏</span>
-        <h3>Memory Cards</h3>
-        <p>Retrouve les paires de cartes K-Pop. Entraine ta memoire !</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">🧩</span>
-        <h3>Puzzle Photo</h3>
-        <p>Reconstitue les images de tes stars preferees piece par piece.</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">🎨</span>
-        <h3>Coloriage</h3>
-        <p>Colorie des dessins exclusifs de tes idoles K-Pop.</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">👗</span>
-        <h3>Habillage</h3>
-        <p>Cree le look parfait pour ton avatar K-Pop avec des centaines de vetements.</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">🌟</span>
-        <h3>Collection Stars</h3>
-        <p>Collectionne les cartes de toutes les stars et complete ton album.</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">👤</span>
-        <h3>Avatar Creator</h3>
-        <p>Cree ton personnage K-Pop unique avec des dizaines d'options.</p>
-      </div>
-      <div class="game-card">
-        <span class="game-card-emoji">🃏</span>
-        <h3>Carte a Gratter</h3>
-        <p>Gratte et decouvre des surprises, des stickers et des bonus !</p>
-      </div>
+<!-- ==================== SOCIAL PROOF ==================== -->
+<section class="social-section reveal">
+  <h2>Ils Adorent</h2>
+
+  <div class="counter">
+    🎮 Plus de <span id="play-count">0</span> parties jouees
+  </div>
+
+  <div class="testimonials">
+    <div class="testimonial reveal reveal-delay-1">
+      <div class="avatar">👧🏻</div>
+      <div class="t-stars">⭐⭐⭐⭐⭐</div>
+      <q>Mon jeu prefere ! Je joue tous les jours au karaoke et au quiz. Trop bien !</q>
+      <div class="t-name">Emma, 9 ans</div>
     </div>
+    <div class="testimonial reveal reveal-delay-2">
+      <div class="avatar">👩🏽</div>
+      <div class="t-stars">⭐⭐⭐⭐⭐</div>
+      <q>Enfin un jeu gratuit SANS pub ! Ma fille peut jouer tranquille. Merci !</q>
+      <div class="t-name">Sophie, maman</div>
+    </div>
+    <div class="testimonial reveal reveal-delay-3">
+      <div class="avatar">👧🏾</div>
+      <div class="t-stars">⭐⭐⭐⭐⭐</div>
+      <q>J'adore le pet cafe et le fashion show ! Mon chat virtuel est trop mignon !</q>
+      <div class="t-name">Lina, 7 ans</div>
+    </div>
+  </div>
+
+  <div class="parent-badge reveal">
+    🛡️ Recommande par les parents
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section class="section" id="avis">
-  <div class="container">
-    <h2 class="section-title reveal">Les parents en parlent</h2>
-    <p class="section-subtitle reveal">Des milliers de familles ont deja adopte K-Pop Star Academy.</p>
-    <div class="testimonials-grid">
-      <div class="testimonial-card reveal">
-        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testimonial-text">&laquo; Mes filles de 6 et 10 ans adorent ! Elles y jouent tous les jours apres l'ecole. C'est devenu un rituel. &raquo;</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar t1">S</div>
-          <div>
-            <div class="testimonial-name">Sophie M.</div>
-            <div class="testimonial-role">Maman de 2 enfants</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal">
-        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testimonial-text">&laquo; Enfin un jeu sans pub et sans achats in-app ! Je peux laisser mon fils jouer sans m'inquieter. Bravo. &raquo;</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar t2">T</div>
-          <div>
-            <div class="testimonial-name">Thomas L.</div>
-            <div class="testimonial-role">Papa d'un garcon de 8 ans</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal">
-        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testimonial-text">&laquo; Ma fille a appris plein de choses sur la K-Pop et elle adore collectionner les cartes. Le mode karaoke est genial ! &raquo;</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar t3">N</div>
-          <div>
-            <div class="testimonial-name">Nadia K.</div>
-            <div class="testimonial-role">Maman d'une fille de 9 ans</div>
-          </div>
-        </div>
-      </div>
+<!-- ==================== INSTALL ==================== -->
+<section class="install-section reveal">
+  <h2>Installe en 30 Secondes</h2>
+
+  <div class="steps">
+    <div class="step reveal reveal-delay-1">
+      <span class="step-icon">📱</span>
+      <span class="step-num">1</span>
+      <h3>Ouvre le lien</h3>
+      <p>Sur ton telephone</p>
     </div>
+    <div class="step reveal reveal-delay-2">
+      <span class="step-icon">📥</span>
+      <span class="step-num">2</span>
+      <h3>Ajouter a l'ecran</h3>
+      <p>Clique "Ajouter a l'ecran d'accueil"</p>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <span class="step-icon">🎉</span>
+      <span class="step-num">3</span>
+      <h3>C'est pret !</h3>
+      <p>Amuse-toi, meme sans internet</p>
+    </div>
+  </div>
+
+  <div class="qr-area reveal"></div>
+
+  <div class="share-row reveal">
+    <a href="https://wa.me/?text=Regarde%20ce%20jeu%20K-Pop%20trop%20bien%20!%20https://kpop-star-academy.app" class="share-btn whatsapp" target="_blank">
+      💬 Partager WhatsApp
+    </a>
+    <button class="share-btn copy" id="copy-btn" onclick="copyLink()">
+      📋 Copier le lien
+    </button>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://kpop-star-academy.app" class="share-btn facebook" target="_blank">
+      📘 Facebook
+    </a>
   </div>
 </section>
 
-<!-- PRICING -->
-<section class="section" id="prix">
-  <div class="container">
-    <h2 class="section-title reveal">Simple et transparent</h2>
-    <p class="section-subtitle reveal">Jouez gratuitement pour toujours, ou debloquez encore plus de contenu.</p>
-    <div class="pricing-grid">
-      <div class="pricing-card reveal">
-        <div class="pricing-name">Gratuit</div>
-        <div class="pricing-price">0&euro;</div>
-        <div class="pricing-period">Pour toujours</div>
-        <ul class="pricing-features">
-          <li>10 mini-jeux complets</li>
-          <li>Mode Duo karaoke</li>
-          <li>Collection de stickers</li>
-          <li>Systeme de niveaux</li>
-          <li>Fonctionne hors-ligne</li>
-          <li>Zero pub, zero tracking</li>
-        </ul>
-        <a href="index.html" class="btn btn-primary" style="width:100%;justify-content:center;">Jouer Gratuitement</a>
-      </div>
-      <div class="pricing-card featured reveal">
-        <div class="pricing-badge">Populaire</div>
-        <div class="pricing-name">Star VIP</div>
-        <div class="pricing-price">4,99&euro;</div>
-        <div class="pricing-period">Achat unique</div>
-        <ul class="pricing-features">
-          <li>Tout le contenu gratuit inclus</li>
-          <li>50 stickers exclusifs</li>
-          <li>5 themes premium</li>
-          <li>Avatar personnalise illimite</li>
-          <li>Chansons karaoke bonus</li>
-          <li>Niveaux de difficulte avances</li>
-          <li>Badge VIP dore</li>
-        </ul>
-        <a href="index.html" class="btn btn-primary" style="width:100%;justify-content:center;background:linear-gradient(135deg, var(--gold), #ff8c00);color:#1a1a2e;">Devenir VIP</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="section" id="faq">
-  <div class="container">
-    <h2 class="section-title reveal">Questions frequentes</h2>
-    <p class="section-subtitle reveal">Tout ce que vous devez savoir avant de laisser vos enfants jouer.</p>
-    <div class="faq-list">
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          C'est vraiment gratuit ?
-          <span class="faq-arrow">&#9660;</span>
-        </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">Oui, 100% jouable gratuitement ! Les 10 mini-jeux sont accessibles sans rien payer. L'option Star VIP est un bonus optionnel pour les plus grands fans, mais elle n'est absolument pas necessaire pour profiter du jeu.</div>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          Y a-t-il des publicites ?
-          <span class="faq-arrow">&#9660;</span>
-        </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">Non, zero publicite. Nous pensons que les enfants meritent une experience de jeu sans interruption ni distraction. Pas de bannieres, pas de videos forcees, pas de pop-ups.</div>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          C'est adapte a quel age ?
-          <span class="faq-arrow">&#9660;</span>
-        </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">K-Pop Star Academy est concu pour les enfants de 4 a 12 ans. Les jeux sont accessibles aux plus petits grace a des interfaces simples et colorees, tout en restant amusants pour les plus grands avec des niveaux de difficulte progressifs.</div>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          Ca marche sur quel appareil ?
-          <span class="faq-arrow">&#9660;</span>
-        </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">Sur tous les appareils ! Telephone, tablette et ordinateur. Le jeu s'adapte automatiquement a la taille de l'ecran. Il fonctionne sur Chrome, Safari, Firefox et Edge. Vous pouvez aussi l'installer comme une app sur votre ecran d'accueil.</div>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">
-          Les donnees sont-elles securisees ?
-          <span class="faq-arrow">&#9660;</span>
-        </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">Absolument. Toutes les donnees (progression, scores, parametres) sont stockees localement sur l'appareil de votre enfant. Rien n'est envoye a un serveur. Nous ne collectons aucune information personnelle. La vie privee de votre famille est notre priorite.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA BANNER -->
-<section class="section">
-  <div class="container">
-    <div class="cta-banner reveal">
-      <h2>Pret a lancer l'aventure K-Pop ?</h2>
-      <p>Gratuit, sans pub, sans inscription. Votre enfant joue en 10 secondes.</p>
-      <a href="index.html" class="btn btn-primary">Jouer Maintenant</a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
+<!-- ==================== FOOTER ==================== -->
 <footer>
-  <div class="footer-inner">
-    <ul class="footer-links">
-      <li><a href="index.html">Jouer</a></li>
-      <li><a href="mailto:contact@kpop-star-academy.fr">Contact</a></li>
-      <li><a href="#">Mentions legales</a></li>
-    </ul>
-    <p class="footer-copy">&copy; 2024 K-Pop Star Academy &mdash; Ecole Saint-Esprit</p>
-    <div class="footer-social">
-      <a href="https://wa.me/?text=Decouvre%20K-Pop%20Star%20Academy%20!%20https://kpop-star-academy.fr" target="_blank" rel="noopener" title="Partager sur WhatsApp">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      </a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=https://kpop-star-academy.fr" target="_blank" rel="noopener" title="Partager sur Facebook">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-      </a>
-      <a href="https://twitter.com/intent/tweet?text=Decouvre%20K-Pop%20Star%20Academy%20!&url=https://kpop-star-academy.fr" target="_blank" rel="noopener" title="Partager sur Twitter">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      </a>
-    </div>
-  </div>
+  <p>K-Pop Star Academy &mdash; Fait avec 💖 pour les fans de K-Pop</p>
+  <p style="margin-top:8px;">Gratuit &bull; Sans pub &bull; <a href="privacy.html">Vie privee</a></p>
 </footer>
 
 <script>
-// Scroll reveal
+// ===== LOADER =====
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('hide'), 800);
+});
+
+// ===== STAR FIELD =====
+(() => {
+  const c = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 3 + 1;
+    Object.assign(s.style, {
+      width: size + 'px', height: size + 'px',
+      top: Math.random() * 100 + '%',
+      left: Math.random() * 100 + '%',
+      '--dur': (Math.random() * 3 + 2) + 's',
+      animationDelay: Math.random() * 3 + 's'
+    });
+    c.appendChild(s);
+  }
+})();
+
+// ===== FLOATING EMOJIS =====
+(() => {
+  const emojis = ['🎤','⭐','💖','👑','🦄','🌈','🎵','✨','🎀','💜'];
+  const c = document.getElementById('floating-emojis');
+  emojis.forEach((e, i) => {
+    const d = document.createElement('div');
+    d.className = 'float-emoji';
+    d.textContent = e;
+    Object.assign(d.style, {
+      top: (10 + Math.random() * 80) + '%',
+      left: (5 + Math.random() * 90) + '%',
+      '--dur': (4 + Math.random() * 6) + 's',
+      '--drift': (-20 - Math.random() * 30) + 'px',
+      '--rot': (Math.random() * 30 - 15) + 'deg',
+      animationDelay: (i * .7) + 's',
+      fontSize: (.8 + Math.random() * 1.2) + 'rem'
+    });
+    c.appendChild(d);
+  });
+})();
+
+// ===== HERO TITLE LETTERS =====
+(() => {
+  const text = 'K-Pop Star Academy';
+  const colors = [
+    'linear-gradient(135deg,#ff2d95,#ff6b9d)',
+    'linear-gradient(135deg,#a855f7,#c084fc)',
+    'linear-gradient(135deg,#ffd700,#ffec4d)',
+    'linear-gradient(135deg,#06d6a0,#34d399)',
+    'linear-gradient(135deg,#ff6b6b,#ff2d95)',
+    'linear-gradient(135deg,#22d3ee,#a78bfa)',
+    'linear-gradient(135deg,#f472b6,#fbbf24)',
+    'linear-gradient(135deg,#60a5fa,#a855f7)',
+  ];
+  const container = document.getElementById('hero-title');
+  let ci = 0;
+  text.split('').forEach((ch, i) => {
+    const span = document.createElement('span');
+    if (ch === ' ') {
+      span.innerHTML = '&nbsp;';
+      span.style.width = '.3em';
+    } else {
+      span.textContent = ch;
+      span.className = 'letter';
+      span.style.background = colors[ci % colors.length];
+      span.style.webkitBackgroundClip = 'text';
+      span.style.backgroundClip = 'text';
+      span.style.webkitTextFillColor = 'transparent';
+      span.style.animationDelay = (i * .12) + 's';
+      span.style.setProperty('--float-y', (-6 - Math.random() * 10) + 'px');
+      ci++;
+    }
+    container.appendChild(span);
+  });
+})();
+
+// ===== COUNTING ANIMATION =====
+function animateCount(el, target, duration) {
+  let start = 0;
+  const step = (ts) => {
+    if (!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    el.textContent = Math.floor(progress * target);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(step);
+}
+
+// ===== INTERSECTION OBSERVER =====
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 80);
-      observer.unobserve(entry.target);
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // Trigger counters
+      if (e.target.querySelector('#game-count')) {
+        animateCount(document.getElementById('game-count'), 16, 1500);
+      }
+      if (e.target.querySelector('#play-count')) {
+        animateCount(document.getElementById('play-count'), 1247, 2000);
+      }
     }
   });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// FAQ accordion
-document.querySelectorAll('.faq-question').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.parentElement;
-    const wasOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-    if (!wasOpen) item.classList.add('open');
+// Trigger hero elements immediately
+setTimeout(() => {
+  document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('visible'));
+  animateCount(document.getElementById('game-count'), 16, 1500);
+}, 900);
+
+// ===== CONFETTI =====
+function confetti() {
+  const colors = ['#ff2d95','#a855f7','#ffd700','#06d6a0','#ff6b6b','#22d3ee','#f472b6','#60a5fa'];
+  for (let i = 0; i < 50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    Object.assign(c.style, {
+      left: (Math.random() * 100) + 'vw',
+      top: '-10px',
+      background: colors[Math.floor(Math.random() * colors.length)],
+      width: (6 + Math.random() * 8) + 'px',
+      height: (6 + Math.random() * 8) + 'px',
+      borderRadius: Math.random() > .5 ? '50%' : '2px',
+      '--fall-dur': (1.5 + Math.random() * 2) + 's',
+      '--rot': (360 + Math.random() * 720) + 'deg',
+      animationDelay: (Math.random() * .5) + 's'
+    });
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
+
+document.getElementById('cta-main').addEventListener('click', (e) => {
+  confetti();
+});
+
+// ===== AUTO-SCROLL GAMES =====
+(() => {
+  const scroll = document.getElementById('games-scroll');
+  let scrollDir = 1;
+  let autoScroll = true;
+  let interval;
+
+  function startAutoScroll() {
+    interval = setInterval(() => {
+      if (!autoScroll) return;
+      scroll.scrollLeft += scrollDir;
+      if (scroll.scrollLeft >= scroll.scrollWidth - scroll.clientWidth - 5) scrollDir = -1;
+      if (scroll.scrollLeft <= 5) scrollDir = 1;
+    }, 30);
+  }
+
+  scroll.addEventListener('pointerdown', () => { autoScroll = false; });
+  scroll.addEventListener('pointerup', () => { setTimeout(() => autoScroll = true, 3000); });
+
+  startAutoScroll();
+})();
+
+// ===== COPY LINK =====
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✅ Copie !';
+    setTimeout(() => btn.textContent = '📋 Copier le lien', 2000);
+  });
+}
+
+// ===== PARALLAX ON FLOATING EMOJIS =====
+document.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - .5) * 20;
+  const y = (e.clientY / window.innerHeight - .5) * 20;
+  document.querySelectorAll('.float-emoji').forEach((el, i) => {
+    const factor = (i % 3 + 1) * .5;
+    el.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
   });
 });
-
-// PWA install
-let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = 'inline-flex';
-});
-
-installBtn.addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    if (outcome === 'accepted') installBtn.style.display = 'none';
-  }
-});
 </script>
-
 </body>
 </html>
