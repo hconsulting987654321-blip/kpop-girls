@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Mode Défilé — École Saint-Esprit</title>
+<title>Mode Défilé — K-Pop Star Academy</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
 <meta name="description" content="Mode Défilé K-Pop — Prépare ta tenue et défile sur le podium !">
 <meta name="author" content="K-Pop Star Academy">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Mode Défilé — École Saint-Esprit">
+<meta property="og:title" content="Mode Défilé — K-Pop Star Academy">
 <meta property="og:description" content="Prépare ta tenue et défile sur le podium devant le public !">
-<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:site_name" content="K-Pop Star Academy">
 <meta property="og:type" content="website">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap');
@@ -1033,7 +1034,7 @@ function showRoundScore() {
   const gradeEmojis = { S: '👑 S', A: '🌟 A', B: '✨ B', C: '💫 C' };
   document.getElementById('gradeDisplay').textContent = gradeEmojis[score.grade] || score.grade;
 
-  const titles = { S: 'INCROYABLE !', A: 'Magnifique !', B: 'Tres bien !', C: 'Pas mal !' };
+  const titles = { S: 'INCROYABLE !', A: 'Magnifique !', B: 'Très bien !', C: 'Pas mal !' };
   document.getElementById('scoreTitle').textContent = titles[score.grade];
 
   document.getElementById('comboLabel').textContent = score.comboNames.length ? score.comboNames.join(' | ') : '';

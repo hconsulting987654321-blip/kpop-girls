@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mes Succes — Ecole Saint-Esprit</title>
+<title>Mes Succès — K-Pop Star Academy</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -294,13 +294,13 @@ body{
   <span class="toast-icon" id="toastIcon"></span>
   <div>
     <span class="toast-text" id="toastText"></span>
-    <span class="toast-sub">Succes debloque !</span>
+    <span class="toast-sub">Succès débloqué !</span>
   </div>
 </div>
 
 <div class="header">
-  <h1>Mes Succes</h1>
-  <div class="school-sub">Ecole Saint-Esprit</div>
+  <h1>Mes Succès</h1>
+  <div class="school-sub">K-Pop Star Academy</div>
   <div class="player-name" id="playerGreeting"></div>
 </div>
 
@@ -337,7 +337,7 @@ body{
 <div class="stats-bar">
   <div class="stat-card">
     <div class="stat-value" id="statTotal">0/50</div>
-    <div class="stat-label">Succes</div>
+    <div class="stat-label">Succès</div>
   </div>
   <div class="stat-card">
     <div class="stat-value" id="statRare">0</div>
@@ -345,7 +345,7 @@ body{
   </div>
   <div class="stat-card">
     <div class="stat-value" id="statStars">0</div>
-    <div class="stat-label">Etoiles</div>
+    <div class="stat-label">Étoiles</div>
   </div>
   <div class="stat-card">
     <div class="stat-value" id="statGames">0</div>
@@ -356,11 +356,11 @@ body{
 <!-- Filters -->
 <div class="filters">
   <button class="filter-btn active" data-filter="all">Tous</button>
-  <button class="filter-btn" data-filter="unlocked">Debloques</button>
+  <button class="filter-btn" data-filter="unlocked">Débloqués</button>
   <button class="filter-btn" data-filter="locked">Verrouilles</button>
   <button class="filter-btn" data-filter="game-general">General</button>
   <button class="filter-btn" data-filter="game-dance">Dance</button>
-  <button class="filter-btn" data-filter="game-stars">Etoiles</button>
+  <button class="filter-btn" data-filter="game-stars">Étoiles</button>
   <button class="filter-btn" data-filter="game-memory">Memory</button>
   <button class="filter-btn" data-filter="game-quiz">Quiz</button>
   <button class="filter-btn" data-filter="game-habillage">Habillage</button>
@@ -384,33 +384,33 @@ document.getElementById('backBtn').href = 'index.html?player=' + encodeURICompon
 // ===== ACHIEVEMENT DEFINITIONS =====
 const ACHIEVEMENTS = [
   // ===== GENERAL (10) =====
-  {id:'gen_premier_pas',icon:'🌟',title:'Premier Pas',desc:'Jouer a un jeu pour la premiere fois',hint:'Joue a n\'importe quel jeu',game:'general',rarity:'bronze'},
+  {id:'gen_premier_pas',icon:'🌟',title:'Premier Pas',desc:'Jouer a un jeu pour la première fois',hint:'Joue a n\'importe quel jeu',game:'general',rarity:'bronze'},
   {id:'gen_en_feu',icon:'🔥',title:'En Feu',desc:'3 jours de suite de connexion',hint:'Reviens 3 jours de suite',game:'general',rarity:'silver'},
   {id:'gen_collectionneuse',icon:'💎',title:'Collectionneuse',desc:'Collecter 10 stickers',hint:'Continue a collecter...',game:'general',rarity:'silver'},
-  {id:'gen_reine',icon:'👑',title:'Reine',desc:'Atteindre le niveau 10',hint:'Gagne des etoiles pour monter de niveau',game:'general',rarity:'gold'},
+  {id:'gen_reine',icon:'👑',title:'Reine',desc:'Atteindre le niveau 10',hint:'Gagne des étoiles pour monter de niveau',game:'general',rarity:'gold'},
   {id:'gen_championne',icon:'🏆',title:'Championne',desc:'Obtenir un grade S dans un jeu',hint:'Fais un score parfait !',game:'general',rarity:'gold'},
   {id:'gen_perseverante',icon:'💪',title:'Perseverante',desc:'Jouer 50 parties au total',hint:'Continue a jouer !',game:'general',rarity:'silver'},
   {id:'gen_arc_en_ciel',icon:'🌈',title:'Arc-en-ciel',desc:'Jouer aux 10 jeux au moins une fois',hint:'Essaie tous les jeux !',game:'general',rarity:'gold'},
-  {id:'gen_1000_etoiles',icon:'⭐',title:'1000 Etoiles',desc:'Gagner 1000 etoiles au total',hint:'Accumule les etoiles...',game:'general',rarity:'gold'},
+  {id:'gen_1000_etoiles',icon:'⭐',title:'1000 Étoiles',desc:'Gagner 1000 etoiles au total',hint:'Accumule les étoiles...',game:'general',rarity:'gold'},
   {id:'gen_perfectionniste',icon:'🎯',title:'Perfectionniste',desc:'Score parfait dans un jeu',hint:'Vise la perfection !',game:'general',rarity:'diamond'},
   {id:'gen_legende',icon:'💫',title:'Legende',desc:'Atteindre le niveau 20',hint:'Le sommet t\'attend...',game:'general',rarity:'diamond'},
 
   // ===== DANCE (4) =====
-  {id:'dance_first',icon:'💃',title:'Premiere Danse',desc:'Jouer au Dance Challenge pour la premiere fois',hint:'Essaie le Dance Challenge',game:'dance',rarity:'bronze'},
+  {id:'dance_first',icon:'💃',title:'Première Danse',desc:'Jouer au Dance Challenge pour la première fois',hint:'Essaie le Dance Challenge',game:'dance',rarity:'bronze'},
   {id:'dance_500',icon:'🎶',title:'Groove Master',desc:'Atteindre 500 points au Dance Challenge',hint:'Atteins 500 pts',game:'dance',rarity:'silver'},
   {id:'dance_1000',icon:'🕺',title:'Danseuse Elite',desc:'Atteindre 1000 points au Dance Challenge',hint:'1000 pts, c\'est possible !',game:'dance',rarity:'gold'},
   {id:'dance_s_grade',icon:'👸',title:'Reine du Dance Floor',desc:'Obtenir un grade S au Dance Challenge',hint:'Le grade S ultime...',game:'dance',rarity:'diamond'},
 
   // ===== STARS (4) =====
-  {id:'stars_first',icon:'⭐',title:'Chasseuse d\'Etoiles',desc:'Jouer a Attrape les Etoiles pour la premiere fois',hint:'Essaie Attrape les Etoiles',game:'stars',rarity:'bronze'},
-  {id:'stars_300',icon:'🌟',title:'Super Catch',desc:'Atteindre 300 points',hint:'Attrape 300 pts d\'etoiles',game:'stars',rarity:'silver'},
+  {id:'stars_first',icon:'⭐',title:'Chasseuse d\'Etoiles',desc:'Jouer a Attrape les Étoiles pour la première fois',hint:'Essaie Attrape les Étoiles',game:'stars',rarity:'bronze'},
+  {id:'stars_300',icon:'🌟',title:'Super Catch',desc:'Atteindre 300 points',hint:'Attrape 300 pts d\'étoiles',game:'stars',rarity:'silver'},
   {id:'stars_unicorn',icon:'🦄',title:'Licorne Magique',desc:'Attraper une licorne',hint:'Cherche la licorne...',game:'stars',rarity:'gold'},
   {id:'stars_no_bomb',icon:'🛡️',title:'Intouchable',desc:'Finir une partie sans toucher de bombe',hint:'Esquive tout !',game:'stars',rarity:'diamond'},
 
   // ===== MEMORY (4) =====
-  {id:'memory_first',icon:'🧠',title:'Bonne Memoire',desc:'Gagner une partie de Memory',hint:'Trouve toutes les paires',game:'memory',rarity:'bronze'},
+  {id:'memory_first',icon:'🧠',title:'Bonne Mémoire',desc:'Gagner une partie de Memory',hint:'Trouve toutes les paires',game:'memory',rarity:'bronze'},
   {id:'memory_expert',icon:'🎓',title:'Experte Memory',desc:'Gagner en mode Expert',hint:'Essaie le mode Expert',game:'memory',rarity:'silver'},
-  {id:'memory_perfect',icon:'✨',title:'Memoire Parfaite',desc:'Gagner sans aucune erreur',hint:'Zero erreur, c\'est possible ?',game:'memory',rarity:'gold'},
+  {id:'memory_perfect',icon:'✨',title:'Mémoire Parfaite',desc:'Gagner sans aucune erreur',hint:'Zero erreur, c\'est possible ?',game:'memory',rarity:'gold'},
   {id:'memory_speed',icon:'⚡',title:'Eclair de Genie',desc:'Gagner en moins de 30 coups',hint:'Moins de 30 coups !',game:'memory',rarity:'diamond'},
 
   // ===== QUIZ (4) =====
@@ -420,19 +420,19 @@ const ACHIEVEMENTS = [
   {id:'quiz_3perfect',icon:'🧪',title:'Genie K-Pop',desc:'3 quiz parfaits consecutifs',hint:'3 fois 100% de suite !',game:'quiz',rarity:'diamond'},
 
   // ===== HABILLAGE (4) =====
-  {id:'hab_first',icon:'👗',title:'Styliste Debutante',desc:'Creer une premiere tenue',hint:'Habille ta star !',game:'habillage',rarity:'bronze'},
+  {id:'hab_first',icon:'👗',title:'Styliste Débutante',desc:'Créer une première tenue',hint:'Habille ta star !',game:'habillage',rarity:'bronze'},
   {id:'hab_themes',icon:'🎨',title:'Exploratrice Mode',desc:'Essayer tous les themes',hint:'Essaie chaque theme',game:'habillage',rarity:'silver'},
   {id:'hab_5saves',icon:'💾',title:'Garde-robe Complete',desc:'Sauvegarder 5 tenues',hint:'Sauvegarde 5 looks',game:'habillage',rarity:'gold'},
   {id:'hab_s_grade',icon:'💅',title:'Icone de Mode',desc:'Obtenir un grade S en Habillage',hint:'Le style ultime...',game:'habillage',rarity:'diamond'},
 
   // ===== KARAOKE (4) =====
-  {id:'kara_first',icon:'🎤',title:'Premiere Note',desc:'Chanter une chanson au karaoke',hint:'Chante ta premiere chanson',game:'karaoke',rarity:'bronze'},
+  {id:'kara_first',icon:'🎤',title:'Première Note',desc:'Chanter une chanson au karaoke',hint:'Chante ta première chanson',game:'karaoke',rarity:'bronze'},
   {id:'kara_all_songs',icon:'🎵',title:'Repertoire Complet',desc:'Chanter toutes les chansons',hint:'Chante-les toutes !',game:'karaoke',rarity:'silver'},
-  {id:'kara_5stars',icon:'🌟',title:'5 Etoiles',desc:'Obtenir 5 etoiles sur une chanson',hint:'Chante parfaitement',game:'karaoke',rarity:'gold'},
+  {id:'kara_5stars',icon:'🌟',title:'5 Étoiles',desc:'Obtenir 5 étoiles sur une chanson',hint:'Chante parfaitement',game:'karaoke',rarity:'gold'},
   {id:'kara_duo',icon:'👯',title:'Duo Parfait',desc:'Completer un duo',hint:'Trouve une partenaire',game:'karaoke',rarity:'diamond'},
 
   // ===== COLORIAGE (4) =====
-  {id:'color_first',icon:'🖌️',title:'Premiere Couleur',desc:'Completer un premier coloriage',hint:'Colorie un dessin !',game:'coloriage',rarity:'bronze'},
+  {id:'color_first',icon:'🖌️',title:'Première Couleur',desc:'Completer un premier coloriage',hint:'Colorie un dessin !',game:'coloriage',rarity:'bronze'},
   {id:'color_all',icon:'🎨',title:'Artiste Complete',desc:'Colorier tous les dessins',hint:'Colorie tout !',game:'coloriage',rarity:'silver'},
   {id:'color_badges',icon:'🏅',title:'Collectionne les Badges',desc:'Obtenir tous les badges coloriage',hint:'Decroche tous les badges',game:'coloriage',rarity:'gold'},
   {id:'color_speed',icon:'🚀',title:'Speed Painter',desc:'Colorier un dessin en moins de 2 minutes',hint:'Vite, vite !',game:'coloriage',rarity:'diamond'},
@@ -444,29 +444,29 @@ const ACHIEVEMENTS = [
   {id:'puzzle_speed',icon:'⏱️',title:'Speed Puzzle',desc:'Completer un puzzle en moins de 60 secondes',hint:'Chrono !',game:'puzzle',rarity:'diamond'},
 
   // ===== AVATAR (4) =====
-  {id:'avatar_first',icon:'🎭',title:'Ma Premiere Idol',desc:'Creer un premier avatar idol',hint:'Cree ton idol !',game:'avatar',rarity:'bronze'},
-  {id:'avatar_5',icon:'👥',title:'Groupe Complet',desc:'Sauvegarder 5 idols differentes',hint:'Cree 5 idols',game:'avatar',rarity:'silver'},
+  {id:'avatar_first',icon:'🎭',title:'Ma Première Idol',desc:'Créer un premier avatar idol',hint:'Crée ton idol !',game:'avatar',rarity:'bronze'},
+  {id:'avatar_5',icon:'👥',title:'Groupe Complet',desc:'Sauvegarder 5 idols differentes',hint:'Crée 5 idols',game:'avatar',rarity:'silver'},
   {id:'avatar_photo',icon:'📸',title:'Photo Booth',desc:'Utiliser le mode photo booth',hint:'Prends une photo !',game:'avatar',rarity:'gold'},
   {id:'avatar_effects',icon:'✨',title:'Effets Speciaux',desc:'Essayer tous les effets',hint:'Teste tous les effets',game:'avatar',rarity:'diamond'},
 
   // ===== CARTE (4) =====
-  {id:'carte_first',icon:'🃏',title:'Premiere Carte',desc:'Creer une premiere carte K-Pop',hint:'Cree ta carte !',game:'carte',rarity:'bronze'},
-  {id:'carte_legendary',icon:'🌈',title:'Carte Legendaire',desc:'Obtenir une carte legendaire',hint:'La chance sourira...',game:'carte',rarity:'gold'},
+  {id:'carte_first',icon:'🃏',title:'Première Carte',desc:'Créer une première carte K-Pop',hint:'Crée ta carte !',game:'carte',rarity:'bronze'},
+  {id:'carte_legendary',icon:'🌈',title:'Carte Légendaire',desc:'Obtenir une carte légendaire',hint:'La chance sourira...',game:'carte',rarity:'gold'},
   {id:'carte_8',icon:'📇',title:'Collection 8 Cartes',desc:'Collecter 8 cartes differentes',hint:'8 cartes dans ta collection',game:'carte',rarity:'silver'},
-  {id:'carte_perfect',icon:'💎',title:'Carte Parfaite',desc:'Creer une carte avec un score parfait',hint:'La carte parfaite...',game:'carte',rarity:'diamond'},
+  {id:'carte_perfect',icon:'💎',title:'Carte Parfaite',desc:'Créer une carte avec un score parfait',hint:'La carte parfaite...',game:'carte',rarity:'diamond'},
 ];
 
 const GAME_META = {
   general: {emoji:'🏠',label:'General'},
   dance: {emoji:'💃',label:'Dance Challenge'},
-  stars: {emoji:'⭐',label:'Attrape les Etoiles'},
+  stars: {emoji:'⭐',label:'Attrape les Étoiles'},
   memory: {emoji:'🧠',label:'K-Pop Memory'},
   quiz: {emoji:'❓',label:'Quiz K-Pop'},
   habillage: {emoji:'👗',label:'Habillage K-Pop'},
   karaoke: {emoji:'🎤',label:'Karaoke Star'},
   coloriage: {emoji:'🖌️',label:'Coloriage K-Pop'},
   puzzle: {emoji:'🧩',label:'Puzzle Star'},
-  avatar: {emoji:'🎭',label:'Cree ton Idol'},
+  avatar: {emoji:'🎭',label:'Crée ton Idol'},
   carte: {emoji:'🃏',label:'Ma Carte K-Pop'},
 };
 
@@ -644,7 +644,7 @@ function autoDetectAchievements(){
   if(cardCollection.length > 0) unlockAchievement('carte_first');
   if(cardCollection.length >= 8) unlockAchievement('carte_8');
   // Check for legendary
-  const hasLegendary = cardCollection.some(c => c && (c.rarity === 'legendary' || c.rarity === 'legendaire'));
+  const hasLegendary = cardCollection.some(c => c && (c.rarity === 'legendary' || c.rarity === 'légendaire'));
   if(hasLegendary) unlockAchievement('carte_legendary');
 
   return {stars, level, gamesPlayed: gamesPlayed.size, stickers: stickers.length, streak};
@@ -718,7 +718,7 @@ function renderAll(){
         <div class="ach-title">${isU ? ach.title : '???'}</div>
         <div class="ach-desc">${isU ? ach.desc : ach.hint}</div>
         <span class="ach-game-tag">${meta.label}</span>
-        ${isU ? '<span class="ach-date">Debloque le ' + dateStr + '</span>' : ''}
+        ${isU ? '<span class="ach-date">Débloqué le ' + dateStr + '</span>' : ''}
       `;
 
       grid.appendChild(card);

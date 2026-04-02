@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ma Carte K-Pop — Ecole Saint-Esprit</title>
+<title>Ma Carte K-Pop — K-Pop Star Academy</title>
 <meta name="description" content="Ma Carte K-Pop — Crée ta carte de star collector !">
 <meta name="author" content="K-Pop Star Academy">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Ma Carte K-Pop — Ecole Saint-Esprit">
+<meta property="og:title" content="Ma Carte K-Pop — K-Pop Star Academy">
 <meta property="og:description" content="Ma Carte K-Pop — Crée ta carte de star collector !">
-<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:site_name" content="K-Pop Star Academy">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
 <meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
@@ -18,6 +18,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
@@ -619,7 +620,7 @@ h1 {
 <a href="index.html" class="back-btn">Retour</a>
 
 <h1>Ma Carte K-Pop</h1>
-<div class="subtitle">Ecole Saint-Esprit</div>
+<div class="subtitle">K-Pop Star Academy</div>
 
 <!-- Rarity counter + progress -->
 <div class="rarity-counter" id="rarityCounter"></div>
@@ -655,7 +656,7 @@ h1 {
       <div class="card-content">
         <div class="card-header">
           <span class="card-label">K-POP STAR CARD</span>
-          <span class="card-school">Saint-Esprit</span>
+          <span class="card-school">K-Pop Star Academy</span>
         </div>
         <div class="card-avatar" id="cardAvatar">&#x1F478;</div>
         <div class="card-player-name" id="cardName">Star</div>
@@ -1080,7 +1081,7 @@ function updateRarityCounter() {
   const total = collection.length;
 
   document.getElementById('rarityCounter').innerHTML =
-    '<span class="rc-legendary">Legendaires: ' + counts.legendary + '/8</span>' +
+    '<span class="rc-legendary">Légendaires: ' + counts.legendary + '/8</span>' +
     '<span class="rc-epic">Epiques: ' + counts.epic + '/8</span>' +
     '<span class="rc-rare">Rares: ' + counts.rare + '/8</span>';
 
@@ -1094,7 +1095,7 @@ function updateRarityCounter() {
   } else if (total > 0) {
     msgEl.textContent = 'Collection : ' + total + '/8 — Continue !';
   } else {
-    msgEl.textContent = 'Cree ta premiere carte !';
+    msgEl.textContent = 'Crée ta première carte !';
   }
 
   // Total cards created (lifetime)
@@ -1135,7 +1136,7 @@ const rarities = [
   { key: 'normal', label: 'Normal', cls: 'normal' },
   { key: 'rare', label: 'Rare', cls: 'rare' },
   { key: 'epic', label: 'Epique', cls: 'epic' },
-  { key: 'legendary', label: 'Legendaire', cls: 'legendary' },
+  { key: 'legendary', label: 'Légendaire', cls: 'legendary' },
 ];
 
 let currentStyle = 0;
@@ -1384,7 +1385,7 @@ function shareCard() {
     'Rarete: ' + rarities[currentRarity].label,
     'Danse: ' + stats.dance + ' | Style: ' + stats.style,
     'Chant: ' + stats.sing + ' | Charisme: ' + stats.charisma,
-    '--- Ecole Saint-Esprit ---'
+    '--- K-Pop Star Academy ---'
   ].join('\n');
 
   if (navigator.clipboard) {
@@ -1431,7 +1432,7 @@ function saveCard() {
   // Confetti on save!
   launchConfetti(30);
 
-  showToast('Carte sauvegardee ! +30 etoiles');
+  showToast('Carte sauvegardée ! +30 étoiles');
   renderCollection();
   updateRarityCounter();
 }
@@ -1442,7 +1443,7 @@ function renderCollection() {
   grid.innerHTML = '';
 
   if (collection.length === 0) {
-    grid.innerHTML = '<div class="collection-empty">Aucune carte sauvegardee. Cree ta premiere !</div>';
+    grid.innerHTML = '<div class="collection-empty">Aucune carte sauvegardée. Crée ta première !</div>';
     return;
   }
 

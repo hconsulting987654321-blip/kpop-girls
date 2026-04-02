@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Photo Booth K-Pop — École Saint-Esprit</title>
+<title>Photo Booth K-Pop — K-Pop Star Academy</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
@@ -15,7 +16,7 @@
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="Photo Booth K-Pop — K-Pop Star Academy">
 <meta property="og:description" content="Photo Booth K-Pop — Crée tes photos avec des stickers !">
-<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:site_name" content="K-Pop Star Academy">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
 <meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
@@ -627,7 +628,7 @@ function renderGallery() {
   const grid = document.getElementById('galleryGrid');
   const gallery = loadGallery();
   if (gallery.length === 0) {
-    grid.innerHTML = '<div class="gallery-empty">Prends ta premiere photo ! 📸</div>';
+    grid.innerHTML = '<div class="gallery-empty">Prends ta première photo ! 📸</div>';
     return;
   }
   grid.innerHTML = '';

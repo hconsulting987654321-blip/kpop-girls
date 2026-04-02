@@ -7,6 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
@@ -15,7 +16,7 @@
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="Course K-Pop — K-Pop Star Academy">
 <meta property="og:description" content="Course infinie K-Pop — Saute, collecte et cours !">
-<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:site_name" content="K-Pop Star Academy">
 <meta property="og:type" content="website">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
@@ -81,14 +82,14 @@ body{background:#1a1a2e;min-height:100vh;font-family:'Quicksand',sans-serif;over
 <!-- MENU -->
 <div id="menu">
   <h1>Course K-Pop</h1>
-  <p>Cours, saute et collecte des etoiles dans cette course infinie !</p>
+  <p>Cours, saute et collecte des étoiles dans cette course infinie !</p>
   <div class="player-select">
     <button class="player-card" onclick="selectPlayer(0)"><span class="avatar">💜</span>Ambre</button>
     <button class="player-card" onclick="selectPlayer(1)"><span class="avatar">💖</span>Eden</button>
     <button class="player-card" onclick="selectPlayer(2)"><span class="avatar">💛</span>Louise</button>
   </div>
   <button class="start-btn" id="startBtn" disabled onclick="startGame()">Choisir une joueuse</button>
-  <div class="instructions">Espace ou Tap pour sauter<br>Maintenir = saut plus haut<br>Collecte les etoiles, evite les obstacles !</div>
+  <div class="instructions">Espace ou Tap pour sauter<br>Maintenir = saut plus haut<br>Collecte les étoiles, evite les obstacles !</div>
 </div>
 
 <!-- CANVAS -->
@@ -244,13 +245,16 @@ function drawParallax(scrollX){
 
 // ===== PARTICLES =====
 let particles = [];
+const MAX_PARTICLES = 50;
 function spawnParticles(x, y, color, count=8){
   for(let i=0;i<count;i++){
+    if(particles.length >= MAX_PARTICLES) particles.shift();
     particles.push({x,y,vx:(Math.random()-.5)*6,vy:-Math.random()*5-2,
       life:1,color,size:Math.random()*4+2});
   }
 }
 function spawnScorePopup(x, y, text, color='#ffd700'){
+  if(particles.length >= MAX_PARTICLES) particles.shift();
   particles.push({x,y,vx:0,vy:-2,life:1.2,text,color,size:16,isText:true});
 }
 function updateParticles(dt){

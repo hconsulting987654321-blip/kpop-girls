@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cree ton Idol — Ecole Saint-Esprit</title>
+<title>Crée ton Idol — K-Pop Star Academy</title>
 <meta name="description" content="Crée ton Idol K-Pop — Personnalise ta star !">
 <meta name="author" content="K-Pop Star Academy">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Cree ton Idol — Ecole Saint-Esprit">
+<meta property="og:title" content="Crée ton Idol — K-Pop Star Academy">
 <meta property="og:description" content="Crée ton Idol K-Pop — Personnalise ta star !">
-<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:site_name" content="K-Pop Star Academy">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
 <meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
@@ -18,6 +18,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
@@ -197,7 +198,7 @@ h1{font-size:1.9em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,.2);margin:10p
 <body>
 
 <a href="index.html" class="back-btn">Retour</a>
-<h1>Cree ton Idol</h1>
+<h1>Crée ton Idol</h1>
 <div class="player-name-display" id="playerDisplay"></div>
 <div class="unlock-counter" id="unlockCounter"></div>
 
@@ -239,9 +240,9 @@ h1{font-size:1.9em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,.2);margin:10p
       <button class="share-btn share-copy" onclick="shareCopyAvatar()">Copier</button>
     </div>
     <div class="random-themes">
-      <button class="theme-btn" onclick="randomTheme('cute')">Aleatoire Cute</button>
-      <button class="theme-btn" onclick="randomTheme('cool')">Aleatoire Cool</button>
-      <button class="theme-btn" onclick="randomTheme('princess')">Aleatoire Princesse</button>
+      <button class="theme-btn" onclick="randomTheme('cute')">Aléatoire Cute</button>
+      <button class="theme-btn" onclick="randomTheme('cool')">Aléatoire Cool</button>
+      <button class="theme-btn" onclick="randomTheme('princess')">Aléatoire Princesse</button>
     </div>
   </div>
 
@@ -258,7 +259,7 @@ h1{font-size:1.9em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,.2);margin:10p
     <div class="frame-deco">&#x1F4F8;</div>
     <div class="photo-avatar-box" id="photoBox"></div>
     <div class="photo-name" id="photoName"></div>
-    <div style="color:#999;font-size:.85em">Ecole Saint-Esprit</div>
+    <div style="color:#999;font-size:.85em">K-Pop Star Academy</div>
     <button class="photo-close" onclick="closePhotoBooth()">Fermer</button>
   </div>
 </div>
@@ -549,7 +550,7 @@ function countTotalOptions(){
 }
 function updateUnlockCounter(){
   const t=countTotalOptions();
-  document.getElementById('unlockCounter').innerHTML='\uD83D\uDD13 <span>'+t+'/'+t+'</span> options debloquees — Acces VIP !';
+  document.getElementById('unlockCounter').innerHTML='\uD83D\uDD13 <span>'+t+'/'+t+'</span> options débloquées — Acces VIP !';
 }
 
 // ========== STAR RATING ==========
@@ -917,18 +918,18 @@ function exportDescription(){
     'Accessoire: '+OPTIONS.accessory[current.accessory].name,
     'Fond: '+OPTIONS.bg[current.bg].emoji,
     'Effet: '+OPTIONS.effect[current.effect].name,
-    '--- Ecole Saint-Esprit ---'
+    '--- K-Pop Star Academy ---'
   ].join('\n');
   if(navigator.clipboard){navigator.clipboard.writeText(desc).then(()=>showToast('Description copiee !'))}
   else{showToast('Description: '+name)}
 }
 
 function shareWhatsAppAvatar(){
-  const msg=encodeURIComponent("J'ai cree mon Idol K-Pop ! Cree la tienne ! https://hconsulting987654321-blip.github.io/kpop-girls/");
+  const msg=encodeURIComponent("J'ai créé mon Idol K-Pop ! Crée la tienne ! https://hconsulting987654321-blip.github.io/kpop-girls/");
   window.open("https://wa.me/?text="+msg,"_blank");
 }
 function shareCopyAvatar(){
-  const msg="J'ai cree mon Idol K-Pop ! Cree la tienne ! https://hconsulting987654321-blip.github.io/kpop-girls/";
+  const msg="J'ai créé mon Idol K-Pop ! Crée la tienne ! https://hconsulting987654321-blip.github.io/kpop-girls/";
   navigator.clipboard.writeText(msg).then(()=>{const t=document.getElementById('shareToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)});
 }
 
@@ -946,14 +947,14 @@ function saveAvatar(){
   if(!trophies.includes('avatar_created')){trophies.push('avatar_created');localStorage.setItem('kpop_trophies_'+playerName,JSON.stringify(trophies))}
   let stars=parseInt(localStorage.getItem('kpop_stars_'+playerName)||'0');stars+=20;
   localStorage.setItem('kpop_stars_'+playerName,String(stars));
-  showToast(name+' sauvegardee ! +20 etoiles');renderGallery();
+  showToast(name+' sauvegardée ! +20 étoiles');renderGallery();
 }
 
 function renderGallery(){
   const grid=document.getElementById('galleryGrid');
   const gallery=JSON.parse(localStorage.getItem('kpop_idol_gallery_'+playerName)||'[]');
   grid.innerHTML='';
-  if(gallery.length===0){grid.innerHTML='<div class="gallery-empty">Aucune idol sauvegardee. Cree ta premiere !</div>';return}
+  if(gallery.length===0){grid.innerHTML='<div class="gallery-empty">Aucune idol sauvegardée. Crée ta première !</div>';return}
 
   gallery.forEach((idol,idx)=>{
     const card=document.createElement('div');card.className='gallery-card';

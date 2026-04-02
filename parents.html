@@ -174,17 +174,17 @@ h1{
   <div class="section">
     <h2>A propos du jeu</h2>
     <p>K-Pop Star Academy est un jeu educatif et divertissant cree pour les enfants de 4 a 12 ans.</p>
-    <p>Inspire de la culture K-Pop, il developpe la memoire, le rythme, la creativite et la culture generale a travers des mini-jeux varies et colores.</p>
+    <p>Inspiré de la culture K-Pop, il developpe la mémoire, le rythme, la créativité et la culture generale a travers des mini-jeux varies et colores.</p>
 
     <h3>Nos 10 jeux et leurs benefices educatifs</h3>
     <ul class="game-benefits">
-      <li><span class="icon">👸</span><div><strong>Cree ton Idol</strong> — Creativite et expression personnelle. L'enfant conçoit son personnage unique en choisissant coiffure, tenue et accessoires.</div></li>
+      <li><span class="icon">👸</span><div><strong>Crée ton Idol</strong> — Créativité et expression personnelle. L'enfant conçoit son personnage unique en choisissant coiffure, tenue et accessoires.</div></li>
       <li><span class="icon">💳</span><div><strong>Ma Carte K-Pop</strong> — Identite et confiance en soi. L'enfant cree sa carte de star personnalisee.</div></li>
       <li><span class="icon">💃</span><div><strong>Dance Challenge</strong> — Coordination et sens du rythme. L'enfant suit le tempo en appuyant au bon moment.</div></li>
       <li><span class="icon">🃏</span><div><strong>K-Pop Memory</strong> — Memoire visuelle et concentration. Retrouver les paires le plus vite possible.</div></li>
-      <li><span class="icon">⭐</span><div><strong>Attrape les Etoiles</strong> — Reflexes et coordination main-oeil. Attraper les etoiles et les coeurs qui tombent.</div></li>
+      <li><span class="icon">⭐</span><div><strong>Attrape les Étoiles</strong> — Reflexes et coordination main-oeil. Attraper les étoiles et les coeurs qui tombent.</div></li>
       <li><span class="icon">🎵</span><div><strong>Quiz K-Pop</strong> — Culture generale et apprentissage. Questions adaptees sur la musique et la culture K-Pop.</div></li>
-      <li><span class="icon">👗</span><div><strong>Habillage K-Pop</strong> — Creativite artistique et sens esthetique. Composer des tenues pour un concert.</div></li>
+      <li><span class="icon">👗</span><div><strong>Habillage K-Pop</strong> — Créativité artistique et sens esthetique. Composer des tenues pour un concert.</div></li>
       <li><span class="icon">🎙️</span><div><strong>Karaoke Star</strong> — Lecture et expression orale. Suivre les paroles qui defilent a l'ecran.</div></li>
       <li><span class="icon">🎨</span><div><strong>Coloriage K-Pop</strong> — Motricite fine et sens des couleurs. Colorier des illustrations thematiques.</div></li>
       <li><span class="icon">🧩</span><div><strong>Puzzle Star</strong> — Logique et raisonnement spatial. Reconstituer des images en deplaçant les pieces.</div></li>
@@ -193,10 +193,10 @@ h1{
 
   <!-- Privacy & Safety -->
   <div class="section">
-    <h2>Vie privee et securite</h2>
-    <p>La securite de vos enfants est notre priorite absolue. Voici nos engagements :</p>
+    <h2>Vie privée et sécurité</h2>
+    <p>La sécurité de vos enfants est notre priorité absolue. Voici nos engagements :</p>
     <ul class="safety-list">
-      <li><span class="check">&#10003;</span> Zero collecte de donnees — tout est stocke localement sur l'appareil</li>
+      <li><span class="check">&#10003;</span> Zéro collecte de données — tout est stocké localement sur l'appareil</li>
       <li><span class="check">&#10003;</span> Aucune publicite</li>
       <li><span class="check">&#10003;</span> Aucun achat in-app cache</li>
       <li><span class="check">&#10003;</span> Pas de connexion internet requise (fonctionne hors-ligne)</li>
@@ -235,8 +235,8 @@ h1{
     <div class="status" id="pinStatus"></div>
 
     <h3>Reinitialiser la progression</h3>
-    <p style="color:rgba(255,255,255,.5);font-size:.9em;">Attention : ceci efface toutes les donnees de jeu (scores, trophees, collection).</p>
-    <button class="btn secondary" onclick="resetAllData()">Reinitialiser les donnees</button>
+    <p style="color:rgba(255,255,255,.5);font-size:.9em;">Attention : ceci efface toutes les données de jeu (scores, trophées, collection).</p>
+    <button class="btn secondary" onclick="resetAllData()">Réinitialiser les données</button>
     <div class="status" id="resetStatus"></div>
   </div>
 
@@ -245,9 +245,9 @@ h1{
     <h2>Contact</h2>
     <div class="contact-info">
       <p>Pour toute question ou suggestion :</p>
-      <p>Email : <a href="mailto:contact@kpopstaracademy.com">contact@kpopstaracademy.com</a></p>
+      <p>Email : <a href="mailto:hello@stellargames.studio">hello@stellargames.studio</a></p>
       <br>
-      <p>Fait avec amour par des parents pour des enfants.</p>
+      <p>© 2024 Stellar Games Studio — Jeux éducatifs pour enfants</p>
     </div>
   </div>
 
@@ -343,7 +343,7 @@ function resetPin() {
 
 /* ===== RESET DATA ===== */
 function resetAllData() {
-  if (!confirm('Etes-vous sur de vouloir effacer toutes les donnees de jeu ? Cette action est irreversible.')) return;
+  if (!confirm('Etes-vous sur de vouloir effacer toutes les données de jeu ? Cette action est irreversible.')) return;
   const parentalKeys = ['kpop_parental_pin', 'kpop_time_limit', 'kpop_play_time_today', 'kpop_play_date'];
   const savedParental = {};
   parentalKeys.forEach(k => { savedParental[k] = localStorage.getItem(k); });

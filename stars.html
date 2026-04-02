@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Attrape les Etoiles — K-Pop Star Academy</title>
+<title>Attrape les Étoiles — K-Pop Star Academy</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
 <meta name="description" content="Attrape les Étoiles — Jeu d'action K-Pop gratuit !">
 <meta name="author" content="K-Pop Star Academy">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Attrape les Etoiles — K-Pop Star Academy">
+<meta property="og:title" content="Attrape les Étoiles — K-Pop Star Academy">
 <meta property="og:description" content="Attrape les Étoiles — Jeu d'action K-Pop gratuit !">
-<meta property="og:site_name" content="K-Pop Star Academy — École Saint-Esprit">
+<meta property="og:site_name" content="K-Pop Star Academy">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
 <meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
@@ -287,7 +288,7 @@ a.back-btn:hover{background:rgba(255,255,255,0.25)}
 
 <!-- Start Screen -->
 <div class="overlay" id="startScreen">
-  <h2>Attrape les Etoiles !</h2>
+  <h2>Attrape les Étoiles !</h2>
   <p class="subtitle">K-Pop Star Academy</p>
 
   <p>Qui joue ?</p>
@@ -892,8 +893,10 @@ function updateHUD() {
 }
 
 // ===== EFFECTS =====
+const MAX_PARTICLES = 50;
 function createParticles(x, y, color, count=8, big=false) {
   for (let i = 0; i < count; i++) {
+    if (particles.length >= MAX_PARTICLES) particles.shift();
     const angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
     const speed = big ? 4 + Math.random() * 6 : 2 + Math.random() * 4;
     particles.push({
@@ -910,6 +913,7 @@ function createParticles(x, y, color, count=8, big=false) {
 
 function createEmojiParticles(x, y, emoji, count=5) {
   for (let i = 0; i < count; i++) {
+    if (particles.length >= MAX_PARTICLES) particles.shift();
     particles.push({
       x, y,
       vx: (Math.random() - 0.5) * 8,
@@ -1557,6 +1561,7 @@ function easeOutBack(t) {
 // ===== END GAME =====
 function endGame() {
   gameRunning = false;
+  if (frame) { cancelAnimationFrame(frame); frame = null; }
   clearInterval(gameTimer);
   clearTimeout(spawnTimer);
 
@@ -1663,16 +1668,19 @@ if('serviceWorker' in navigator){
 }
 
 // === AAA MOBILE EFFECTS ===
-// Sparkle trail
+// Sparkle trail (perf: throttled to every 3rd event, 15% chance)
+var _sparkleFrame = 0;
 document.addEventListener('mousemove', function(e) {
-  if (Math.random() > 0.7) createSparkleTrail(e.clientX, e.clientY);
+  if (++_sparkleFrame % 3 !== 0) return;
+  if (Math.random() > 0.85) createSparkleTrail(e.clientX, e.clientY);
 });
 document.addEventListener('touchmove', function(e) {
-  if (Math.random() > 0.7) createSparkleTrail(e.touches[0].clientX, e.touches[0].clientY);
+  if (++_sparkleFrame % 3 !== 0) return;
+  if (Math.random() > 0.85) createSparkleTrail(e.touches[0].clientX, e.touches[0].clientY);
 });
 function createSparkleTrail(x, y) {
   var s = document.createElement('div');
-  s.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;font-size:' + (8 + Math.random() * 12) + 'px;left:' + x + 'px;top:' + y + 'px;opacity:1;transition:all 0.8s ease-out;';
+  s.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;font-size:' + (8 + Math.random() * 8) + 'px;left:' + x + 'px;top:' + y + 'px;opacity:1;transition:transform 0.8s ease-out,opacity 0.8s ease-out;will-change:transform,opacity;';
   s.textContent = ['\u2728','\u2B50','\uD83D\uDCAB','\uD83C\uDF1F','\uD83D\uDC96'][Math.floor(Math.random() * 5)];
   document.body.appendChild(s);
   requestAnimationFrame(function() {

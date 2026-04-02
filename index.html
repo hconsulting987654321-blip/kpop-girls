@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>K-Pop Star Academy — École Saint-Esprit</title>
+<title>K-Pop Star Academy</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="icon-192.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -911,6 +912,13 @@ body::before {
   .quick-names{flex-wrap:wrap;}
   .collection-grid{grid-template-columns:repeat(4,1fr);gap:6px;}
 }
+@media(prefers-reduced-motion:reduce){
+  #sparkleCanvas{display:none!important;}
+  .falling-emoji{display:none!important;}
+  .aurora,.aurora-wave{display:none!important;}
+  .confetti-piece{display:none!important;}
+  *{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
+}
 </style>
 </head>
 <body>
@@ -964,7 +972,7 @@ body::before {
   <div class="welcome-emojis" id="welcomeEmojis"></div>
   <div class="welcome-crest">🎤</div>
   <h1>K-Pop Star Academy</h1>
-  <div class="school-badge" data-i18n="school_name">École Saint-Esprit</div>
+  <div class="school-badge" data-i18n="school_name">K-Pop Star Academy</div>
 
   <div class="welcome-form">
     <label data-i18n="welcome_label">Comment tu t'appelles ?</label>
@@ -1002,7 +1010,7 @@ body::before {
   <!-- Header -->
   <div class="header">
     <h1>K-Pop Star Academy</h1>
-    <div class="school-sub" data-i18n="school_name">École Saint-Esprit</div>
+    <div class="school-sub" data-i18n="school_name">K-Pop Star Academy</div>
     <div class="greeting" id="greeting"></div>
     <div class="streak-display hidden" id="streakDisplay"></div>
   </div>
@@ -1064,7 +1072,7 @@ body::before {
       box-shadow:0 0 20px rgba(255,215,0,.1);
     " onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 0 30px rgba(255,215,0,.25)'" onmouseout="this.style.transform='';this.style.boxShadow='0 0 20px rgba(255,215,0,.1)'">
       <span style="font-size:1.3em">🏆</span>
-      <span data-i18n="achievements_btn">Mes Succes</span>
+      <span data-i18n="achievements_btn">Mes Succès</span>
       <span id="achCountBadge" style="
         background:linear-gradient(145deg,var(--pink),var(--purple));
         padding:2px 10px;border-radius:12px;font-size:.75em;
@@ -1085,14 +1093,14 @@ body::before {
     <div class="collection-count" id="collectionCount"></div>
   </div>
 
-  <div class="footer" data-i18n="footer">Fait avec amour par Papa — École Saint-Esprit</div>
+  <div class="footer" data-i18n="footer">© 2024 Stellar Games Studio</div>
 </div>
 
 <script>
 /* ===== TRANSLATIONS ===== */
 const TRANSLATIONS = {
   fr: {
-    school_name: 'École Saint-Esprit',
+    school_name: 'K-Pop Star Academy',
     welcome_label: "Comment tu t'appelles ?",
     welcome_placeholder: 'Ton prénom...',
     enter_btn: "C'est parti !",
@@ -1121,10 +1129,10 @@ const TRANSLATIONS = {
     games_title: '🎮 Mes Jeux',
     trophies_title: '🏅 Mes Trophées',
     collection_title: '✨ Ma Collection',
-    achievements_btn: 'Mes Succes',
+    achievements_btn: 'Mes Succès',
     collection_count: '{n} / {t} stickers',
     install_app: "Installer l'App",
-    footer: 'Fait avec amour par Papa — École Saint-Esprit',
+    footer: '© 2024 Stellar Games Studio',
     streak_days: '{n} jours de suite !',
     rank_age: '{age} ans — {title}',
     record: 'Record : {v}',
@@ -1205,7 +1213,7 @@ const TRANSLATIONS = {
     custom_titles: ['Princesse K-Pop','Diva du dance floor','Reine des étoiles','Star galactique','Idol supreme'],
   },
   en: {
-    school_name: 'Saint-Esprit School',
+    school_name: 'K-Pop Star Academy',
     welcome_label: "Who's playing?",
     welcome_placeholder: 'Your name...',
     enter_btn: "Let's Go!",
@@ -1237,7 +1245,7 @@ const TRANSLATIONS = {
     achievements_btn: 'My Achievements',
     collection_count: '{n} / {t} stickers',
     install_app: 'Install App',
-    footer: 'Made with love by Papa — Saint-Esprit School',
+    footer: '© 2024 Stellar Games Studio',
     streak_days: '{n} days in a row!',
     rank_age: '{age} yrs — {title}',
     record: 'Best: {v}',
@@ -1613,7 +1621,7 @@ function enterApp(){
 function launchConfetti(){
   const colors=['#ff6fd8','#b44dff','#ffd700','#4ecdc4','#ff9ecf','#ff6fa0','#7b2dcc','#ffaa00'];
   const shapes=['circle','square'];
-  for(let i=0;i<60;i++){
+  for(let i=0;i<30;i++){
     setTimeout(()=>{
       const c=document.createElement('div');
       c.className='confetti-piece';
@@ -2175,7 +2183,7 @@ window.addEventListener('scroll',function(){
     this.phase=Math.random()*Math.PI*2;
   }
 
-  for(let i=0;i<100;i++)particles.push(new Particle());
+  for(let i=0;i<40;i++)particles.push(new Particle());
 
   let scrollBoost=0;
   window.addEventListener('scroll',()=>{scrollBoost=3;});
@@ -2290,7 +2298,7 @@ document.addEventListener('click', (e) => {
     setTimeout(()=>el.remove(), 12000);
   }
   for(let i=0;i<25;i++) setTimeout(()=>spawnEmoji(), i*200);
-  setInterval(spawnEmoji, 600);
+  setInterval(spawnEmoji, 1500);
 })();
 
 // ===== SECTION REVEAL ON SCROLL =====
