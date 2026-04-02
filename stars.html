@@ -146,8 +146,8 @@ body {
 
 <div class="hud">
   <span>Score: <span class="score-val" id="hudScore">0</span></span>
-  <span class="lives-val" id="hudLives">❤️❤️❤️</span>
-  <span class="time-val" id="hudTime">30s</span>
+  <span class="lives-val" id="hudLives">❤️❤️❤️❤️❤️</span>
+  <span class="time-val" id="hudTime">50s</span>
   <span id="hudPlayer"></span>
 </div>
 
@@ -192,13 +192,13 @@ resize();
 let items = [];
 let particles = [];
 let score = 0;
-let lives = 3;
-let timeLeft = 30;
+let lives = 5;
+let timeLeft = 50;
 let gameRunning = false;
 let currentPlayer = '';
 let mouseX = W / 2, mouseY = H / 2;
-let basketSize = 70;
-let spawnRate = 800;
+let basketSize = 95;
+let spawnRate = 1000;
 let gameTimer, spawnTimer, frame;
 let bgStars = [];
 
@@ -220,7 +220,7 @@ const ITEMS = [
   { emoji: '💜', points: 30, weight: 8, size: 35 },
   { emoji: '💎', points: 50, weight: 5, size: 32 },
   { emoji: '👑', points: 40, weight: 4, size: 38 },
-  { emoji: '💣', points: -1, weight: 10, size: 35 }, // -1 = lose life
+  { emoji: '💣', points: -1, weight: 4, size: 35 }, // -1 = lose life
 ];
 
 function selectPlayer(name) {
@@ -245,7 +245,7 @@ function startGame() {
   timeLeft = 30;
   items = [];
   particles = [];
-  spawnRate = 800;
+  spawnRate = 1000;
   gameRunning = true;
 
   updateHUD();
@@ -255,7 +255,7 @@ function startGame() {
     if (!gameRunning) return;
     spawnItem();
     // Speed up over time
-    spawnRate = Math.max(300, 800 - (30 - timeLeft) * 20);
+    spawnRate = Math.max(500, 1000 - (50 - timeLeft) * 10);
     spawnTimer = setTimeout(spawn, spawnRate);
   }
   spawn();
@@ -287,7 +287,7 @@ function spawnItem() {
     emoji: chosen.emoji,
     points: chosen.points,
     size: chosen.size,
-    speed: 2 + Math.random() * 2 + (30 - timeLeft) * 0.1,
+    speed: 1.5 + Math.random() * 1.5 + (50 - timeLeft) * 0.04,
     wobble: Math.random() * Math.PI * 2,
     wobbleSpeed: 0.02 + Math.random() * 0.03,
     rotation: 0,
@@ -366,7 +366,7 @@ function render() {
     const dy = item.y - mouseY;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist < basketSize * 0.6) {
+    if (dist < basketSize * 0.75) {
       if (item.points === -1) {
         // Bomb!
         lives--;
@@ -425,9 +425,9 @@ function endGame() {
   clearTimeout(spawnTimer);
 
   let title, msg;
-  if (score >= 500) { title = 'LEGENDAIRE !!!'; msg = `${currentPlayer} est la QUEEN de la K-pop !!! 👑`; }
-  else if (score >= 300) { title = 'INCROYABLE !!'; msg = `${currentPlayer} est une vraie star ! ⭐`; }
-  else if (score >= 150) { title = 'Super !'; msg = `Bien joué ${currentPlayer} !`; }
+  if (score >= 300) { title = 'LEGENDAIRE !!!'; msg = `${currentPlayer} est la QUEEN de la K-pop !!! 👑`; }
+  else if (score >= 150) { title = 'INCROYABLE !!'; msg = `${currentPlayer} est une vraie star ! ⭐`; }
+  else if (score >= 80) { title = 'Super !'; msg = `Bien joué ${currentPlayer} !`; }
   else { title = 'Pas mal !'; msg = `Continue ${currentPlayer}, tu peux faire mieux !`; }
 
   setTimeout(() => {

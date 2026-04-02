@@ -340,7 +340,7 @@ function update() {
   document.getElementById('stageBg').className = `stage-bg bg-${current.bg}`;
   document.getElementById('outfitName').textContent = outfitNames[Math.floor(Math.random() * outfitNames.length)];
 
-  const score = 60 + Math.floor(Math.random() * 41);
+  const score = 75 + Math.floor(Math.random() * 26);
   document.getElementById('styleScore').textContent = score;
 
   renderItems();

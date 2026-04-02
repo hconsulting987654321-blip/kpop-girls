@@ -359,8 +359,8 @@ body {
 <script>
 const keyMap = { 's': 0, 'd': 1, 'k': 2, 'l': 3 };
 const noteEmojis = ['💃','🎤','🌟','💜'];
-const GAME_DURATION = 45000; // 45 seconds
-const NOTE_SPEED_BASE = 2800;
+const GAME_DURATION = 60000; // 60 seconds
+const NOTE_SPEED_BASE = 4000;
 
 let score = 0;
 let combo = 0;
@@ -407,18 +407,18 @@ function startGame() {
     const lane = Math.floor(Math.random() * 4);
     // Sometimes spawn doubles
     const lanes = [lane];
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.08) {
       let second = (lane + 1 + Math.floor(Math.random() * 3)) % 4;
       lanes.push(second);
     }
 
     lanes.forEach(l => createNote(l));
 
-    // Speed up over time
+    // Speed up over time (gentle)
     elapsed += 500;
-    noteSpeed = Math.max(1800, NOTE_SPEED_BASE - elapsed / 50);
+    noteSpeed = Math.max(2800, NOTE_SPEED_BASE - elapsed / 80);
 
-    const nextDelay = 400 + Math.random() * 500;
+    const nextDelay = 800 + Math.random() * 600;
     spawnTimer = setTimeout(spawnNote, nextDelay);
   }
 
@@ -477,7 +477,7 @@ function hitLane(lane) {
     }
   });
 
-  if (closest && closestDist < 80) {
+  if (closest && closestDist < 150) {
     closest.hit = true;
     closest.el.remove();
     notes = notes.filter(n => n !== closest);
@@ -489,11 +489,11 @@ function hitLane(lane) {
     let text = 'Cool !';
     let color = '#4ecdc4';
 
-    if (closestDist < 20) {
+    if (closestDist < 50) {
       points = 30;
       text = 'PERFECT !!';
       color = '#ffd700';
-    } else if (closestDist < 40) {
+    } else if (closestDist < 100) {
       points = 20;
       text = 'Super !';
       color = '#ff6fd8';
@@ -541,9 +541,9 @@ function endGame() {
 
   const msgs = [
     { min: 0, text: `Continue ${currentPlayer}, tu vas y arriver !`, title: 'Pas mal !' },
-    { min: 200, text: `${currentPlayer} assure grave !`, title: 'Super !' },
-    { min: 500, text: `${currentPlayer} est une STAR de la K-pop !`, title: 'INCROYABLE !' },
-    { min: 1000, text: `${currentPlayer} est la REINE du dance floor !!!`, title: 'LEGENDAIRE !!!' },
+    { min: 100, text: `${currentPlayer} assure grave !`, title: 'Super !' },
+    { min: 250, text: `${currentPlayer} est une STAR de la K-pop !`, title: 'INCROYABLE !' },
+    { min: 500, text: `${currentPlayer} est la REINE du dance floor !!!`, title: 'LEGENDAIRE !!!' },
   ];
 
   let msg = msgs[0];

@@ -340,7 +340,7 @@ function startGame(size, btn) {
 
   // Timer
   clearInterval(timerInterval);
-  totalTime = size <= 8 ? 60 : size <= 12 ? 90 : size <= 16 ? 120 : 150;
+  totalTime = size <= 8 ? 120 : size <= 12 ? 150 : size <= 16 ? 210 : 300;
   timeLeft = totalTime;
   updateTimer();
   timerInterval = setInterval(() => {
@@ -400,7 +400,7 @@ function flipCard(card, index) {
         b.card.classList.remove('flipped');
         flipped = [];
         locked = false;
-      }, 700);
+      }, 1200);
     }
   }
 }

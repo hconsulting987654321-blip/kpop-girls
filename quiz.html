@@ -263,7 +263,7 @@ h1 {
 </div>
 
 <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
-<div class="score-display">Question <span id="qNum">1</span>/15 — Score: <span id="score">0</span></div>
+<div class="score-display">Question <span id="qNum">1</span>/10 — Score: <span id="score">0</span></div>
 
 <div class="question-card" id="questionCard">
   <div class="q-emoji" id="qEmoji"></div>
@@ -333,7 +333,7 @@ function shuffle(a) {
 
 function startQuiz() {
   document.getElementById('resultOverlay').classList.remove('show');
-  questions = shuffle([...allQuestions]).slice(0, 15);
+  questions = shuffle([...allQuestions]).slice(0, 10);
   currentQ = 0;
   score = 0;
   showQuestion();
@@ -415,9 +415,9 @@ function showResult() {
   let title, stars, msg;
   const pct = score / (questions.length * 10) * 100;
 
-  if (pct >= 90) { title = 'INCROYABLE !!!'; stars = '⭐⭐⭐'; msg = `${currentPlayer} est une VRAIE experte K-pop !`; }
-  else if (pct >= 70) { title = 'SUPER !!'; stars = '⭐⭐'; msg = `${currentPlayer} connait bien la K-pop !`; }
-  else if (pct >= 50) { title = 'Bien !'; stars = '⭐'; msg = `Pas mal ${currentPlayer}, continue d'apprendre !`; }
+  if (pct >= 80) { title = 'INCROYABLE !!!'; stars = '⭐⭐⭐'; msg = `${currentPlayer} est une VRAIE experte K-pop !`; }
+  else if (pct >= 50) { title = 'SUPER !!'; stars = '⭐⭐'; msg = `${currentPlayer} connait bien la K-pop !`; }
+  else if (pct >= 30) { title = 'Bien !'; stars = '⭐'; msg = `Pas mal ${currentPlayer}, continue d'apprendre !`; }
   else { title = 'Continue !'; stars = '🌟'; msg = `${currentPlayer}, tu vas t'ameliorer !`; }
 
   document.getElementById('resultTitle').textContent = title;
