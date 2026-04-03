@@ -904,6 +904,70 @@ body::before {
   .confetti-piece{display:none!important;}
   *{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
 }
+
+/* ===== RESET PANEL ===== */
+.settings-btn{
+  position:absolute;top:12px;right:12px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .3s;font-size:1.1em;color:rgba(255,255,255,.5);
+  z-index:5;
+}
+.settings-btn:hover{background:rgba(255,255,255,.2);color:#fff;transform:rotate(60deg);}
+.profile-card{position:relative;}
+
+.reset-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+}
+.reset-overlay.show{display:flex;}
+.reset-panel{
+  background:linear-gradient(145deg,rgba(26,10,46,.95),rgba(13,5,32,.95));
+  border:1px solid var(--glass-border);border-radius:24px;
+  padding:28px 24px;width:90%;max-width:420px;max-height:85vh;overflow-y:auto;
+  animation:modalPop .3s ease-out;
+}
+@keyframes modalPop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.reset-panel h2{font-size:1.3em;text-align:center;margin:0 0 6px;color:#fff;}
+.reset-panel .subtitle{text-align:center;font-size:.8em;color:rgba(255,255,255,.5);margin-bottom:18px;}
+.reset-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border-radius:14px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  margin-bottom:8px;transition:all .2s;
+}
+.reset-item:hover{background:rgba(255,255,255,.1);}
+.reset-item .ri-icon{font-size:1.5em;flex-shrink:0;}
+.reset-item .ri-info{flex:1;}
+.reset-item .ri-name{font-weight:700;font-size:.95em;}
+.reset-item .ri-desc{font-size:.72em;color:rgba(255,255,255,.45);margin-top:2px;}
+.reset-item .ri-btn{
+  background:linear-gradient(145deg,rgba(255,100,100,.2),rgba(255,60,60,.1));
+  border:1px solid rgba(255,100,100,.3);color:#ff8888;
+  border-radius:10px;padding:6px 14px;font-size:.8em;font-weight:700;
+  cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;
+}
+.reset-item .ri-btn:hover{background:rgba(255,60,60,.3);color:#fff;}
+.reset-item .ri-btn.done{background:rgba(100,255,100,.1);border-color:rgba(100,255,100,.3);color:#88ff88;pointer-events:none;}
+.reset-divider{
+  border:none;border-top:1px solid rgba(255,255,255,.08);margin:16px 0;
+}
+.reset-all-btn{
+  display:block;width:100%;padding:14px;border:2px solid rgba(255,60,60,.4);
+  background:rgba(255,60,60,.1);color:#ff6666;border-radius:14px;
+  font-size:1em;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;
+  margin-top:8px;
+}
+.reset-all-btn:hover{background:rgba(255,60,60,.25);color:#fff;}
+.reset-close-btn{
+  display:block;width:100%;padding:12px;margin-top:10px;
+  background:var(--glass);border:1px solid var(--glass-border);
+  border-radius:14px;color:#fff;font-size:.95em;font-weight:600;
+  cursor:pointer;transition:all .2s;font-family:inherit;text-align:center;
+}
+.reset-close-btn:hover{background:rgba(255,255,255,.2);}
 </style>
 <!-- Firebase SDK (compat mode for simplicity) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -1013,6 +1077,7 @@ body::before {
 
   <!-- Profile card -->
   <div class="profile-card" id="profileCard">
+    <div class="settings-btn" onclick="openResetPanel()" title="Réglages">⚙️</div>
     <div class="profile-top">
       <div class="profile-avatar" id="profileEmoji">💖</div>
       <div class="profile-info">
@@ -1081,6 +1146,11 @@ body::before {
   </div>
 
   <div class="footer"><span data-i18n="footer">&copy; 2026 Stellar Games Studio</span> &middot; <a href="parents.html" style="color:rgba(255,255,255,.35);text-decoration:none;font-size:.95em;">Parents</a></div>
+</div>
+
+<!-- ===== RESET PANEL ===== -->
+<div class="reset-overlay" id="resetOverlay" onclick="if(event.target===this)closeResetPanel()">
+  <div class="reset-panel" id="resetPanel"></div>
 </div>
 
 <script>
@@ -1198,6 +1268,27 @@ const TRANSLATIONS = {
       'Mega Star':'Mega Star','K-Pop Queen':'K-Pop Queen','Légende':'Légende'
     },
     custom_titles: ['Princesse K-Pop','Diva du dance floor','Reine des étoiles','Star galactique','Idol supreme'],
+    reset_title: 'Recommencer',
+    reset_subtitle: 'Choisis ce que tu veux recommencer à zéro',
+    reset_confirm: 'Tu es sûre ? Tout sera effacé pour ce jeu !',
+    reset_done: 'Effacé !',
+    reset_btn: 'Recommencer',
+    reset_all: 'Tout recommencer à zéro',
+    reset_all_confirm: 'Tu es VRAIMENT sûre ? Toute ta progression sera perdue !',
+    reset_close: 'Fermer',
+    reset_games: {
+      pet: {name:'Mon Pet', desc:'Choisir un nouvel animal', icon:'🐱'},
+      avatar: {name:'Mon Idol', desc:'Recréer ton avatar', icon:'👸'},
+      carte: {name:'Ma Carte K-Pop', desc:'Refaire ta carte de star', icon:'💳'},
+      habillage: {name:'Habillage', desc:'Recommencer ta garde-robe', icon:'👗'},
+      scores: {name:'Mes Scores', desc:'Remettre tous les records à zéro', icon:'🏆'},
+      trophies: {name:'Mes Trophées', desc:'Recommencer la collection de trophées', icon:'🏅'},
+      stickers: {name:'Mes Stickers', desc:'Recommencer la collection de stickers', icon:'✨'},
+      coloriage: {name:'Mes Coloriages', desc:'Effacer tous les coloriages', icon:'🎨'},
+      puzzle: {name:'Mes Puzzles', desc:'Recommencer tous les puzzles', icon:'🧩'},
+      photobooth: {name:'Mes Photos', desc:'Effacer toutes les photos', icon:'📸'},
+      studio: {name:'Mon Studio', desc:'Effacer mes créations musicales', icon:'🎹'},
+    },
   },
   en: {
     school_name: 'K-Pop Star Academy',
@@ -1311,6 +1402,27 @@ const TRANSLATIONS = {
       'Mega Star':'Mega Star','K-Pop Queen':'K-Pop Queen','Légende':'Legend'
     },
     custom_titles: ['K-Pop Princess','Dance Floor Diva','Star Queen','Galactic Star','Supreme Idol'],
+    reset_title: 'Start Over',
+    reset_subtitle: 'Choose what you want to reset',
+    reset_confirm: 'Are you sure? All progress for this game will be lost!',
+    reset_done: 'Done!',
+    reset_btn: 'Reset',
+    reset_all: 'Reset everything',
+    reset_all_confirm: 'Are you REALLY sure? All your progress will be lost!',
+    reset_close: 'Close',
+    reset_games: {
+      pet: {name:'My Pet', desc:'Choose a new animal', icon:'🐱'},
+      avatar: {name:'My Idol', desc:'Recreate your avatar', icon:'👸'},
+      carte: {name:'My K-Pop Card', desc:'Remake your star card', icon:'💳'},
+      habillage: {name:'Dress Up', desc:'Start your wardrobe over', icon:'👗'},
+      scores: {name:'My Scores', desc:'Reset all high scores', icon:'🏆'},
+      trophies: {name:'My Trophies', desc:'Reset trophy collection', icon:'🏅'},
+      stickers: {name:'My Stickers', desc:'Reset sticker collection', icon:'✨'},
+      coloriage: {name:'My Colorings', desc:'Erase all colorings', icon:'🎨'},
+      puzzle: {name:'My Puzzles', desc:'Reset all puzzles', icon:'🧩'},
+      photobooth: {name:'My Photos', desc:'Erase all photos', icon:'📸'},
+      studio: {name:'My Studio', desc:'Erase music creations', icon:'🎹'},
+    },
   }
 };
 
@@ -2353,6 +2465,92 @@ document.addEventListener('click', (e) => {
   });
   stopWhenMain.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
 })();
+
+// ===== RESET PANEL =====
+function openResetPanel(){
+  const p=localStorage.getItem('kpop_player');
+  if(!p) return;
+  const t=TRANSLATIONS[currentLang];
+  const rg=t.reset_games;
+  const panel=document.getElementById('resetPanel');
+  let html=`<h2>⚙️ ${t.reset_title}</h2><div class="subtitle">${t.reset_subtitle}</div>`;
+  const items=['pet','avatar','carte','habillage','coloriage','puzzle','photobooth','studio','scores','trophies','stickers'];
+  items.forEach(key=>{
+    const g=rg[key];
+    html+=`<div class="reset-item"><div class="ri-icon">${g.icon}</div><div class="ri-info"><div class="ri-name">${g.name}</div><div class="ri-desc">${g.desc}</div></div><button class="ri-btn" id="resetBtn_${key}" onclick="resetGame('${key}')">${t.reset_btn}</button></div>`;
+  });
+  html+=`<hr class="reset-divider">`;
+  html+=`<button class="reset-all-btn" onclick="resetEverything()">${t.reset_all}</button>`;
+  html+=`<button class="reset-close-btn" onclick="closeResetPanel()">${t.reset_close}</button>`;
+  panel.innerHTML=html;
+  document.getElementById('resetOverlay').classList.add('show');
+}
+function closeResetPanel(){document.getElementById('resetOverlay').classList.remove('show');}
+
+function resetGame(key){
+  const t=TRANSLATIONS[currentLang];
+  if(!confirm(t.reset_confirm)) return;
+  const p=localStorage.getItem('kpop_player');
+  if(!p) return;
+  const keysToRemove=[];
+  const patterns=getResetPatterns(key,p);
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k && patterns.some(pat=>typeof pat==='string'?k===pat:pat.test(k))){
+      keysToRemove.push(k);
+    }
+  }
+  keysToRemove.forEach(k=>localStorage.removeItem(k));
+  const btn=document.getElementById('resetBtn_'+key);
+  if(btn){btn.textContent=t.reset_done;btn.classList.add('done');}
+  refreshAfterReset();
+}
+
+function getResetPatterns(key,p){
+  switch(key){
+    case 'pet': return [`kpop_pet_${p}`];
+    case 'avatar': return [`kpop_avatar_${p}`,`kpop_idol_gallery_${p}`];
+    case 'carte': return [`kpop_carte_${p}`,`kpop_card_collection_${p}`,`kpop_total_cards_${p}`];
+    case 'habillage': return [`kpop_gallery_${p}`,`kpop_themes_${p}`];
+    case 'scores': return [new RegExp(`^kpop_hs_.*_${escRx(p)}$`),`kpop_dance_hs_${p}`,`kpop_memory_hs_${p}`,`kpop_quiz_hs_${p}`,`kpop_course_hs_${p}`,`kpop_defile_hs_${p}`];
+    case 'trophies': return [`kpop_trophies_${p}`];
+    case 'stickers': return [`kpop_stickers_${p}`];
+    case 'coloriage': return [new RegExp(`^kpop_coloriage_.*_${escRx(p)}$`),new RegExp(`^kpop_coloriage_done_${escRx(p)}_`)];
+    case 'puzzle': return [new RegExp(`^kpop_puzzle_.*_${escRx(p)}$`),new RegExp(`^kpop_puzzle_.*_${escRx(p)}`)];
+    case 'photobooth': return [`kpop_photos_${p}`,`kpop_gallery_photobooth_${p}`,new RegExp(`^kpop_pack_${escRx(p)}_`)];
+    case 'studio': return [`kpop_studio_pattern_${p}`,`kpop_beats_${p}`];
+    default: return [];
+  }
+}
+function escRx(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+
+function resetEverything(){
+  const t=TRANSLATIONS[currentLang];
+  if(!confirm(t.reset_all_confirm)) return;
+  const p=localStorage.getItem('kpop_player');
+  if(!p) return;
+  const keysToRemove=[];
+  const escaped=escRx(p);
+  const playerRx=new RegExp(`_${escaped}$|_${escaped}_`);
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k && k.startsWith('kpop_') && playerRx.test(k)) keysToRemove.push(k);
+  }
+  // Also reset stars, streak, boxes, etc.
+  ['stars','streak','lastplay','boxes','boxes_opened','custom_title','daily','achievements','ach_confetti'].forEach(s=>{
+    keysToRemove.push(`kpop_${s}_${p}`);
+  });
+  // Remove streak_claimed
+  keysToRemove.push(`kpop_streak_claimed_${p}`);
+  // Dedupe and remove
+  [...new Set(keysToRemove)].forEach(k=>localStorage.removeItem(k));
+  closeResetPanel();
+  refreshAfterReset();
+}
+
+function refreshAfterReset(){
+  if(typeof initMain==='function') initMain();
+}
 
 // ===== SECTION REVEAL ON SCROLL =====
 (function(){
