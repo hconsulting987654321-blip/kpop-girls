@@ -214,6 +214,11 @@ body{
   .skills{grid-template-columns:1fr;}
 }
 </style>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="firebase-sync.js"></script>
 </head>
 <body>
 
@@ -329,6 +334,24 @@ body{
     <p style="font-size:.82em;">Attention : ceci efface toutes les donnees de jeu (scores, trophees, collection). Les reglages parentaux sont conserves.</p>
     <button class="btn sec" onclick="resetAllData()">Reinitialiser les donnees</button>
     <div class="status" id="resetStatus"></div>
+
+    <h3 style="margin-top:20px;">Synchronisation Cloud</h3>
+    <p style="font-size:.82em;">Synchronisez la progression entre plusieurs appareils (telephone, tablette, ordinateur).</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+      <button class="btn" onclick="showLinkCode()" id="linkCodeBtn">Obtenir un code</button>
+      <button class="btn sec" onclick="showLinkInput()">Lier un appareil</button>
+    </div>
+    <div id="linkCodeDisplay" style="display:none;margin-top:12px;padding:16px;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:12px;text-align:center;">
+      <div style="font-size:.8em;opacity:.7;margin-bottom:6px;">Code de liaison :</div>
+      <div id="linkCodeValue" style="font-size:2em;font-weight:800;letter-spacing:4px;color:#ffd700;font-family:monospace;"></div>
+      <div style="font-size:.75em;opacity:.5;margin-top:6px;">Entrez ce code sur l'autre appareil</div>
+    </div>
+    <div id="linkInputDisplay" style="display:none;margin-top:12px;">
+      <input type="text" id="linkCodeInput" placeholder="Code a 8 caracteres" maxlength="8" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;padding:10px 14px;border-radius:10px;font-family:monospace;font-size:1.1em;letter-spacing:2px;text-transform:uppercase;width:100%;text-align:center;">
+      <button class="btn" onclick="doLinkDevice()" style="margin-top:8px;width:100%;">Synchroniser</button>
+    </div>
+    <div class="status" id="linkStatus"></div>
+    <div id="syncStatus" style="margin-top:8px;font-size:.82em;opacity:.7;"></div>
   </div>
 
   <!-- Comment ca marche -->
@@ -529,6 +552,55 @@ window.trackPlayTime = function() {
   if (played + 1 >= limit) return false;
   return true;
 };
+
+/* ===== CLOUD SYNC UI ===== */
+function updateSyncStatus() {
+  var el = document.getElementById('syncStatus');
+  if (typeof KPopSync !== 'undefined' && KPopSync.isConnected) {
+    el.innerHTML = '&#9989; Connecte au cloud (ID: ' + KPopSync.userId.substring(0,6) + '...)';
+  } else {
+    el.innerHTML = '&#9888; Mode hors-ligne (configurez Firebase pour activer le cloud)';
+  }
+}
+
+function showLinkCode() {
+  if (typeof KPopSync === 'undefined' || !KPopSync.isConnected) {
+    document.getElementById('linkStatus').textContent = 'Cloud non disponible';
+    return;
+  }
+  var code = KPopSync.generateLinkCode();
+  document.getElementById('linkCodeValue').textContent = code;
+  document.getElementById('linkCodeDisplay').style.display = 'block';
+  document.getElementById('linkInputDisplay').style.display = 'none';
+}
+
+function showLinkInput() {
+  document.getElementById('linkInputDisplay').style.display = 'block';
+  document.getElementById('linkCodeDisplay').style.display = 'none';
+  document.getElementById('linkCodeInput').focus();
+}
+
+async function doLinkDevice() {
+  var code = document.getElementById('linkCodeInput').value.trim();
+  if (code.length !== 8) {
+    document.getElementById('linkStatus').textContent = 'Le code doit faire 8 caracteres';
+    return;
+  }
+  if (typeof KPopSync === 'undefined' || !KPopSync.isConnected) {
+    document.getElementById('linkStatus').textContent = 'Cloud non disponible';
+    return;
+  }
+  document.getElementById('linkStatus').textContent = 'Synchronisation en cours...';
+  var ok = await KPopSync.linkDevice(code);
+  if (ok) {
+    document.getElementById('linkStatus').textContent = 'Appareil lie ! La progression a ete synchronisee.';
+    document.getElementById('linkInputDisplay').style.display = 'none';
+  } else {
+    document.getElementById('linkStatus').textContent = 'Code invalide ou expire.';
+  }
+}
+
+setTimeout(updateSyncStatus, 2000);
 </script>
 
 </body>

@@ -25,6 +25,7 @@ const CORE_ASSETS = [
   './pet.html',
   './photobooth.html',
   // Assets
+  './firebase-sync.js',
   './common.css',
   './manifest.json',
   './favicon.svg',
