@@ -1044,7 +1044,8 @@ body::before {
       </div>
     </div>
     <div class="profile-stats">
-      <div class="profile-stat"><div class="val" id="pStars">0</div><div class="lbl" data-i18n="stat_stars">Étoiles</div></div>
+      <div class="profile-stat"><div class="val" id="pStars">0</div><div class="lbl">⭐ Équipe</div></div>
+      <div class="profile-stat"><div class="val" id="pMyStars">0</div><div class="lbl">Mes ⭐</div></div>
       <div class="profile-stat"><div class="val" id="pLevel">1</div><div class="lbl" data-i18n="stat_level">Niveau</div></div>
       <div class="profile-stat"><div class="val" id="pTrophies">0</div><div class="lbl" data-i18n="stat_trophies">Trophées</div></div>
     </div>
@@ -1059,7 +1060,7 @@ body::before {
 
   <!-- Classement -->
   <div class="classement">
-    <h2 data-i18n="ranking_title">🏆 Classement</h2>
+    <h2>👑 Notre Équipe</h2>
     <div class="classement-list" id="classementList"></div>
   </div>
 
@@ -1759,7 +1760,7 @@ function claimDailyReward(){
 
 /* ===== MYSTERY BOX ===== */
 function checkMysteryBox(){
-  const totalStars=parseInt(localStorage.getItem('kpop_stars_'+playerName)||'0');
+  const totalStars=PLAYERS.reduce((sum,p)=>sum+parseInt(localStorage.getItem('kpop_stars_'+p.name)||'0'),0);
   const boxesOpened=parseInt(localStorage.getItem('kpop_boxes_opened_'+playerName)||'0');
   const boxesAvailable=Math.floor(totalStars/50)-boxesOpened;
   const btn=document.getElementById('mysteryBoxBtn');
@@ -1903,8 +1904,10 @@ function initMain(){
   const greet=greetings[Math.floor(Math.random()*greetings.length)].replace('{name}',playerName);
   document.getElementById('greeting').textContent=greet;
 
-  // Stars & Level
-  const totalStars=parseInt(localStorage.getItem('kpop_stars_'+playerName)||'0');
+  // Stars & Level — TEAM MODE: all 3 players share accumulated stars
+  const myStars=parseInt(localStorage.getItem('kpop_stars_'+playerName)||'0');
+  const teamStars=PLAYERS.reduce((sum,p)=>sum+parseInt(localStorage.getItem('kpop_stars_'+p.name)||'0'),0);
+  const totalStars=teamStars;
   const level=Math.floor(totalStars/100)+1;
   const xpInLevel=totalStars%100;
   const unlocked=JSON.parse(localStorage.getItem('kpop_trophies_'+playerName)||'[]');
@@ -1926,6 +1929,7 @@ function initMain(){
   document.getElementById('profileTitle').textContent=customTitle||getRankTitle(totalStars);
 
   document.getElementById('pStars').textContent=totalStars;
+  document.getElementById('pMyStars').textContent=myStars;
   document.getElementById('pLevel').textContent=level;
   document.getElementById('pTrophies').textContent=unlocked.length+'/'+TROPHIES.length;
 
@@ -1989,24 +1993,40 @@ function buildTicker(){
   t.innerHTML=html;
 }
 
-/* ===== CLASSEMENT ===== */
+/* ===== CLASSEMENT — TEAM MODE ===== */
 function buildClassement(){
   const list=document.getElementById('classementList');
   const data=PLAYERS.map(p=>{
     const s=parseInt(localStorage.getItem('kpop_stars_'+p.name)||'0');
     return{...p,stars:s};
-  }).sort((a,b)=>b.stars-a.stars);
+  });
+  const teamTotal=data.reduce((s,p)=>s+p.stars,0);
 
-  const medals=['gold','silver','bronze'];
-  list.innerHTML='';
+  // Team header
+  list.innerHTML=`
+    <div class="team-header" style="text-align:center;padding:12px 0 8px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);">
+      <div style="font-size:1.6em;font-weight:800;background:linear-gradient(135deg,var(--pink),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+        👑 Équipe Star — ${teamTotal} ⭐
+      </div>
+      <div style="font-size:.75em;opacity:.6;margin-top:2px;">Niveau ${Math.floor(teamTotal/100)+1} • ${getRankTitle(teamTotal)}</div>
+    </div>
+  `;
+  // Individual contributions
   data.forEach((p,i)=>{
+    const pct=teamTotal>0?Math.round(p.stars/teamTotal*100):0;
     const row=document.createElement('div');
-    row.className='classement-row'+(i===0?' first':'');
-    const ageStr=T('rank_age',{age:p.age, title:getRankTitle(p.stars)});
+    row.className='classement-row';
     row.innerHTML=`
-      <div class="rank-num ${medals[i]||''}">${i+1}</div>
       <div class="rank-avatar" style="background:${p.color}">${p.emoji}</div>
-      <div class="rank-info"><div class="rname">${p.name}</div><div class="rage">${ageStr}</div></div>
+      <div class="rank-info">
+        <div class="rname">${p.name}</div>
+        <div class="rage" style="display:flex;align-items:center;gap:6px;">
+          <div style="flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;">
+            <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));border-radius:3px;transition:width .5s;"></div>
+          </div>
+          <span style="font-size:.7em;opacity:.7;">${pct}%</span>
+        </div>
+      </div>
       <div class="rank-stars">⭐ ${p.stars}</div>
     `;
     list.appendChild(row);
