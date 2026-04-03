@@ -232,7 +232,7 @@ function showHighScore(){
 }
 function getHS(){return parseInt(localStorage.getItem('kpop_hs_course_'+playerName)||'0');}
 function getStars(){return parseInt(localStorage.getItem('kpop_stars_'+playerName)||'0');}
-function saveStars(n){const cur=getStars();localStorage.setItem('kpop_stars_'+playerName,Math.max(cur,n));}
+function saveStars(n){const cur=getStars();localStorage.setItem('kpop_stars_'+playerName,cur+n);}
 
 // Auto-select from URL/storage
 if(storedPlayer){

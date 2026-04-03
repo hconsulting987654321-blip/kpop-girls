@@ -869,7 +869,7 @@ function autoDetectAchievements(){
   // === CARTE ===
   if(cardCollection.length > 0) unlockAchievement('carte_first');
   if(cardCollection.length >= 8) unlockAchievement('carte_8');
-  var hasLegendary = cardCollection.some(function(c){ return c && (c.rarity === 'legendary' || c.rarity === 'legendaire'); });
+  var hasLegendary = cardCollection.some(function(c){ return c && c.data && (c.data.rarity === 3 || c.data.rarity === 'legendary' || c.data.rarity === 'legendaire'); });
   if(hasLegendary) unlockAchievement('carte_legendary');
 
   // === PHOTOBOOTH ===
@@ -910,10 +910,8 @@ function autoDetectAchievements(){
 
   // === PET ===
   if(gamesPlayed.has('pet')) unlockAchievement('pet_first');
-  var petHappiness = parseInt(localStorage.getItem('kpop_pet_happiness_' + p) || '0');
-  if(petHappiness >= 100) unlockAchievement('pet_happy');
-  var petLevel = parseInt(localStorage.getItem('kpop_pet_level_' + p) || '0');
-  if(petLevel >= 10) unlockAchievement('pet_lv10');
+  var petRaw = localStorage.getItem('kpop_pet_' + p);
+  if(petRaw){ try{ var petData = JSON.parse(petRaw); if(petData.stats && petData.stats.happiness >= 100) unlockAchievement('pet_happy'); if(petData.level >= 10) unlockAchievement('pet_lv10'); }catch(e){} }
 
   return {stars:stars, teamStars:teamStars, level:level, gamesPlayed:gamesPlayed.size, stickers:stickers.length, streak:streak};
 }

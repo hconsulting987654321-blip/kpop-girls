@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kpop-v3';
+const CACHE_NAME = 'kpop-v4';
 
 const CORE_ASSETS = [
   './',
@@ -25,10 +25,13 @@ const CORE_ASSETS = [
   './pet.html',
   './photobooth.html',
   // Assets
+  './common.css',
   './manifest.json',
   './favicon.svg',
   './icon-192.svg',
-  './icon-512.svg'
+  './icon-512.svg',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 const FONT_URLS = [

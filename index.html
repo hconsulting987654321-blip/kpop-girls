@@ -205,23 +205,7 @@ body::before {
   text-shadow:0 1px 3px rgba(0,0,0,.3);
   letter-spacing:.5px;
 }
-.quick-btn[data-name="Ambre"]{
-  background:linear-gradient(145deg,#ff6fd8,#ff9ecf,#ff6fa0);
-  border-color:rgba(255,111,216,.5);
-  box-shadow:0 4px 20px rgba(255,111,216,.3);
-}
-.quick-btn[data-name="Eden"]{
-  background:linear-gradient(145deg,#b44dff,#9b30ff,#7b2dcc);
-  border-color:rgba(180,77,255,.5);
-  box-shadow:0 4px 20px rgba(180,77,255,.3);
-}
-.quick-btn[data-name="Louise"]{
-  background:linear-gradient(145deg,#ffd700,#ffaa00,#ff8c00);
-  border-color:rgba(255,215,0,.5);
-  box-shadow:0 4px 20px rgba(255,215,0,.3);
-  color:#1a1028;
-  text-shadow:0 1px 2px rgba(255,255,255,.3);
-}
+/* Player button colors set dynamically via JS */
 .quick-btn:hover{
   transform:scale(1.12) translateY(-3px);
   filter:brightness(1.15);
@@ -978,11 +962,7 @@ body::before {
   <div class="welcome-form">
     <label data-i18n="welcome_label">Comment tu t'appelles ?</label>
     <input type="text" class="welcome-input" id="nameInput" data-i18n-placeholder="welcome_placeholder" placeholder="Ton prénom..." maxlength="20" autocomplete="off">
-    <div class="quick-names">
-      <button class="quick-btn" data-name="Ambre" onclick="pickName('Ambre',this)">Ambre</button>
-      <button class="quick-btn" data-name="Eden" onclick="pickName('Eden',this)">Eden</button>
-      <button class="quick-btn" data-name="Louise" onclick="pickName('Louise',this)">Louise</button>
-    </div>
+    <div class="quick-names" id="quickNames"></div>
     <button class="enter-btn" id="enterBtn" disabled onclick="enterApp()" data-i18n="enter_btn">C'est parti !</button>
   </div>
 </div>
@@ -1095,7 +1075,7 @@ body::before {
     <div class="collection-count" id="collectionCount"></div>
   </div>
 
-  <div class="footer"><span data-i18n="footer">&copy; 2025 Stellar Games Studio</span> &middot; <a href="parents.html" style="color:rgba(255,255,255,.35);text-decoration:none;font-size:.95em;">Parents</a></div>
+  <div class="footer"><span data-i18n="footer">&copy; 2026 Stellar Games Studio</span> &middot; <a href="parents.html" style="color:rgba(255,255,255,.35);text-decoration:none;font-size:.95em;">Parents</a></div>
 </div>
 
 <script>
@@ -1134,7 +1114,7 @@ const TRANSLATIONS = {
     achievements_btn: 'Mes Succès',
     collection_count: '{n} / {t} stickers',
     install_app: "Installer l'App",
-    footer: '© 2024 Stellar Games Studio',
+    footer: '© 2026 Stellar Games Studio',
     streak_days: '{n} jours de suite !',
     rank_age: '{age} ans — {title}',
     record: 'Record : {v}',
@@ -1247,7 +1227,7 @@ const TRANSLATIONS = {
     achievements_btn: 'My Achievements',
     collection_count: '{n} / {t} stickers',
     install_app: 'Install App',
-    footer: '© 2024 Stellar Games Studio',
+    footer: '© 2026 Stellar Games Studio',
     streak_days: '{n} days in a row!',
     rank_age: '{age} yrs — {title}',
     record: 'Best: {v}',
@@ -1392,11 +1372,23 @@ function initLangToggle() {
 }
 
 /* ===== DATA ===== */
-const PLAYERS = [
+const DEFAULT_PLAYERS = [
   {name:'Ambre', age:6, emoji:'💖', color:'linear-gradient(145deg,#ff1a1a,#ff6b6b)', stars:true},
   {name:'Eden', age:6, emoji:'💖', color:'linear-gradient(145deg,#a18cd1,#cdb4f0)'},
   {name:'Louise', age:10, emoji:'⭐', color:'linear-gradient(145deg,#fbc2eb,#f6a5c1)'},
 ];
+const PLAYER_COLORS = [
+  'linear-gradient(145deg,#ff6fd8,#ff9ecf)', 'linear-gradient(145deg,#4ecdc4,#44b09e)',
+  'linear-gradient(145deg,#f093fb,#f5576c)', 'linear-gradient(145deg,#43e97b,#38f9d7)',
+  'linear-gradient(145deg,#fa709a,#fee140)', 'linear-gradient(145deg,#a18cd1,#fbc2eb)',
+];
+const PLAYER_EMOJIS = ['💖','⭐','🌟','💫','🎀','🦋','🌈','🎤','👑','💎'];
+function loadPlayers(){
+  try{ const s=localStorage.getItem('kpop_players'); if(s){ const p=JSON.parse(s); if(Array.isArray(p)&&p.length) return p; } }catch(e){}
+  return DEFAULT_PLAYERS;
+}
+function savePlayers(p){ localStorage.setItem('kpop_players',JSON.stringify(p)); }
+let PLAYERS = loadPlayers();
 
 const GAMES = [
   {file:'avatar.html',icon:'👸',difficulty:1,time:'5 min',isNew:false},
@@ -1562,6 +1554,44 @@ document.addEventListener('click',function(e){
 const nameInput = document.getElementById('nameInput');
 const enterBtn = document.getElementById('enterBtn');
 
+// Build quick-select buttons dynamically from PLAYERS
+(function buildQuickBtns(){
+  const container = document.getElementById('quickNames');
+  PLAYERS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'quick-btn';
+    btn.setAttribute('data-name', p.name);
+    btn.textContent = p.name;
+    btn.style.background = p.color;
+    btn.style.borderColor = 'rgba(255,255,255,.3)';
+    btn.style.boxShadow = '0 4px 20px rgba(255,255,255,.15)';
+    btn.onclick = () => pickName(p.name, btn);
+    container.appendChild(btn);
+  });
+  // "+" button to add a new player
+  const addBtn = document.createElement('button');
+  addBtn.className = 'quick-btn';
+  addBtn.textContent = '+';
+  addBtn.title = 'Ajouter un joueur';
+  addBtn.style.background = 'rgba(255,255,255,.12)';
+  addBtn.style.borderColor = 'rgba(255,255,255,.3)';
+  addBtn.style.fontSize = '1.5em';
+  addBtn.onclick = () => {
+    const name = prompt('Prénom du nouveau joueur :');
+    if(!name || !name.trim()) return;
+    const trimmed = name.trim().substring(0,20);
+    if(PLAYERS.some(p => p.name.toLowerCase() === trimmed.toLowerCase())){ alert('Ce joueur existe déjà !'); return; }
+    const emoji = PLAYER_EMOJIS[PLAYERS.length % PLAYER_EMOJIS.length];
+    const color = PLAYER_COLORS[PLAYERS.length % PLAYER_COLORS.length];
+    PLAYERS.push({name:trimmed, emoji:emoji, color:color});
+    savePlayers(PLAYERS);
+    container.innerHTML = '';
+    buildQuickBtns();
+    pickName(trimmed, container.querySelector('[data-name="'+trimmed+'"]'));
+  };
+  container.appendChild(addBtn);
+})();
+
 nameInput.addEventListener('input',()=>{enterBtn.disabled=!nameInput.value.trim();});
 nameInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&nameInput.value.trim())enterApp();});
 
@@ -1591,6 +1621,14 @@ function enterApp(){
   if(!playerName)return;
   localStorage.setItem('kpop_player',playerName);
 
+  // Auto-add new player to team if not exists
+  if(!PLAYERS.some(p => p.name.toLowerCase() === playerName.toLowerCase())){
+    const emoji = PLAYER_EMOJIS[PLAYERS.length % PLAYER_EMOJIS.length];
+    const color = PLAYER_COLORS[PLAYERS.length % PLAYER_COLORS.length];
+    PLAYERS.push({name:playerName, emoji:emoji, color:color});
+    savePlayers(PLAYERS);
+  }
+
   let visitors=JSON.parse(localStorage.getItem('kpop_visitors')||'[]');
   if(!visitors.includes(playerName)){visitors.push(playerName);localStorage.setItem('kpop_visitors',JSON.stringify(visitors));}
 
@@ -1618,27 +1656,6 @@ function enterApp(){
     updateStreak();
     checkStreakRewards();
   },500);
-}
-
-function launchConfetti(){
-  const colors=['#ff6fd8','#b44dff','#ffd700','#4ecdc4','#ff9ecf','#ff6fa0','#7b2dcc','#ffaa00'];
-  const shapes=['circle','square'];
-  for(let i=0;i<30;i++){
-    setTimeout(()=>{
-      const c=document.createElement('div');
-      c.className='confetti-piece';
-      c.style.left=Math.random()*100+'%';
-      c.style.setProperty('--dur',(2+Math.random()*2)+'s');
-      c.style.setProperty('--rot',(360+Math.random()*720)+'deg');
-      c.style.background=colors[Math.floor(Math.random()*colors.length)];
-      const size=6+Math.random()*8;
-      c.style.width=size+'px';
-      c.style.height=shapes[Math.floor(Math.random()*2)]==='circle'?size+'px':size*1.5+'px';
-      c.style.borderRadius=Math.random()>.5?'50%':'2px';
-      document.body.appendChild(c);
-      setTimeout(()=>c.remove(),4000);
-    },i*30);
-  }
 }
 
 function playCelebSound(){
@@ -2323,7 +2340,13 @@ document.addEventListener('click', (e) => {
     setTimeout(()=>el.remove(), 12000);
   }
   for(let i=0;i<25;i++) setTimeout(()=>spawnEmoji(), i*200);
-  setInterval(spawnEmoji, 1500);
+  const emojiInterval = setInterval(spawnEmoji, 1500);
+  // Stop spawning once welcome screen is dismissed
+  const stopWhenMain = new MutationObserver(()=>{
+    const main = document.getElementById('main');
+    if(main && main.classList.contains('show')){ clearInterval(emojiInterval); stopWhenMain.disconnect(); }
+  });
+  stopWhenMain.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
 })();
 
 // ===== SECTION REVEAL ON SCROLL =====
