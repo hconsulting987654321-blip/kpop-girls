@@ -450,7 +450,7 @@ h1 {
 </style>
 </head>
 <body>
-<a class="back-btn" href="index.html">Retour</a>
+<a class="back-btn" href="index.html" id="backBtn">Retour</a>
 
 <h1>Coloriage K-Pop</h1>
 <p class="subtitle">Choisis un dessin et colorie-le !</p>
@@ -504,6 +504,7 @@ h1 {
 
 <script>
 const playerName = new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star';
+document.getElementById('backBtn').href = 'index.html?player=' + encodeURIComponent(playerName);
 
 // =========== WEB AUDIO ENGINE ===========
 const AudioEngine = (() => {
@@ -1441,5 +1442,19 @@ document.addEventListener('click', function(e) {
 });
 
 </script>
+<!-- Page Transition -->
+<style>
+.page-transition-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;pointer-events:none;background:#050510;opacity:1;transition:opacity .3s ease}
+.page-transition-overlay.visible{opacity:1;pointer-events:all}
+.page-transition-overlay.hidden{opacity:0}
+.page-transition-overlay .sparkle{position:absolute;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle,#ffd700,#ff6fd8);opacity:0;animation:ptSparkle .6s ease-out forwards}
+@keyframes ptSparkle{0%{opacity:1;transform:scale(0) rotate(0deg)}40%{opacity:1;transform:scale(1.5) rotate(180deg)}100%{opacity:0;transform:scale(0) rotate(360deg)}}
+</style>
+<script>
+(function(){var o=document.createElement("div");o.className="page-transition-overlay";for(var i=0;i<12;i++){var s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.animationDelay=Math.random()*.3+"s";o.appendChild(s)}document.body.appendChild(o);
+requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add("hidden")})});
+document.addEventListener("click",function(e){var a=e.target.closest("a[href]");if(!a||a.target==="_blank"||a.href.startsWith("javascript")||a.href.startsWith("#")||a.href.startsWith("mailto"))return;e.preventDefault();o.classList.remove("hidden");o.classList.add("visible");o.querySelectorAll(".sparkle").forEach(function(sp){sp.style.animation="none";sp.offsetHeight;sp.style.left=Math.random()*100+"%";sp.style.top=Math.random()*100+"%";sp.style.animationDelay=Math.random()*.3+"s";sp.style.animation=""});setTimeout(function(){window.location.href=a.href},300)})})();
+</script>
+
 </body>
 </html>

@@ -345,7 +345,7 @@ checkUnlocks();
 /* ===== INIT ===== */
 document.getElementById('backBtn').href = `index.html?player=${encodeURIComponent(playerName)}`;
 document.getElementById('playerName').textContent = playerName;
-document.getElementById('starsCount').textContent = starCount + ' etoiles';
+document.getElementById('starsCount').textContent = '\u2B50 ' + starCount + ' etoiles';
 
 // Sound toggle
 document.getElementById('soundToggle').onclick = () => {
@@ -427,7 +427,8 @@ TEMPLATES.forEach((t, i) => {
 
 // Canvas click = deselect
 document.getElementById('canvasWrap').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('canvasBg') || e.target === document.getElementById('canvasStickers')) {
+  const t = e.target;
+  if (t === document.getElementById('canvasBg') || t === document.getElementById('canvasStickers') || t === document.getElementById('canvasWrap')) {
     deselectAll();
   }
 });
@@ -435,6 +436,30 @@ document.getElementById('canvasWrap').addEventListener('click', (e) => {
 // Enter key for text input
 document.getElementById('textInput').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') addTextSticker();
+});
+
+// Delete/Backspace key to delete selected sticker
+document.addEventListener('keydown', (e) => {
+  // Don't intercept if user is typing in an input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) {
+    e.preventDefault();
+    deleteSelected();
+  }
+  // Escape to deselect
+  if (e.key === 'Escape' && selectedId) {
+    deselectAll();
+  }
+  // Ctrl+Z / Cmd+Z for undo
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+    e.preventDefault();
+    undo();
+  }
+  // Ctrl+Shift+Z / Ctrl+Y for redo
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+    e.preventDefault();
+    redo();
+  }
 });
 
 renderGallery();
@@ -514,7 +539,7 @@ function addSeoulLights(c) {
   }
 }
 
-function placeSticker(content, isText, x, y, color) {
+function placeSticker(content, isText, x, y, color, silent) {
   const wrap = document.getElementById('canvasWrap');
   const rect = wrap.getBoundingClientRect();
   const px = x !== undefined ? x : 30 + Math.random() * (rect.width - 80);
@@ -538,8 +563,12 @@ function placeSticker(content, isText, x, y, color) {
   el.addEventListener('pointerdown', (e) => onStickerDown(e, id));
   el.addEventListener('click', (e) => { e.stopPropagation(); selectSticker(id); });
   document.getElementById('canvasStickers').appendChild(el);
-  selectSticker(id);
-  playPop();
+  // Remove pop animation class after it finishes
+  el.addEventListener('animationend', () => el.classList.remove('sticker-pop'), { once: true });
+  if (!silent) {
+    selectSticker(id);
+    playPop();
+  }
 }
 
 function addTextSticker() {
@@ -668,7 +697,7 @@ function restoreStickers(state) {
   placedStickers = [];
   deselectAll();
   state.forEach(s => {
-    placeSticker(s.content, s.isText, s.x, s.y, s.color);
+    placeSticker(s.content, s.isText, s.x, s.y, s.color, true);
     const placed = placedStickers[placedStickers.length - 1];
     placed.size = s.size;
     placed.rotation = s.rotation;
@@ -740,7 +769,7 @@ function loadTemplate(idx) {
   setFrame(t.frame);
   if (t.filter !== undefined) setFilter(t.filter);
   t.stickers.forEach(s => {
-    placeSticker(s.c, s.t, s.x, s.y, s.col);
+    placeSticker(s.c, s.t, s.x, s.y, s.col, true);
     const placed = placedStickers[placedStickers.length - 1];
     placed.size = s.s;
     placed.rotation = s.r;
@@ -766,7 +795,7 @@ function showUnlockPrompt(cat) {
       localStorage.setItem(`kpop_stars_${playerName}`, starCount);
       localStorage.setItem(`kpop_pack_${playerName}_${cat.name}`, '1');
       cat.locked = false;
-      document.getElementById('starsCount').textContent = starCount + ' etoiles';
+      document.getElementById('starsCount').textContent = '\u2B50 ' + starCount + ' etoiles';
       // Update tab appearance
       const tabs = tabsEl.querySelectorAll('.sticker-tab');
       const idx = STICKER_CATS.indexOf(cat);
@@ -804,6 +833,7 @@ function downloadPhoto() {
     scene: currentScene,
     frame: currentFrame,
     filter: currentFilter,
+    effect: currentEffect,
     stickers: placedStickers.map(s => ({...s}))
   }, 680, 880);
   const link = document.createElement('a');
@@ -825,8 +855,9 @@ function randomStickers() {
     const item = cat.items[Math.floor(Math.random() * cat.items.length)];
     const x = 20 + Math.random() * (rect.width - 60);
     const y = 20 + Math.random() * (rect.height - 60);
-    setTimeout(() => placeSticker(item, false, x, y), i * 70);
+    placeSticker(item, false, x, y);
   }
+  deselectAll();
 }
 
 function clearAll() {
@@ -855,6 +886,7 @@ function saveToGallery() {
     scene: currentScene,
     frame: currentFrame,
     filter: currentFilter,
+    effect: currentEffect,
     stickers: placedStickers.map(s => ({...s})),
     timestamp: Date.now()
   };
@@ -862,7 +894,7 @@ function saveToGallery() {
   localStorage.setItem(getGalleryKey(), JSON.stringify(gallery));
   starCount += 20;
   localStorage.setItem(`kpop_stars_${playerName}`, starCount);
-  document.getElementById('starsCount').textContent = starCount + ' etoiles';
+  document.getElementById('starsCount').textContent = '\u2B50 ' + starCount + ' etoiles';
   checkUnlocks();
   renderGallery();
   showBonus('+20 etoiles !', '#ffd700');
@@ -906,8 +938,21 @@ function drawPhotoPreview(ctx, photo, w, h) {
   }
   ctx.fillRect(0, 0, w, h);
 
-  // Apply filter effect to preview
+  // Apply CSS filter effect (sepia, grayscale, etc.) by re-drawing onto a temp canvas
   const filter = FILTERS[photo.filter || 0];
+  if (filter && filter.style) {
+    try {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = w; tempCanvas.height = h;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(ctx.canvas, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      ctx.filter = filter.style;
+      ctx.drawImage(tempCanvas, 0, 0);
+      ctx.filter = 'none';
+    } catch(e) { /* filter not supported, skip */ }
+  }
+  // Apply color overlay
   if (filter && filter.color) {
     ctx.fillStyle = filter.color;
     ctx.fillRect(0, 0, w, h);
@@ -966,8 +1011,12 @@ function loadPhoto(photo) {
   setScene(photo.scene || 0);
   setFrame(photo.frame || 0);
   if (photo.filter !== undefined) setFilter(photo.filter);
+  if (photo.effect !== undefined && photo.effect !== 'none') {
+    const effIdx = EFFECTS.findIndex(e => e.type === photo.effect);
+    if (effIdx >= 0) setEffect(photo.effect, effIdx);
+  }
   (photo.stickers || []).forEach(s => {
-    placeSticker(s.content, s.isText, s.x, s.y, s.color);
+    placeSticker(s.content, s.isText, s.x, s.y, s.color, true);
     const placed = placedStickers[placedStickers.length - 1];
     placed.size = s.size;
     placed.rotation = s.rotation;
@@ -1052,5 +1101,19 @@ function showBonus(text, color) {
   setTimeout(() => el.remove(), 1300);
 }
 </script>
+<!-- Page Transition -->
+<style>
+.page-transition-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;pointer-events:none;background:#050510;opacity:1;transition:opacity .3s ease}
+.page-transition-overlay.visible{opacity:1;pointer-events:all}
+.page-transition-overlay.hidden{opacity:0}
+.page-transition-overlay .sparkle{position:absolute;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle,#ffd700,#ff6fd8);opacity:0;animation:ptSparkle .6s ease-out forwards}
+@keyframes ptSparkle{0%{opacity:1;transform:scale(0) rotate(0deg)}40%{opacity:1;transform:scale(1.5) rotate(180deg)}100%{opacity:0;transform:scale(0) rotate(360deg)}}
+</style>
+<script>
+(function(){var o=document.createElement("div");o.className="page-transition-overlay";for(var i=0;i<12;i++){var s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.animationDelay=Math.random()*.3+"s";o.appendChild(s)}document.body.appendChild(o);
+requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add("hidden")})});
+document.addEventListener("click",function(e){var a=e.target.closest("a[href]");if(!a||a.target==="_blank"||a.href.startsWith("javascript")||a.href.startsWith("#")||a.href.startsWith("mailto"))return;e.preventDefault();o.classList.remove("hidden");o.classList.add("visible");o.querySelectorAll(".sparkle").forEach(function(sp){sp.style.animation="none";sp.offsetHeight;sp.style.left=Math.random()*100+"%";sp.style.top=Math.random()*100+"%";sp.style.animationDelay=Math.random()*.3+"s";sp.style.animation=""});setTimeout(function(){window.location.href=a.href},300)})})();
+</script>
+
 </body>
 </html>

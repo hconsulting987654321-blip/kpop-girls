@@ -599,9 +599,9 @@ const PLAYERS=[
 // STATE
 // ═══════════════════════════════════════
 let playerName='',currentRound=0,totalScore=0,timerValue=35,timerInterval=null,timerPaused=false;
-let roundThemes=[],roundScores=[],bestRound={score:0,round:0,outfit:null};
+let roundThemes=[],roundScores=[],bestRound={score:-1,round:0,outfit:null};
 let outfit={hair:'',face:'',top:'',bottom:'',shoes:'',accessory:''};
-let runwayAnimFrame=null,totalRounds=7;
+let runwayAnimFrame=null,totalRounds=7,runwayInProgress=false;
 
 // ═══════════════════════════════════════
 // INIT
@@ -657,7 +657,7 @@ function selectPlayer(name,skipAnim){
 // GAME FLOW
 // ═══════════════════════════════════════
 function startGame(){
-  currentRound=0;totalScore=0;roundScores=[];bestRound={score:0,round:0,outfit:null};
+  currentRound=0;totalScore=0;roundScores=[];bestRound={score:-1,round:0,outfit:null};runwayInProgress=false;
   // Shuffle 6 themes + freestyle round 7
   roundThemes=[...THEMES].sort(()=>Math.random()-.5);
   roundThemes.push(FREESTYLE_THEME);
@@ -673,6 +673,8 @@ function startRound(){
   document.getElementById('goBar').style.display='block';
   document.getElementById('runwayPhase').classList.remove('active');
   document.getElementById('scoreScreen').classList.remove('active');
+  document.getElementById('finalScreen').classList.remove('active');
+  document.getElementById('pauseOverlay').classList.remove('active');
 
   const isFreestyle=currentRound===6;
   document.getElementById('roundLabel').textContent=isFreestyle?'Bonus!':'Round '+(currentRound+1)+'/6';
@@ -690,16 +692,20 @@ function startRound(){
 function buildWardrobe(theme){
   const ward=document.getElementById('wardrobe');ward.innerHTML='';
   const isFreestyle=theme===FREESTYLE_THEME;
-  Object.keys(CATEGORIES).forEach(key=>{
+  const catKeys=Object.keys(CATEGORIES);
+  const isMobile=window.innerWidth<=750;
+  catKeys.forEach((key,catIdx)=>{
     const cat=CATEGORIES[key];
     const section=document.createElement('div');section.className='ward-section glass';
     const header=document.createElement('div');header.className='ward-header';
-    header.innerHTML='<span>'+cat.label+'</span><span>▼</span>';
+    const startCollapsed=isMobile&&catIdx>0;
+    header.innerHTML='<span>'+cat.label+'</span><span>'+(startCollapsed?'▶':'▼')+'</span>';
     header.onclick=()=>{
       const body=section.querySelector('.ward-body');
       body.classList.toggle('collapsed');
+      header.querySelector('span:last-child').textContent=body.classList.contains('collapsed')?'▶':'▼';
     };
-    const body=document.createElement('div');body.className='ward-body';
+    const body=document.createElement('div');body.className='ward-body'+(startCollapsed?' collapsed':'');
     cat.items.forEach(item=>{
       const btn=document.createElement('button');btn.className='item-btn';btn.textContent=item.e;
       const matches=isFreestyle||item.tags.some(t=>theme.keywords.includes(t));
@@ -794,6 +800,8 @@ function resumeTimer(){
 // RUNWAY ANIMATION
 // ═══════════════════════════════════════
 function startRunway(){
+  if(runwayInProgress)return;
+  runwayInProgress=true;
   clearInterval(timerInterval);
   document.getElementById('outfitPhase').style.display='none';
   document.getElementById('goBar').style.display='none';
@@ -962,6 +970,7 @@ function gradeToStars(grade){
 }
 
 function showRoundScore(){
+  runwayInProgress=false;
   const score=calcScore();
   document.getElementById('runwayPhase').classList.remove('active');
   if(runwayAnimFrame)cancelAnimationFrame(runwayAnimFrame);
@@ -995,7 +1004,7 @@ function showRoundScore(){
   totalScore+=score.total;
   roundScores.push({theme:roundThemes[currentRound],score:score.total,grade:score.grade,stars,outfit:{...outfit}});
 
-  if(score.total>bestRound.score){
+  if(score.total>bestRound.score||bestRound.score<0){
     bestRound={score:score.total,round:currentRound+1,outfit:{...outfit}};
   }
 
@@ -1093,5 +1102,19 @@ function restartGame(){
   startGame();
 }
 </script>
+<!-- Page Transition -->
+<style>
+.page-transition-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;pointer-events:none;background:#050510;opacity:1;transition:opacity .3s ease}
+.page-transition-overlay.visible{opacity:1;pointer-events:all}
+.page-transition-overlay.hidden{opacity:0}
+.page-transition-overlay .sparkle{position:absolute;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle,#ffd700,#ff6fd8);opacity:0;animation:ptSparkle .6s ease-out forwards}
+@keyframes ptSparkle{0%{opacity:1;transform:scale(0) rotate(0deg)}40%{opacity:1;transform:scale(1.5) rotate(180deg)}100%{opacity:0;transform:scale(0) rotate(360deg)}}
+</style>
+<script>
+(function(){var o=document.createElement("div");o.className="page-transition-overlay";for(var i=0;i<12;i++){var s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.animationDelay=Math.random()*.3+"s";o.appendChild(s)}document.body.appendChild(o);
+requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add("hidden")})});
+document.addEventListener("click",function(e){var a=e.target.closest("a[href]");if(!a||a.target==="_blank"||a.href.startsWith("javascript")||a.href.startsWith("#")||a.href.startsWith("mailto"))return;e.preventDefault();o.classList.remove("hidden");o.classList.add("visible");o.querySelectorAll(".sparkle").forEach(function(sp){sp.style.animation="none";sp.offsetHeight;sp.style.left=Math.random()*100+"%";sp.style.top=Math.random()*100+"%";sp.style.animationDelay=Math.random()*.3+"s";sp.style.animation=""});setTimeout(function(){window.location.href=a.href},300)})})();
+</script>
+
 </body>
 </html>

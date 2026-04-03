@@ -263,7 +263,7 @@ a.back-btn:hover{background:rgba(255,255,255,0.25)}
 </head>
 <body>
 
-<a href="index.html" class="back-btn">Retour</a>
+<a href="index.html" class="back-btn" id="backBtn">Retour</a>
 
 <div class="hud" id="hud" style="display:none">
   <div class="hud-item"><span>Score:</span><span class="score-val" id="hudScore">0</span></div>
@@ -470,6 +470,7 @@ function getAllItems() {
 
 // ===== GAME STATE =====
 let currentPlayer = new URLSearchParams(location.search).get('player') || localStorage.getItem('kpop_player') || '';
+if (currentPlayer) { document.getElementById('backBtn').href = 'index.html?player=' + encodeURIComponent(currentPlayer); }
 let currentMode = '';
 let score = 0;
 let lives = 5;
@@ -570,6 +571,7 @@ document.querySelectorAll('.player-btn').forEach(btn => {
     currentPlayer = btn.dataset.player;
     document.querySelectorAll('.player-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    document.getElementById('backBtn').href = 'index.html?player=' + encodeURIComponent(currentPlayer);
     checkReady();
     updateBestScoresForPlayer();
   });
@@ -1582,6 +1584,12 @@ function endGame() {
     localStorage.setItem(hsKeyLegacy, score); // keep legacy key updated
   }
 
+  // Save stars to global star counter
+  const starsEarned = score >= 500 ? 5 : score >= 300 ? 4 : score >= 150 ? 3 : score >= 50 ? 2 : 1;
+  let totalStarsCatch = parseInt(localStorage.getItem('kpop_stars_' + currentPlayer) || '0');
+  totalStarsCatch += starsEarned;
+  localStorage.setItem('kpop_stars_' + currentPlayer, String(totalStarsCatch));
+
   let title, msg;
   if (score >= 500) { title = 'LEGENDAIRE !!!'; msg = `${currentPlayer} est la QUEEN de la K-pop !!!`; }
   else if (score >= 300) { title = 'INCROYABLE !!'; msg = `${currentPlayer} est une vraie star !`; }
@@ -1718,5 +1726,19 @@ document.addEventListener('click', function(e) {
 });
 
 </script>
+<!-- Page Transition -->
+<style>
+.page-transition-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;pointer-events:none;background:#050510;opacity:1;transition:opacity .3s ease}
+.page-transition-overlay.visible{opacity:1;pointer-events:all}
+.page-transition-overlay.hidden{opacity:0}
+.page-transition-overlay .sparkle{position:absolute;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle,#ffd700,#ff6fd8);opacity:0;animation:ptSparkle .6s ease-out forwards}
+@keyframes ptSparkle{0%{opacity:1;transform:scale(0) rotate(0deg)}40%{opacity:1;transform:scale(1.5) rotate(180deg)}100%{opacity:0;transform:scale(0) rotate(360deg)}}
+</style>
+<script>
+(function(){var o=document.createElement("div");o.className="page-transition-overlay";for(var i=0;i<12;i++){var s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.animationDelay=Math.random()*.3+"s";o.appendChild(s)}document.body.appendChild(o);
+requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add("hidden")})});
+document.addEventListener("click",function(e){var a=e.target.closest("a[href]");if(!a||a.target==="_blank"||a.href.startsWith("javascript")||a.href.startsWith("#")||a.href.startsWith("mailto"))return;e.preventDefault();o.classList.remove("hidden");o.classList.add("visible");o.querySelectorAll(".sparkle").forEach(function(sp){sp.style.animation="none";sp.offsetHeight;sp.style.left=Math.random()*100+"%";sp.style.top=Math.random()*100+"%";sp.style.animationDelay=Math.random()*.3+"s";sp.style.animation=""});setTimeout(function(){window.location.href=a.href},300)})})();
+</script>
+
 </body>
 </html>

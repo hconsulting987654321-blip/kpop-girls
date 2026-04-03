@@ -21,7 +21,7 @@ body{
   background-size:400% 400%;animation:gradBG 12s ease infinite;
   min-height:100vh;min-height:100dvh;font-family:'Quicksand',sans-serif;
   display:flex;flex-direction:column;align-items:center;
-  padding:12px;overflow-x:hidden;color:#fff;
+  padding:12px;padding-top:50px;overflow-x:hidden;color:#fff;
 }
 @keyframes gradBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
@@ -320,6 +320,7 @@ h1{font-size:1.5em;font-weight:800;color:#fff;text-align:center;text-shadow:0 2p
 .catch-basket{
   position:absolute;bottom:10px;font-size:2.5em;
   transition:left .1s;pointer-events:none;
+  transform:translateX(-50%);
 }
 
 /* Memory game */
@@ -446,6 +447,7 @@ h1{font-size:1.5em;font-weight:800;color:#fff;text-align:center;text-shadow:0 2p
   .pet-arena{height:210px}
   h1{font-size:1.2em}
   .memory-card{width:50px;height:50px;font-size:1.4em}
+  .memory-grid{grid-template-columns:repeat(4,50px)!important}
   .mg-area{height:260px}
   .minigame-btns{grid-template-columns:1fr 1fr 1fr;gap:6px}
 }
@@ -658,7 +660,7 @@ const STAT_CONFIG=[
 ];
 
 const DECAY={happiness:5,hunger:8,energy:3,style:4};
-const COOLDOWNS={feed:8,play:12,sleep:20,groom:10,sing:15,dance:15};
+const COOLDOWNS={feed:8,play:12,sleep:20,groom:10,sing:15,dance:15,dress:0};
 const XP_BASE=50;
 
 const ACTIONS=[
@@ -667,7 +669,8 @@ const ACTIONS=[
   {id:'sleep',icon:'😴',label:'Dormir',stats:{energy:40},xp:6,particles:['💤','😴','🌙','⭐','☁️'],anim:'sleep',sfx:sfxSleep},
   {id:'groom',icon:'🛁',label:'Toiletter',stats:{style:35},xp:8,particles:['✨','💫','🫧','🧼','💎'],anim:'bounce',sfx:sfxGroom},
   {id:'sing',icon:'🎵',label:'Chanter',stats:{happiness:15,style:10},xp:12,particles:['🎵','🎶','🎤','💜','🎼'],anim:'bounce',sfx:sfxSing},
-  {id:'dance',icon:'💃',label:'Danser',stats:{happiness:20,energy:-10,style:15},xp:14,particles:['💃','🕺','✨','🎶','⭐'],anim:'dance',sfx:sfxPlay}
+  {id:'dance',icon:'💃',label:'Danser',stats:{happiness:20,energy:-10,style:15},xp:14,particles:['💃','🕺','✨','🎶','⭐'],anim:'dance',sfx:sfxPlay},
+  {id:'dress',icon:'👗',label:'Habiller',stats:{style:5},xp:4,particles:['👗','✨','💎','🎀','👑'],anim:'bounce',sfx:sfxGroom,openOutfit:true}
 ];
 
 // Pet mood speech lines
@@ -775,7 +778,7 @@ function adoptPet(){
     stats:{happiness:100,hunger:100,energy:100,style:100},
     level:1,xp:0,totalXp:0,room:'bedroom',costume:-1,
     streak:1,lastVisit:Date.now(),lastDecay:Date.now(),
-    actionCounts:{feed:0,play:0,sleep:0,groom:0,sing:0,dance:0},
+    actionCounts:{feed:0,play:0,sleep:0,groom:0,sing:0,dance:0,dress:0},
     mgPlayed:0,mgTotal:0,
     firstTime:true
   };
@@ -795,7 +798,8 @@ function loadPet(){
   if(!raw)return false;
   pet=JSON.parse(raw);
   // Ensure fields exist (migration)
-  if(!pet.actionCounts)pet.actionCounts={feed:0,play:0,sleep:0,groom:0,sing:0,dance:0};
+  if(!pet.actionCounts)pet.actionCounts={feed:0,play:0,sleep:0,groom:0,sing:0,dance:0,dress:0};
+  if(!('dress' in pet.actionCounts))pet.actionCounts.dress=0;
   if(!pet.mgPlayed)pet.mgPlayed=0;
   if(!pet.mgTotal)pet.mgTotal=0;
   if(!pet.totalXp)pet.totalXp=pet.level*XP_BASE+pet.xp;
@@ -949,6 +953,8 @@ function doAction(actionId){
   if(cooldowns[actionId])return;
   ensureAudio();
   const cfg=ACTIONS.find(a=>a.id===actionId);if(!cfg)return;
+  // Special: outfit picker
+  if(cfg.openOutfit){openOutfitPicker();return}
   for(const k in cfg.stats)pet.stats[k]=Math.min(100,Math.max(0,pet.stats[k]+cfg.stats[k]));
   pet.xp+=cfg.xp;pet.totalXp+=cfg.xp;
   pet.actionCounts[actionId]=(pet.actionCounts[actionId]||0)+1;
@@ -967,7 +973,8 @@ function doAction(actionId){
   updateStatsUI();savePet();renderPet();
   updateQuests();
   // Force a speech
-  if(!speechTimeout){speechTimeout=null;showMoodSpeech()}
+  if(speechTimeout){clearTimeout(speechTimeout);speechTimeout=null}
+  showMoodSpeech();
 }
 
 function startCooldown(actionId){
@@ -1009,14 +1016,14 @@ setInterval(()=>{
 
 // ─── LEVEL UP ───
 function checkLevelUp(){
+  if(pet.level>=25)return;
   const needed=xpForLevel(pet.level);
-  while(pet.xp>=needed&&pet.level<25){
-    pet.xp-=xpForLevel(pet.level);
+  if(pet.xp>=needed){
+    pet.xp-=needed;
     pet.level++;
     sfxLevelUp();
     addStars(pet.level*2);
     showLevelUp();
-    return; // show one at a time
   }
 }
 
@@ -1088,10 +1095,6 @@ function openOutfitPicker(){
   document.getElementById('outfitModal').classList.add('show');
 }
 function closeOutfitPicker(){document.getElementById('outfitModal').classList.remove('show')}
-// Hook dress action to outfit picker
-ACTIONS.find(a=>a.id==='groom')||null;
-// Add dress button handler (override groom to open picker on second tap... no, keep separate)
-// The "Habiller" action is the outfit picker
 document.addEventListener('click',e=>{
   if(e.target.closest('#outfitModal')&&!e.target.closest('.modal-panel'))closeOutfitPicker();
 });
@@ -1100,7 +1103,8 @@ document.addEventListener('click',e=>{
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['actions','minigames','quests'][i]===tab));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
+  const el=document.getElementById('tab-'+tab);
+  if(el)el.classList.add('active');
 }
 
 // ─── DAILY QUESTS ───
@@ -1189,6 +1193,8 @@ function startMinigame(type){
   document.getElementById('mgClose').textContent='Abandonner';
   document.getElementById('mgOverlay').classList.add('show');
   const area=document.getElementById('mgArea');area.innerHTML='';
+  area.style.display='';area.style.alignItems='';area.style.justifyContent='';
+  area.onclick=null;area.onmousemove=null;area.ontouchmove=null;area.ontouchstart=null;
 
   if(type==='catch')startCatchGame(area);
   else if(type==='memory')startMemoryGame(area);
@@ -1218,8 +1224,11 @@ function closeMinigame(){
   mgActive=false;
   if(mgInterval){clearInterval(mgInterval);mgInterval=null}
   if(mgTimeout){clearTimeout(mgTimeout);mgTimeout=null}
+  const area=document.getElementById('mgArea');
+  area.innerHTML='';
+  area.style.display='';area.style.alignItems='';area.style.justifyContent='';
+  area.onclick=null;area.onmousemove=null;area.ontouchmove=null;area.ontouchstart=null;
   document.getElementById('mgOverlay').classList.remove('show');
-  document.getElementById('mgArea').innerHTML='';
 }
 
 // ── CATCH GAME ──
@@ -1399,5 +1408,19 @@ function startRhythmGame(area){
   }
 })();
 </script>
+<!-- Page Transition -->
+<style>
+.page-transition-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;pointer-events:none;background:#050510;opacity:1;transition:opacity .3s ease}
+.page-transition-overlay.visible{opacity:1;pointer-events:all}
+.page-transition-overlay.hidden{opacity:0}
+.page-transition-overlay .sparkle{position:absolute;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle,#ffd700,#ff6fd8);opacity:0;animation:ptSparkle .6s ease-out forwards}
+@keyframes ptSparkle{0%{opacity:1;transform:scale(0) rotate(0deg)}40%{opacity:1;transform:scale(1.5) rotate(180deg)}100%{opacity:0;transform:scale(0) rotate(360deg)}}
+</style>
+<script>
+(function(){var o=document.createElement("div");o.className="page-transition-overlay";for(var i=0;i<12;i++){var s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.animationDelay=Math.random()*.3+"s";o.appendChild(s)}document.body.appendChild(o);
+requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add("hidden")})});
+document.addEventListener("click",function(e){var a=e.target.closest("a[href]");if(!a||a.target==="_blank"||a.href.startsWith("javascript")||a.href.startsWith("#")||a.href.startsWith("mailto"))return;e.preventDefault();o.classList.remove("hidden");o.classList.add("visible");o.querySelectorAll(".sparkle").forEach(function(sp){sp.style.animation="none";sp.offsetHeight;sp.style.left=Math.random()*100+"%";sp.style.top=Math.random()*100+"%";sp.style.animationDelay=Math.random()*.3+"s";sp.style.animation=""});setTimeout(function(){window.location.href=a.href},300)})})();
+</script>
+
 </body>
 </html>
