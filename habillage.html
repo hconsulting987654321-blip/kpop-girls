@@ -22,9 +22,8 @@
 <meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+<link rel="stylesheet" href="common.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;}
 
 :root{
   --pink:#ff6fd8;--purple:#a18cd1;--gold:#ffd700;--dark:#1a1a2e;
@@ -38,23 +37,6 @@ body{
   min-height:100vh;font-family:'Quicksand',sans-serif;
   color:white;overflow-x:hidden;
 }
-@keyframes pageEnter {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes gradBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-/* ── TOP BAR ── */
-.top-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 20px;flex-wrap:wrap;gap:8px;
-}
-.back-btn{
-  background:rgba(255,255,255,0.25);color:white;border:2px solid rgba(255,255,255,0.4);
-  padding:6px 18px;border-radius:30px;font-family:inherit;font-size:.9em;
-  cursor:pointer;text-decoration:none;transition:.2s;
-}
-.back-btn:hover{background:rgba(255,255,255,0.4)}
 .top-bar h1{font-size:1.6em;text-shadow:2px 2px 8px rgba(0,0,0,0.25)}
 .player-badge{
   background:linear-gradient(135deg,var(--gold),#f6b93b);

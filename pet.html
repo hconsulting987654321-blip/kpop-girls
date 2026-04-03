@@ -12,32 +12,15 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
 <meta name="description" content="Adopte et prends soin de ton animal K-Pop virtuel !">
+<link rel="stylesheet" href="common.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
 :root{--pink:#ff6fd8;--purple:#b44dff;--gold:#ffd700;--dark:#0a0a1a;--glass:rgba(255,255,255,.15);--glass-border:rgba(255,255,255,.25)}
-*{margin:0;padding:0;box-sizing:border-box}
 body{
   background:linear-gradient(135deg,#1a0a2e,#0a0a1a,#2d0a4e,#0a0a1a);
   background-size:400% 400%;animation:gradBG 12s ease infinite;
   min-height:100vh;min-height:100dvh;font-family:'Quicksand',sans-serif;
   display:flex;flex-direction:column;align-items:center;
   padding:12px;padding-top:50px;overflow-x:hidden;color:#fff;
-}
-@keyframes gradBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-a.back-btn{
-  position:fixed;top:12px;left:12px;z-index:100;
-  background:var(--glass);backdrop-filter:blur(10px);
-  border:1px solid var(--glass-border);color:#fff;text-decoration:none;
-  padding:8px 16px;border-radius:20px;font-weight:700;font-size:.85em;transition:.3s;
-}
-a.back-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05)}
-
-.sound-toggle{
-  position:fixed;top:12px;right:12px;z-index:100;
-  background:var(--glass);backdrop-filter:blur(10px);
-  border:1px solid var(--glass-border);color:#fff;
-  padding:8px 14px;border-radius:20px;font-size:1.1em;cursor:pointer;transition:.3s;
 }
 .sound-toggle:hover{background:rgba(255,255,255,.3)}
 

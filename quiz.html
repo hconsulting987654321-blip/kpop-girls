@@ -22,9 +22,8 @@
 <meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/og-image.html">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="icon-192.svg">
+<link rel="stylesheet" href="common.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   background:linear-gradient(135deg,#a18cd1,#fbc2eb,#ff6fd8,#a18cd1);
@@ -37,13 +36,6 @@ body{
   overflow-x:hidden;
 }
 
-@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-/* Screen flash overlays */
-.screen-flash{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  pointer-events:none;z-index:150;opacity:0;
-}
 .screen-flash.correct-glow{
   background:radial-gradient(ellipse at center,rgba(76,217,100,0.3) 0%,transparent 70%);
   animation:correctGlowAnim 0.6s ease forwards;
@@ -111,8 +103,6 @@ body{
   100%{opacity:1;transform:translateX(0)}
 }
 
-.back-btn{position:fixed;top:10px;left:10px;background:rgba(255,255,255,0.3);color:white;border:2px solid rgba(255,255,255,0.5);padding:6px 16px;border-radius:30px;font-family:inherit;font-size:0.9em;cursor:pointer;text-decoration:none;z-index:100;transition:all 0.3s;backdrop-filter:blur(5px)}
-.back-btn:hover{background:rgba(255,255,255,0.5)}
 
 h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px 0 5px;text-align:center}
 .subtitle{color:rgba(255,255,255,0.8);font-size:0.95em;margin-bottom:12px;font-weight:600}
@@ -369,10 +359,6 @@ h1{font-size:2em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,0.2);margin:10px
 @keyframes flashOut {
   0% { opacity: 1; }
   100% { opacity: 0; }
-}
-@keyframes pageEnter {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>

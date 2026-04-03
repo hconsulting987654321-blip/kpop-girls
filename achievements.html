@@ -7,10 +7,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0a0a1a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
 :root{
   --pink:#ff6fd8;--purple:#b44dff;--gold:#ffd700;--dark:#0a0a1a;
   --glass:rgba(255,255,255,0.07);--glass-border:rgba(255,255,255,0.15);
@@ -18,8 +16,6 @@
   --bronze:#cd7f32;--silver:#c0c0c0;--diamond:#b9f2ff;
   --epic-gold:#ffd700;
 }
-
-html{scroll-behavior:smooth;}
 
 body{
   background:var(--dark);
@@ -48,19 +44,6 @@ body{
   90%{opacity:1;}
   100%{opacity:0;transform:translateY(-10vh) scale(1);}
 }
-
-/* ===== BACK BUTTON ===== */
-.back-btn{
-  position:fixed;top:14px;left:14px;
-  background:rgba(255,255,255,.1);color:#fff;
-  border:2px solid rgba(255,255,255,.2);
-  padding:8px 20px;border-radius:30px;
-  font-family:inherit;font-size:.9em;font-weight:600;
-  cursor:pointer;text-decoration:none;z-index:300;
-  backdrop-filter:blur(12px);
-  transition:all .3s;
-}
-.back-btn:hover{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.4);transform:scale(1.05);}
 
 /* ===== HEADER ===== */
 .header{

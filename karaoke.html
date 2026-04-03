@@ -22,9 +22,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
+<link rel="stylesheet" href="common.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
-* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
@@ -210,16 +209,6 @@ body.shaking {
   animation: screenShake 0.3s ease;
 }
 
-.back-btn {
-  position: fixed; top: 15px; left: 15px;
-  background: rgba(255,255,255,0.15);
-  color: white; border: 2px solid rgba(255,255,255,0.3);
-  padding: 8px 18px; border-radius: 30px;
-  font-family: inherit; font-size: 1em;
-  cursor: pointer; text-decoration: none; z-index: 100;
-  transition: all 0.3s;
-}
-.back-btn:hover { background: rgba(255,255,255,0.3); }
 
 .header { text-align: center; padding: 15px; z-index: 10; }
 .header h1 { font-size: 1.8em; color: white; text-shadow: 0 0 20px #ff6fd8; }
@@ -636,11 +625,6 @@ body.shaking {
 .share-copy{background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.3)}
 .share-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#25D366;color:white;padding:10px 25px;border-radius:25px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s}
 .share-toast.show{opacity:1}
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
 
 /* === AAA MOBILE EFFECTS === */
 @keyframes emojiRain {
@@ -650,10 +634,6 @@ body.shaking {
 @keyframes flashOut {
   0% { opacity: 1; }
   100% { opacity: 0; }
-}
-@keyframes pageEnter {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>

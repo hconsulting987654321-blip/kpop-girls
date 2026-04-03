@@ -22,9 +22,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
+<link rel="stylesheet" href="common.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   background:linear-gradient(135deg,#ff9a9e,#fbc2eb,#a18cd1);
@@ -32,50 +31,6 @@ body{
   animation:gradientBG 8s ease infinite,pageEnter .6s ease-out;
   min-height:100vh;font-family:'Quicksand',sans-serif;
   display:flex;flex-direction:column;align-items:center;padding:15px;
-}
-@keyframes pageEnter{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes sparkle{0%,100%{opacity:0;transform:scale(0) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(180deg)}}
-@keyframes pulseGold{0%,100%{border-color:#ffd700;box-shadow:0 0 8px rgba(255,215,0,.3)}50%{border-color:#ffec8b;box-shadow:0 0 20px rgba(255,215,0,.6)}}
-@keyframes bounceIn{0%{opacity:0;transform:scale(.3) translateY(20px)}50%{transform:scale(1.08) translateY(-4px)}100%{opacity:1;transform:scale(1) translateY(0)}}
-@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1)}100%{opacity:0;transform:translateY(120px) rotate(720deg) scale(.3)}}
-@keyframes sparkBurst{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(0)}}
-@keyframes cameraFlash{0%{opacity:.9}100%{opacity:0}}
-@keyframes glowPulse{0%,100%{box-shadow:0 0 20px var(--glow-color,rgba(255,105,180,.4))}50%{box-shadow:0 0 40px var(--glow-color,rgba(255,105,180,.6)),0 0 60px var(--glow-color,rgba(255,105,180,.2))}}
-@keyframes idolFrameShine{0%{background-position:-200% center}100%{background-position:200% center}}
-@keyframes floatMood{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.1)}}
-@keyframes shimmer{0%{background-position:-100% 0}100%{background-position:200% 0}}
-
-.back-btn{position:fixed;top:12px;left:12px;background:rgba(255,255,255,.3);color:white;border:2px solid rgba(255,255,255,.5);padding:6px 16px;border-radius:30px;font-family:inherit;font-size:.9em;cursor:pointer;text-decoration:none;z-index:100}
-h1{font-size:1.9em;color:white;text-shadow:3px 3px 6px rgba(0,0,0,.2);margin:10px 0 5px}
-.player-name-display{color:#ffd700;font-size:1.1em;font-weight:700;text-shadow:0 0 10px rgba(255,215,0,.5);margin-bottom:4px}
-.unlock-counter{color:rgba(255,255,255,.85);font-size:.85em;font-weight:600;margin-bottom:10px;text-shadow:1px 1px 3px rgba(0,0,0,.2)}
-.unlock-counter span{color:#ffd700;font-weight:700}
-
-.idol-du-jour{background:linear-gradient(145deg,rgba(255,215,0,.2),rgba(255,105,180,.2));border:2px solid rgba(255,215,0,.4);border-radius:16px;padding:10px 20px;margin-bottom:12px;text-align:center;max-width:500px;width:100%;backdrop-filter:blur(8px);position:relative;overflow:hidden}
-.idol-du-jour::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,215,0,.15),transparent);background-size:200% 100%;animation:idolFrameShine 3s linear infinite}
-.idol-du-jour-title{color:#ffd700;font-weight:700;font-size:.95em;text-shadow:0 0 8px rgba(255,215,0,.4);position:relative}
-.idol-du-jour-suggestion{color:white;font-size:.85em;margin-top:4px;position:relative}
-.idol-du-jour-btn{background:linear-gradient(145deg,#ffd700,#ffaa00);color:#333;border:none;padding:5px 14px;border-radius:12px;font-family:inherit;font-size:.8em;font-weight:700;cursor:pointer;margin-top:6px;position:relative;transition:transform .15s}
-.idol-du-jour-btn:hover{transform:scale(1.06)}
-
-.tabs{display:flex;gap:6px;margin-bottom:15px;flex-wrap:wrap;justify-content:center}
-.tab-btn{background:rgba(255,255,255,.15);color:white;border:2px solid rgba(255,255,255,.2);padding:8px 16px;border-radius:20px;font-family:inherit;font-size:.85em;font-weight:600;cursor:pointer;transition:all .2s}
-.tab-btn:hover{background:rgba(255,255,255,.3)}
-.tab-btn.active{background:rgba(255,215,0,.3);border-color:#ffd700;box-shadow:0 0 12px rgba(255,215,0,.3)}
-
-.creator{display:flex;gap:20px;max-width:950px;width:100%;flex-wrap:wrap;justify-content:center}
-
-/* ===== IDOL CARD PREVIEW ===== */
-.preview-panel{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,.3);border-radius:24px;padding:20px;text-align:center;min-width:280px;flex:0 0 290px}
-.avatar-preview-wrapper{perspective:600px;margin:0 auto 12px;width:220px;height:310px}
-.avatar-preview{
-  width:220px;height:310px;position:relative;border-radius:20px;overflow:hidden;
-  background:linear-gradient(180deg,#ffecd2,#fcb69f);
-  animation:bounce 3s ease-in-out infinite,glowPulse 2s ease-in-out infinite;
-  transition:transform .15s ease-out,box-shadow .3s;
-  transform-style:preserve-3d;will-change:transform;
 }
 
 /* Card zones — all absolute positioned */

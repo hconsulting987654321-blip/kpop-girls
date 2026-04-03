@@ -22,9 +22,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
+<link rel="stylesheet" href="common.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
-* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   background: linear-gradient(135deg, #fce4f3, #e8d5f5, #d5e8f5, #fce4f3);
@@ -42,18 +41,8 @@ body {
   50% { background-position: 100% 50%; }
 }
 
-.back-btn {
-  position: fixed; top: 10px; left: 10px;
-  background: rgba(180,60,180,0.2);
-  color: #9b3dcc;
-  border: 2px solid rgba(180,60,180,0.35);
-  padding: 6px 16px; border-radius: 30px;
-  font-family: inherit; font-size: 0.9em; font-weight: 600;
-  cursor: pointer; text-decoration: none; z-index: 100;
-  backdrop-filter: blur(6px);
-  transition: all 0.3s;
-}
-.back-btn:hover { background: rgba(180,60,180,0.35); transform: scale(1.05); }
+.back-btn{background:rgba(180,60,180,.2);color:#9b3dcc;border-color:rgba(180,60,180,.35)}
+.back-btn:hover{background:rgba(180,60,180,.35)}
 
 h1 {
   text-align: center;
@@ -442,10 +431,6 @@ h1 {
 @keyframes flashOut {
   0% { opacity: 1; }
   100% { opacity: 0; }
-}
-@keyframes pageEnter {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>

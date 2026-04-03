@@ -1,0 +1,237 @@
+/* ================================================
+   K-Pop Star Academy — Design System Unifie
+   ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap');
+
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* ── VARIABLES ── */
+:root{
+  --pink:#ff6fd8;
+  --purple:#b44dff;
+  --gold:#ffd700;
+  --dark:#0a0a1a;
+  --glass:rgba(255,255,255,.1);
+  --glass-border:rgba(255,255,255,.18);
+  --glass-hover:rgba(255,255,255,.25);
+  --card-bg:rgba(255,255,255,.07);
+  --card-border:rgba(255,255,255,.12);
+  --radius:18px;
+  --radius-sm:12px;
+  --radius-pill:30px;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  min-height:100vh;
+  font-family:'Quicksand',sans-serif;
+  color:#fff;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── PAGE ENTER ANIMATION ── */
+@keyframes pageEnter{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── GRADIENT BG ANIMATION (shared by many game pages) ── */
+@keyframes gradientBG{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes gradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes gradBG{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* ── BACK BUTTON (unified) ── */
+.back-btn,
+a.back-btn{
+  position:fixed;top:10px;left:10px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  border:2px solid rgba(255,255,255,.25);
+  padding:6px 16px;
+  border-radius:var(--radius-pill);
+  font-family:inherit;font-size:.85em;font-weight:600;
+  cursor:pointer;text-decoration:none;
+  z-index:200;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:all .3s;
+  line-height:1.4;
+}
+.back-btn:hover,
+a.back-btn:hover{
+  background:var(--glass-hover);
+  border-color:rgba(255,255,255,.4);
+  transform:scale(1.04);
+}
+
+/* Back button INSIDE a top-bar (not fixed) */
+.top-bar .back-btn,
+.top-bar a.back-btn{
+  position:static;
+}
+
+/* ── SOUND TOGGLE (unified) ── */
+.sound-toggle,
+.sound-btn{
+  position:fixed;top:10px;right:10px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  border:2px solid rgba(255,255,255,.25);
+  padding:6px 14px;
+  border-radius:var(--radius-pill);
+  font-family:inherit;font-size:.85em;font-weight:600;
+  cursor:pointer;
+  z-index:200;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:all .3s;
+  display:flex;align-items:center;justify-content:center;
+}
+.sound-toggle:hover,
+.sound-btn:hover{
+  background:var(--glass-hover);
+  border-color:rgba(255,255,255,.4);
+}
+.sound-btn.muted{opacity:.5}
+
+/* Sound toggle inside top-bar */
+.top-bar .sound-toggle,
+.top-bar .sound-btn{
+  position:static;
+}
+
+/* ── TOP BAR (shared layout) ── */
+.top-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;flex-wrap:wrap;gap:8px;
+  z-index:200;
+}
+.top-bar.fixed{
+  position:fixed;top:0;left:0;right:0;
+  pointer-events:none;
+}
+.top-bar.fixed>*{pointer-events:all}
+
+/* ── GLASS MORPHISM (unified) ── */
+.glass{
+  background:var(--glass);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+}
+
+/* ── CARD (unified) ── */
+.card{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius);
+  padding:20px;
+}
+
+/* ── TYPOGRAPHY ── */
+.page-title{
+  font-size:clamp(1.4em,4vw,1.9em);
+  color:#fff;
+  font-weight:700;
+  text-shadow:0 0 20px rgba(255,111,216,.35);
+  text-align:center;
+}
+.page-title.gradient{
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(255,111,216,.3));
+}
+.subtitle{
+  font-size:.82em;
+  color:rgba(255,255,255,.55);
+  text-align:center;
+  margin-top:2px;
+}
+
+/* ── PLAYER INFO ── */
+.player-tag{color:var(--purple);font-weight:700}
+.star-count,.stars-count{color:var(--gold);font-weight:700}
+.player-name-display{color:var(--gold);font-size:1.1em;font-weight:700;text-shadow:0 0 10px rgba(255,215,0,.5)}
+
+/* ── BUTTONS ── */
+.btn{
+  padding:8px 20px;
+  border-radius:var(--radius-sm);
+  border:none;
+  font-family:inherit;font-weight:700;font-size:.85em;
+  cursor:pointer;
+  color:#fff;
+  transition:all .3s;
+}
+.btn:active{transform:scale(.95)}
+.btn-pink{background:linear-gradient(135deg,var(--pink),#e91e8c);box-shadow:0 4px 15px rgba(255,111,216,.35)}
+.btn-pink:hover{box-shadow:0 4px 25px rgba(255,111,216,.55)}
+.btn-purple{background:linear-gradient(135deg,var(--purple),#8a2be2);box-shadow:0 4px 15px rgba(180,77,255,.3)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#ff9500);color:var(--dark)}
+.btn-ghost{background:rgba(255,255,255,.08);border:1px solid var(--card-border)}
+.btn-ghost:hover{background:rgba(255,255,255,.15)}
+
+/* Primary action button (pill) */
+.action-btn{
+  padding:10px 22px;
+  border-radius:var(--radius-pill);
+  border:none;
+  font-family:inherit;font-weight:700;font-size:.88em;
+  cursor:pointer;
+  color:#fff;
+  transition:all .3s;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.action-btn:active{transform:scale(.94)}
+
+/* ── TABS (unified) ── */
+.tabs{
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
+}
+.tab-btn{
+  background:rgba(255,255,255,.08);
+  border:1.5px solid var(--card-border);
+  color:rgba(255,255,255,.65);
+  padding:7px 16px;
+  border-radius:var(--radius-pill);
+  font-family:inherit;font-size:.82em;font-weight:700;
+  cursor:pointer;transition:all .25s;
+}
+.tab-btn:hover{background:rgba(255,255,255,.14)}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff;border-color:rgba(255,255,255,.3);
+}
+
+/* ── SCREEN FLASH OVERLAYS ── */
+.screen-flash{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  pointer-events:none;z-index:150;opacity:0;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.25)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .back-btn,a.back-btn{font-size:.8em;padding:5px 12px}
+  .sound-toggle,.sound-btn{font-size:.8em;padding:5px 12px}
+}
