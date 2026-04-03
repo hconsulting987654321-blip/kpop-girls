@@ -5,256 +5,385 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mon Pet K-Pop — K-Pop Star Academy</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" content="#0a0a1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon-192.svg">
 <meta name="description" content="Adopte et prends soin de ton animal K-Pop virtuel !">
-<meta name="author" content="K-Pop Star Academy">
-<meta name="robots" content="index, follow">
-<meta property="og:title" content="Mon Pet K-Pop — K-Pop Star Academy">
-<meta property="og:description" content="Adopte et prends soin de ton animal K-Pop virtuel !">
-<meta property="og:site_name" content="K-Pop Star Academy">
-<meta property="og:type" content="website">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
+:root{--pink:#ff6fd8;--purple:#b44dff;--gold:#ffd700;--dark:#0a0a1a;--glass:rgba(255,255,255,.15);--glass-border:rgba(255,255,255,.25)}
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{
-  background:linear-gradient(135deg,#a18cd1,#fbc2eb,#ff6fd8,#a18cd1);
-  background-size:400% 400%;
-  animation:gradBG 8s ease infinite;
-  min-height:100vh;
-  font-family:'Quicksand',sans-serif;
+  background:linear-gradient(135deg,#1a0a2e,#0a0a1a,#2d0a4e,#0a0a1a);
+  background-size:400% 400%;animation:gradBG 12s ease infinite;
+  min-height:100vh;min-height:100dvh;font-family:'Quicksand',sans-serif;
   display:flex;flex-direction:column;align-items:center;
-  padding:12px;overflow-x:hidden;
-  color:#2d1b69;
+  padding:12px;overflow-x:hidden;color:#fff;
 }
 @keyframes gradBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
 a.back-btn{
   position:fixed;top:12px;left:12px;z-index:100;
-  background:rgba(255,255,255,.25);backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.4);
-  color:#fff;text-decoration:none;padding:8px 16px;border-radius:20px;
-  font-weight:700;font-size:.85em;transition:.3s;
+  background:var(--glass);backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);color:#fff;text-decoration:none;
+  padding:8px 16px;border-radius:20px;font-weight:700;font-size:.85em;transition:.3s;
 }
-a.back-btn:hover{background:rgba(255,255,255,.45);transform:scale(1.05)}
+a.back-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05)}
 
-h1{
-  font-size:1.5em;font-weight:800;color:#fff;text-align:center;
-  text-shadow:0 2px 15px rgba(161,140,209,.6);
-  margin:8px 0 4px;
+.sound-toggle{
+  position:fixed;top:12px;right:12px;z-index:100;
+  background:var(--glass);backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);color:#fff;
+  padding:8px 14px;border-radius:20px;font-size:1.1em;cursor:pointer;transition:.3s;
 }
-.subtitle{font-size:.85em;color:rgba(255,255,255,.8);margin-bottom:10px;text-align:center}
+.sound-toggle:hover{background:rgba(255,255,255,.3)}
 
-/* Glass panel */
+h1{font-size:1.5em;font-weight:800;color:#fff;text-align:center;text-shadow:0 2px 15px rgba(180,77,255,.5);margin:8px 0 2px}
+.subtitle{font-size:.85em;color:rgba(255,255,255,.65);margin-bottom:10px;text-align:center}
+
 .glass{
-  background:rgba(255,255,255,.2);backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.35);border-radius:20px;
-  padding:18px;width:100%;max-width:480px;margin-bottom:12px;
+  background:var(--glass);backdrop-filter:blur(14px);
+  border:1px solid var(--glass-border);border-radius:20px;
+  padding:18px;width:100%;max-width:500px;margin-bottom:10px;
 }
+
+/* Screens */
+.screen{display:none}
+.screen.active{display:block}
+
+/* ── TUTORIAL ── */
+#tutorialOverlay{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+}
+#tutorialOverlay.show{display:flex}
+.tuto-card{
+  background:linear-gradient(135deg,rgba(180,77,255,.3),rgba(255,111,216,.3));
+  backdrop-filter:blur(20px);border:1px solid var(--glass-border);
+  border-radius:24px;padding:28px;text-align:center;
+  max-width:360px;width:90%;animation:popIn .4s ease;
+}
+.tuto-card h2{font-size:1.4em;margin-bottom:10px;color:var(--gold)}
+.tuto-card p{font-size:.9em;line-height:1.5;margin-bottom:14px;color:rgba(255,255,255,.9)}
+.tuto-steps{text-align:left;margin:12px 0;font-size:.85em;line-height:1.8}
+.tuto-btn{
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff;border:none;padding:12px 32px;border-radius:25px;
+  font-family:inherit;font-size:1em;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 20px rgba(255,111,216,.4);transition:.3s;
+}
+.tuto-btn:hover{transform:scale(1.05)}
 
 /* ── ADOPT SCREEN ── */
 #adoptScreen{text-align:center}
 #adoptScreen h2{font-size:1.3em;color:#fff;margin-bottom:14px}
 .pet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .pet-option{
-  background:rgba(255,255,255,.25);backdrop-filter:blur(8px);
-  border:2px solid rgba(255,255,255,.3);border-radius:16px;
+  background:var(--glass);backdrop-filter:blur(8px);
+  border:2px solid transparent;border-radius:16px;
   padding:14px 6px;cursor:pointer;transition:.3s;text-align:center;
 }
-.pet-option:hover{transform:scale(1.08);border-color:#fff;background:rgba(255,255,255,.4)}
+.pet-option:hover{transform:scale(1.08);border-color:var(--pink);background:rgba(255,111,216,.15)}
+.pet-option.selected{border-color:var(--pink);background:rgba(255,111,216,.2)}
 .pet-option .emoji{font-size:3em;display:block;margin-bottom:4px}
-.pet-option .pname{font-weight:700;font-size:.85em;color:#2d1b69}
+.pet-option .pname{font-weight:700;font-size:.82em;color:rgba(255,255,255,.85)}
 
 .name-input{
-  width:80%;max-width:260px;padding:10px 16px;border-radius:30px;border:2px solid rgba(255,255,255,.5);
-  background:rgba(255,255,255,.3);backdrop-filter:blur(8px);
-  font-family:inherit;font-size:1em;text-align:center;color:#2d1b69;
-  outline:none;margin-bottom:10px;
+  width:80%;max-width:260px;padding:10px 16px;border-radius:30px;
+  border:2px solid var(--glass-border);background:rgba(255,255,255,.1);
+  backdrop-filter:blur(8px);font-family:inherit;font-size:1em;
+  text-align:center;color:#fff;outline:none;margin-bottom:10px;
 }
-.name-input::placeholder{color:rgba(45,27,105,.5)}
-.name-input:focus{border-color:#ff6fd8;background:rgba(255,255,255,.5)}
+.name-input::placeholder{color:rgba(255,255,255,.4)}
+.name-input:focus{border-color:var(--pink);background:rgba(255,111,216,.1)}
 
 .adopt-btn{
-  background:linear-gradient(135deg,#ff6fd8,#a18cd1);
+  background:linear-gradient(135deg,var(--pink),var(--purple));
   color:#fff;border:none;padding:12px 36px;border-radius:30px;
   font-family:inherit;font-size:1.1em;font-weight:800;cursor:pointer;
   box-shadow:0 4px 20px rgba(255,111,216,.4);transition:.3s;
 }
-.adopt-btn:hover{transform:scale(1.06);box-shadow:0 6px 30px rgba(255,111,216,.6)}
-.adopt-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.adopt-btn:hover{transform:scale(1.06)}
+.adopt-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-/* ── MAIN PET VIEW ── */
-#petView{display:none}
-
-.top-bar{
-  display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:6px;margin-bottom:6px;
-}
-.pet-name-display{font-size:1.15em;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+/* ── PET VIEW ── */
+.top-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.pet-name-display{font-size:1.1em;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.3)}
 .level-badge{
-  background:linear-gradient(135deg,#ffd700,#ff6fd8);
-  color:#fff;padding:3px 12px;border-radius:20px;
-  font-weight:800;font-size:.85em;
-  box-shadow:0 2px 10px rgba(255,215,0,.4);
+  background:linear-gradient(135deg,var(--gold),var(--pink));
+  color:#fff;padding:3px 12px;border-radius:20px;font-weight:800;font-size:.85em;
+}
+.stars-badge{
+  background:linear-gradient(135deg,var(--gold),#ffaa00);
+  color:var(--dark);padding:3px 12px;border-radius:20px;font-weight:800;font-size:.82em;
 }
 .streak-badge{
   background:linear-gradient(135deg,#ff6f61,#ff9a76);
-  color:#fff;padding:3px 12px;border-radius:20px;
-  font-weight:700;font-size:.8em;
+  color:#fff;padding:3px 12px;border-radius:20px;font-weight:700;font-size:.8em;
 }
 
-/* XP bar */
-.xp-bar-wrap{
-  width:100%;height:10px;background:rgba(255,255,255,.2);border-radius:10px;
-  overflow:hidden;margin-bottom:8px;
-}
-.xp-bar-fill{
-  height:100%;background:linear-gradient(90deg,#ffd700,#ff6fd8);
-  border-radius:10px;transition:width .5s;
-}
+.xp-bar-wrap{width:100%;height:10px;background:rgba(255,255,255,.1);border-radius:10px;overflow:hidden;margin-bottom:4px}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--pink));border-radius:10px;transition:width .5s}
+.xp-label{font-size:.65em;color:rgba(255,255,255,.5);text-align:right}
 
 /* Stats */
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
 .stat-item{display:flex;align-items:center;gap:6px}
 .stat-icon{font-size:1.3em;flex-shrink:0}
 .stat-info{flex:1;min-width:0}
-.stat-label{font-size:.7em;font-weight:700;color:rgba(45,27,105,.7)}
-.stat-bar{
-  width:100%;height:8px;background:rgba(255,255,255,.25);border-radius:8px;
-  overflow:hidden;
-}
+.stat-label{font-size:.7em;font-weight:700;color:rgba(255,255,255,.6)}
+.stat-bar{width:100%;height:8px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden}
 .stat-fill{height:100%;border-radius:8px;transition:width .4s}
 .stat-fill.hunger{background:linear-gradient(90deg,#ff6b6b,#ffa07a)}
-.stat-fill.happiness{background:linear-gradient(90deg,#ff6fd8,#ee82ee)}
-.stat-fill.energy{background:linear-gradient(90deg,#ffd700,#ffaa00)}
+.stat-fill.happiness{background:linear-gradient(90deg,var(--pink),#ee82ee)}
+.stat-fill.energy{background:linear-gradient(90deg,var(--gold),#ffaa00)}
 .stat-fill.style{background:linear-gradient(90deg,#00d2ff,#7b68ee)}
-.stat-val{font-size:.65em;font-weight:700;color:rgba(45,27,105,.6);text-align:right}
+.stat-val{font-size:.65em;font-weight:700;color:rgba(255,255,255,.5);text-align:right;min-width:22px}
+
+.stat-item.warning .stat-bar{animation:warnPulse 1s ease infinite}
+.stat-item.warning .stat-icon{animation:warnShake .5s ease infinite}
+@keyframes warnShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+/* Pet speech bubble */
+.speech-bubble{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:20;
+  background:rgba(255,255,255,.9);color:var(--dark);
+  padding:8px 16px;border-radius:16px;font-size:.8em;font-weight:700;
+  white-space:nowrap;opacity:0;transition:opacity .4s;pointer-events:none;
+  box-shadow:0 4px 15px rgba(0,0,0,.2);
+}
+.speech-bubble::after{
+  content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);
+  border:8px solid transparent;border-top-color:rgba(255,255,255,.9);
+}
+.speech-bubble.show{opacity:1}
 
 /* Pet arena */
 .pet-arena{
   position:relative;width:100%;height:260px;border-radius:18px;
-  overflow:hidden;margin-bottom:10px;
-  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;margin-bottom:8px;display:flex;align-items:center;justify-content:center;
 }
-.room-bg{
-  position:absolute;inset:0;z-index:0;transition:background .5s;
-}
+.room-bg{position:absolute;inset:0;z-index:0;transition:background .5s}
 .room-bg.bedroom{background:linear-gradient(180deg,#1a1a3e 0%,#2d1b69 40%,#4a2c8a 100%)}
 .room-bg.garden{background:linear-gradient(180deg,#87ceeb 0%,#98fb98 60%,#228b22 100%)}
 .room-bg.stage{background:linear-gradient(180deg,#0a0a1a 0%,#1a0a2e 40%,#2d0a4e 100%)}
 .room-bg.space{background:linear-gradient(180deg,#000022 0%,#0a0a3a 50%,#1a0a4e 100%)}
+.room-bg.cafe{background:linear-gradient(180deg,#3e1a0a 0%,#5c2d0e 50%,#8b4513 100%)}
+.room-bg.plage{background:linear-gradient(180deg,#87ceeb 0%,#00bfff 40%,#f4d03f 80%,#e6c35c 100%)}
 
 .room-decor{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 .pet-container{position:relative;z-index:5;text-align:center}
 .pet-emoji{
-  font-size:8em;display:block;
+  font-size:7em;display:block;
   animation:petFloat 3s ease-in-out infinite;
-  filter:drop-shadow(0 8px 20px rgba(0,0,0,.3));
-  transition:filter .3s;
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.4));transition:filter .3s,font-size .5s;
 }
+.pet-emoji.evolved1{font-size:8em}
+.pet-emoji.evolved2{font-size:9em}
+.pet-emoji.evolved3{font-size:10em}
 @keyframes petFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-.mood-indicator{
-  font-size:2em;display:block;margin-bottom:-8px;
-  animation:moodPulse 2s ease-in-out infinite;
+.evolution-crown{
+  position:absolute;top:-30px;left:50%;transform:translateX(-50%);font-size:1.5em;
+  animation:crownFloat 2s ease-in-out infinite;z-index:10;
 }
+@keyframes crownFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+
+.evolution-sparkles{
+  position:absolute;inset:0;z-index:6;pointer-events:none;
+}
+.sparkle{
+  position:absolute;animation:sparkleAnim 2s ease-in-out infinite;
+  font-size:1.2em;
+}
+@keyframes sparkleAnim{0%,100%{opacity:.3;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
+
+.mood-indicator{font-size:1.8em;display:block;margin-bottom:-8px;animation:moodPulse 2s ease-in-out infinite}
 @keyframes moodPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 
-.costume-overlay{
-  position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
-  font-size:1.4em;opacity:.9;
-}
+.costume-overlay{position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);font-size:1.4em;opacity:.9}
 
-/* Animations */
 .pet-emoji.bounce{animation:petBounce .5s ease 3}
 @keyframes petBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
-.pet-emoji.sleep{animation:petSleep 2s ease-in-out infinite;filter:brightness(.7) drop-shadow(0 8px 20px rgba(0,0,0,.3))}
+.pet-emoji.sleep{animation:petSleep 2s ease-in-out infinite;filter:brightness(.7) drop-shadow(0 8px 20px rgba(0,0,0,.4))}
 @keyframes petSleep{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(3px) rotate(3deg)}}
 .pet-emoji.shake{animation:petShake .3s ease infinite}
 @keyframes petShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.pet-emoji.sad{filter:brightness(.6) saturate(.5) drop-shadow(0 8px 20px rgba(0,0,0,.3))}
+.pet-emoji.sad{filter:brightness(.6) saturate(.5) drop-shadow(0 8px 20px rgba(0,0,0,.4))}
+.pet-emoji.dance{animation:petDance .4s ease infinite}
+@keyframes petDance{0%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-15px) rotate(5deg)}100%{transform:translateY(0) rotate(-5deg)}}
 
-/* Floating particles */
 .float-particle{
-  position:absolute;z-index:10;pointer-events:none;
-  font-size:1.6em;
+  position:absolute;z-index:10;pointer-events:none;font-size:1.6em;
   animation:floatUp 1.2s ease forwards;
 }
-@keyframes floatUp{
-  0%{opacity:1;transform:translateY(0) scale(1)}
-  100%{opacity:0;transform:translateY(-80px) scale(.4)}
-}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(.4)}}
 
-/* Action buttons */
-.actions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+/* Actions */
+.actions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
 .action-btn{
-  background:rgba(255,255,255,.25);backdrop-filter:blur(8px);
-  border:1.5px solid rgba(255,255,255,.35);border-radius:14px;
-  padding:10px 4px;cursor:pointer;transition:.3s;
-  text-align:center;font-family:inherit;color:#2d1b69;
-  position:relative;overflow:hidden;
+  background:var(--glass);backdrop-filter:blur(8px);
+  border:1.5px solid var(--glass-border);border-radius:14px;
+  padding:10px 4px;cursor:pointer;transition:.3s;text-align:center;
+  font-family:inherit;color:#fff;position:relative;overflow:hidden;
 }
-.action-btn:hover:not(:disabled){transform:scale(1.05);background:rgba(255,255,255,.4);border-color:#fff}
+.action-btn:hover:not(:disabled){transform:scale(1.05);background:rgba(255,255,255,.25);border-color:var(--pink)}
 .action-btn:active:not(:disabled){transform:scale(.95)}
-.action-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.action-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
 .action-btn .aicon{font-size:1.8em;display:block}
 .action-btn .alabel{font-size:.72em;font-weight:700;display:block;margin-top:2px}
 .action-btn .cooldown-bar{
   position:absolute;bottom:0;left:0;height:3px;
-  background:linear-gradient(90deg,#ff6fd8,#a18cd1);
+  background:linear-gradient(90deg,var(--pink),var(--purple));
   border-radius:0 0 14px 14px;transition:width linear;
 }
 
-/* Room & costume pickers */
+/* Pickers */
 .picker-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:8px}
 .picker-btn{
-  background:rgba(255,255,255,.2);backdrop-filter:blur(6px);
-  border:2px solid rgba(255,255,255,.3);border-radius:12px;
+  background:var(--glass);backdrop-filter:blur(6px);
+  border:2px solid transparent;border-radius:12px;
   padding:6px 12px;cursor:pointer;font-family:inherit;
-  font-size:.75em;font-weight:700;color:#2d1b69;transition:.3s;
+  font-size:.75em;font-weight:700;color:#fff;transition:.3s;
 }
-.picker-btn:hover{border-color:#fff;background:rgba(255,255,255,.4)}
-.picker-btn.active{border-color:#ff6fd8;background:rgba(255,111,216,.25)}
+.picker-btn:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.2)}
+.picker-btn.active{border-color:var(--pink);background:rgba(255,111,216,.2)}
+.picker-btn.locked{opacity:.35;cursor:not-allowed}
+.picker-btn.locked::after{content:' 🔒';font-size:.8em}
 
-.section-label{font-size:.8em;font-weight:800;color:rgba(255,255,255,.8);margin-bottom:6px;text-align:center}
+.section-label{font-size:.8em;font-weight:800;color:rgba(255,255,255,.6);margin-bottom:6px;text-align:center}
 
-/* Outfit modal */
-.outfit-modal{
+/* ── DAILY QUESTS ── */
+.quest-item{
+  display:flex;align-items:center;gap:10px;padding:8px 12px;
+  background:rgba(255,255,255,.05);border-radius:12px;margin-bottom:6px;
+  border:1px solid rgba(255,255,255,.1);transition:.3s;
+}
+.quest-item.done{border-color:rgba(255,215,0,.3);background:rgba(255,215,0,.08)}
+.quest-icon{font-size:1.3em;flex-shrink:0}
+.quest-info{flex:1}
+.quest-title{font-size:.8em;font-weight:700}
+.quest-progress{font-size:.65em;color:rgba(255,255,255,.5);margin-top:2px}
+.quest-progress-bar{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin-top:3px}
+.quest-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--pink));border-radius:4px;transition:width .4s}
+.quest-reward{font-size:.75em;font-weight:800;color:var(--gold);flex-shrink:0}
+.quest-check{font-size:1.2em;flex-shrink:0}
+
+/* ── MINI-GAMES ── */
+.minigame-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mg-btn{
+  background:linear-gradient(135deg,rgba(180,77,255,.2),rgba(255,111,216,.2));
+  backdrop-filter:blur(8px);border:1.5px solid rgba(180,77,255,.3);
+  border-radius:14px;padding:12px 6px;cursor:pointer;transition:.3s;
+  text-align:center;font-family:inherit;color:#fff;
+}
+.mg-btn:hover{transform:scale(1.05);border-color:var(--purple);background:rgba(180,77,255,.3)}
+.mg-btn .mg-icon{font-size:2em;display:block;margin-bottom:4px}
+.mg-btn .mg-label{font-size:.72em;font-weight:700}
+
+/* Minigame overlay */
+.mg-overlay{
+  display:none;position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;flex-direction:column;
+}
+.mg-overlay.show{display:flex}
+.mg-container{
+  background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-border);border-radius:24px;
+  padding:24px;width:92%;max-width:400px;text-align:center;
+}
+.mg-container h3{color:var(--gold);margin-bottom:12px;font-size:1.2em}
+.mg-score-display{font-size:.85em;color:rgba(255,255,255,.7);margin-bottom:12px}
+.mg-area{
+  position:relative;width:100%;height:300px;border-radius:16px;overflow:hidden;
+  background:rgba(0,0,0,.3);margin-bottom:12px;touch-action:none;user-select:none;
+}
+.mg-close{
+  background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);
+  padding:8px 24px;border-radius:20px;font-family:inherit;font-weight:700;cursor:pointer;margin-top:8px;
+}
+.mg-result{
+  font-size:1.2em;font-weight:800;color:var(--gold);margin:12px 0;
+}
+
+/* Catch game */
+.catch-item{
+  position:absolute;font-size:2em;transition:none;pointer-events:none;
+  animation:catchFall linear forwards;
+}
+@keyframes catchFall{0%{top:-40px}100%{top:310px}}
+.catch-basket{
+  position:absolute;bottom:10px;font-size:2.5em;
+  transition:left .1s;pointer-events:none;
+}
+
+/* Memory game */
+.memory-grid{
+  display:grid;gap:8px;justify-content:center;margin:auto;
+}
+.memory-card{
+  width:60px;height:60px;border-radius:12px;cursor:pointer;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8em;transition:.3s;border:2px solid transparent;
+}
+.memory-card.flipped{background:rgba(255,255,255,.2);border-color:var(--gold)}
+.memory-card.matched{background:rgba(255,215,0,.2);border-color:var(--gold);opacity:.7}
+.memory-card:not(.flipped):not(.matched) span{visibility:hidden}
+
+/* Rhythm game */
+.rhythm-lane{
+  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+  width:80px;height:80px;border-radius:50%;
+  border:3px solid var(--pink);background:rgba(255,111,216,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2em;
+}
+.rhythm-note{
+  position:absolute;font-size:2em;left:50%;transform:translateX(-50%);
+  animation:rhythmFall linear forwards;pointer-events:none;
+}
+@keyframes rhythmFall{0%{top:-40px;opacity:1}100%{top:280px;opacity:.3}}
+.rhythm-flash{animation:rFlash .3s ease}
+@keyframes rFlash{0%{background:rgba(255,215,0,.4)}100%{background:rgba(255,111,216,.1)}}
+
+/* ── MODALS ── */
+.modal-overlay{
   display:none;position:fixed;inset:0;z-index:200;
   background:rgba(0,0,0,.5);backdrop-filter:blur(6px);
   align-items:center;justify-content:center;
 }
-.outfit-modal.show{display:flex}
-.outfit-panel{
-  background:rgba(255,255,255,.25);backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.4);border-radius:24px;
-  padding:24px;width:90%;max-width:360px;text-align:center;
+.modal-overlay.show{display:flex}
+.modal-panel{
+  background:rgba(30,10,50,.85);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-border);border-radius:24px;
+  padding:24px;width:90%;max-width:380px;text-align:center;
 }
-.outfit-panel h3{color:#fff;margin-bottom:14px;font-size:1.1em}
+.modal-panel h3{color:var(--gold);margin-bottom:14px;font-size:1.1em}
+
 .outfit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
 .outfit-item{
   font-size:2.2em;cursor:pointer;padding:8px;border-radius:12px;
-  background:rgba(255,255,255,.15);border:2px solid transparent;
-  transition:.3s;
+  background:rgba(255,255,255,.08);border:2px solid transparent;transition:.3s;
 }
-.outfit-item:hover{background:rgba(255,255,255,.35);transform:scale(1.1)}
-.outfit-item.active{border-color:#ffd700;background:rgba(255,215,0,.2)}
-.outfit-item.locked{opacity:.35;cursor:not-allowed;position:relative}
-.outfit-item.locked::after{
-  content:'🔒';position:absolute;bottom:-2px;right:-2px;font-size:.4em;
-}
-.close-modal{
-  background:linear-gradient(135deg,#ff6fd8,#a18cd1);
-  color:#fff;border:none;padding:8px 28px;border-radius:20px;
-  font-family:inherit;font-weight:700;cursor:pointer;
-}
+.outfit-item:hover{background:rgba(255,255,255,.2);transform:scale(1.1)}
+.outfit-item.active{border-color:var(--gold);background:rgba(255,215,0,.15)}
+.outfit-item.locked{opacity:.3;cursor:not-allowed;position:relative}
+.outfit-item.locked::after{content:'🔒';position:absolute;bottom:-2px;right:-2px;font-size:.4em}
 
-/* Level up overlay */
+.modal-btn{
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff;border:none;padding:8px 28px;border-radius:20px;
+  font-family:inherit;font-weight:700;cursor:pointer;transition:.3s;
+}
+.modal-btn:hover{transform:scale(1.05)}
+
+/* Level up */
 .levelup-overlay{
   display:none;position:fixed;inset:0;z-index:300;
   background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
@@ -262,128 +391,117 @@ h1{
 }
 .levelup-overlay.show{display:flex}
 .levelup-card{
-  background:linear-gradient(135deg,#ffd700,#ff6fd8,#a18cd1);
+  background:linear-gradient(135deg,var(--gold),var(--pink),var(--purple));
   border-radius:28px;padding:30px;text-align:center;
-  animation:levelPop .5s ease;color:#fff;
-  box-shadow:0 10px 60px rgba(255,215,0,.5);
+  animation:popIn .5s ease;color:#fff;box-shadow:0 10px 60px rgba(255,215,0,.5);
 }
-@keyframes levelPop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
-.levelup-card h2{font-size:2em;margin-bottom:6px}
+@keyframes popIn{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.levelup-card h2{font-size:1.8em;margin-bottom:6px}
 .levelup-card .lv-num{font-size:3em;font-weight:800}
-.levelup-card .lv-msg{font-size:.9em;margin:8px 0 14px;opacity:.9}
+.levelup-card .lv-msg{font-size:.85em;margin:8px 0 14px;opacity:.9}
 .levelup-card button{
-  background:#fff;color:#ff6fd8;border:none;padding:10px 30px;
+  background:#fff;color:var(--pink);border:none;padding:10px 30px;
   border-radius:20px;font-family:inherit;font-weight:800;font-size:1em;cursor:pointer;
 }
 
-/* Warning pulse */
 .warning-pulse{animation:warnPulse 1s ease infinite}
-@keyframes warnPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,50,50,.4)}50%{box-shadow:0 0 20px 8px rgba(255,50,50,.6)}}
+@keyframes warnPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,50,50,.3)}50%{box-shadow:0 0 20px 8px rgba(255,50,50,.5)}}
 
-/* Decor elements */
 .decor-star{
-  position:absolute;color:rgba(255,255,255,.6);font-size:.8em;
+  position:absolute;color:rgba(255,255,255,.5);font-size:.8em;
   animation:twinkle 2s ease-in-out infinite;
 }
 @keyframes twinkle{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
 
-@media(max-width:400px){
-  .pet-emoji{font-size:5.5em}
-  .actions-grid{grid-template-columns:repeat(3,1fr);gap:6px}
-  .pet-arena{height:200px}
+/* Tabs */
+.tab-row{display:flex;gap:4px;margin-bottom:10px;justify-content:center}
+.tab-btn{
+  background:rgba(255,255,255,.08);border:1.5px solid transparent;
+  border-radius:12px;padding:8px 14px;font-family:inherit;font-size:.78em;
+  font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;transition:.3s;
+}
+.tab-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+.tab-btn.active{border-color:var(--pink);color:#fff;background:rgba(255,111,216,.15)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Evolution info */
+.evo-info{
+  display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:8px;
+}
+.evo-stage{
+  text-align:center;font-size:.7em;padding:6px 10px;border-radius:10px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  opacity:.5;transition:.3s;
+}
+.evo-stage.reached{opacity:1;border-color:var(--gold);background:rgba(255,215,0,.1)}
+.evo-stage .evo-emoji{font-size:1.8em;display:block;margin-bottom:2px}
+
+@media(max-width:420px){
+  .pet-emoji{font-size:5em!important}
+  .pet-emoji.evolved1{font-size:6em!important}
+  .pet-emoji.evolved2{font-size:7em!important}
+  .pet-emoji.evolved3{font-size:7.5em!important}
+  .actions-grid{gap:6px}
+  .pet-arena{height:210px}
   h1{font-size:1.2em}
+  .memory-card{width:50px;height:50px;font-size:1.4em}
+  .mg-area{height:260px}
+  .minigame-btns{grid-template-columns:1fr 1fr 1fr;gap:6px}
 }
 </style>
 </head>
 <body>
 
-<a href="index.html" class="back-btn">Retour</a>
+<a href="index.html" class="back-btn" id="backBtn">&#8592; Retour</a>
+<button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
 
 <h1>Mon Pet K-Pop</h1>
 <p class="subtitle">Adopte et prends soin de ton compagnon star !</p>
 
-<!-- ── ADOPT SCREEN ── -->
-<div id="adoptScreen" class="glass">
-  <h2>Choisis ton compagnon !</h2>
-  <div class="pet-grid">
-    <div class="pet-option" onclick="selectPetType(this,'cat')" data-type="cat">
-      <span class="emoji">🐱</span>
-      <span class="pname">Kitty Star</span>
+<!-- TUTORIAL -->
+<div id="tutorialOverlay">
+  <div class="tuto-card">
+    <h2>Bienvenue !</h2>
+    <p>Tu vas adopter ton propre compagnon K-Pop ! Voici comment jouer :</p>
+    <div class="tuto-steps">
+      1. Choisis un animal et donne-lui un nom<br>
+      2. Nourris-le, joue avec lui, fais-le dormir<br>
+      3. Joue aux mini-jeux pour gagner des etoiles<br>
+      4. Complete les quetes du jour pour des bonus<br>
+      5. Monte de niveau pour debloquer tenues et salles<br>
+      6. Ton pet evolue aux niveaux 5, 10 et 15 !
     </div>
-    <div class="pet-option" onclick="selectPetType(this,'rabbit')" data-type="rabbit">
-      <span class="emoji">🐰</span>
-      <span class="pname">Bunny Pop</span>
-    </div>
-    <div class="pet-option" onclick="selectPetType(this,'panda')" data-type="panda">
-      <span class="emoji">🐼</span>
-      <span class="pname">Panda Beat</span>
-    </div>
-    <div class="pet-option" onclick="selectPetType(this,'fox')" data-type="fox">
-      <span class="emoji">🦊</span>
-      <span class="pname">Foxy Tune</span>
-    </div>
-    <div class="pet-option" onclick="selectPetType(this,'dog')" data-type="dog">
-      <span class="emoji">🐶</span>
-      <span class="pname">Puppy Dance</span>
-    </div>
-    <div class="pet-option" onclick="selectPetType(this,'unicorn')" data-type="unicorn">
-      <span class="emoji">🦄</span>
-      <span class="pname">Unicorn Dream</span>
-    </div>
+    <button class="tuto-btn" onclick="closeTutorial()">C'est parti !</button>
   </div>
+</div>
+
+<!-- ADOPT SCREEN -->
+<div id="adoptScreen" class="glass screen active">
+  <h2>Choisis ton compagnon !</h2>
+  <div class="pet-grid" id="petGrid"></div>
   <input class="name-input" id="petNameInput" placeholder="Donne-lui un nom..." maxlength="16">
   <br>
   <button class="adopt-btn" id="adoptBtn" onclick="adoptPet()" disabled>Adopter !</button>
 </div>
 
-<!-- ── MAIN PET VIEW ── -->
-<div id="petView">
+<!-- MAIN PET VIEW -->
+<div id="petView" class="screen">
   <!-- Top bar -->
   <div class="glass" style="padding:12px 16px">
     <div class="top-bar">
-      <span class="pet-name-display" id="petNameDisp">—</span>
-      <span class="level-badge" id="levelBadge">Lv.1</span>
+      <span class="pet-name-display" id="petNameDisp"></span>
+      <span class="level-badge" id="levelBadge">Nv.1</span>
+      <span class="stars-badge" id="starsBadge">0</span>
       <span class="streak-badge" id="streakBadge">Jour 1</span>
     </div>
     <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBar" style="width:0%"></div></div>
+    <div class="xp-label" id="xpLabel">0 / 50 XP</div>
   </div>
 
   <!-- Stats -->
   <div class="glass" style="padding:12px 16px">
-    <div class="stats-grid">
-      <div class="stat-item">
-        <span class="stat-icon">💖</span>
-        <div class="stat-info">
-          <div class="stat-label">Bonheur</div>
-          <div class="stat-bar"><div class="stat-fill happiness" id="barHappiness" style="width:100%"></div></div>
-        </div>
-        <span class="stat-val" id="valHappiness">100</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-icon">🍕</span>
-        <div class="stat-info">
-          <div class="stat-label">Faim</div>
-          <div class="stat-bar"><div class="stat-fill hunger" id="barHunger" style="width:100%"></div></div>
-        </div>
-        <span class="stat-val" id="valHunger">100</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-icon">⚡</span>
-        <div class="stat-info">
-          <div class="stat-label">Énergie</div>
-          <div class="stat-bar"><div class="stat-fill energy" id="barEnergy" style="width:100%"></div></div>
-        </div>
-        <span class="stat-val" id="valEnergy">100</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-icon">✨</span>
-        <div class="stat-info">
-          <div class="stat-label">Style</div>
-          <div class="stat-bar"><div class="stat-fill style" id="barStyle" style="width:100%"></div></div>
-        </div>
-        <span class="stat-val" id="valStyle">100</span>
-      </div>
-    </div>
+    <div class="stats-grid" id="statsGrid"></div>
   </div>
 
   <!-- Pet Arena -->
@@ -391,7 +509,8 @@ h1{
     <div class="pet-arena" id="petArena">
       <div class="room-bg bedroom" id="roomBg"></div>
       <div class="room-decor" id="roomDecor"></div>
-      <div class="pet-container">
+      <div class="speech-bubble" id="speechBubble"></div>
+      <div class="pet-container" id="petContainer">
         <span class="mood-indicator" id="moodFace">😍</span>
         <span class="pet-emoji" id="petEmoji">🐱</span>
         <span class="costume-overlay" id="costumeDisplay"></span>
@@ -399,54 +518,54 @@ h1{
     </div>
   </div>
 
-  <!-- Actions -->
+  <!-- Tabs: Actions / Mini-jeux / Quetes -->
   <div class="glass">
-    <div class="actions-grid">
-      <button class="action-btn" id="btnFeed" onclick="doAction('feed')">
-        <span class="aicon">🍕</span><span class="alabel">Nourrir</span>
-        <div class="cooldown-bar" style="width:0%"></div>
-      </button>
-      <button class="action-btn" id="btnPlay" onclick="doAction('play')">
-        <span class="aicon">🎮</span><span class="alabel">Jouer</span>
-        <div class="cooldown-bar" style="width:0%"></div>
-      </button>
-      <button class="action-btn" id="btnSleep" onclick="doAction('sleep')">
-        <span class="aicon">😴</span><span class="alabel">Dormir</span>
-        <div class="cooldown-bar" style="width:0%"></div>
-      </button>
-      <button class="action-btn" id="btnGroom" onclick="doAction('groom')">
-        <span class="aicon">🛁</span><span class="alabel">Toiletter</span>
-        <div class="cooldown-bar" style="width:0%"></div>
-      </button>
-      <button class="action-btn" id="btnSing" onclick="doAction('sing')">
-        <span class="aicon">🎵</span><span class="alabel">Chanter</span>
-        <div class="cooldown-bar" style="width:0%"></div>
-      </button>
-      <button class="action-btn" id="btnDress" onclick="openOutfitPicker()">
-        <span class="aicon">👗</span><span class="alabel">Habiller</span>
-        <div class="cooldown-bar" style="width:0%"></div>
-      </button>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab('actions')">🎮 Actions</button>
+      <button class="tab-btn" onclick="switchTab('minigames')">🎯 Mini-jeux</button>
+      <button class="tab-btn" onclick="switchTab('quests')">📋 Quetes</button>
+    </div>
+
+    <!-- Actions tab -->
+    <div class="tab-content active" id="tab-actions">
+      <div class="actions-grid" id="actionsGrid"></div>
+    </div>
+
+    <!-- Mini-games tab -->
+    <div class="tab-content" id="tab-minigames">
+      <div class="minigame-btns">
+        <button class="mg-btn" onclick="startMinigame('catch')">
+          <span class="mg-icon">🍬</span><span class="mg-label">Attrape-bonbons</span>
+        </button>
+        <button class="mg-btn" onclick="startMinigame('memory')">
+          <span class="mg-icon">🧠</span><span class="mg-label">Memory</span>
+        </button>
+        <button class="mg-btn" onclick="startMinigame('rhythm')">
+          <span class="mg-icon">🎵</span><span class="mg-label">Rythme K-Pop</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quests tab -->
+    <div class="tab-content" id="tab-quests">
+      <div id="questsList"></div>
     </div>
   </div>
 
   <!-- Room picker -->
   <div class="glass" style="padding:12px">
-    <div class="section-label">Chambre</div>
-    <div class="picker-row" id="roomPicker">
-      <button class="picker-btn active" onclick="setRoom('bedroom')">🛏️ Chambre</button>
-      <button class="picker-btn" onclick="setRoom('garden')">🌸 Jardin</button>
-      <button class="picker-btn" onclick="setRoom('stage')">🎤 Scène</button>
-      <button class="picker-btn" onclick="setRoom('space')">🚀 Espace</button>
-    </div>
+    <div class="section-label">Salle</div>
+    <div class="picker-row" id="roomPicker"></div>
+    <div class="evo-info" id="evoInfo"></div>
   </div>
 </div>
 
 <!-- Outfit Modal -->
-<div class="outfit-modal" id="outfitModal">
-  <div class="outfit-panel">
+<div class="modal-overlay" id="outfitModal">
+  <div class="modal-panel">
     <h3>Choisir une tenue</h3>
     <div class="outfit-grid" id="outfitGrid"></div>
-    <button class="close-modal" onclick="closeOutfitPicker()">Fermer</button>
+    <button class="modal-btn" onclick="closeOutfitPicker()">Fermer</button>
   </div>
 </div>
 
@@ -455,116 +574,214 @@ h1{
   <div class="levelup-card">
     <h2>Level Up !</h2>
     <div class="lv-num" id="lvNum">2</div>
-    <div class="lv-msg" id="lvMsg">Nouvelle tenue débloquée !</div>
+    <div class="lv-msg" id="lvMsg"></div>
     <button onclick="closeLevelUp()">Super !</button>
   </div>
 </div>
 
-<script>
-// ─── AUDIO CONTEXT ───
-const AudioCtx=window.AudioContext||window.webkitAudioContext;
-let actx;
-function ensureAudio(){if(!actx)actx=new AudioCtx()}
+<!-- Minigame Overlay -->
+<div class="mg-overlay" id="mgOverlay">
+  <div class="mg-container">
+    <h3 id="mgTitle">Mini-jeu</h3>
+    <div class="mg-score-display" id="mgScoreDisplay">Score : 0</div>
+    <div class="mg-area" id="mgArea"></div>
+    <div class="mg-result" id="mgResult" style="display:none"></div>
+    <button class="mg-close" id="mgClose" onclick="closeMinigame()">Fermer</button>
+  </div>
+</div>
 
-function playTone(freq,dur,type='sine',vol=.15){
-  ensureAudio();
+<script>
+// ─── AUDIO ───
+const AudioCtx=window.AudioContext||window.webkitAudioContext;
+let actx,soundOn=true;
+function ensureAudio(){if(!actx)actx=new AudioCtx();if(actx.state==='suspended')actx.resume()}
+function toggleSound(){
+  soundOn=!soundOn;
+  document.getElementById('soundToggle').textContent=soundOn?'🔊':'🔇';
+}
+
+function playTone(freq,dur,type='sine',vol=.12){
+  if(!soundOn)return;ensureAudio();
   const o=actx.createOscillator(),g=actx.createGain();
   o.type=type;o.frequency.value=freq;
   g.gain.setValueAtTime(vol,actx.currentTime);
   g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+dur);
-  o.connect(g);g.connect(actx.destination);
-  o.start();o.stop(actx.currentTime+dur);
+  o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+dur);
 }
-
-function sfxFeed(){playTone(300,.08,'square',.12);setTimeout(()=>playTone(400,.08,'square',.1),100);setTimeout(()=>playTone(350,.1,'square',.1),200)}
-function sfxPlay(){playTone(523,.1,'sine',.12);setTimeout(()=>playTone(659,.1,'sine',.12),120);setTimeout(()=>playTone(784,.15,'sine',.1),240)}
-function sfxSleep(){playTone(262,.4,'sine',.08);setTimeout(()=>playTone(247,.5,'sine',.06),400)}
-function sfxGroom(){playTone(1200,.06,'sine',.08);setTimeout(()=>playTone(1500,.06,'sine',.08),80);setTimeout(()=>playTone(1800,.08,'sine',.06),160)}
-function sfxSing(){[523,587,659,784,880].forEach((f,i)=>setTimeout(()=>playTone(f,.15,'sine',.1),i*130))}
-function sfxLevelUp(){
-  [523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.2,'square',.1),i*150));
-  setTimeout(()=>playTone(1047,.4,'sine',.12),600);
-}
+function sfxFeed(){playTone(300,.08,'square',.1);setTimeout(()=>playTone(400,.08,'square',.08),100);setTimeout(()=>playTone(350,.1,'square',.08),200)}
+function sfxPlay(){playTone(523,.1,'sine',.1);setTimeout(()=>playTone(659,.1,'sine',.1),120);setTimeout(()=>playTone(784,.15,'sine',.08),240)}
+function sfxSleep(){playTone(262,.4,'sine',.06);setTimeout(()=>playTone(247,.5,'sine',.05),400)}
+function sfxGroom(){playTone(1200,.06,'sine',.07);setTimeout(()=>playTone(1500,.06,'sine',.07),80);setTimeout(()=>playTone(1800,.08,'sine',.05),160)}
+function sfxSing(){[523,587,659,784,880].forEach((f,i)=>setTimeout(()=>playTone(f,.15,'sine',.08),i*130))}
+function sfxLevelUp(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.2,'square',.08),i*150));setTimeout(()=>playTone(1047,.4,'sine',.1),600)}
+function sfxWarn(){playTone(200,.3,'sawtooth',.08);setTimeout(()=>playTone(180,.3,'sawtooth',.06),300)}
+function sfxStar(){playTone(880,.1,'sine',.08);setTimeout(()=>playTone(1100,.15,'sine',.07),100)}
+function sfxMgHit(){playTone(660,.08,'square',.08);setTimeout(()=>playTone(880,.1,'square',.06),80)}
+function sfxMgMiss(){playTone(200,.2,'sawtooth',.08)}
+function sfxMgWin(){[523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>playTone(f,.15,'sine',.08),i*100))}
 
 // ─── CONFIG ───
 const PET_TYPES={
-  cat:{emoji:'🐱',name:'Kitty Star'},
-  rabbit:{emoji:'🐰',name:'Bunny Pop'},
-  panda:{emoji:'🐼',name:'Panda Beat'},
-  fox:{emoji:'🦊',name:'Foxy Tune'},
-  dog:{emoji:'🐶',name:'Puppy Dance'},
-  unicorn:{emoji:'🦄',name:'Unicorn Dream'}
+  cat:{emoji:'🐱',name:'Kitty Star'},rabbit:{emoji:'🐰',name:'Bunny Pop'},
+  panda:{emoji:'🐼',name:'Panda Beat'},fox:{emoji:'🦊',name:'Foxy Tune'},
+  dog:{emoji:'🐶',name:'Puppy Dance'},unicorn:{emoji:'🦄',name:'Unicorn Dream'}
 };
 
 const COSTUMES=[
-  {emoji:'👑',name:'Couronne',unlockLv:1},
-  {emoji:'🎀',name:'Noeud',unlockLv:3},
-  {emoji:'🕶️',name:'Lunettes',unlockLv:5},
-  {emoji:'🎩',name:'Chapeau',unlockLv:8},
-  {emoji:'💎',name:'Diamant',unlockLv:12}
+  {emoji:'👑',name:'Couronne',lv:1},{emoji:'🎀',name:'Noeud',lv:3},
+  {emoji:'🕶️',name:'Lunettes',lv:5},{emoji:'🎩',name:'Chapeau',lv:7},
+  {emoji:'💎',name:'Diamant',lv:10},{emoji:'🌸',name:'Fleur',lv:12},
+  {emoji:'🦋',name:'Papillon',lv:14},{emoji:'⭐',name:'Etoile',lv:15},
+  {emoji:'🎭',name:'Masque',lv:17},{emoji:'💫',name:'Cosmos',lv:20}
 ];
 
-const DECAY={happiness:5,hunger:8,energy:3,style:4}; // per hour
-const COOLDOWNS={feed:8,play:12,sleep:20,groom:10,sing:15}; // seconds
-const XP_PER_LEVEL=50;
-
-const ACTIONS={
-  feed:{stats:{hunger:30},xp:8,particles:['🍕','🍔','🍩','🍪','🍰'],anim:'bounce',sfx:sfxFeed},
-  play:{stats:{happiness:25,energy:5},xp:10,particles:['⭐','🎮','🎯','🏀','🎪'],anim:'bounce',sfx:sfxPlay},
-  sleep:{stats:{energy:40},xp:6,particles:['💤','😴','🌙','⭐','☁️'],anim:'sleep',sfx:sfxSleep},
-  groom:{stats:{style:35},xp:8,particles:['✨','💫','🫧','🧼','💎'],anim:'bounce',sfx:sfxGroom},
-  sing:{stats:{happiness:15,style:10},xp:12,particles:['🎵','🎶','🎤','💜','🎼'],anim:'bounce',sfx:sfxSing}
-};
+const ROOMS=[
+  {id:'bedroom',emoji:'🛏️',name:'Chambre',lv:1},
+  {id:'garden',emoji:'🌸',name:'Jardin',lv:1},
+  {id:'stage',emoji:'🎤',name:'Scene',lv:3},
+  {id:'space',emoji:'🚀',name:'Espace',lv:7},
+  {id:'cafe',emoji:'☕',name:'Cafe K-Pop',lv:10},
+  {id:'plage',emoji:'🏖️',name:'Plage',lv:14}
+];
 
 const ROOM_DECOR={
-  bedroom:['⭐','🌙','💜','✨','🛏️'],
-  garden:['🌸','🌺','🌻','🦋','🌿'],
-  stage:['🎤','🎵','💡','⭐','🔥'],
-  space:['⭐','🌟','🪐','🚀','💫']
+  bedroom:['⭐','🌙','💜','✨','🛏️'],garden:['🌸','🌺','🌻','🦋','🌿'],
+  stage:['🎤','🎵','💡','⭐','🔥'],space:['⭐','🌟','🪐','🚀','💫'],
+  cafe:['☕','🧁','🍰','🎶','💜'],plage:['🐚','🌊','⭐','🌴','🦀']
+};
+
+const STAT_CONFIG=[
+  {key:'happiness',icon:'💖',label:'Bonheur',color:'happiness'},
+  {key:'hunger',icon:'🍕',label:'Faim',color:'hunger'},
+  {key:'energy',icon:'⚡',label:'Energie',color:'energy'},
+  {key:'style',icon:'✨',label:'Style',color:'style'}
+];
+
+const DECAY={happiness:5,hunger:8,energy:3,style:4};
+const COOLDOWNS={feed:8,play:12,sleep:20,groom:10,sing:15,dance:15};
+const XP_BASE=50;
+
+const ACTIONS=[
+  {id:'feed',icon:'🍕',label:'Nourrir',stats:{hunger:30},xp:8,particles:['🍕','🍔','🍩','🍪','🍰'],anim:'bounce',sfx:sfxFeed},
+  {id:'play',icon:'🎮',label:'Jouer',stats:{happiness:25,energy:5},xp:10,particles:['⭐','🎮','🎯','🏀','🎪'],anim:'bounce',sfx:sfxPlay},
+  {id:'sleep',icon:'😴',label:'Dormir',stats:{energy:40},xp:6,particles:['💤','😴','🌙','⭐','☁️'],anim:'sleep',sfx:sfxSleep},
+  {id:'groom',icon:'🛁',label:'Toiletter',stats:{style:35},xp:8,particles:['✨','💫','🫧','🧼','💎'],anim:'bounce',sfx:sfxGroom},
+  {id:'sing',icon:'🎵',label:'Chanter',stats:{happiness:15,style:10},xp:12,particles:['🎵','🎶','🎤','💜','🎼'],anim:'bounce',sfx:sfxSing},
+  {id:'dance',icon:'💃',label:'Danser',stats:{happiness:20,energy:-10,style:15},xp:14,particles:['💃','🕺','✨','🎶','⭐'],anim:'dance',sfx:sfxPlay}
+];
+
+// Pet mood speech lines
+const SPEECH={
+  happy:["Saranghae ! 💖","Je suis trop contente !","Fighting ! ✊","Kamsahamnida !","On est les meilleures !","Yehet ! 🎉"],
+  ok:["Ca va bien !","Hehe~","Annyeonghaseyo !","On joue ?"],
+  hungry:["J'ai faim...","Pizza ? 🍕","Mon ventre gargouille...","Nourris-moi stp !"],
+  tired:["Je suis fatiguee...","Zzz...","Un petit dodo ?","J'ai plus d'energie..."],
+  sad:["Je suis triste...","Tu m'as oubliee ?","Prends soin de moi...","Wae... 😢"],
+  stylish:["Je suis trop belle !","Regarde mon style !","Fashionista ! 👗","Trop stylée !"]
 };
 
 // ─── STATE ───
-let pet=null;
-let selectedType=null;
-let cooldowns={};
-let decayInterval=null;
+let pet=null,selectedType=null,cooldowns={},decayInterval=null,speechTimeout=null;
+let mgActive=false,mgType=null,mgScore=0,mgInterval=null,mgTimeout=null;
 
-function getPlayer(){return new URLSearchParams(location.search).get('player')||localStorage.getItem('kpop_player')||'Joueur'}
+function getPlayer(){
+  const p=new URLSearchParams(location.search).get('player')||localStorage.getItem('kpop_player')||'Ambre';
+  localStorage.setItem('kpop_player',p);return p;
+}
 const PLAYER=getPlayer();
+document.getElementById('backBtn').href='index.html?player='+encodeURIComponent(PLAYER);
 
-function storageKey(){return 'kpop_pet_'+PLAYER}
+function storageKey(){return'kpop_pet_'+PLAYER}
+function starsKey(){return'kpop_stars_'+PLAYER}
+function questKey(){return'kpop_quests_'+PLAYER}
+
+function getStars(){return parseInt(localStorage.getItem(starsKey()))||0}
+function addStars(n){const s=getStars()+n;localStorage.setItem(starsKey(),s);updateStarsUI();sfxStar();return s}
+function updateStarsUI(){document.getElementById('starsBadge').textContent='⭐ '+getStars()}
+
+// ─── BUILD UI ───
+function buildAdoptGrid(){
+  const grid=document.getElementById('petGrid');
+  grid.innerHTML='';
+  for(const[type,data]of Object.entries(PET_TYPES)){
+    const el=document.createElement('div');
+    el.className='pet-option';el.dataset.type=type;
+    el.innerHTML=`<span class="emoji">${data.emoji}</span><span class="pname">${data.name}</span>`;
+    el.onclick=()=>{selectedType=type;document.querySelectorAll('.pet-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');checkAdoptReady()};
+    grid.appendChild(el);
+  }
+}
+
+function buildStatsGrid(){
+  const grid=document.getElementById('statsGrid');
+  grid.innerHTML='';
+  STAT_CONFIG.forEach(s=>{
+    const div=document.createElement('div');
+    div.className='stat-item';div.id='statItem_'+s.key;
+    div.innerHTML=`<span class="stat-icon">${s.icon}</span><div class="stat-info"><div class="stat-label">${s.label}</div><div class="stat-bar"><div class="stat-fill ${s.color}" id="bar${cap(s.key)}" style="width:100%"></div></div></div><span class="stat-val" id="val${cap(s.key)}">100</span>`;
+    grid.appendChild(div);
+  });
+}
+
+function buildActionsGrid(){
+  const grid=document.getElementById('actionsGrid');
+  grid.innerHTML='';
+  ACTIONS.forEach(a=>{
+    const btn=document.createElement('button');
+    btn.className='action-btn';btn.id='btn_'+a.id;
+    btn.innerHTML=`<span class="aicon">${a.icon}</span><span class="alabel">${a.label}</span><div class="cooldown-bar" style="width:0%"></div>`;
+    btn.onclick=()=>doAction(a.id);
+    grid.appendChild(btn);
+  });
+}
+
+function buildRoomPicker(){
+  const row=document.getElementById('roomPicker');
+  row.innerHTML='';
+  ROOMS.forEach(r=>{
+    const btn=document.createElement('button');
+    btn.className='picker-btn';btn.dataset.room=r.id;
+    btn.textContent=r.emoji+' '+r.name;
+    const unlocked=pet&&pet.level>=r.lv;
+    if(!unlocked){btn.classList.add('locked');btn.title='Niveau '+r.lv+' requis'}
+    else{btn.onclick=()=>setRoom(r.id)}
+    if(pet&&pet.room===r.id)btn.classList.add('active');
+    row.appendChild(btn);
+  });
+}
+
+function buildEvoInfo(){
+  const el=document.getElementById('evoInfo');
+  el.innerHTML='';
+  const stages=[{lv:1,label:'Bebe',emoji:'🥚'},{lv:5,label:'Junior',emoji:'⭐'},{lv:10,label:'Star',emoji:'👑'},{lv:15,label:'Mega Star',emoji:'🌟'}];
+  stages.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='evo-stage'+(pet&&pet.level>=s.lv?' reached':'');
+    d.innerHTML=`<span class="evo-emoji">${s.emoji}</span>Nv.${s.lv}<br>${s.label}`;
+    el.appendChild(d);
+  });
+}
 
 // ─── ADOPT ───
-function selectPetType(el,type){
-  selectedType=type;
-  document.querySelectorAll('.pet-option').forEach(o=>o.style.borderColor='rgba(255,255,255,.3)');
-  el.style.borderColor='#ff6fd8';
-  checkAdoptReady();
-}
-
 document.getElementById('petNameInput').addEventListener('input',checkAdoptReady);
-function checkAdoptReady(){
-  document.getElementById('adoptBtn').disabled=!(selectedType&&document.getElementById('petNameInput').value.trim());
-}
+function checkAdoptReady(){document.getElementById('adoptBtn').disabled=!(selectedType&&document.getElementById('petNameInput').value.trim())}
 
 function adoptPet(){
   const name=document.getElementById('petNameInput').value.trim();
   if(!selectedType||!name)return;
   ensureAudio();
   pet={
-    type:selectedType,
-    name:name,
+    type:selectedType,name,
     stats:{happiness:100,hunger:100,energy:100,style:100},
-    level:1,xp:0,
-    room:'bedroom',
-    costume:-1,
-    streak:1,
-    lastVisit:Date.now(),
-    lastDecay:Date.now()
+    level:1,xp:0,totalXp:0,room:'bedroom',costume:-1,
+    streak:1,lastVisit:Date.now(),lastDecay:Date.now(),
+    actionCounts:{feed:0,play:0,sleep:0,groom:0,sing:0,dance:0},
+    mgPlayed:0,mgTotal:0,
+    firstTime:true
   };
-  savePet();
-  sfxLevelUp();
-  showPetView();
+  savePet();sfxLevelUp();showPetView();
+  // Show tutorial for first time
+  showTutorial();
 }
 
 // ─── PERSISTENCE ───
@@ -577,149 +794,191 @@ function loadPet(){
   const raw=localStorage.getItem(storageKey());
   if(!raw)return false;
   pet=JSON.parse(raw);
-  // Apply time-based decay
-  const now=Date.now();
-  const hours=(now-pet.lastDecay)/(1000*3600);
-  if(hours>0.01){
-    for(const k in DECAY){
-      pet.stats[k]=Math.max(0,Math.round(pet.stats[k]-DECAY[k]*hours));
-    }
-  }
-  // Streak check
+  // Ensure fields exist (migration)
+  if(!pet.actionCounts)pet.actionCounts={feed:0,play:0,sleep:0,groom:0,sing:0,dance:0};
+  if(!pet.mgPlayed)pet.mgPlayed=0;
+  if(!pet.mgTotal)pet.mgTotal=0;
+  if(!pet.totalXp)pet.totalXp=pet.level*XP_BASE+pet.xp;
+  // Time-based decay
+  const hours=(Date.now()-pet.lastDecay)/(1000*3600);
+  if(hours>0.01){for(const k in DECAY)pet.stats[k]=Math.max(0,Math.round(pet.stats[k]-DECAY[k]*hours))}
+  // Streak
   const lastDate=new Date(pet.lastVisit).toDateString();
   const today=new Date().toDateString();
   if(lastDate!==today){
     const yesterday=new Date(Date.now()-86400000).toDateString();
-    if(lastDate===yesterday){
-      pet.streak=(pet.streak||1)+1;
-      // Daily bonus: refill a bit
-      for(const k in pet.stats) pet.stats[k]=Math.min(100,pet.stats[k]+10);
-    } else if(lastDate!==today){
-      pet.streak=1;
-    }
-    pet.lastVisit=now;
+    if(lastDate===yesterday){pet.streak=(pet.streak||1)+1;for(const k in pet.stats)pet.stats[k]=Math.min(100,pet.stats[k]+10)}
+    else if(lastDate!==today)pet.streak=1;
+    pet.lastVisit=Date.now();
+    // Reset daily action counts
+    pet.actionCounts={feed:0,play:0,sleep:0,groom:0,sing:0,dance:0};
+    pet.mgPlayed=0;
   }
-  pet.lastDecay=now;
-  savePet();
-  return true;
+  pet.lastDecay=Date.now();savePet();return true;
 }
 
-// ─── SHOW PET ───
+// ─── TUTORIAL ───
+function showTutorial(){document.getElementById('tutorialOverlay').classList.add('show')}
+function closeTutorial(){
+  document.getElementById('tutorialOverlay').classList.remove('show');
+  if(pet)pet.firstTime=false;savePet();
+}
+
+// ─── SHOW PET VIEW ───
 function showPetView(){
-  document.getElementById('adoptScreen').style.display='none';
-  document.getElementById('petView').style.display='block';
-  renderPet();
-  renderRoomDecor();
-  startDecay();
+  document.getElementById('adoptScreen').classList.remove('active');
+  document.getElementById('petView').classList.add('active');
+  buildStatsGrid();buildActionsGrid();buildRoomPicker();buildEvoInfo();
+  renderPet();renderRoomDecor();renderQuests();startDecay();
+  updateStarsUI();
+  if(pet.firstTime)showTutorial();
 }
 
 function renderPet(){
   const pt=PET_TYPES[pet.type];
-  document.getElementById('petEmoji').textContent=pt.emoji;
+  const pe=document.getElementById('petEmoji');
+  pe.textContent=pt.emoji;
+  // Evolution visual
+  pe.classList.remove('evolved1','evolved2','evolved3');
+  const container=document.getElementById('petContainer');
+  container.querySelectorAll('.evolution-crown,.evolution-sparkles').forEach(e=>e.remove());
+  if(pet.level>=15){
+    pe.classList.add('evolved3');
+    addEvoCrown('🌟');addEvoSparkles(8);
+  }else if(pet.level>=10){
+    pe.classList.add('evolved2');
+    addEvoCrown('👑');addEvoSparkles(5);
+  }else if(pet.level>=5){
+    pe.classList.add('evolved1');
+    addEvoSparkles(3);
+  }
   document.getElementById('petNameDisp').textContent=pet.name;
-  document.getElementById('levelBadge').textContent='Lv.'+pet.level;
-  document.getElementById('streakBadge').textContent='Jour '+pet.streak;
-  // XP
-  const xpNeeded=pet.level*XP_PER_LEVEL;
+  document.getElementById('levelBadge').textContent='Nv.'+pet.level;
+  document.getElementById('streakBadge').textContent='🔥 Jour '+pet.streak;
+  const xpNeeded=xpForLevel(pet.level);
   const pct=Math.min(100,Math.round(pet.xp/xpNeeded*100));
   document.getElementById('xpBar').style.width=pct+'%';
-  // Costume
+  document.getElementById('xpLabel').textContent=pet.xp+' / '+xpNeeded+' XP';
   document.getElementById('costumeDisplay').textContent=pet.costume>=0?COSTUMES[pet.costume].emoji:'';
-  // Room
   setRoom(pet.room,true);
-  // Stats
   updateStatsUI();
+  buildRoomPicker();buildEvoInfo();
+}
+
+function addEvoCrown(emoji){
+  const c=document.createElement('span');c.className='evolution-crown';c.textContent=emoji;
+  document.getElementById('petContainer').appendChild(c);
+}
+function addEvoSparkles(count){
+  const wrap=document.createElement('div');wrap.className='evolution-sparkles';
+  for(let i=0;i<count;i++){
+    const s=document.createElement('span');s.className='sparkle';
+    s.textContent='✨';
+    s.style.left=10+Math.random()*80+'%';s.style.top=10+Math.random()*80+'%';
+    s.style.animationDelay=Math.random()*2+'s';
+    wrap.appendChild(s);
+  }
+  document.getElementById('petContainer').appendChild(wrap);
 }
 
 function updateStatsUI(){
   const s=pet.stats;
-  for(const k of ['happiness','hunger','energy','style']){
-    const v=Math.round(s[k]);
-    document.getElementById('bar'+capitalize(k)).style.width=v+'%';
-    document.getElementById('val'+capitalize(k)).textContent=v;
-  }
+  let anyWarning=false;
+  STAT_CONFIG.forEach(cfg=>{
+    const v=Math.round(s[cfg.key]);
+    document.getElementById('bar'+cap(cfg.key)).style.width=v+'%';
+    document.getElementById('val'+cap(cfg.key)).textContent=v;
+    const item=document.getElementById('statItem_'+cfg.key);
+    if(v<=20){item.classList.add('warning');anyWarning=true}
+    else item.classList.remove('warning');
+  });
+  // Warning sound (once per decay tick)
+  if(anyWarning&&!updateStatsUI._warned){sfxWarn();updateStatsUI._warned=true}
+  else if(!anyWarning)updateStatsUI._warned=false;
+
   // Mood
   const avg=(s.happiness+s.hunger+s.energy+s.style)/4;
   const pe=document.getElementById('petEmoji');
   const mf=document.getElementById('moodFace');
   const arena=document.getElementById('petArena');
-  pe.className='pet-emoji';
+  pe.classList.remove('sad','shake');
   arena.classList.remove('warning-pulse');
 
-  if(avg>=80){mf.textContent='😍';pe.classList.add('');spawnIdleHearts()}
+  if(avg>=80){mf.textContent='😍'}
   else if(avg>=60){mf.textContent='😊'}
-  else if(avg>=40){mf.textContent='😐';pe.style.animationPlayState='paused'}
+  else if(avg>=40){mf.textContent='😐'}
   else if(avg>=20){mf.textContent='😢';pe.classList.add('sad')}
   else{mf.textContent='😭';pe.classList.add('shake');arena.classList.add('warning-pulse')}
-  if(avg>=40)pe.style.animationPlayState='running';
+
+  // Speech
+  showMoodSpeech();
+}
+updateStatsUI._warned=false;
+
+function showMoodSpeech(){
+  if(speechTimeout)return; // Don't spam
+  const s=pet.stats;
+  let lines;
+  if(s.hunger<=20)lines=SPEECH.hungry;
+  else if(s.energy<=20)lines=SPEECH.tired;
+  else if((s.happiness+s.hunger+s.energy+s.style)/4<=30)lines=SPEECH.sad;
+  else if(s.style>=80)lines=SPEECH.stylish;
+  else if((s.happiness+s.hunger+s.energy+s.style)/4>=75)lines=SPEECH.happy;
+  else lines=SPEECH.ok;
+  if(Math.random()>.3)return; // Not every time
+  const bubble=document.getElementById('speechBubble');
+  bubble.textContent=lines[Math.floor(Math.random()*lines.length)];
+  bubble.classList.add('show');
+  speechTimeout=setTimeout(()=>{bubble.classList.remove('show');speechTimeout=setTimeout(()=>{speechTimeout=null},5000)},3000);
 }
 
-function capitalize(s){return s[0].toUpperCase()+s.slice(1)}
+function cap(s){return s[0].toUpperCase()+s.slice(1)}
+function xpForLevel(lv){return XP_BASE+lv*10}
 
-// ─── DECAY TIMER ───
+// ─── DECAY ───
 function startDecay(){
   if(decayInterval)clearInterval(decayInterval);
   decayInterval=setInterval(()=>{
-    // Decay per minute (rate/60)
-    for(const k in DECAY){
-      pet.stats[k]=Math.max(0,pet.stats[k]-DECAY[k]/60);
-    }
-    updateStatsUI();
-    savePet();
-  },60000); // every minute
+    for(const k in DECAY)pet.stats[k]=Math.max(0,pet.stats[k]-DECAY[k]/60);
+    updateStatsUI();savePet();
+  },60000);
 }
 
 // ─── ACTIONS ───
-function doAction(action){
-  if(cooldowns[action])return;
+function doAction(actionId){
+  if(cooldowns[actionId])return;
   ensureAudio();
-  const cfg=ACTIONS[action];
-  // Apply stat changes
-  for(const k in cfg.stats){
-    pet.stats[k]=Math.min(100,pet.stats[k]+cfg.stats[k]);
-  }
-  // XP
-  pet.xp+=cfg.xp;
+  const cfg=ACTIONS.find(a=>a.id===actionId);if(!cfg)return;
+  for(const k in cfg.stats)pet.stats[k]=Math.min(100,Math.max(0,pet.stats[k]+cfg.stats[k]));
+  pet.xp+=cfg.xp;pet.totalXp+=cfg.xp;
+  pet.actionCounts[actionId]=(pet.actionCounts[actionId]||0)+1;
+  addStars(1);
   checkLevelUp();
   // Animation
   const pe=document.getElementById('petEmoji');
-  pe.className='pet-emoji';
-  void pe.offsetWidth; // reflow
+  pe.classList.remove('bounce','sleep','dance','shake','sad');
+  void pe.offsetWidth;
   pe.classList.add(cfg.anim);
-  if(cfg.anim==='sleep'){
-    setTimeout(()=>{pe.classList.remove('sleep');pe.className='pet-emoji'},3000);
-  } else {
-    setTimeout(()=>pe.className='pet-emoji',1500);
-  }
-  // Particles
+  const dur=cfg.anim==='sleep'?3000:1500;
+  setTimeout(()=>pe.classList.remove(cfg.anim),dur);
   spawnParticles(cfg.particles);
-  // Sound
   cfg.sfx();
-  // Cooldown
-  startCooldown(action);
-  updateStatsUI();
-  savePet();
-  renderPet();
+  startCooldown(actionId);
+  updateStatsUI();savePet();renderPet();
+  updateQuests();
+  // Force a speech
+  if(!speechTimeout){speechTimeout=null;showMoodSpeech()}
 }
 
-function startCooldown(action){
-  const dur=COOLDOWNS[action];
-  const btnId={feed:'btnFeed',play:'btnPlay',sleep:'btnSleep',groom:'btnGroom',sing:'btnSing'}[action];
-  if(!btnId)return;
-  const btn=document.getElementById(btnId);
+function startCooldown(actionId){
+  const dur=COOLDOWNS[actionId]||10;
+  const btn=document.getElementById('btn_'+actionId);if(!btn)return;
   const bar=btn.querySelector('.cooldown-bar');
-  btn.disabled=true;
-  cooldowns[action]=true;
-  bar.style.transition='none';
-  bar.style.width='100%';
+  btn.disabled=true;cooldowns[actionId]=true;
+  bar.style.transition='none';bar.style.width='100%';
   void bar.offsetWidth;
-  bar.style.transition='width '+dur+'s linear';
-  bar.style.width='0%';
-  setTimeout(()=>{
-    btn.disabled=false;
-    cooldowns[action]=false;
-    bar.style.width='0%';
-  },dur*1000);
+  bar.style.transition='width '+dur+'s linear';bar.style.width='0%';
+  setTimeout(()=>{btn.disabled=false;cooldowns[actionId]=false},dur*1000);
 }
 
 // ─── PARTICLES ───
@@ -727,63 +986,59 @@ function spawnParticles(emojis){
   const arena=document.getElementById('petArena');
   for(let i=0;i<8;i++){
     setTimeout(()=>{
-      const p=document.createElement('span');
-      p.className='float-particle';
+      const p=document.createElement('span');p.className='float-particle';
       p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-      p.style.left=30+Math.random()*40+'%';
-      p.style.top=30+Math.random()*30+'%';
+      p.style.left=25+Math.random()*50+'%';p.style.top=25+Math.random()*40+'%';
       p.style.animationDuration=(.8+Math.random()*.8)+'s';
-      arena.appendChild(p);
-      p.addEventListener('animationend',()=>p.remove());
+      arena.appendChild(p);p.addEventListener('animationend',()=>p.remove());
     },i*120);
   }
 }
 
-function spawnIdleHearts(){
-  if(Math.random()>.85)return;
-  const arena=document.getElementById('petArena');
-  const p=document.createElement('span');
-  p.className='float-particle';
-  p.textContent=['💖','💜','💗','✨'][Math.floor(Math.random()*4)];
-  p.style.left=40+Math.random()*20+'%';
-  p.style.top='40%';
-  arena.appendChild(p);
-  p.addEventListener('animationend',()=>p.remove());
-}
-setInterval(()=>{if(pet&&(pet.stats.happiness+pet.stats.hunger+pet.stats.energy+pet.stats.style)/4>=80)spawnIdleHearts()},3000);
+setInterval(()=>{
+  if(!pet)return;
+  const avg=(pet.stats.happiness+pet.stats.hunger+pet.stats.energy+pet.stats.style)/4;
+  if(avg>=80&&Math.random()>.7){
+    const arena=document.getElementById('petArena');
+    const p=document.createElement('span');p.className='float-particle';
+    p.textContent=['💖','💜','💗','✨'][Math.floor(Math.random()*4)];
+    p.style.left=40+Math.random()*20+'%';p.style.top='40%';
+    arena.appendChild(p);p.addEventListener('animationend',()=>p.remove());
+  }
+},3500);
 
 // ─── LEVEL UP ───
 function checkLevelUp(){
-  const needed=pet.level*XP_PER_LEVEL;
-  if(pet.xp>=needed&&pet.level<20){
-    pet.xp-=needed;
+  const needed=xpForLevel(pet.level);
+  while(pet.xp>=needed&&pet.level<25){
+    pet.xp-=xpForLevel(pet.level);
     pet.level++;
     sfxLevelUp();
+    addStars(pet.level*2);
     showLevelUp();
+    return; // show one at a time
   }
 }
 
 function showLevelUp(){
-  const ov=document.getElementById('levelupOverlay');
   document.getElementById('lvNum').textContent=pet.level;
-  const costume=COSTUMES.find(c=>c.unlockLv===pet.level);
-  document.getElementById('lvMsg').textContent=costume
-    ?'Tenue débloquée : '+costume.emoji+' '+costume.name+' !'
-    :'Continue comme ça, superstar !';
-  ov.classList.add('show');
-  // Fireworks
+  const costume=COSTUMES.find(c=>c.lv===pet.level);
+  const room=ROOMS.find(r=>r.lv===pet.level);
+  let msg='Continue comme ca, superstar !';
+  if(pet.level===5)msg='Ton pet a evolue ! Il grandit !';
+  else if(pet.level===10)msg='Evolution ! Ton pet est une STAR ! 👑';
+  else if(pet.level===15)msg='MEGA EVOLUTION ! Ton pet est legendaire ! 🌟';
+  else if(costume)msg='Tenue debloquee : '+costume.emoji+' '+costume.name+' !';
+  else if(room)msg='Nouvelle salle : '+room.emoji+' '+room.name+' !';
+  document.getElementById('lvMsg').textContent=msg;
+  document.getElementById('levelupOverlay').classList.add('show');
   for(let i=0;i<20;i++){
     setTimeout(()=>{
-      const s=document.createElement('span');
-      s.className='float-particle';
+      const s=document.createElement('span');s.className='float-particle';
       s.textContent=['🎉','⭐','🎊','💜','✨','🎵'][Math.floor(Math.random()*6)];
-      s.style.position='fixed';
-      s.style.left=Math.random()*80+10+'%';
-      s.style.top=Math.random()*60+20+'%';
-      s.style.zIndex='350';
-      s.style.fontSize='2em';
-      document.body.appendChild(s);
-      s.addEventListener('animationend',()=>s.remove());
+      s.style.position='fixed';s.style.left=Math.random()*80+10+'%';
+      s.style.top=Math.random()*60+20+'%';s.style.zIndex='350';s.style.fontSize='2em';
+      document.body.appendChild(s);s.addEventListener('animationend',()=>s.remove());
     },i*100);
   }
 }
@@ -792,73 +1047,355 @@ function closeLevelUp(){document.getElementById('levelupOverlay').classList.remo
 // ─── ROOM ───
 function setRoom(room,silent){
   pet.room=room;
-  const bg=document.getElementById('roomBg');
-  bg.className='room-bg '+room;
-  document.querySelectorAll('#roomPicker .picker-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('roomBg').className='room-bg '+room;
   document.querySelectorAll('#roomPicker .picker-btn').forEach(b=>{
-    if(b.textContent.toLowerCase().includes(room.substring(0,4)))b.classList.add('active');
+    b.classList.toggle('active',b.dataset.room===room);
   });
   renderRoomDecor();
   if(!silent)savePet();
 }
 
 function renderRoomDecor(){
-  const container=document.getElementById('roomDecor');
-  container.innerHTML='';
+  const c=document.getElementById('roomDecor');c.innerHTML='';
   const items=ROOM_DECOR[pet.room]||[];
   for(let i=0;i<12;i++){
-    const d=document.createElement('span');
-    d.className='decor-star';
+    const d=document.createElement('span');d.className='decor-star';
     d.textContent=items[Math.floor(Math.random()*items.length)];
-    d.style.left=Math.random()*90+5+'%';
-    d.style.top=Math.random()*80+5+'%';
-    d.style.animationDelay=Math.random()*3+'s';
-    d.style.fontSize=(.6+Math.random()*.8)+'em';
-    container.appendChild(d);
+    d.style.left=Math.random()*90+5+'%';d.style.top=Math.random()*80+5+'%';
+    d.style.animationDelay=Math.random()*3+'s';d.style.fontSize=(.6+Math.random()*.8)+'em';
+    c.appendChild(d);
   }
 }
 
 // ─── OUTFIT ───
 function openOutfitPicker(){
   ensureAudio();
-  const grid=document.getElementById('outfitGrid');
-  grid.innerHTML='';
+  const grid=document.getElementById('outfitGrid');grid.innerHTML='';
   COSTUMES.forEach((c,i)=>{
-    const el=document.createElement('div');
-    el.className='outfit-item';
-    const unlocked=pet.level>=c.unlockLv;
+    const el=document.createElement('div');el.className='outfit-item';
+    const unlocked=pet.level>=c.lv;
     if(!unlocked)el.classList.add('locked');
     if(pet.costume===i)el.classList.add('active');
-    el.textContent=c.emoji;
-    el.title=c.name+(unlocked?'':' (Lv.'+c.unlockLv+')');
-    if(unlocked){
-      el.onclick=()=>{
-        pet.costume=pet.costume===i?-1:i;
-        savePet();
-        renderPet();
-        openOutfitPicker(); // refresh
-        sfxGroom();
-      };
-    }
+    el.textContent=c.emoji;el.title=c.name+(unlocked?'':' (Nv.'+c.lv+')');
+    if(unlocked)el.onclick=()=>{pet.costume=pet.costume===i?-1:i;savePet();renderPet();openOutfitPicker();sfxGroom()};
     grid.appendChild(el);
   });
-  // Add "no costume" option
   const none=document.createElement('div');
   none.className='outfit-item'+(pet.costume===-1?' active':'');
-  none.textContent='❌';
-  none.title='Aucune tenue';
+  none.textContent='❌';none.title='Aucune tenue';
   none.onclick=()=>{pet.costume=-1;savePet();renderPet();openOutfitPicker()};
   grid.appendChild(none);
   document.getElementById('outfitModal').classList.add('show');
 }
 function closeOutfitPicker(){document.getElementById('outfitModal').classList.remove('show')}
+// Hook dress action to outfit picker
+ACTIONS.find(a=>a.id==='groom')||null;
+// Add dress button handler (override groom to open picker on second tap... no, keep separate)
+// The "Habiller" action is the outfit picker
+document.addEventListener('click',e=>{
+  if(e.target.closest('#outfitModal')&&!e.target.closest('.modal-panel'))closeOutfitPicker();
+});
+
+// ─── TABS ───
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['actions','minigames','quests'][i]===tab));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+// ─── DAILY QUESTS ───
+function getTodayStr(){return new Date().toISOString().slice(0,10)}
+
+function getQuests(){
+  const raw=localStorage.getItem(questKey());
+  if(raw){
+    const q=JSON.parse(raw);
+    if(q.date===getTodayStr())return q;
+  }
+  // Generate new daily quests
+  const pool=[
+    {id:'feed3',title:'Nourris ton pet 3 fois',target:3,action:'feed',icon:'🍕',reward:5},
+    {id:'play2',title:'Joue 2 fois avec ton pet',target:2,action:'play',icon:'🎮',reward:5},
+    {id:'sing2',title:'Fais chanter ton pet 2 fois',target:2,action:'sing',icon:'🎵',reward:5},
+    {id:'groom2',title:'Toilette ton pet 2 fois',target:2,action:'groom',icon:'🛁',reward:4},
+    {id:'dance3',title:'Fais danser ton pet 3 fois',target:3,action:'dance',icon:'💃',reward:6},
+    {id:'mg2',title:'Joue a 2 mini-jeux',target:2,action:'minigame',icon:'🎯',reward:8},
+    {id:'mg3',title:'Joue a 3 mini-jeux',target:3,action:'minigame',icon:'🎯',reward:10},
+    {id:'actions5',title:'Fais 5 actions',target:5,action:'any',icon:'⭐',reward:7},
+    {id:'actions10',title:'Fais 10 actions',target:10,action:'any',icon:'🌟',reward:12},
+    {id:'sleep2',title:'Fais dormir ton pet 2 fois',target:2,action:'sleep',icon:'😴',reward:4},
+  ];
+  // Pick 3 random
+  const shuffled=[...pool].sort(()=>Math.random()-.5);
+  const quests={date:getTodayStr(),items:shuffled.slice(0,3).map(q=>({...q,progress:0,claimed:false}))};
+  localStorage.setItem(questKey(),JSON.stringify(quests));
+  return quests;
+}
+
+function updateQuests(){
+  const q=getQuests();
+  q.items.forEach(quest=>{
+    if(quest.claimed)return;
+    if(quest.action==='minigame'){
+      quest.progress=pet.mgPlayed||0;
+    }else if(quest.action==='any'){
+      quest.progress=Object.values(pet.actionCounts).reduce((a,b)=>a+b,0);
+    }else{
+      quest.progress=pet.actionCounts[quest.action]||0;
+    }
+  });
+  localStorage.setItem(questKey(),JSON.stringify(q));
+  renderQuests();
+}
+
+function renderQuests(){
+  const q=getQuests();
+  const list=document.getElementById('questsList');list.innerHTML='';
+  q.items.forEach((quest,idx)=>{
+    const done=quest.progress>=quest.target;
+    const div=document.createElement('div');
+    div.className='quest-item'+(done?' done':'');
+    const pct=Math.min(100,Math.round(quest.progress/quest.target*100));
+    div.innerHTML=`
+      <span class="quest-icon">${quest.icon}</span>
+      <div class="quest-info">
+        <div class="quest-title">${quest.title}</div>
+        <div class="quest-progress">${Math.min(quest.progress,quest.target)} / ${quest.target}</div>
+        <div class="quest-progress-bar"><div class="quest-progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <span class="quest-reward">${quest.claimed?'':'⭐ +'+quest.reward}</span>
+      <span class="quest-check">${quest.claimed?'✅':done?'🎁':''}</span>
+    `;
+    if(done&&!quest.claimed){
+      div.style.cursor='pointer';
+      div.onclick=()=>{
+        quest.claimed=true;
+        addStars(quest.reward);
+        localStorage.setItem(questKey(),JSON.stringify(q));
+        renderQuests();sfxMgWin();
+        spawnParticles(['⭐','🎉','✨','💫','🌟']);
+      };
+    }
+    list.appendChild(div);
+  });
+}
+
+// ─── MINI-GAMES ───
+function startMinigame(type){
+  ensureAudio();
+  mgActive=true;mgType=type;mgScore=0;
+  document.getElementById('mgResult').style.display='none';
+  document.getElementById('mgScoreDisplay').textContent='Score : 0';
+  document.getElementById('mgClose').textContent='Abandonner';
+  document.getElementById('mgOverlay').classList.add('show');
+  const area=document.getElementById('mgArea');area.innerHTML='';
+
+  if(type==='catch')startCatchGame(area);
+  else if(type==='memory')startMemoryGame(area);
+  else if(type==='rhythm')startRhythmGame(area);
+}
+
+function endMinigame(score){
+  mgActive=false;
+  if(mgInterval){clearInterval(mgInterval);mgInterval=null}
+  if(mgTimeout){clearTimeout(mgTimeout);mgTimeout=null}
+  const xpGain=Math.max(3,Math.round(score*1.5));
+  const starsGain=Math.max(1,Math.round(score/3));
+  pet.xp+=xpGain;pet.totalXp+=xpGain;
+  pet.mgPlayed=(pet.mgPlayed||0)+1;
+  pet.stats.happiness=Math.min(100,pet.stats.happiness+10);
+  checkLevelUp();savePet();renderPet();
+  addStars(starsGain);
+  updateQuests();
+  const res=document.getElementById('mgResult');
+  res.style.display='block';
+  res.textContent='Bravo ! +'+xpGain+' XP, +'+starsGain+' ⭐';
+  document.getElementById('mgClose').textContent='Fermer';
+  sfxMgWin();
+}
+
+function closeMinigame(){
+  mgActive=false;
+  if(mgInterval){clearInterval(mgInterval);mgInterval=null}
+  if(mgTimeout){clearTimeout(mgTimeout);mgTimeout=null}
+  document.getElementById('mgOverlay').classList.remove('show');
+  document.getElementById('mgArea').innerHTML='';
+}
+
+// ── CATCH GAME ──
+function startCatchGame(area){
+  document.getElementById('mgTitle').textContent='🍬 Attrape les bonbons !';
+  const treats=['🍬','🍭','🍪','🍩','⭐','💎'];
+  const bads=['💀','🌵'];
+  let basketX=50;
+  mgScore=0;
+  // Basket
+  const basket=document.createElement('div');
+  basket.className='catch-basket';basket.textContent='🧺';
+  basket.style.left=basketX+'%';
+  area.appendChild(basket);
+
+  // Controls
+  function moveBasket(x){
+    const rect=area.getBoundingClientRect();
+    basketX=Math.max(5,Math.min(95,((x-rect.left)/rect.width)*100));
+    basket.style.left=basketX+'%';
+  }
+  area.onmousemove=e=>moveBasket(e.clientX);
+  area.ontouchmove=e=>{e.preventDefault();moveBasket(e.touches[0].clientX)};
+
+  let spawned=0;const maxSpawns=30;
+  mgInterval=setInterval(()=>{
+    if(!mgActive||spawned>=maxSpawns)return;
+    spawned++;
+    const isBad=Math.random()<.2;
+    const item=document.createElement('span');
+    item.className='catch-item';
+    item.textContent=isBad?bads[Math.floor(Math.random()*bads.length)]:treats[Math.floor(Math.random()*treats.length)];
+    const x=5+Math.random()*85;
+    item.style.left=x+'%';
+    const speed=2+Math.random()*1.5;
+    item.style.animationDuration=speed+'s';
+    item.dataset.bad=isBad?'1':'0';
+    area.appendChild(item);
+
+    item.addEventListener('animationend',()=>{
+      if(!item.parentNode)return;
+      // Check catch
+      const itemX=parseFloat(item.style.left);
+      if(Math.abs(itemX-basketX)<15){
+        if(item.dataset.bad==='1'){mgScore=Math.max(0,mgScore-2);sfxMgMiss()}
+        else{mgScore++;sfxMgHit()}
+        document.getElementById('mgScoreDisplay').textContent='Score : '+mgScore;
+      }
+      item.remove();
+    });
+  },700);
+
+  mgTimeout=setTimeout(()=>{
+    if(mgInterval){clearInterval(mgInterval);mgInterval=null}
+    setTimeout(()=>endMinigame(mgScore),1500);
+  },22000);
+}
+
+// ── MEMORY GAME ──
+function startMemoryGame(area){
+  document.getElementById('mgTitle').textContent='🧠 Memory K-Pop !';
+  const emojis=['🎤','🎵','💜','⭐','🎶','👑','💎','🌸'];
+  const pairs=emojis.slice(0,6);
+  const cards=[...pairs,...pairs].sort(()=>Math.random()-.5);
+  mgScore=0;
+  let flipped=[],matched=0,locked=false;
+
+  area.style.display='flex';area.style.alignItems='center';area.style.justifyContent='center';
+  const grid=document.createElement('div');
+  grid.className='memory-grid';
+  grid.style.gridTemplateColumns='repeat(4,60px)';
+  area.appendChild(grid);
+
+  cards.forEach((emoji,i)=>{
+    const card=document.createElement('div');
+    card.className='memory-card';card.dataset.idx=i;card.dataset.emoji=emoji;
+    card.innerHTML=`<span>${emoji}</span>`;
+    card.onclick=()=>{
+      if(locked||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+      card.classList.add('flipped');sfxMgHit();
+      flipped.push(card);
+      if(flipped.length===2){
+        locked=true;
+        if(flipped[0].dataset.emoji===flipped[1].dataset.emoji){
+          flipped.forEach(c=>c.classList.add('matched'));
+          matched++;mgScore+=2;
+          document.getElementById('mgScoreDisplay').textContent='Score : '+mgScore;
+          flipped=[];locked=false;
+          if(matched===pairs.length){
+            mgScore+=5; // bonus for completing
+            setTimeout(()=>endMinigame(mgScore),600);
+          }
+        }else{
+          setTimeout(()=>{
+            flipped.forEach(c=>c.classList.remove('flipped'));
+            flipped=[];locked=false;sfxMgMiss();
+          },800);
+        }
+      }
+    };
+    grid.appendChild(card);
+  });
+  // Brief preview
+  setTimeout(()=>grid.querySelectorAll('.memory-card').forEach(c=>c.classList.add('flipped')),100);
+  setTimeout(()=>grid.querySelectorAll('.memory-card').forEach(c=>c.classList.remove('flipped')),1500);
+}
+
+// ── RHYTHM GAME ──
+function startRhythmGame(area){
+  document.getElementById('mgTitle').textContent='🎵 Rythme K-Pop !';
+  mgScore=0;
+  let combo=0;
+  const notes=['🎵','🎶','💜','⭐','🎤'];
+  // Target zone
+  const lane=document.createElement('div');lane.className='rhythm-lane';lane.id='rhythmLane';
+  lane.textContent='👆';area.appendChild(lane);
+
+  let noteCount=0;const maxNotes=20;
+  const activeNotes=[];
+
+  function tapHandler(){
+    // Check if any note is in the zone
+    const laneRect=lane.getBoundingClientRect();
+    const laneY=laneRect.top+laneRect.height/2;
+    let hit=false;
+    for(let i=activeNotes.length-1;i>=0;i--){
+      const n=activeNotes[i];
+      if(!n.parentNode){activeNotes.splice(i,1);continue}
+      const nr=n.getBoundingClientRect();
+      const noteY=nr.top+nr.height/2;
+      if(Math.abs(noteY-laneY)<50){
+        hit=true;n.remove();activeNotes.splice(i,1);
+        mgScore++;combo++;sfxMgHit();
+        lane.classList.remove('rhythm-flash');void lane.offsetWidth;
+        lane.classList.add('rhythm-flash');
+        break;
+      }
+    }
+    if(!hit){combo=0;sfxMgMiss()}
+    document.getElementById('mgScoreDisplay').textContent='Score : '+mgScore+(combo>2?' (x'+combo+' combo!)':'');
+  }
+
+  area.onclick=tapHandler;
+  area.ontouchstart=e=>{e.preventDefault();tapHandler()};
+
+  mgInterval=setInterval(()=>{
+    if(!mgActive||noteCount>=maxNotes)return;
+    noteCount++;
+    const note=document.createElement('span');note.className='rhythm-note';
+    note.textContent=notes[Math.floor(Math.random()*notes.length)];
+    const speed=1.5+Math.random()*.8;
+    note.style.animationDuration=speed+'s';
+    note.style.left=(30+Math.random()*40)+'%';
+    area.appendChild(note);
+    activeNotes.push(note);
+    note.addEventListener('animationend',()=>{
+      const idx=activeNotes.indexOf(note);
+      if(idx>=0)activeNotes.splice(idx,1);
+      note.remove();
+    });
+  },900);
+
+  mgTimeout=setTimeout(()=>{
+    if(mgInterval){clearInterval(mgInterval);mgInterval=null}
+    area.onclick=null;area.ontouchstart=null;
+    setTimeout(()=>endMinigame(mgScore),1500);
+  },20000);
+}
 
 // ─── INIT ───
 (function init(){
+  buildAdoptGrid();
   if(loadPet()){
     showPetView();
-  } else {
-    document.getElementById('adoptScreen').style.display='block';
+  }else{
+    document.getElementById('adoptScreen').classList.add('active');
   }
 })();
 </script>
