@@ -5,145 +5,424 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>K-Pop Star Academy</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#050510;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Quicksand',sans-serif;overflow:hidden;position:relative}
-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
-.center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center}
-#star{font-size:80px;opacity:0;filter:drop-shadow(0 0 30px #ffd700);position:absolute}
-#bigK{font-size:100px;font-weight:700;opacity:0;background:linear-gradient(135deg,#ffd700,#ffaa00,#ffe066);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 25px rgba(255,215,0,.6));position:absolute}
-#title{font-size:2.4rem;font-weight:700;white-space:nowrap;min-height:3rem;text-align:center}
-#title span{opacity:0;display:inline-block;filter:drop-shadow(0 0 8px currentColor)}
-#subtitle{margin-top:14px;font-size:1.05rem;color:rgba(255,255,255,.85);letter-spacing:3px;text-transform:uppercase;opacity:0;transition:opacity .6s}
-#loadWrap{position:fixed;bottom:40px;width:260px;z-index:3;opacity:0;transition:opacity .4s}
-#loadText{color:rgba(255,255,255,.35);font-size:.7rem;text-align:center;margin-bottom:6px;letter-spacing:3px;text-transform:uppercase;font-family:'Quicksand',sans-serif}
-#loadBar{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden}
-#loadFill{height:100%;width:0%;background:linear-gradient(90deg,#ff6fd8,#ffd700);border-radius:4px;transition:width .1s linear}
-.emoji{position:absolute;z-index:1;font-size:22px;opacity:.12;animation:drift linear infinite}
-@keyframes drift{0%{transform:translateY(0) rotate(0deg)}100%{transform:translateY(-110vh) rotate(360deg)}}
-#flash{position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:100;opacity:0;pointer-events:none;transition:opacity .4s}
-.fade-zoom{animation:fadeZoom .5s ease-in forwards}
-@keyframes fadeZoom{to{opacity:0;transform:scale(1.15)}}
+
+:root {
+  --pink:#ff6fd8; --purple:#b44dff; --gold:#ffd700; --dark:#0a0a1a;
+}
+
+body{
+  background:var(--dark);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  font-family:'Quicksand',sans-serif;
+  overflow:hidden;position:relative;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ===== STARFIELD CANVAS ===== */
+canvas#stars{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+
+/* ===== AURORA GLOW ===== */
+.aurora{
+  position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+}
+.aurora::before,.aurora::after{
+  content:'';position:absolute;width:150%;height:150%;
+  top:-25%;left:-25%;border-radius:50%;
+  animation:auroraMove 12s ease-in-out infinite alternate;
+}
+.aurora::before{
+  background:radial-gradient(ellipse at 40% 40%, rgba(180,77,255,.2) 0%, transparent 60%);
+}
+.aurora::after{
+  background:radial-gradient(ellipse at 60% 60%, rgba(255,111,216,.15) 0%, transparent 60%);
+  animation-delay:-6s;animation-direction:alternate-reverse;
+}
+@keyframes auroraMove{
+  0%{transform:rotate(0deg) scale(1)}
+  100%{transform:rotate(10deg) scale(1.15)}
+}
+
+/* ===== CENTER SCENE ===== */
+.center{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:8px;
+}
+
+/* ===== LOGO STAR ===== */
+#logo-star{
+  font-size:80px;
+  opacity:0;
+  filter:drop-shadow(0 0 40px rgba(255,215,0,.6));
+  animation:starEntrance .8s .3s cubic-bezier(.17,.67,.35,1.5) forwards;
+}
+@keyframes starEntrance{
+  0%{opacity:0;transform:scale(0) rotate(-180deg)}
+  100%{opacity:1;transform:scale(1) rotate(0deg)}
+}
+
+/* ===== TITLE ===== */
+#title{
+  font-size:clamp(1.8rem,7vw,3.2rem);
+  font-weight:800;
+  text-align:center;
+  white-space:nowrap;
+  opacity:0;
+  animation:titleFade .6s 1s ease-out forwards;
+}
+#title .line1{
+  display:block;
+  background:linear-gradient(135deg, var(--pink), var(--purple));
+  background-size:200% 200%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:gradShift 3s ease-in-out infinite;
+}
+#title .line2{
+  display:block;
+  background:linear-gradient(135deg, var(--gold), #ffaa00);
+  background-size:200% 200%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:gradShift 3s ease-in-out infinite reverse;
+}
+@keyframes gradShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes titleFade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ===== SUBTITLE ===== */
+#subtitle{
+  margin-top:6px;
+  font-size:.95rem;
+  color:rgba(255,255,255,.6);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:0;
+  animation:titleFade .5s 1.5s ease-out forwards;
+}
+
+/* ===== SPARKLE RING ===== */
+.sparkle-ring{
+  position:absolute;
+  width:200px;height:200px;
+  pointer-events:none;
+}
+.sparkle-ring .dot{
+  position:absolute;width:5px;height:5px;
+  border-radius:50%;background:var(--gold);
+  opacity:0;
+  animation:ringDot 2.5s 1.2s ease-in-out infinite;
+}
+@keyframes ringDot{
+  0%,100%{opacity:0;transform:scale(0)}
+  30%{opacity:1;transform:scale(1.5)}
+  70%{opacity:1;transform:scale(1)}
+}
+
+/* ===== LOADING BAR ===== */
+#load-wrap{
+  position:fixed;bottom:50px;
+  width:260px;z-index:3;
+  opacity:0;
+  animation:titleFade .4s 1.8s ease-out forwards;
+}
+#load-text{
+  color:rgba(255,255,255,.35);
+  font-size:.7rem;text-align:center;
+  margin-bottom:8px;letter-spacing:3px;
+  text-transform:uppercase;
+  font-family:'Quicksand',sans-serif;
+}
+#load-bar{
+  width:100%;height:5px;
+  background:rgba(255,255,255,.08);
+  border-radius:5px;overflow:hidden;
+}
+#load-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg, var(--pink), var(--gold), var(--purple));
+  background-size:300% 100%;
+  border-radius:5px;
+  animation:barGlow 2s linear infinite;
+  transition:width .08s linear;
+}
+@keyframes barGlow{
+  0%{background-position:0% 50%}
+  100%{background-position:300% 50%}
+}
+
+/* ===== SKIP HINT ===== */
+#skip-hint{
+  position:fixed;bottom:16px;
+  font-size:.7rem;color:rgba(255,255,255,.25);
+  letter-spacing:2px;text-transform:uppercase;
+  z-index:3;
+  opacity:0;
+  animation:titleFade .4s 2.2s ease-out forwards;
+}
+
+/* ===== FLOATING EMOJIS ===== */
+.emoji{
+  position:absolute;z-index:1;
+  pointer-events:none;
+  opacity:0;
+  animation:emojiFloat linear infinite;
+}
+@keyframes emojiFloat{
+  0%{transform:translateY(0) rotate(0deg);opacity:0}
+  10%{opacity:.4}
+  90%{opacity:.4}
+  100%{transform:translateY(-110vh) rotate(360deg);opacity:0}
+}
+
+/* ===== FLASH TRANSITION ===== */
+#flash{
+  position:fixed;inset:0;
+  background:linear-gradient(135deg, var(--pink), var(--gold));
+  z-index:100;opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease-in;
+}
+
+/* ===== BURST PARTICLES ===== */
+.burst-dot{
+  position:absolute;z-index:5;
+  border-radius:50%;pointer-events:none;
+}
+
+/* ===== EXIT ANIMATION ===== */
+.exit-zoom{
+  animation:exitZoom .5s ease-in forwards;
+}
+@keyframes exitZoom{
+  to{opacity:0;transform:scale(1.3)}
+}
 </style>
 </head>
 <body>
+
 <canvas id="stars"></canvas>
+<div class="aurora"></div>
+
 <div class="center" id="scene">
-  <span id="star"></span>
-  <span id="bigK">K</span>
-  <div id="title"></div>
-  <div id="subtitle">K-Pop Star Academy</div>
+  <div class="sparkle-ring" id="sparkle-ring"></div>
+  <div id="logo-star">&#11088;</div>
+  <div id="title">
+    <span class="line1">K-Pop Star</span>
+    <span class="line2">Academy</span>
+  </div>
+  <div id="subtitle">&#127925; Chargement...</div>
 </div>
-<div id="loadWrap"><div id="loadText"></div><div id="loadBar"><div id="loadFill"></div></div></div>
+
+<div id="load-wrap">
+  <div id="load-text">Preparation de la scene</div>
+  <div id="load-bar"><div id="load-fill"></div></div>
+</div>
+
+<div id="skip-hint">Touche pour commencer</div>
 <div id="flash"></div>
 
 <script>
-// --- Starfield ---
-const cv=document.getElementById('stars'),cx=cv.getContext('2d');
-let W,H;function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}
-resize();addEventListener('resize',resize);
-const dots=Array.from({length:60},()=>({x:Math.random()*2000,y:Math.random()*2000,r:.5+Math.random()*1.5,s:Math.random()*Math.PI*2,sp:.5+Math.random()*2}));
-function drawStars(t){cx.clearRect(0,0,W,H);dots.forEach(d=>{const a=.3+.7*(.5+.5*Math.sin(d.s+t*d.sp/1000));cx.beginPath();cx.arc(d.x%W,d.y%H,d.r,0,6.28);cx.fillStyle=`rgba(255,255,255,${a})`;cx.fill()})}
+// ===== STARFIELD =====
+const cv = document.getElementById('stars');
+const cx = cv.getContext('2d');
+let W, H;
+function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+resize(); addEventListener('resize', resize);
 
-// --- Floating emojis ---
-const emojis=['🎤','⭐','💖','🎵','👑','💎'];
-for(let i=0;i<10;i++){const e=document.createElement('div');e.className='emoji';e.textContent=emojis[i%emojis.length];e.style.left=Math.random()*95+'%';e.style.bottom=-40+'px';e.style.animationDuration=(12+Math.random()*10)+'s';e.style.animationDelay=(Math.random()*6)+'s';e.style.fontSize=(18+Math.random()*12)+'px';document.body.appendChild(e)}
+const dots = Array.from({length: 70}, () => ({
+  x: Math.random() * 2000, y: Math.random() * 2000,
+  r: .4 + Math.random() * 2, phase: Math.random() * Math.PI * 2,
+  speed: .3 + Math.random() * 2
+}));
 
-// --- Loading text typewriter ---
-function typeText(el,str,ms){let i=0;const iv=setInterval(()=>{el.textContent=str.slice(0,++i);if(i>=str.length)clearInterval(iv)},ms)}
-
-// --- Burst particles ---
-function burst(x,y,count,color){for(let i=0;i<count;i++){const p=document.createElement('div');p.style.cssText=`position:absolute;z-index:5;width:${3+Math.random()*4}px;height:${3+Math.random()*4}px;border-radius:50%;background:${color||'#ffd700'};left:${x}px;top:${y}px;pointer-events:none;`;document.body.appendChild(p);const a=Math.random()*Math.PI*2,v=60+Math.random()*120,dx=Math.cos(a)*v,dy=Math.sin(a)*v;let ox=0,oy=0,op=1,t0=performance.now();(function anim(t){const d=(t-t0)/1000;ox=dx*d;oy=dy*d+50*d*d;op=Math.max(0,1-d/1);p.style.transform=`translate(${ox}px,${oy}px)`;p.style.opacity=op;if(op>0)requestAnimationFrame(anim);else p.remove()})(t0)}}
-
-// --- Audio ---
-function playChime(){const a=new(window.AudioContext||window.webkitAudioContext)();[523.25,659.25,783.99].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.15,a.currentTime+i*.15);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.15+.6);o.connect(g);g.connect(a.destination);o.start(a.currentTime+i*.15);o.stop(a.currentTime+i*.15+.6)})}
-function playSparkle(){const a=new(window.AudioContext||window.webkitAudioContext)();[1318,1568,2093].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.08,a.currentTime+i*.08);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.08+.4);o.connect(g);g.connect(a.destination);o.start(a.currentTime+i*.08);o.stop(a.currentTime+i*.08+.4)})}
-
-// --- Title colors ---
-const titleText='K-Pop Star Academy';
-const colors=['#ff6fd8','#ff5ec4','#d45cff','#b05cff','#9b6fff','#8b7fff','#c084fc','#d8a0ff','#e8b0ff','#f0c0ff','#ffb0e0','#ffc0c0','#ffd080','#ffd700','#ffe040','#fff060','#ffd700','#ffaa00'];
-
-// --- Sequence ---
-const starEl=document.getElementById('star');
-const bigK=document.getElementById('bigK');
-const titleEl=document.getElementById('title');
-const subtitleEl=document.getElementById('subtitle');
-const loadWrap=document.getElementById('loadWrap');
-const loadFill=document.getElementById('loadFill');
-const loadTextEl=document.getElementById('loadText');
-const scene=document.getElementById('scene');
-const flash=document.getElementById('flash');
-let started=false;
-
-function startSequence(){if(started)return;started=true;
-  const cx2=document.body.getBoundingClientRect();
-  const mx=cx2.width/2,my=cx2.height/2;
-
-  // 0-0.5s: star appears with burst
-  starEl.textContent='⭐';
-  starEl.style.opacity='1';
-  starEl.style.transition='all .4s cubic-bezier(.17,.67,.35,1.5)';
-  starEl.style.transform='scale(1)';
-  setTimeout(()=>burst(mx,my,25,'#ffd700'),200);
-
-  // Show loading bar + typewriter
-  loadWrap.style.opacity='1';
-  typeText(loadTextEl,'Loading...',120);
-  // Start loading fill
-  let prog=0;const loadIv=setInterval(()=>{prog=Math.min(100,prog+100/35);loadFill.style.width=prog+'%';if(prog>=100)clearInterval(loadIv)},100);
-
-  // 0.5-1.5s: star morphs to K
-  setTimeout(()=>{
-    starEl.style.opacity='0';starEl.style.transform='scale(0) rotate(180deg)';
-    bigK.style.opacity='1';bigK.style.transition='opacity .5s, transform .5s cubic-bezier(.17,.67,.35,1.5)';
-    bigK.style.transform='scale(1)';
-  },500);
-
-  // 1s: chime
-  setTimeout(playChime,1000);
-
-  // 1.5-2.5s: K fades, title types out
-  setTimeout(()=>{
-    bigK.style.transition='opacity .3s, transform .3s';
-    bigK.style.opacity='0';bigK.style.transform='scale(0.3)';
-    for(let i=0;i<titleText.length;i++){
-      const s=document.createElement('span');
-      s.textContent=titleText[i]===' '?'\u00A0':titleText[i];
-      s.style.color=colors[i%colors.length];
-      titleEl.appendChild(s);
-      setTimeout(()=>{s.style.opacity='1';s.style.transition='opacity .15s, transform .2s';s.style.transform='scale(1.1)';setTimeout(()=>s.style.transform='scale(1)',100)},i*55);
-    }
-  },1500);
-
-  // 2.5s: subtitle fades in
-  setTimeout(()=>{subtitleEl.style.opacity='1'},2500);
-
-  // 3s: sparkle burst from edges + sparkle sound
-  setTimeout(()=>{
-    playSparkle();
-    for(let i=0;i<8;i++){
-      const ex=[0,cx2.width,Math.random()*cx2.width,Math.random()*cx2.width][i%4];
-      const ey=[Math.random()*cx2.height,Math.random()*cx2.height,0,cx2.height][i%4];
-      burst(ex,ey,12,['#ff6fd8','#ffd700','#a18cd1','#fff'][i%4]);
-    }
-  },3000);
-
-  // 3.5s: fade out + zoom + redirect
-  setTimeout(()=>{
-    scene.classList.add('fade-zoom');
-    loadWrap.style.opacity='0';
-    setTimeout(()=>{flash.style.opacity='1';setTimeout(()=>{window.location.href='index.html'},400)},400);
-  },3500);
+function drawStars(t) {
+  cx.clearRect(0, 0, W, H);
+  dots.forEach(d => {
+    const a = .15 + .85 * (.5 + .5 * Math.sin(d.phase + t * d.speed / 1000));
+    cx.beginPath();
+    cx.arc(d.x % W, d.y % H, d.r, 0, 6.28);
+    cx.fillStyle = 'rgba(255,255,255,' + a + ')';
+    cx.fill();
+  });
 }
 
-// Animation loop
-(function loop(t){requestAnimationFrame(loop);drawStars(t)})(0);
+// ===== SPARKLE RING =====
+(() => {
+  const ring = document.getElementById('sparkle-ring');
+  for (let i = 0; i < 12; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    const angle = (i / 12) * Math.PI * 2;
+    const radius = 90;
+    dot.style.left = (100 + Math.cos(angle) * radius - 2.5) + 'px';
+    dot.style.top = (100 + Math.sin(angle) * radius - 2.5) + 'px';
+    dot.style.animationDelay = (1.2 + i * .15) + 's';
+    dot.style.background = ['#ff6fd8','#b44dff','#ffd700'][i % 3];
+    ring.appendChild(dot);
+  }
+})();
 
-// Start on any interaction or auto-start
-document.addEventListener('click',startSequence,{once:true});
-document.addEventListener('touchstart',startSequence,{once:true});
-setTimeout(startSequence,300);
+// ===== FLOATING EMOJIS =====
+const emojis = ['\u{1F3A4}','\u2B50','\u{1F496}','\u{1F3B5}','\u{1F451}','\u{1F48E}','\u2728','\u{1F3B6}','\u{1F31F}','\u{1F49C}'];
+for (let i = 0; i < 14; i++) {
+  const e = document.createElement('div');
+  e.className = 'emoji';
+  e.textContent = emojis[i % emojis.length];
+  e.style.left = (Math.random() * 92) + '%';
+  e.style.bottom = '-40px';
+  e.style.animationDuration = (10 + Math.random() * 8) + 's';
+  e.style.animationDelay = (Math.random() * 5) + 's';
+  e.style.fontSize = (16 + Math.random() * 14) + 'px';
+  document.body.appendChild(e);
+}
+
+// ===== BURST PARTICLES =====
+function burst(x, y, count, color) {
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'burst-dot';
+    const size = 3 + Math.random() * 5;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.background = color || '#ffd700';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    document.body.appendChild(p);
+    const angle = Math.random() * Math.PI * 2;
+    const vel = 50 + Math.random() * 130;
+    const dx = Math.cos(angle) * vel;
+    const dy = Math.sin(angle) * vel;
+    let ox = 0, oy = 0, op = 1;
+    const t0 = performance.now();
+    (function anim(t) {
+      const d = (t - t0) / 1000;
+      ox = dx * d; oy = dy * d + 60 * d * d;
+      op = Math.max(0, 1 - d / .9);
+      p.style.transform = 'translate(' + ox + 'px,' + oy + 'px)';
+      p.style.opacity = op;
+      if (op > 0) requestAnimationFrame(anim); else p.remove();
+    })(t0);
+  }
+}
+
+// ===== AUDIO =====
+function playChime() {
+  try {
+    const a = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 783.99].forEach((f, i) => {
+      const o = a.createOscillator(), g = a.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(.12, a.currentTime + i * .15);
+      g.gain.exponentialRampToValueAtTime(.001, a.currentTime + i * .15 + .6);
+      o.connect(g); g.connect(a.destination);
+      o.start(a.currentTime + i * .15);
+      o.stop(a.currentTime + i * .15 + .6);
+    });
+  } catch(e) {}
+}
+
+function playSparkle() {
+  try {
+    const a = new (window.AudioContext || window.webkitAudioContext)();
+    [1318, 1568, 2093].forEach((f, i) => {
+      const o = a.createOscillator(), g = a.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(.06, a.currentTime + i * .08);
+      g.gain.exponentialRampToValueAtTime(.001, a.currentTime + i * .08 + .4);
+      o.connect(g); g.connect(a.destination);
+      o.start(a.currentTime + i * .08);
+      o.stop(a.currentTime + i * .08 + .4);
+    });
+  } catch(e) {}
+}
+
+// ===== LOADING BAR =====
+const loadFill = document.getElementById('load-fill');
+const loadTextEl = document.getElementById('load-text');
+const loadTexts = ['Preparation de la scene', 'Accordage des micros', 'Eclairage du podium', 'C\'est parti !'];
+let prog = 0;
+const loadIv = setInterval(() => {
+  prog = Math.min(100, prog + 100 / 30);
+  loadFill.style.width = prog + '%';
+  const idx = Math.min(3, Math.floor(prog / 28));
+  loadTextEl.textContent = loadTexts[idx];
+  if (prog >= 100) clearInterval(loadIv);
+}, 100);
+
+// ===== SEQUENCE =====
+const scene = document.getElementById('scene');
+const flash = document.getElementById('flash');
+let navigating = false;
+
+function navigate() {
+  if (navigating) return;
+  navigating = true;
+  clearInterval(loadIv);
+  loadFill.style.width = '100%';
+
+  // Play sparkle sound
+  playSparkle();
+
+  // Burst from center
+  const rect = document.body.getBoundingClientRect();
+  const mx = rect.width / 2, my = rect.height / 2;
+  burst(mx, my, 30, '#ffd700');
+  burst(mx - 50, my - 30, 15, '#ff6fd8');
+  burst(mx + 50, my - 30, 15, '#b44dff');
+
+  // Exit animation
+  scene.classList.add('exit-zoom');
+  document.getElementById('load-wrap').style.opacity = '0';
+  document.getElementById('skip-hint').style.opacity = '0';
+
+  setTimeout(() => {
+    flash.style.opacity = '1';
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 350);
+  }, 350);
+}
+
+// Chime at 1s
+setTimeout(playChime, 1000);
+
+// Edge bursts at 2s
+setTimeout(() => {
+  playSparkle();
+  const rect = document.body.getBoundingClientRect();
+  for (let i = 0; i < 6; i++) {
+    const ex = [0, rect.width, Math.random() * rect.width, Math.random() * rect.width, 0, rect.width][i];
+    const ey = [Math.random() * rect.height, Math.random() * rect.height, 0, rect.height, rect.height * .3, rect.height * .7][i];
+    burst(ex, ey, 10, ['#ff6fd8','#ffd700','#b44dff','#06d6a0','#ff6fd8','#ffd700'][i]);
+  }
+}, 2000);
+
+// Auto-redirect at 3.5s
+setTimeout(navigate, 3500);
+
+// Click / touch to skip
+document.addEventListener('click', navigate, { once: true });
+document.addEventListener('touchstart', navigate, { once: true });
+
+// ===== ANIMATION LOOP =====
+(function loop(t) {
+  requestAnimationFrame(loop);
+  drawStars(t);
+})(0);
 </script>
 </body>
 </html>

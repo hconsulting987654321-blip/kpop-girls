@@ -1,26 +1,49 @@
 {
   "name": "K-Pop Star Academy",
   "short_name": "K-Pop Stars",
-  "description": "Le jeu K-Pop ultime pour les filles ! 10 mini-jeux, collection de stickers, mode duo et plus !",
+  "description": "15 jeux K-Pop pour les filles!",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#1a1a2e",
-  "background_color": "#1a1a2e",
-  "categories": ["games", "entertainment", "education"],
+  "theme_color": "#0a0a1a",
+  "background_color": "#0a0a1a",
+  "categories": ["games", "entertainment", "kids"],
   "icons": [
     {
       "src": "icon-192.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     },
     {
       "src": "icon-512.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ],
-  "screenshots": []
+  "screenshots": [
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "K-Pop Star Academy - 15 jeux K-Pop"
+    }
+  ],
+  "lang": "fr",
+  "dir": "ltr"
 }

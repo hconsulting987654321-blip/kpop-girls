@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mes Succès — K-Pop Star Academy</title>
+<title>Salle des Trophees — K-Pop Star Academy</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" content="#0a0a1a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 
 :root{
-  --pink:#ff6fd8;--purple:#b44dff;--gold:#ffd700;--dark:#1a1028;
-  --glass:rgba(255,255,255,0.1);--glass-border:rgba(255,255,255,0.18);
-  --card-bg:rgba(255,255,255,0.08);
+  --pink:#ff6fd8;--purple:#b44dff;--gold:#ffd700;--dark:#0a0a1a;
+  --glass:rgba(255,255,255,0.07);--glass-border:rgba(255,255,255,0.15);
+  --card-bg:rgba(255,255,255,0.06);
   --bronze:#cd7f32;--silver:#c0c0c0;--diamond:#b9f2ff;
+  --epic-gold:#ffd700;
 }
 
 html{scroll-behavior:smooth;}
@@ -23,300 +24,497 @@ html{scroll-behavior:smooth;}
 body{
   background:var(--dark);
   background-image:
-    radial-gradient(ellipse at 20% 0%,rgba(180,77,255,.25) 0%,transparent 60%),
-    radial-gradient(ellipse at 80% 100%,rgba(255,111,216,.2) 0%,transparent 60%);
+    radial-gradient(ellipse at 20% 0%,rgba(180,77,255,.22) 0%,transparent 60%),
+    radial-gradient(ellipse at 80% 100%,rgba(255,111,216,.18) 0%,transparent 60%),
+    radial-gradient(ellipse at 50% 50%,rgba(255,215,0,.04) 0%,transparent 70%);
   min-height:100vh;
   font-family:'Quicksand',sans-serif;
   color:#fff;
   overflow-x:hidden;
+  padding-bottom:60px;
+}
+
+/* ===== FLOATING PARTICLES ===== */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.4),transparent 70%);
+  animation:floatParticle linear infinite;
+  opacity:0;
+}
+@keyframes floatParticle{
+  0%{opacity:0;transform:translateY(100vh) scale(.5);}
+  10%{opacity:1;}
+  90%{opacity:1;}
+  100%{opacity:0;transform:translateY(-10vh) scale(1);}
 }
 
 /* ===== BACK BUTTON ===== */
 .back-btn{
-  position:fixed;top:12px;left:12px;
-  background:rgba(255,255,255,.15);color:#fff;
-  border:2px solid rgba(255,255,255,.3);
-  padding:7px 16px;border-radius:30px;
-  font-family:inherit;font-size:.95em;
+  position:fixed;top:14px;left:14px;
+  background:rgba(255,255,255,.1);color:#fff;
+  border:2px solid rgba(255,255,255,.2);
+  padding:8px 20px;border-radius:30px;
+  font-family:inherit;font-size:.9em;font-weight:600;
   cursor:pointer;text-decoration:none;z-index:300;
-  transition:.3s;
+  backdrop-filter:blur(12px);
+  transition:all .3s;
 }
-.back-btn:hover{background:rgba(255,255,255,.3);}
+.back-btn:hover{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.4);transform:scale(1.05);}
 
 /* ===== HEADER ===== */
 .header{
-  text-align:center;padding:40px 20px 10px;
+  text-align:center;padding:50px 20px 10px;position:relative;z-index:1;
 }
+.trophy-icon{
+  font-size:3.5em;display:block;margin-bottom:8px;
+  animation:trophyBounce 2s ease-in-out infinite;
+  filter:drop-shadow(0 0 20px rgba(255,215,0,.4));
+}
+@keyframes trophyBounce{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-8px) rotate(2deg);}}
+
 .header h1{
-  font-size:clamp(1.6em,4vw,2.6em);font-weight:700;
-  background:linear-gradient(135deg,#fff,var(--pink),var(--gold));
+  font-size:clamp(1.8em,5vw,3em);font-weight:800;
+  background:linear-gradient(135deg,#fff 0%,var(--gold) 40%,var(--pink) 70%,var(--purple) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
+  letter-spacing:-0.5px;
 }
 .header .school-sub{
-  font-size:.8em;letter-spacing:3px;text-transform:uppercase;
-  color:rgba(255,255,255,.45);margin-top:2px;
+  font-size:.85em;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-top:4px;
 }
 .player-name{
-  font-size:1.2em;color:var(--gold);font-weight:700;margin-top:8px;
+  display:inline-block;
+  font-size:1.15em;color:var(--gold);font-weight:700;margin-top:12px;
+  padding:4px 20px;border-radius:20px;
+  background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);
   text-shadow:0 0 20px rgba(255,215,0,.3);
 }
 
+/* ===== TEAM BANNER ===== */
+.team-banner{
+  max-width:700px;margin:20px auto 0;padding:0 16px;
+  text-align:center;
+}
+.team-banner-inner{
+  background:linear-gradient(135deg,rgba(255,111,216,.1),rgba(180,77,255,.1),rgba(255,215,0,.08));
+  border:1.5px solid rgba(255,255,255,.12);
+  border-radius:20px;padding:16px 24px;
+  backdrop-filter:blur(12px);
+}
+.team-title{font-size:.85em;color:rgba(255,255,255,.5);margin-bottom:6px;letter-spacing:2px;text-transform:uppercase;}
+.team-names{font-size:1.3em;font-weight:700;}
+.team-names span{margin:0 6px;}
+.team-names .n1{color:#ff6fd8;}
+.team-names .n2{color:#b44dff;}
+.team-names .n3{color:#ffd700;}
+
 /* ===== STATS BAR ===== */
 .stats-bar{
-  display:flex;flex-wrap:wrap;gap:16px;justify-content:center;
-  max-width:900px;margin:20px auto;padding:0 16px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:12px;max-width:900px;margin:24px auto;padding:0 16px;
+  position:relative;z-index:1;
 }
 .stat-card{
-  background:var(--glass);backdrop-filter:blur(12px);
-  border:1px solid var(--glass-border);
-  border-radius:20px;padding:16px 24px;
-  text-align:center;min-width:140px;flex:1;max-width:220px;
+  background:var(--glass);backdrop-filter:blur(14px);
+  border:1.5px solid var(--glass-border);
+  border-radius:18px;padding:16px 12px;
+  text-align:center;
+  transition:transform .3s,box-shadow .3s;
 }
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(180,77,255,.15);}
+.stat-icon{font-size:1.6em;margin-bottom:4px;display:block;}
 .stat-value{
-  font-size:2em;font-weight:700;
+  font-size:1.8em;font-weight:800;
   background:linear-gradient(135deg,var(--gold),var(--pink));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
 }
-.stat-label{font-size:.8em;color:rgba(255,255,255,.6);margin-top:2px;}
+.stat-label{font-size:.75em;color:rgba(255,255,255,.5);margin-top:2px;font-weight:600;}
 
-/* ===== PROGRESS RING ===== */
+/* ===== PROGRESS SECTION ===== */
 .progress-section{
   display:flex;align-items:center;justify-content:center;gap:30px;
-  margin:20px auto;max-width:600px;flex-wrap:wrap;
+  margin:24px auto;max-width:650px;flex-wrap:wrap;padding:0 16px;
+  position:relative;z-index:1;
 }
-.progress-ring-wrap{position:relative;width:120px;height:120px;}
+.progress-ring-wrap{position:relative;width:130px;height:130px;flex-shrink:0;}
 .progress-ring{transform:rotate(-90deg);}
-.progress-ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:8;}
+.progress-ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:8;}
 .progress-ring-fill{
   fill:none;stroke:url(#progressGrad);stroke-width:8;
   stroke-linecap:round;
-  transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);
+  transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1);
 }
 .progress-text{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   text-align:center;
 }
-.progress-pct{font-size:1.8em;font-weight:700;color:var(--gold);}
-.progress-sub{font-size:.7em;color:rgba(255,255,255,.5);}
+.progress-pct{font-size:2em;font-weight:800;color:var(--gold);}
+.progress-sub{font-size:.7em;color:rgba(255,255,255,.45);font-weight:600;}
 
-/* ===== PROGRESS BAR ===== */
 .progress-bar-wrap{flex:1;min-width:200px;}
+.progress-bar-label{font-size:.85em;font-weight:700;margin-bottom:8px;color:rgba(255,255,255,.7);}
 .progress-bar-outer{
-  background:rgba(255,255,255,.1);border-radius:12px;height:18px;
+  background:rgba(255,255,255,.08);border-radius:14px;height:22px;
   overflow:hidden;position:relative;
+  border:1px solid rgba(255,255,255,.06);
 }
 .progress-bar-inner{
-  height:100%;border-radius:12px;
+  height:100%;border-radius:14px;
   background:linear-gradient(90deg,var(--pink),var(--purple),var(--gold));
   background-size:200% 100%;
   animation:barShimmer 3s ease infinite;
-  transition:width 1.5s cubic-bezier(.4,0,.2,1);
+  transition:width 2s cubic-bezier(.4,0,.2,1);
   position:relative;
 }
 .progress-bar-inner::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
   animation:barShine 2s ease infinite;
 }
 @keyframes barShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 @keyframes barShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.milestone-markers{display:flex;justify-content:space-between;margin-top:6px;font-size:.7em;color:rgba(255,255,255,.4);}
+.milestone-markers{
+  display:flex;justify-content:space-between;margin-top:6px;
+  font-size:.7em;color:rgba(255,255,255,.35);font-weight:600;
+}
+
+/* ===== RARITY LEGEND ===== */
+.rarity-legend{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  max-width:700px;margin:16px auto;padding:0 16px;
+  position:relative;z-index:1;
+}
+.rarity-badge{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:20px;font-size:.78em;font-weight:700;
+  background:rgba(255,255,255,.05);border:1.5px solid;
+}
+.rarity-badge.rb-bronze{border-color:rgba(205,127,50,.4);color:var(--bronze);}
+.rarity-badge.rb-silver{border-color:rgba(192,192,192,.4);color:var(--silver);}
+.rarity-badge.rb-gold{border-color:rgba(255,215,0,.4);color:var(--gold);}
+.rarity-badge.rb-diamond{border-color:rgba(185,242,255,.5);color:var(--diamond);}
+.rarity-dot{width:10px;height:10px;border-radius:50%;}
+.rb-bronze .rarity-dot{background:var(--bronze);}
+.rb-silver .rarity-dot{background:var(--silver);}
+.rb-gold .rarity-dot{background:var(--gold);}
+.rb-diamond .rarity-dot{background:var(--diamond);box-shadow:0 0 8px rgba(185,242,255,.6);}
 
 /* ===== FILTER BUTTONS ===== */
 .filters{
   display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
-  max-width:900px;margin:20px auto;padding:0 16px;
+  max-width:1000px;margin:20px auto;padding:0 16px;
+  position:relative;z-index:1;
 }
 .filter-btn{
   background:var(--glass);border:1.5px solid var(--glass-border);
   color:#fff;padding:8px 18px;border-radius:25px;
-  font-family:inherit;font-size:.85em;font-weight:600;
+  font-family:inherit;font-size:.82em;font-weight:600;
   cursor:pointer;transition:all .3s;
+  backdrop-filter:blur(8px);
 }
-.filter-btn:hover{background:rgba(255,255,255,.18);}
+.filter-btn:hover{background:rgba(255,255,255,.15);transform:translateY(-1px);}
 .filter-btn.active{
   background:linear-gradient(145deg,var(--pink),var(--purple));
   border-color:transparent;
-  box-shadow:0 2px 12px rgba(180,77,255,.3);
+  box-shadow:0 4px 18px rgba(180,77,255,.3);
+  transform:translateY(-1px);
 }
 
-/* ===== GAME SECTION ===== */
-.game-section{
-  max-width:1000px;margin:10px auto 30px;padding:0 16px;width:100%;
+/* ===== CATEGORY SECTION ===== */
+.category-section{
+  max-width:1100px;margin:8px auto 30px;padding:0 16px;width:100%;
+  position:relative;z-index:1;
 }
-.game-section-title{
-  font-size:1.3em;font-weight:700;margin-bottom:14px;
-  padding-bottom:8px;
-  border-bottom:2px solid rgba(255,255,255,.1);
-  display:flex;align-items:center;gap:10px;
+.category-header{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:16px;padding-bottom:10px;
+  border-bottom:2px solid rgba(255,255,255,.08);
 }
-.game-section-title .game-emoji{font-size:1.2em;}
-.game-section-title .game-count{
-  font-size:.7em;font-weight:500;
-  color:rgba(255,255,255,.4);margin-left:auto;
+.category-emoji{font-size:1.5em;}
+.category-name{font-size:1.25em;font-weight:700;}
+.category-count{
+  margin-left:auto;
+  font-size:.8em;font-weight:600;
+  color:rgba(255,255,255,.4);
+  background:rgba(255,255,255,.06);
+  padding:4px 12px;border-radius:12px;
 }
 
 /* ===== ACHIEVEMENT GRID ===== */
 .ach-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
   gap:14px;
 }
 
 /* ===== ACHIEVEMENT CARD ===== */
 .ach-card{
-  background:var(--glass);backdrop-filter:blur(12px);
+  background:var(--glass);backdrop-filter:blur(14px);
   border:2px solid var(--glass-border);
-  border-radius:18px;padding:18px;
+  border-radius:20px;padding:20px;
   position:relative;overflow:hidden;
   transition:all .4s cubic-bezier(.17,.67,.35,1.2);
   cursor:default;
 }
-.ach-card:hover{transform:translateY(-4px) scale(1.02);}
-
-/* Rarity borders */
-.ach-card.rarity-bronze{border-color:rgba(205,127,50,.5);}
-.ach-card.rarity-silver{border-color:rgba(192,192,192,.5);}
-.ach-card.rarity-gold{border-color:rgba(255,215,0,.5);}
-.ach-card.rarity-diamond{border-color:rgba(185,242,255,.6);}
-
-/* Unlocked glow */
-.ach-card.unlocked{
-  box-shadow:0 0 20px rgba(255,215,0,.15);
+.ach-card::before{
+  content:'';position:absolute;top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.03),transparent,rgba(255,255,255,.03),transparent);
+  animation:cardRotate 8s linear infinite;
+  opacity:0;transition:opacity .4s;
 }
-.ach-card.unlocked.rarity-bronze{box-shadow:0 0 20px rgba(205,127,50,.2);}
-.ach-card.unlocked.rarity-silver{box-shadow:0 0 20px rgba(192,192,192,.2);}
-.ach-card.unlocked.rarity-gold{box-shadow:0 0 25px rgba(255,215,0,.25);}
-.ach-card.unlocked.rarity-diamond{box-shadow:0 0 30px rgba(185,242,255,.3);}
+.ach-card:hover::before{opacity:1;}
+@keyframes cardRotate{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+
+.ach-card:hover{transform:translateY(-6px) scale(1.02);}
+
+/* Rarity borders + glows */
+.ach-card.rarity-bronze{border-color:rgba(205,127,50,.35);}
+.ach-card.rarity-silver{border-color:rgba(192,192,192,.35);}
+.ach-card.rarity-gold{border-color:rgba(255,215,0,.4);}
+.ach-card.rarity-diamond{border-color:rgba(185,242,255,.45);}
+
+.ach-card.unlocked.rarity-bronze{
+  box-shadow:0 0 20px rgba(205,127,50,.15),inset 0 0 30px rgba(205,127,50,.05);
+}
+.ach-card.unlocked.rarity-silver{
+  box-shadow:0 0 22px rgba(192,192,192,.18),inset 0 0 30px rgba(192,192,192,.05);
+}
+.ach-card.unlocked.rarity-gold{
+  box-shadow:0 0 28px rgba(255,215,0,.2),inset 0 0 35px rgba(255,215,0,.06);
+  border-color:rgba(255,215,0,.5);
+}
+.ach-card.unlocked.rarity-diamond{
+  box-shadow:0 0 35px rgba(185,242,255,.25),inset 0 0 40px rgba(185,242,255,.06);
+  border-color:rgba(185,242,255,.6);
+}
+
+/* Diamond shimmer */
+.ach-card.unlocked.rarity-diamond::after{
+  content:'';position:absolute;top:0;left:-100%;
+  width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(185,242,255,.15),transparent);
+  animation:diamondShine 3s ease-in-out infinite;
+}
+@keyframes diamondShine{0%{left:-100%;}50%{left:150%;}100%{left:150%;}}
+
+/* Gold shimmer */
+.ach-card.unlocked.rarity-gold::after{
+  content:'';position:absolute;top:0;left:-100%;
+  width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,215,0,.1),transparent);
+  animation:goldShine 4s ease-in-out infinite;
+}
+@keyframes goldShine{0%{left:-100%;}50%{left:150%;}100%{left:150%;}}
 
 /* Locked state */
 .ach-card.locked{
-  filter:grayscale(.8) brightness(.6);
-  opacity:.7;
+  filter:grayscale(.85) brightness(.5);
+  opacity:.6;
 }
 .ach-card.locked:hover{
-  filter:grayscale(.6) brightness(.7);
-  opacity:.85;
+  filter:grayscale(.6) brightness(.65);
+  opacity:.8;
 }
+
+/* Locked shimmer overlay */
+.ach-card.locked .lock-shimmer{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.04) 50%,transparent 60%);
+  background-size:300% 300%;
+  animation:lockShimmer 4s ease infinite;
+}
+@keyframes lockShimmer{0%{background-position:100% 100%;}100%{background-position:0% 0%;}}
 
 .ach-icon{
-  font-size:2.4em;margin-bottom:6px;display:block;
+  font-size:2.8em;margin-bottom:8px;display:block;
   transition:transform .3s;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.3));
 }
 .ach-card:hover .ach-icon{transform:scale(1.15) rotate(-5deg);}
+.ach-card.locked .ach-icon{font-size:2.4em;filter:none;}
 
-.ach-title{font-size:1.05em;font-weight:700;margin-bottom:4px;}
-.ach-desc{font-size:.8em;color:rgba(255,255,255,.6);line-height:1.4;margin-bottom:6px;}
+.ach-title{font-size:1.05em;font-weight:700;margin-bottom:4px;line-height:1.3;}
+.ach-desc{font-size:.78em;color:rgba(255,255,255,.55);line-height:1.4;margin-bottom:8px;}
+
+.ach-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .ach-game-tag{
   display:inline-block;
-  font-size:.65em;font-weight:600;
-  padding:2px 10px;border-radius:12px;
+  font-size:.62em;font-weight:700;
+  padding:3px 10px;border-radius:12px;
   background:rgba(255,255,255,.08);
-  color:rgba(255,255,255,.5);
+  color:rgba(255,255,255,.45);
+  text-transform:uppercase;letter-spacing:.5px;
 }
 .ach-date{
-  font-size:.65em;color:var(--gold);
-  margin-top:6px;display:block;
+  font-size:.65em;color:var(--gold);font-weight:600;
+  margin-left:auto;
 }
+
+/* Rarity tag */
 .ach-rarity-tag{
-  position:absolute;top:10px;right:10px;
-  font-size:.6em;font-weight:700;
-  padding:2px 8px;border-radius:10px;
-  text-transform:uppercase;letter-spacing:1px;
+  position:absolute;top:12px;right:12px;
+  font-size:.58em;font-weight:800;
+  padding:3px 10px;border-radius:10px;
+  text-transform:uppercase;letter-spacing:1.2px;
 }
-.rarity-bronze .ach-rarity-tag{background:rgba(205,127,50,.25);color:var(--bronze);}
-.rarity-silver .ach-rarity-tag{background:rgba(192,192,192,.2);color:var(--silver);}
-.rarity-gold .ach-rarity-tag{background:rgba(255,215,0,.2);color:var(--gold);}
-.rarity-diamond .ach-rarity-tag{background:rgba(185,242,255,.2);color:var(--diamond);}
+.rarity-bronze .ach-rarity-tag{background:rgba(205,127,50,.2);color:var(--bronze);}
+.rarity-silver .ach-rarity-tag{background:rgba(192,192,192,.18);color:var(--silver);}
+.rarity-gold .ach-rarity-tag{background:rgba(255,215,0,.18);color:var(--gold);}
+.rarity-diamond .ach-rarity-tag{background:rgba(185,242,255,.18);color:var(--diamond);}
 
-/* Lock overlay */
+/* Lock icon */
 .lock-overlay{
-  position:absolute;top:10px;left:10px;
-  font-size:1.2em;opacity:.5;
+  position:absolute;top:12px;left:12px;
+  font-size:1.1em;opacity:.4;
 }
 
-/* ===== TOAST NOTIFICATION ===== */
+/* ===== TOAST ===== */
 .ach-toast{
-  position:fixed;top:-100px;left:50%;transform:translateX(-50%);
-  background:linear-gradient(145deg,rgba(26,16,40,.95),rgba(42,16,64,.95));
-  backdrop-filter:blur(16px);
+  position:fixed;top:-120px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(145deg,rgba(26,16,40,.96),rgba(42,16,64,.96));
+  backdrop-filter:blur(20px);
   border:2px solid rgba(255,215,0,.4);
-  border-radius:18px;padding:14px 28px;
-  display:flex;align-items:center;gap:14px;
+  border-radius:20px;padding:16px 30px;
+  display:flex;align-items:center;gap:16px;
   z-index:9999;
-  box-shadow:0 8px 40px rgba(255,215,0,.2);
+  box-shadow:0 10px 50px rgba(255,215,0,.2),0 0 80px rgba(180,77,255,.15);
   transition:top .6s cubic-bezier(.17,.67,.35,1.2);
-  max-width:90vw;
+  max-width:92vw;
 }
-.ach-toast.show{top:20px;}
-.ach-toast .toast-icon{font-size:2em;}
-.ach-toast .toast-text{font-size:.95em;font-weight:600;}
-.ach-toast .toast-sub{font-size:.75em;color:var(--gold);display:block;margin-top:2px;}
+.ach-toast.show{top:24px;}
+.ach-toast .toast-icon{font-size:2.2em;animation:toastPop .5s ease;}
+@keyframes toastPop{0%{transform:scale(0) rotate(-20deg);}60%{transform:scale(1.3) rotate(5deg);}100%{transform:scale(1) rotate(0);}}
+.ach-toast .toast-text{font-size:1em;font-weight:700;}
+.ach-toast .toast-sub{font-size:.75em;color:var(--gold);display:block;margin-top:3px;font-weight:600;}
 
 /* ===== CONFETTI ===== */
 .confetti-piece{
   position:fixed;width:10px;height:10px;
   border-radius:2px;z-index:9998;
   pointer-events:none;
-  animation:confettiFall 3s ease-out forwards;
+  animation:confettiFall var(--dur,3s) ease-out forwards;
 }
 @keyframes confettiFall{
   0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);}
-  100%{opacity:0;transform:translateY(100vh) rotate(720deg) scale(.3);}
+  100%{opacity:0;transform:translateY(100vh) rotate(720deg) scale(.2);}
 }
 
+/* ===== SECRET SECTION ===== */
+.secret-section{
+  max-width:1100px;margin:40px auto 20px;padding:0 16px;
+  position:relative;z-index:1;
+}
+.secret-banner{
+  background:linear-gradient(135deg,rgba(185,242,255,.08),rgba(255,215,0,.05));
+  border:2px dashed rgba(185,242,255,.2);
+  border-radius:20px;padding:24px;text-align:center;
+}
+.secret-banner h3{font-size:1.2em;color:var(--diamond);margin-bottom:6px;}
+.secret-banner p{font-size:.85em;color:rgba(255,255,255,.4);}
+.secret-count{font-size:2em;font-weight:800;color:var(--diamond);margin:8px 0;}
+
 /* ===== RESPONSIVE ===== */
-@media(max-width:600px){
+@media(max-width:700px){
   .ach-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
-  .ach-card{padding:14px;}
-  .ach-icon{font-size:2em;}
-  .stat-card{min-width:100px;padding:12px 14px;}
-  .stat-value{font-size:1.5em;}
-  .progress-ring-wrap{width:90px;height:90px;}
-  .progress-pct{font-size:1.3em;}
+  .ach-card{padding:14px;border-radius:16px;}
+  .ach-icon{font-size:2.2em;}
+  .stats-bar{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .stat-card{padding:12px 8px;}
+  .stat-value{font-size:1.4em;}
+  .stat-icon{font-size:1.3em;}
+  .progress-ring-wrap{width:100px;height:100px;}
+  .progress-pct{font-size:1.5em;}
+  .header{padding-top:60px;}
+  .trophy-icon{font-size:2.8em;}
+  .header h1{font-size:1.8em;}
+  .team-names{font-size:1.1em;}
+  .filter-btn{padding:6px 14px;font-size:.78em;}
+  .rarity-legend{gap:8px;}
+  .rarity-badge{padding:4px 10px;font-size:.72em;}
+}
+@media(max-width:400px){
+  .ach-grid{grid-template-columns:1fr 1fr;gap:8px;}
+  .ach-card{padding:12px;}
+  .ach-icon{font-size:1.8em;}
+  .ach-title{font-size:.9em;}
+  .ach-desc{font-size:.72em;}
 }
 
 /* ===== EMPTY STATE ===== */
 .empty-state{
-  text-align:center;padding:40px 20px;
-  color:rgba(255,255,255,.4);font-size:1.1em;
+  text-align:center;padding:50px 20px;
+  color:rgba(255,255,255,.35);font-size:1.1em;
+}
+.empty-state .empty-icon{font-size:3em;margin-bottom:10px;display:block;}
+
+/* ===== NEWLY UNLOCKED PULSE ===== */
+.ach-card.newly-unlocked{
+  animation:newUnlock 1.5s ease;
+}
+@keyframes newUnlock{
+  0%{transform:scale(1);box-shadow:0 0 0 rgba(255,215,0,0);}
+  30%{transform:scale(1.06);box-shadow:0 0 40px rgba(255,215,0,.4);}
+  60%{transform:scale(.98);}
+  100%{transform:scale(1);}
 }
 </style>
 </head>
 <body>
 
-<a class="back-btn" id="backBtn" href="index.html">Retour</a>
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
 
-<!-- Toast container -->
+<a class="back-btn" id="backBtn" href="index.html">&#8592; Retour</a>
+
+<!-- Toast -->
 <div class="ach-toast" id="achToast">
   <span class="toast-icon" id="toastIcon"></span>
   <div>
     <span class="toast-text" id="toastText"></span>
-    <span class="toast-sub">Succès débloqué !</span>
+    <span class="toast-sub">Succes debloque !</span>
   </div>
 </div>
 
+<!-- Header -->
 <div class="header">
-  <h1>Mes Succès</h1>
+  <span class="trophy-icon">&#127942;</span>
+  <h1>Salle des Trophees</h1>
   <div class="school-sub">K-Pop Star Academy</div>
   <div class="player-name" id="playerGreeting"></div>
 </div>
 
-<!-- Progress Section -->
+<!-- Team Banner -->
+<div class="team-banner">
+  <div class="team-banner-inner">
+    <div class="team-title">Equipe</div>
+    <div class="team-names">
+      <span class="n1">Ambre</span>
+      <span style="color:rgba(255,255,255,.3)">&amp;</span>
+      <span class="n2">Eden</span>
+      <span style="color:rgba(255,255,255,.3)">&amp;</span>
+      <span class="n3">Louise</span>
+    </div>
+  </div>
+</div>
+
+<!-- Progress -->
 <div class="progress-section">
   <div class="progress-ring-wrap">
-    <svg class="progress-ring" width="100%" height="100%" viewBox="0 0 120 120">
+    <svg class="progress-ring" width="100%" height="100%" viewBox="0 0 130 130">
       <defs>
         <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stop-color="var(--pink)"/>
+          <stop offset="50%" stop-color="var(--purple)"/>
           <stop offset="100%" stop-color="var(--gold)"/>
         </linearGradient>
       </defs>
-      <circle class="progress-ring-bg" cx="60" cy="60" r="52"/>
-      <circle class="progress-ring-fill" id="progressRing" cx="60" cy="60" r="52"
-        stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+      <circle class="progress-ring-bg" cx="65" cy="65" r="56"/>
+      <circle class="progress-ring-fill" id="progressRing" cx="65" cy="65" r="56"
+        stroke-dasharray="351.86" stroke-dashoffset="351.86"/>
     </svg>
     <div class="progress-text">
       <div class="progress-pct" id="progressPct">0%</div>
@@ -324,11 +522,12 @@ body{
     </div>
   </div>
   <div class="progress-bar-wrap">
+    <div class="progress-bar-label" id="progressLabel">0 / 55 trophees debloques</div>
     <div class="progress-bar-outer">
       <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
     </div>
     <div class="milestone-markers">
-      <span>0</span><span>10</span><span>25</span><span>50</span>
+      <span>0</span><span>10</span><span>25</span><span>40</span><span>55</span>
     </div>
   </div>
 </div>
@@ -336,43 +535,58 @@ body{
 <!-- Stats -->
 <div class="stats-bar">
   <div class="stat-card">
-    <div class="stat-value" id="statTotal">0/50</div>
-    <div class="stat-label">Succès</div>
+    <span class="stat-icon">&#127942;</span>
+    <div class="stat-value" id="statTotal">0/55</div>
+    <div class="stat-label">Trophees</div>
   </div>
   <div class="stat-card">
-    <div class="stat-value" id="statRare">0</div>
-    <div class="stat-label">Rares</div>
-  </div>
-  <div class="stat-card">
+    <span class="stat-icon">&#11088;</span>
     <div class="stat-value" id="statStars">0</div>
-    <div class="stat-label">Étoiles</div>
+    <div class="stat-label">Etoiles equipe</div>
   </div>
   <div class="stat-card">
+    <span class="stat-icon">&#127775;</span>
+    <div class="stat-value" id="statRare">0</div>
+    <div class="stat-label">Rares+</div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon">&#127918;</span>
     <div class="stat-value" id="statGames">0</div>
     <div class="stat-label">Jeux joues</div>
   </div>
+  <div class="stat-card">
+    <span class="stat-icon">&#128142;</span>
+    <div class="stat-value" id="statDiamond">0</div>
+    <div class="stat-label">Diamant</div>
+  </div>
+</div>
+
+<!-- Rarity Legend -->
+<div class="rarity-legend">
+  <div class="rarity-badge rb-bronze"><span class="rarity-dot"></span> Bronze</div>
+  <div class="rarity-badge rb-silver"><span class="rarity-dot"></span> Argent</div>
+  <div class="rarity-badge rb-gold"><span class="rarity-dot"></span> Or</div>
+  <div class="rarity-badge rb-diamond"><span class="rarity-dot"></span> Diamant</div>
 </div>
 
 <!-- Filters -->
-<div class="filters">
+<div class="filters" id="filtersContainer">
   <button class="filter-btn active" data-filter="all">Tous</button>
-  <button class="filter-btn" data-filter="unlocked">Débloqués</button>
+  <button class="filter-btn" data-filter="unlocked">Debloques</button>
   <button class="filter-btn" data-filter="locked">Verrouilles</button>
-  <button class="filter-btn" data-filter="game-general">General</button>
-  <button class="filter-btn" data-filter="game-dance">Dance</button>
-  <button class="filter-btn" data-filter="game-stars">Étoiles</button>
-  <button class="filter-btn" data-filter="game-memory">Memory</button>
-  <button class="filter-btn" data-filter="game-quiz">Quiz</button>
-  <button class="filter-btn" data-filter="game-habillage">Habillage</button>
-  <button class="filter-btn" data-filter="game-karaoke">Karaoke</button>
-  <button class="filter-btn" data-filter="game-coloriage">Coloriage</button>
-  <button class="filter-btn" data-filter="game-puzzle">Puzzle</button>
-  <button class="filter-btn" data-filter="game-avatar">Avatar</button>
-  <button class="filter-btn" data-filter="game-carte">Carte</button>
 </div>
 
-<!-- Achievement sections will be injected here -->
+<!-- Achievement sections injected here -->
 <div id="achievementsContainer"></div>
+
+<!-- Secret achievements teaser -->
+<div class="secret-section" id="secretSection" style="display:none;">
+  <div class="secret-banner">
+    <h3>&#128274; Succes Secrets</h3>
+    <div class="secret-count" id="secretCount">?</div>
+    <p>Certains trophees sont caches... Continue a jouer pour les decouvrir !</p>
+  </div>
+</div>
 
 <script>
 // ===== PLAYER =====
@@ -381,96 +595,162 @@ const playerName = params.get('player') || localStorage.getItem('kpop_player') |
 document.getElementById('playerGreeting').textContent = playerName;
 document.getElementById('backBtn').href = 'index.html?player=' + encodeURIComponent(playerName);
 
-// ===== ACHIEVEMENT DEFINITIONS =====
+// ===== FLOATING PARTICLES =====
+(function(){
+  const container = document.getElementById('particles');
+  for(let i=0;i<20;i++){
+    const p = document.createElement('div');
+    p.className='particle';
+    const s = Math.random()*4+2;
+    p.style.width=s+'px';p.style.height=s+'px';
+    p.style.left=Math.random()*100+'vw';
+    p.style.animationDuration=(Math.random()*15+10)+'s';
+    p.style.animationDelay=(Math.random()*10)+'s';
+    container.appendChild(p);
+  }
+})();
+
+// ===== ACHIEVEMENT DEFINITIONS (55 total) =====
 const ACHIEVEMENTS = [
-  // ===== GENERAL (10) =====
-  {id:'gen_premier_pas',icon:'🌟',title:'Premier Pas',desc:'Jouer a un jeu pour la première fois',hint:'Joue a n\'importe quel jeu',game:'general',rarity:'bronze'},
-  {id:'gen_en_feu',icon:'🔥',title:'En Feu',desc:'3 jours de suite de connexion',hint:'Reviens 3 jours de suite',game:'general',rarity:'silver'},
-  {id:'gen_collectionneuse',icon:'💎',title:'Collectionneuse',desc:'Collecter 10 stickers',hint:'Continue a collecter...',game:'general',rarity:'silver'},
-  {id:'gen_reine',icon:'👑',title:'Reine',desc:'Atteindre le niveau 10',hint:'Gagne des étoiles pour monter de niveau',game:'general',rarity:'gold'},
-  {id:'gen_championne',icon:'🏆',title:'Championne',desc:'Obtenir un grade S dans un jeu',hint:'Fais un score parfait !',game:'general',rarity:'gold'},
-  {id:'gen_perseverante',icon:'💪',title:'Perseverante',desc:'Jouer 50 parties au total',hint:'Continue a jouer !',game:'general',rarity:'silver'},
-  {id:'gen_arc_en_ciel',icon:'🌈',title:'Arc-en-ciel',desc:'Jouer aux 10 jeux au moins une fois',hint:'Essaie tous les jeux !',game:'general',rarity:'gold'},
-  {id:'gen_1000_etoiles',icon:'⭐',title:'1000 Étoiles',desc:'Gagner 1000 etoiles au total',hint:'Accumule les étoiles...',game:'general',rarity:'gold'},
-  {id:'gen_perfectionniste',icon:'🎯',title:'Perfectionniste',desc:'Score parfait dans un jeu',hint:'Vise la perfection !',game:'general',rarity:'diamond'},
-  {id:'gen_legende',icon:'💫',title:'Legende',desc:'Atteindre le niveau 20',hint:'Le sommet t\'attend...',game:'general',rarity:'diamond'},
+  // ===== GENERAL (8) =====
+  {id:'gen_premier_pas',icon:'\u{1F31F}',title:'Premier Pas',desc:'Jouer a un jeu pour la premiere fois',hint:'Joue a n\'importe quel jeu',game:'general',rarity:'bronze'},
+  {id:'gen_en_feu',icon:'\u{1F525}',title:'En Feu',desc:'3 jours de suite de connexion',hint:'Reviens 3 jours de suite',game:'general',rarity:'silver'},
+  {id:'gen_collectionneuse',icon:'\u{1F48E}',title:'Collectionneuse',desc:'Collecter 10 stickers',hint:'Continue a collecter...',game:'general',rarity:'silver'},
+  {id:'gen_reine',icon:'\u{1F451}',title:'Reine',desc:'Atteindre le niveau 10',hint:'Gagne des etoiles pour monter',game:'general',rarity:'gold'},
+  {id:'gen_championne',icon:'\u{1F3C6}',title:'Championne',desc:'Obtenir un grade S dans un jeu',hint:'Fais un score parfait !',game:'general',rarity:'gold'},
+  {id:'gen_arc_en_ciel',icon:'\u{1F308}',title:'Arc-en-ciel',desc:'Jouer aux 15 jeux au moins une fois',hint:'Essaie tous les jeux !',game:'general',rarity:'gold'},
+  {id:'gen_1000_etoiles',icon:'\u2B50',title:'1000 Etoiles',desc:'Gagner 1000 etoiles au total (equipe)',hint:'Accumulez les etoiles ensemble !',game:'general',rarity:'gold'},
+  {id:'gen_legende',icon:'\u{1F4AB}',title:'Legende',desc:'Atteindre le niveau 20',hint:'Le sommet t\'attend...',game:'general',rarity:'diamond'},
 
-  // ===== DANCE (4) =====
-  {id:'dance_first',icon:'💃',title:'Première Danse',desc:'Jouer au Dance Challenge pour la première fois',hint:'Essaie le Dance Challenge',game:'dance',rarity:'bronze'},
-  {id:'dance_500',icon:'🎶',title:'Groove Master',desc:'Atteindre 500 points au Dance Challenge',hint:'Atteins 500 pts',game:'dance',rarity:'silver'},
-  {id:'dance_1000',icon:'🕺',title:'Danseuse Elite',desc:'Atteindre 1000 points au Dance Challenge',hint:'1000 pts, c\'est possible !',game:'dance',rarity:'gold'},
-  {id:'dance_s_grade',icon:'👸',title:'Reine du Dance Floor',desc:'Obtenir un grade S au Dance Challenge',hint:'Le grade S ultime...',game:'dance',rarity:'diamond'},
+  // ===== MUSIQUE - Karaoke (4) =====
+  {id:'kara_first',icon:'\u{1F3A4}',title:'Premiere Chanson',desc:'Chanter une chanson au karaoke',hint:'Chante ta premiere chanson',game:'karaoke',rarity:'bronze'},
+  {id:'kara_all_songs',icon:'\u{1F3B5}',title:'Repertoire Complet',desc:'Chanter toutes les chansons',hint:'Chante-les toutes !',game:'karaoke',rarity:'silver'},
+  {id:'kara_5stars',icon:'\u{1F31F}',title:'5 Etoiles',desc:'Obtenir 5 etoiles sur une chanson',hint:'Chante parfaitement',game:'karaoke',rarity:'gold'},
+  {id:'kara_duo',icon:'\u{1F46F}',title:'Duo Parfait',desc:'Completer un duo',hint:'Trouve une partenaire',game:'karaoke',rarity:'diamond'},
 
-  // ===== STARS (4) =====
-  {id:'stars_first',icon:'⭐',title:'Chasseuse d\'Etoiles',desc:'Jouer a Attrape les Étoiles pour la première fois',hint:'Essaie Attrape les Étoiles',game:'stars',rarity:'bronze'},
-  {id:'stars_300',icon:'🌟',title:'Super Catch',desc:'Atteindre 300 points',hint:'Attrape 300 pts d\'étoiles',game:'stars',rarity:'silver'},
-  {id:'stars_unicorn',icon:'🦄',title:'Licorne Magique',desc:'Attraper une licorne',hint:'Cherche la licorne...',game:'stars',rarity:'gold'},
-  {id:'stars_no_bomb',icon:'🛡️',title:'Intouchable',desc:'Finir une partie sans toucher de bombe',hint:'Esquive tout !',game:'stars',rarity:'diamond'},
+  // ===== MUSIQUE - Studio (3) =====
+  {id:'studio_first',icon:'\u{1F3B9}',title:'DJ Debutante',desc:'Creer un premier beat au studio',hint:'Lance le studio !',game:'studio',rarity:'bronze'},
+  {id:'studio_10beats',icon:'\u{1F3B6}',title:'Musicienne',desc:'Creer 10 beats differents',hint:'Compose 10 morceaux',game:'studio',rarity:'silver'},
+  {id:'studio_master',icon:'\u{1F3A7}',title:'Productrice',desc:'Utiliser tous les instruments',hint:'Teste tous les sons !',game:'studio',rarity:'gold'},
 
-  // ===== MEMORY (4) =====
-  {id:'memory_first',icon:'🧠',title:'Bonne Mémoire',desc:'Gagner une partie de Memory',hint:'Trouve toutes les paires',game:'memory',rarity:'bronze'},
-  {id:'memory_expert',icon:'🎓',title:'Experte Memory',desc:'Gagner en mode Expert',hint:'Essaie le mode Expert',game:'memory',rarity:'silver'},
-  {id:'memory_perfect',icon:'✨',title:'Mémoire Parfaite',desc:'Gagner sans aucune erreur',hint:'Zero erreur, c\'est possible ?',game:'memory',rarity:'gold'},
-  {id:'memory_speed',icon:'⚡',title:'Eclair de Genie',desc:'Gagner en moins de 30 coups',hint:'Moins de 30 coups !',game:'memory',rarity:'diamond'},
+  // ===== MUSIQUE - Dance (4) =====
+  {id:'dance_first',icon:'\u{1F483}',title:'Premiere Danse',desc:'Jouer au Dance Challenge',hint:'Essaie le Dance Challenge',game:'dance',rarity:'bronze'},
+  {id:'dance_500',icon:'\u{1F3B6}',title:'Groove Master',desc:'Atteindre 500 points en danse',hint:'Atteins 500 pts',game:'dance',rarity:'silver'},
+  {id:'dance_1000',icon:'\u{1F57A}',title:'Danseuse Elite',desc:'Atteindre 1000 points en danse',hint:'1000 pts, c\'est possible !',game:'dance',rarity:'gold'},
+  {id:'dance_s_grade',icon:'\u{1F478}',title:'Reine du Dancefloor',desc:'Grade S au Dance Challenge',hint:'Le grade S ultime...',game:'dance',rarity:'diamond'},
 
-  // ===== QUIZ (4) =====
-  {id:'quiz_first',icon:'❓',title:'Quizzeuse',desc:'Completer un quiz K-Pop',hint:'Reponds au quiz !',game:'quiz',rarity:'bronze'},
-  {id:'quiz_80',icon:'📚',title:'K-Pop Experte',desc:'Obtenir 80% ou plus au quiz',hint:'80% minimum !',game:'quiz',rarity:'silver'},
-  {id:'quiz_100',icon:'💯',title:'Score Parfait',desc:'Obtenir 100% au quiz',hint:'Toutes les bonnes reponses',game:'quiz',rarity:'gold'},
-  {id:'quiz_3perfect',icon:'🧪',title:'Genie K-Pop',desc:'3 quiz parfaits consecutifs',hint:'3 fois 100% de suite !',game:'quiz',rarity:'diamond'},
+  // ===== MODE - Habillage (4) =====
+  {id:'hab_first',icon:'\u{1F457}',title:'Styliste Debutante',desc:'Creer une premiere tenue',hint:'Habille ta star !',game:'habillage',rarity:'bronze'},
+  {id:'hab_themes',icon:'\u{1F3A8}',title:'Exploratrice Mode',desc:'Essayer tous les themes',hint:'Essaie chaque theme',game:'habillage',rarity:'silver'},
+  {id:'hab_5saves',icon:'\u{1F4BE}',title:'Garde-robe Complete',desc:'Sauvegarder 5 tenues',hint:'Sauvegarde 5 looks',game:'habillage',rarity:'gold'},
+  {id:'hab_s_grade',icon:'\u{1F485}',title:'Icone de Mode',desc:'Grade S en Habillage',hint:'Le style ultime...',game:'habillage',rarity:'diamond'},
 
-  // ===== HABILLAGE (4) =====
-  {id:'hab_first',icon:'👗',title:'Styliste Débutante',desc:'Créer une première tenue',hint:'Habille ta star !',game:'habillage',rarity:'bronze'},
-  {id:'hab_themes',icon:'🎨',title:'Exploratrice Mode',desc:'Essayer tous les themes',hint:'Essaie chaque theme',game:'habillage',rarity:'silver'},
-  {id:'hab_5saves',icon:'💾',title:'Garde-robe Complete',desc:'Sauvegarder 5 tenues',hint:'Sauvegarde 5 looks',game:'habillage',rarity:'gold'},
-  {id:'hab_s_grade',icon:'💅',title:'Icone de Mode',desc:'Obtenir un grade S en Habillage',hint:'Le style ultime...',game:'habillage',rarity:'diamond'},
+  // ===== MODE - Defile (4) =====
+  {id:'defile_first',icon:'\u{1F6E4}',title:'Premier Defile',desc:'Participer a un defile',hint:'Monte sur le podium !',game:'defile',rarity:'bronze'},
+  {id:'defile_applause',icon:'\u{1F44F}',title:'Ovation',desc:'Recevoir un tonnerre d\'applaudissements',hint:'Impressionne le public !',game:'defile',rarity:'silver'},
+  {id:'defile_fashionista',icon:'\u{1F460}',title:'Fashionista',desc:'Grade S au defile',hint:'Deviens la reine du podium',game:'defile',rarity:'gold'},
+  {id:'defile_supermodel',icon:'\u{1F4A5}',title:'Top Model',desc:'3 defiles parfaits de suite',hint:'La perfection en serie...',game:'defile',rarity:'diamond'},
 
-  // ===== KARAOKE (4) =====
-  {id:'kara_first',icon:'🎤',title:'Première Note',desc:'Chanter une chanson au karaoke',hint:'Chante ta première chanson',game:'karaoke',rarity:'bronze'},
-  {id:'kara_all_songs',icon:'🎵',title:'Repertoire Complet',desc:'Chanter toutes les chansons',hint:'Chante-les toutes !',game:'karaoke',rarity:'silver'},
-  {id:'kara_5stars',icon:'🌟',title:'5 Étoiles',desc:'Obtenir 5 étoiles sur une chanson',hint:'Chante parfaitement',game:'karaoke',rarity:'gold'},
-  {id:'kara_duo',icon:'👯',title:'Duo Parfait',desc:'Completer un duo',hint:'Trouve une partenaire',game:'karaoke',rarity:'diamond'},
+  // ===== ACTION - Course (4) =====
+  {id:'course_first',icon:'\u{1F3C3}',title:'Premiere Course',desc:'Lancer une course',hint:'En piste !',game:'course',rarity:'bronze'},
+  {id:'course_500m',icon:'\u{1F3C5}',title:'Sprinteuse',desc:'Atteindre 500 metres',hint:'Cours jusqu\'a 500m',game:'course',rarity:'silver'},
+  {id:'course_1000m',icon:'\u{1F680}',title:'Speed Runner',desc:'Atteindre 1000 metres',hint:'1000m de pure vitesse',game:'course',rarity:'gold'},
+  {id:'course_2000m',icon:'\u26A1',title:'Eclair',desc:'Atteindre 2000 metres',hint:'La vitesse de la lumiere...',game:'course',rarity:'diamond'},
 
-  // ===== COLORIAGE (4) =====
-  {id:'color_first',icon:'🖌️',title:'Première Couleur',desc:'Completer un premier coloriage',hint:'Colorie un dessin !',game:'coloriage',rarity:'bronze'},
-  {id:'color_all',icon:'🎨',title:'Artiste Complete',desc:'Colorier tous les dessins',hint:'Colorie tout !',game:'coloriage',rarity:'silver'},
-  {id:'color_badges',icon:'🏅',title:'Collectionne les Badges',desc:'Obtenir tous les badges coloriage',hint:'Decroche tous les badges',game:'coloriage',rarity:'gold'},
-  {id:'color_speed',icon:'🚀',title:'Speed Painter',desc:'Colorier un dessin en moins de 2 minutes',hint:'Vite, vite !',game:'coloriage',rarity:'diamond'},
+  // ===== CREATIF - Coloriage (3) =====
+  {id:'color_first',icon:'\u{1F58C}',title:'Premiere Couleur',desc:'Completer un premier coloriage',hint:'Colorie un dessin !',game:'coloriage',rarity:'bronze'},
+  {id:'color_all',icon:'\u{1F3A8}',title:'Artiste Complete',desc:'Colorier tous les dessins',hint:'Colorie tout !',game:'coloriage',rarity:'silver'},
+  {id:'color_speed',icon:'\u{1F680}',title:'Speed Painter',desc:'Colorier en moins de 2 minutes',hint:'Vite, vite !',game:'coloriage',rarity:'gold'},
 
-  // ===== PUZZLE (4) =====
-  {id:'puzzle_first',icon:'🧩',title:'Premier Puzzle',desc:'Completer un premier puzzle',hint:'Assemble les pieces !',game:'puzzle',rarity:'bronze'},
-  {id:'puzzle_hard',icon:'🔥',title:'Mode Difficile',desc:'Completer un puzzle en mode difficile',hint:'Ose le mode difficile',game:'puzzle',rarity:'silver'},
-  {id:'puzzle_all',icon:'🏆',title:'Tous les Puzzles',desc:'Completer tous les puzzles',hint:'Finis-les tous !',game:'puzzle',rarity:'gold'},
-  {id:'puzzle_speed',icon:'⏱️',title:'Speed Puzzle',desc:'Completer un puzzle en moins de 60 secondes',hint:'Chrono !',game:'puzzle',rarity:'diamond'},
+  // ===== CREATIF - Avatar (4) =====
+  {id:'avatar_first',icon:'\u{1F3AD}',title:'Ma Premiere Idol',desc:'Creer un premier avatar idol',hint:'Cree ton idol !',game:'avatar',rarity:'bronze'},
+  {id:'avatar_5',icon:'\u{1F465}',title:'Groupe Complet',desc:'Sauvegarder 5 idols differentes',hint:'Cree 5 idols',game:'avatar',rarity:'silver'},
+  {id:'avatar_photo',icon:'\u{1F4F8}',title:'Photo Booth',desc:'Utiliser le mode photo booth',hint:'Prends une photo !',game:'avatar',rarity:'gold'},
+  {id:'avatar_effects',icon:'\u2728',title:'Effets Speciaux',desc:'Essayer tous les effets',hint:'Teste tous les effets',game:'avatar',rarity:'diamond'},
 
-  // ===== AVATAR (4) =====
-  {id:'avatar_first',icon:'🎭',title:'Ma Première Idol',desc:'Créer un premier avatar idol',hint:'Crée ton idol !',game:'avatar',rarity:'bronze'},
-  {id:'avatar_5',icon:'👥',title:'Groupe Complet',desc:'Sauvegarder 5 idols differentes',hint:'Crée 5 idols',game:'avatar',rarity:'silver'},
-  {id:'avatar_photo',icon:'📸',title:'Photo Booth',desc:'Utiliser le mode photo booth',hint:'Prends une photo !',game:'avatar',rarity:'gold'},
-  {id:'avatar_effects',icon:'✨',title:'Effets Speciaux',desc:'Essayer tous les effets',hint:'Teste tous les effets',game:'avatar',rarity:'diamond'},
+  // ===== CREATIF - Carte (3) =====
+  {id:'carte_first',icon:'\u{1F0CF}',title:'Premiere Carte',desc:'Creer une premiere carte K-Pop',hint:'Cree ta carte !',game:'carte',rarity:'bronze'},
+  {id:'carte_8',icon:'\u{1F4C7}',title:'Collection 8 Cartes',desc:'Collecter 8 cartes differentes',hint:'8 cartes dans ta collection',game:'carte',rarity:'silver'},
+  {id:'carte_legendary',icon:'\u{1F308}',title:'Carte Legendaire',desc:'Obtenir une carte legendaire',hint:'La chance sourira...',game:'carte',rarity:'diamond'},
 
-  // ===== CARTE (4) =====
-  {id:'carte_first',icon:'🃏',title:'Première Carte',desc:'Créer une première carte K-Pop',hint:'Crée ta carte !',game:'carte',rarity:'bronze'},
-  {id:'carte_legendary',icon:'🌈',title:'Carte Légendaire',desc:'Obtenir une carte légendaire',hint:'La chance sourira...',game:'carte',rarity:'gold'},
-  {id:'carte_8',icon:'📇',title:'Collection 8 Cartes',desc:'Collecter 8 cartes differentes',hint:'8 cartes dans ta collection',game:'carte',rarity:'silver'},
-  {id:'carte_perfect',icon:'💎',title:'Carte Parfaite',desc:'Créer une carte avec un score parfait',hint:'La carte parfaite...',game:'carte',rarity:'diamond'},
+  // ===== CREATIF - Photobooth (3) =====
+  {id:'photo_first',icon:'\u{1F4F7}',title:'Premier Selfie',desc:'Prendre une photo au photobooth',hint:'Dis cheese !',game:'photobooth',rarity:'bronze'},
+  {id:'photo_filters',icon:'\u{1F308}',title:'Reine des Filtres',desc:'Essayer tous les filtres',hint:'Teste chaque filtre',game:'photobooth',rarity:'silver'},
+  {id:'photo_gallery',icon:'\u{1F5BC}',title:'Galerie Star',desc:'Sauvegarder 10 photos',hint:'Remplis ta galerie !',game:'photobooth',rarity:'gold'},
+
+  // ===== REFLEXION - Memory (4) =====
+  {id:'memory_first',icon:'\u{1F9E0}',title:'Bonne Memoire',desc:'Gagner une partie de Memory',hint:'Trouve toutes les paires',game:'memory',rarity:'bronze'},
+  {id:'memory_expert',icon:'\u{1F393}',title:'Experte Memory',desc:'Gagner en mode Expert',hint:'Essaie le mode Expert',game:'memory',rarity:'silver'},
+  {id:'memory_perfect',icon:'\u2728',title:'Memoire Parfaite',desc:'Gagner sans aucune erreur',hint:'Zero erreur, c\'est possible ?',game:'memory',rarity:'gold'},
+  {id:'memory_speed',icon:'\u26A1',title:'Eclair de Genie',desc:'Gagner en moins de 30 coups',hint:'Moins de 30 coups !',game:'memory',rarity:'diamond'},
+
+  // ===== REFLEXION - Quiz (4) =====
+  {id:'quiz_first',icon:'\u2753',title:'Quizzeuse',desc:'Completer un quiz K-Pop',hint:'Reponds au quiz !',game:'quiz',rarity:'bronze'},
+  {id:'quiz_80',icon:'\u{1F4DA}',title:'K-Pop Experte',desc:'Obtenir 80% ou plus au quiz',hint:'80% minimum !',game:'quiz',rarity:'silver'},
+  {id:'quiz_100',icon:'\u{1F4AF}',title:'Score Parfait',desc:'Obtenir 100% au quiz',hint:'Toutes les bonnes reponses',game:'quiz',rarity:'gold'},
+  {id:'quiz_3perfect',icon:'\u{1F9EA}',title:'Genie K-Pop',desc:'3 quiz parfaits consecutifs',hint:'3 fois 100% de suite !',game:'quiz',rarity:'diamond'},
+
+  // ===== REFLEXION - Puzzle (3) =====
+  {id:'puzzle_first',icon:'\u{1F9E9}',title:'Premier Puzzle',desc:'Completer un premier puzzle',hint:'Assemble les pieces !',game:'puzzle',rarity:'bronze'},
+  {id:'puzzle_hard',icon:'\u{1F525}',title:'Mode Difficile',desc:'Puzzle en mode difficile',hint:'Ose le mode difficile',game:'puzzle',rarity:'silver'},
+  {id:'puzzle_all',icon:'\u{1F3C6}',title:'Tous les Puzzles',desc:'Completer tous les puzzles',hint:'Finis-les tous !',game:'puzzle',rarity:'gold'},
+
+  // ===== PET (4) =====
+  {id:'pet_first',icon:'\u{1F431}',title:'Adoption',desc:'Adopter ton premier animal',hint:'Adopte un compagnon !',game:'pet',rarity:'bronze'},
+  {id:'pet_happy',icon:'\u{1F49B}',title:'Ami Fidele',desc:'Rendre ton animal 100% heureux',hint:'Prends soin de lui !',game:'pet',rarity:'silver'},
+  {id:'pet_lv10',icon:'\u{1F3C5}',title:'Maman Pet',desc:'Atteindre le niveau 10 avec ton animal',hint:'Eleve-le jusqu\'au level 10',game:'pet',rarity:'gold'},
+  {id:'pet_master',icon:'\u{1F48E}',title:'Pet Master',desc:'Debloquer toutes les evolutions',hint:'Fais tout evoluer !',game:'pet',rarity:'diamond'},
 ];
 
-const GAME_META = {
-  general: {emoji:'🏠',label:'General'},
-  dance: {emoji:'💃',label:'Dance Challenge'},
-  stars: {emoji:'⭐',label:'Attrape les Étoiles'},
-  memory: {emoji:'🧠',label:'K-Pop Memory'},
-  quiz: {emoji:'❓',label:'Quiz K-Pop'},
-  habillage: {emoji:'👗',label:'Habillage K-Pop'},
-  karaoke: {emoji:'🎤',label:'Karaoke Star'},
-  coloriage: {emoji:'🖌️',label:'Coloriage K-Pop'},
-  puzzle: {emoji:'🧩',label:'Puzzle Star'},
-  avatar: {emoji:'🎭',label:'Crée ton Idol'},
-  carte: {emoji:'🃏',label:'Ma Carte K-Pop'},
+// ===== CATEGORIES =====
+const CATEGORIES = [
+  {id:'general', emoji:'\u{1F3E0}', label:'General', games:['general']},
+  {id:'musique', emoji:'\u{1F3B5}', label:'Musique', games:['karaoke','studio','dance']},
+  {id:'mode', emoji:'\u{1F457}', label:'Mode', games:['habillage','defile']},
+  {id:'action', emoji:'\u{1F680}', label:'Action', games:['course']},
+  {id:'creatif', emoji:'\u{1F3A8}', label:'Creatif', games:['coloriage','avatar','carte','photobooth']},
+  {id:'reflexion', emoji:'\u{1F9E0}', label:'Reflexion', games:['memory','quiz','puzzle']},
+  {id:'pet', emoji:'\u{1F431}', label:'Mon Animal', games:['pet']},
+];
+
+const GAME_LABELS = {
+  general:'General', karaoke:'Karaoke Star', studio:'Studio Musical',
+  dance:'Dance Challenge', habillage:'Habillage K-Pop', defile:'Defile Star',
+  course:'Course K-Pop', coloriage:'Coloriage K-Pop', avatar:'Cree ton Idol',
+  carte:'Ma Carte K-Pop', photobooth:'Photobooth', memory:'K-Pop Memory',
+  quiz:'Quiz K-Pop', puzzle:'Puzzle Star', pet:'Mon Animal',
 };
 
 const RARITY_LABELS = {bronze:'Bronze',silver:'Argent',gold:'Or',diamond:'Diamant'};
+const RARITY_ORDER = {bronze:0,silver:1,gold:2,diamond:3};
+
+// ===== TEAM DATA =====
+function getTeamPlayers(){
+  return ['Ambre','Eden','Louise'];
+}
+
+function getTeamStars(){
+  let total = 0;
+  getTeamPlayers().forEach(function(p){
+    total += parseInt(localStorage.getItem('kpop_stars_' + p) || '0');
+  });
+  return total;
+}
+
+function getTeamGamesPlayed(){
+  const games = new Set();
+  const gameKeys = ['dance','stars','memory','quiz','habillage','karaoke','coloriage','puzzle','avatar','carte','course','defile','studio','pet','photobooth'];
+  getTeamPlayers().forEach(function(p){
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(!k || !k.includes(p)) continue;
+      gameKeys.forEach(function(g){
+        if(k.toLowerCase().includes(g)) games.add(g);
+      });
+    }
+  });
+  return games.size;
+}
 
 // ===== PERSISTENCE =====
 function getAchKey(){ return 'kpop_achievements_' + playerName; }
@@ -489,69 +769,67 @@ function isUnlocked(id){
 
 function unlockAchievement(id){
   const data = getUnlocked();
-  if(data[id]) return false; // already unlocked
+  if(data[id]) return false;
   data[id] = Date.now();
   setUnlocked(data);
   return true;
 }
 
-// ===== AUTO-DETECT from localStorage =====
+// ===== AUTO-DETECT =====
 function autoDetectAchievements(){
   const p = playerName;
   const stars = parseInt(localStorage.getItem('kpop_stars_' + p) || '0');
+  const teamStars = getTeamStars();
   const streak = parseInt(localStorage.getItem('kpop_streak_' + p) || '0');
   const stickers = JSON.parse(localStorage.getItem('kpop_stickers_' + p) || '[]');
   const trophies = JSON.parse(localStorage.getItem('kpop_trophies_' + p) || '[]');
   const gallery = JSON.parse(localStorage.getItem('kpop_gallery_' + p) || '[]');
   const cardCollection = JSON.parse(localStorage.getItem('kpop_card_collection_' + p) || '[]');
-  const totalCards = parseInt(localStorage.getItem('kpop_total_cards_' + p) || '0');
   const themesTried = JSON.parse(localStorage.getItem('kpop_themes_' + p) || '[]');
-
-  // Calculate level from stars
   const level = Math.floor(stars / 100) + 1;
 
-  // Track which games have been played (check for any game-specific localStorage)
+  // Detect games played
   const gamesPlayed = new Set();
-  const gameKeys = {
-    dance:'kpop_dance_hs_'+p, stars:'kpop_stars_hs_'+p,
-    memory:'kpop_memory_hs_'+p, quiz:'kpop_quiz_hs_'+p,
-    habillage:'kpop_gallery_'+p, karaoke:'kpop_karaoke_'+p,
-    coloriage:'kpop_coloriage_'+p, puzzle:'kpop_puzzle_completed_'+p,
-    avatar:'kpop_trophies_'+p, carte:'kpop_card_collection_'+p
-  };
-
-  // Check all possible localStorage keys to detect game plays
   for(let i=0;i<localStorage.length;i++){
     const k = localStorage.key(i);
-    if(!k) continue;
-    if(k.includes('dance') && k.includes(p)) gamesPlayed.add('dance');
-    if(k.includes('stars_hs') && k.includes(p)) gamesPlayed.add('stars');
-    if(k.includes('memory') && k.includes(p)) gamesPlayed.add('memory');
-    if(k.includes('quiz') && k.includes(p)) gamesPlayed.add('quiz');
-    if(k.includes('gallery') && k.includes(p) && gallery.length>0) gamesPlayed.add('habillage');
-    if(k.includes('karaoke') && k.includes(p)) gamesPlayed.add('karaoke');
-    if(k.includes('coloriage') && k.includes(p)) gamesPlayed.add('coloriage');
-    if(k.includes('puzzle') && k.includes(p)) gamesPlayed.add('puzzle');
-    if(k.includes('avatar') && k.includes(p)) gamesPlayed.add('avatar');
-    if(k.includes('card_collection') && k.includes(p) && cardCollection.length>0) gamesPlayed.add('carte');
+    if(!k || !k.includes(p)) continue;
+    const kl = k.toLowerCase();
+    if(kl.includes('dance')) gamesPlayed.add('dance');
+    if(kl.includes('stars_hs')) gamesPlayed.add('stars');
+    if(kl.includes('memory')) gamesPlayed.add('memory');
+    if(kl.includes('quiz')) gamesPlayed.add('quiz');
+    if(kl.includes('gallery') && gallery.length>0) gamesPlayed.add('habillage');
+    if(kl.includes('karaoke')) gamesPlayed.add('karaoke');
+    if(kl.includes('coloriage')) gamesPlayed.add('coloriage');
+    if(kl.includes('puzzle')) gamesPlayed.add('puzzle');
+    if(kl.includes('avatar') || kl.includes('idol')) gamesPlayed.add('avatar');
+    if(kl.includes('card_collection') && cardCollection.length>0) gamesPlayed.add('carte');
+    if(kl.includes('course')) gamesPlayed.add('course');
+    if(kl.includes('defile')) gamesPlayed.add('defile');
+    if(kl.includes('studio') || kl.includes('beat')) gamesPlayed.add('studio');
+    if(kl.includes('pet')) gamesPlayed.add('pet');
+    if(kl.includes('photo')) gamesPlayed.add('photobooth');
   }
 
-  // Also check trophies for game detection
-  if(trophies.length>0){
-    trophies.forEach(t => {
-      const tl = (t||'').toLowerCase();
-      if(tl.includes('dance')) gamesPlayed.add('dance');
-      if(tl.includes('star') || tl.includes('catch')) gamesPlayed.add('stars');
-      if(tl.includes('memory')) gamesPlayed.add('memory');
-      if(tl.includes('quiz')) gamesPlayed.add('quiz');
-      if(tl.includes('habillage') || tl.includes('outfit') || tl.includes('mode')) gamesPlayed.add('habillage');
-      if(tl.includes('karao')) gamesPlayed.add('karaoke');
-      if(tl.includes('color') || tl.includes('colori')) gamesPlayed.add('coloriage');
-      if(tl.includes('puzzle')) gamesPlayed.add('puzzle');
-      if(tl.includes('avatar') || tl.includes('idol')) gamesPlayed.add('avatar');
-      if(tl.includes('carte') || tl.includes('card')) gamesPlayed.add('carte');
-    });
-  }
+  // Also detect from trophies
+  trophies.forEach(function(t){
+    const tl = (t||'').toLowerCase();
+    if(tl.includes('dance')) gamesPlayed.add('dance');
+    if(tl.includes('star') || tl.includes('catch')) gamesPlayed.add('stars');
+    if(tl.includes('memory')) gamesPlayed.add('memory');
+    if(tl.includes('quiz')) gamesPlayed.add('quiz');
+    if(tl.includes('habillage') || tl.includes('outfit') || tl.includes('mode')) gamesPlayed.add('habillage');
+    if(tl.includes('karao')) gamesPlayed.add('karaoke');
+    if(tl.includes('color')) gamesPlayed.add('coloriage');
+    if(tl.includes('puzzle')) gamesPlayed.add('puzzle');
+    if(tl.includes('avatar') || tl.includes('idol')) gamesPlayed.add('avatar');
+    if(tl.includes('carte') || tl.includes('card')) gamesPlayed.add('carte');
+    if(tl.includes('course') || tl.includes('run')) gamesPlayed.add('course');
+    if(tl.includes('defile') || tl.includes('fashion')) gamesPlayed.add('defile');
+    if(tl.includes('studio') || tl.includes('beat') || tl.includes('music')) gamesPlayed.add('studio');
+    if(tl.includes('pet') || tl.includes('animal')) gamesPlayed.add('pet');
+    if(tl.includes('photo') || tl.includes('selfie')) gamesPlayed.add('photobooth');
+  });
 
   // === GENERAL ===
   if(gamesPlayed.size > 0) unlockAchievement('gen_premier_pas');
@@ -559,72 +837,85 @@ function autoDetectAchievements(){
   if(stickers.length >= 10) unlockAchievement('gen_collectionneuse');
   if(level >= 10) unlockAchievement('gen_reine');
   if(level >= 20) unlockAchievement('gen_legende');
-  if(stars >= 1000) unlockAchievement('gen_1000_etoiles');
-  if(gamesPlayed.size >= 10) unlockAchievement('gen_arc_en_ciel');
-
-  // Check S grade / perfect from trophies
-  const hasSGrade = trophies.some(t => (t||'').toLowerCase().includes('grade s') || (t||'').includes('S'));
+  if(teamStars >= 1000) unlockAchievement('gen_1000_etoiles');
+  if(gamesPlayed.size >= 15) unlockAchievement('gen_arc_en_ciel');
+  var hasSGrade = trophies.some(function(t){ return (t||'').toLowerCase().includes('grade s') || (t||'').includes('S'); });
   if(hasSGrade) unlockAchievement('gen_championne');
 
-  // Count total games played (rough estimate)
-  let totalGamesPlayed = 0;
-  for(let i=0;i<localStorage.length;i++){
-    const k = localStorage.key(i);
-    if(k && k.includes(p) && (k.includes('_hs_') || k.includes('completed') || k.includes('_score')))
-      totalGamesPlayed++;
-  }
-  if(totalGamesPlayed >= 50) unlockAchievement('gen_perseverante');
+  // === KARAOKE ===
+  if(gamesPlayed.has('karaoke')) unlockAchievement('kara_first');
+
+  // === STUDIO ===
+  if(gamesPlayed.has('studio')) unlockAchievement('studio_first');
+  var beatsCreated = parseInt(localStorage.getItem('kpop_beats_' + p) || '0');
+  if(beatsCreated >= 10) unlockAchievement('studio_10beats');
 
   // === DANCE ===
   if(gamesPlayed.has('dance')) unlockAchievement('dance_first');
-  const danceHs = parseInt(localStorage.getItem('kpop_dance_hs_' + p) || '0');
+  var danceHs = parseInt(localStorage.getItem('kpop_dance_hs_' + p) || '0');
   if(danceHs >= 500) unlockAchievement('dance_500');
   if(danceHs >= 1000) unlockAchievement('dance_1000');
-
-  // === STARS ===
-  if(gamesPlayed.has('stars')) unlockAchievement('stars_first');
-  const starsHs = parseInt(localStorage.getItem('kpop_stars_hs_' + p) || '0');
-  if(starsHs >= 300) unlockAchievement('stars_300');
-
-  // === MEMORY ===
-  if(gamesPlayed.has('memory')) unlockAchievement('memory_first');
-  // Check memory high scores for expert/speed
-  try {
-    const memData = JSON.parse(localStorage.getItem('kpop_memory_hs_' + p) || '{}');
-    if(memData.expert || memData.hard) unlockAchievement('memory_expert');
-    // Check for speed achievement
-    Object.values(memData).forEach(v => {
-      if(typeof v === 'number' && v <= 30) unlockAchievement('memory_speed');
-    });
-  } catch(e){}
-
-  // === QUIZ ===
-  if(gamesPlayed.has('quiz')) unlockAchievement('quiz_first');
-  const quizHs = parseInt(localStorage.getItem('kpop_quiz_hs_' + p) || '0');
-  if(quizHs >= 80) unlockAchievement('quiz_80');
-  if(quizHs >= 100) unlockAchievement('quiz_100');
 
   // === HABILLAGE ===
   if(gamesPlayed.has('habillage') || gallery.length > 0) unlockAchievement('hab_first');
   if(themesTried.length >= 5) unlockAchievement('hab_themes');
   if(gallery.length >= 5) unlockAchievement('hab_5saves');
 
-  // === KARAOKE ===
-  if(gamesPlayed.has('karaoke')) unlockAchievement('kara_first');
+  // === DEFILE ===
+  if(gamesPlayed.has('defile')) unlockAchievement('defile_first');
+  var defileHs = parseInt(localStorage.getItem('kpop_defile_hs_' + p) || '0');
+  if(defileHs >= 80) unlockAchievement('defile_applause');
+
+  // === COURSE ===
+  if(gamesPlayed.has('course')) unlockAchievement('course_first');
+  var courseHs = parseInt(localStorage.getItem('kpop_course_hs_' + p) || '0');
+  if(courseHs >= 500) unlockAchievement('course_500m');
+  if(courseHs >= 1000) unlockAchievement('course_1000m');
+  if(courseHs >= 2000) unlockAchievement('course_2000m');
 
   // === COLORIAGE ===
   if(gamesPlayed.has('coloriage')) unlockAchievement('color_first');
-  // Check for badges in trophies
-  const colorBadges = trophies.filter(t => (t||'').toLowerCase().includes('colori') || (t||'').toLowerCase().includes('color'));
-  if(colorBadges.length >= 3) unlockAchievement('color_badges');
+  var colorBadges = trophies.filter(function(t){ return (t||'').toLowerCase().includes('colori') || (t||'').toLowerCase().includes('color'); });
+  if(colorBadges.length >= 3) unlockAchievement('color_all');
+
+  // === AVATAR ===
+  if(gamesPlayed.has('avatar')) unlockAchievement('avatar_first');
+  var avatarTrophies = trophies.filter(function(t){ return (t||'').toLowerCase().includes('idol') || (t||'').toLowerCase().includes('avatar'); });
+  if(avatarTrophies.length >= 5) unlockAchievement('avatar_5');
+
+  // === CARTE ===
+  if(cardCollection.length > 0) unlockAchievement('carte_first');
+  if(cardCollection.length >= 8) unlockAchievement('carte_8');
+  var hasLegendary = cardCollection.some(function(c){ return c && (c.rarity === 'legendary' || c.rarity === 'legendaire'); });
+  if(hasLegendary) unlockAchievement('carte_legendary');
+
+  // === PHOTOBOOTH ===
+  if(gamesPlayed.has('photobooth')) unlockAchievement('photo_first');
+  var photoCount = parseInt(localStorage.getItem('kpop_photos_' + p) || '0');
+  if(photoCount >= 10) unlockAchievement('photo_gallery');
+
+  // === MEMORY ===
+  if(gamesPlayed.has('memory')) unlockAchievement('memory_first');
+  try {
+    var memData = JSON.parse(localStorage.getItem('kpop_memory_hs_' + p) || '{}');
+    if(memData.expert || memData.hard) unlockAchievement('memory_expert');
+    Object.values(memData).forEach(function(v){
+      if(typeof v === 'number' && v <= 30) unlockAchievement('memory_speed');
+    });
+  } catch(e){}
+
+  // === QUIZ ===
+  if(gamesPlayed.has('quiz')) unlockAchievement('quiz_first');
+  var quizHs = parseInt(localStorage.getItem('kpop_quiz_hs_' + p) || '0');
+  if(quizHs >= 80) unlockAchievement('quiz_80');
+  if(quizHs >= 100) unlockAchievement('quiz_100');
 
   // === PUZZLE ===
   if(gamesPlayed.has('puzzle')) unlockAchievement('puzzle_first');
-  // Check puzzle completions
-  let puzzleCompleted = 0;
-  let puzzleHardDone = false;
-  for(let i=0;i<localStorage.length;i++){
-    const k = localStorage.key(i);
+  var puzzleCompleted = 0;
+  var puzzleHardDone = false;
+  for(var i=0;i<localStorage.length;i++){
+    var k = localStorage.key(i);
     if(!k) continue;
     if(k.startsWith('kpop_puzzle_done_'+p) && localStorage.getItem(k)==='1'){
       puzzleCompleted++;
@@ -634,92 +925,138 @@ function autoDetectAchievements(){
   if(puzzleHardDone) unlockAchievement('puzzle_hard');
   if(puzzleCompleted >= 8) unlockAchievement('puzzle_all');
 
-  // === AVATAR ===
-  if(gamesPlayed.has('avatar')) unlockAchievement('avatar_first');
-  // Check avatar saves from trophies
-  const avatarTrophies = trophies.filter(t => (t||'').toLowerCase().includes('idol') || (t||'').toLowerCase().includes('avatar'));
-  if(avatarTrophies.length >= 5) unlockAchievement('avatar_5');
+  // === PET ===
+  if(gamesPlayed.has('pet')) unlockAchievement('pet_first');
+  var petHappiness = parseInt(localStorage.getItem('kpop_pet_happiness_' + p) || '0');
+  if(petHappiness >= 100) unlockAchievement('pet_happy');
+  var petLevel = parseInt(localStorage.getItem('kpop_pet_level_' + p) || '0');
+  if(petLevel >= 10) unlockAchievement('pet_lv10');
 
-  // === CARTE ===
-  if(cardCollection.length > 0) unlockAchievement('carte_first');
-  if(cardCollection.length >= 8) unlockAchievement('carte_8');
-  // Check for legendary
-  const hasLegendary = cardCollection.some(c => c && (c.rarity === 'legendary' || c.rarity === 'légendaire'));
-  if(hasLegendary) unlockAchievement('carte_legendary');
-
-  return {stars, level, gamesPlayed: gamesPlayed.size, stickers: stickers.length, streak};
+  return {stars:stars, teamStars:teamStars, level:level, gamesPlayed:gamesPlayed.size, stickers:stickers.length, streak:streak};
 }
 
 // ===== RENDER =====
 function renderAll(){
-  const stats = autoDetectAchievements();
-  const unlocked = getUnlocked();
-  const unlockedCount = Object.keys(unlocked).length;
-  const total = ACHIEVEMENTS.length;
-  const pct = Math.round((unlockedCount / total) * 100);
+  var stats = autoDetectAchievements();
+  var unlocked = getUnlocked();
+  var unlockedCount = Object.keys(unlocked).length;
+  var total = ACHIEVEMENTS.length;
+  var pct = Math.round((unlockedCount / total) * 100);
+
+  // Detect newly unlocked
+  var newlyUnlockedIds = {};
+  var prevVisit = JSON.parse(sessionStorage.getItem('kpop_ach_before') || '{}');
+  Object.keys(unlocked).forEach(function(id){
+    if(!prevVisit[id]) newlyUnlockedIds[id] = true;
+  });
 
   // Stats
   document.getElementById('statTotal').textContent = unlockedCount + '/' + total;
-  document.getElementById('statStars').textContent = stats.stars;
+  document.getElementById('statStars').textContent = stats.teamStars;
   document.getElementById('statGames').textContent = stats.gamesPlayed;
 
-  // Rare count (gold + diamond)
-  const rareCount = ACHIEVEMENTS.filter(a => (a.rarity === 'gold' || a.rarity === 'diamond') && unlocked[a.id]).length;
+  var rareCount = ACHIEVEMENTS.filter(function(a){ return (a.rarity === 'gold' || a.rarity === 'diamond') && unlocked[a.id]; }).length;
   document.getElementById('statRare').textContent = rareCount;
 
+  var diamondCount = ACHIEVEMENTS.filter(function(a){ return a.rarity === 'diamond' && unlocked[a.id]; }).length;
+  document.getElementById('statDiamond').textContent = diamondCount;
+
   // Progress ring
-  const circumference = 2 * Math.PI * 52;
-  const offset = circumference - (pct / 100) * circumference;
-  const ring = document.getElementById('progressRing');
-  setTimeout(() => { ring.style.strokeDashoffset = offset; }, 100);
+  var circumference = 2 * Math.PI * 56;
+  var offset = circumference - (pct / 100) * circumference;
+  var ring = document.getElementById('progressRing');
+  setTimeout(function(){ ring.style.strokeDashoffset = offset; }, 150);
   document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressLabel').textContent = unlockedCount + ' / ' + total + ' trophees debloques';
 
   // Progress bar
-  setTimeout(() => { document.getElementById('progressBar').style.width = pct + '%'; }, 100);
+  setTimeout(function(){ document.getElementById('progressBar').style.width = pct + '%'; }, 150);
 
-  // Group by game
-  const gameOrder = ['general','dance','stars','memory','quiz','habillage','karaoke','coloriage','puzzle','avatar','carte'];
-  const container = document.getElementById('achievementsContainer');
+  // Build filter buttons for categories
+  var filtersContainer = document.getElementById('filtersContainer');
+  CATEGORIES.forEach(function(cat){
+    if(!filtersContainer.querySelector('[data-filter="cat-'+cat.id+'"]')){
+      var btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.dataset.filter = 'cat-' + cat.id;
+      btn.textContent = cat.emoji + ' ' + cat.label;
+      filtersContainer.appendChild(btn);
+    }
+  });
+
+  // Attach filter listeners
+  filtersContainer.querySelectorAll('.filter-btn').forEach(function(btn){
+    btn.onclick = function(){
+      filtersContainer.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      applyFilter(btn.dataset.filter);
+    };
+  });
+
+  // Render by category
+  var container = document.getElementById('achievementsContainer');
   container.innerHTML = '';
 
-  gameOrder.forEach(game => {
-    const gameAchs = ACHIEVEMENTS.filter(a => a.game === game);
-    const meta = GAME_META[game];
-    const gameUnlocked = gameAchs.filter(a => unlocked[a.id]).length;
+  CATEGORIES.forEach(function(cat){
+    var catAchs = ACHIEVEMENTS.filter(function(a){ return cat.games.indexOf(a.game) !== -1; });
+    if(catAchs.length === 0) return;
+    var catUnlocked = catAchs.filter(function(a){ return !!unlocked[a.id]; }).length;
 
-    const section = document.createElement('div');
-    section.className = 'game-section';
-    section.setAttribute('data-game', game);
+    var section = document.createElement('div');
+    section.className = 'category-section';
+    section.setAttribute('data-category', cat.id);
 
-    section.innerHTML = `
-      <div class="game-section-title">
-        <span class="game-emoji">${meta.emoji}</span>
-        <span>${meta.label}</span>
-        <span class="game-count">${gameUnlocked}/${gameAchs.length}</span>
-      </div>
-      <div class="ach-grid"></div>
-    `;
+    section.innerHTML =
+      '<div class="category-header">' +
+        '<span class="category-emoji">' + cat.emoji + '</span>' +
+        '<span class="category-name">' + cat.label + '</span>' +
+        '<span class="category-count">' + catUnlocked + ' / ' + catAchs.length + '</span>' +
+      '</div>' +
+      '<div class="ach-grid"></div>';
 
-    const grid = section.querySelector('.ach-grid');
+    var grid = section.querySelector('.ach-grid');
 
-    gameAchs.forEach(ach => {
-      const isU = !!unlocked[ach.id];
-      const card = document.createElement('div');
-      card.className = `ach-card rarity-${ach.rarity} ${isU ? 'unlocked' : 'locked'}`;
+    // Sort: unlocked first, then by rarity desc
+    var sorted = catAchs.slice().sort(function(a,b){
+      var aU = unlocked[a.id] ? 1 : 0;
+      var bU = unlocked[b.id] ? 1 : 0;
+      if(aU !== bU) return bU - aU;
+      return RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity];
+    });
+
+    sorted.forEach(function(ach){
+      var isU = !!unlocked[ach.id];
+      var isNew = !!newlyUnlockedIds[ach.id];
+      var card = document.createElement('div');
+      card.className = 'ach-card rarity-' + ach.rarity + (isU ? ' unlocked' : ' locked') + (isNew ? ' newly-unlocked' : '');
       card.setAttribute('data-game', ach.game);
+      card.setAttribute('data-category', cat.id);
       card.setAttribute('data-state', isU ? 'unlocked' : 'locked');
 
-      const dateStr = isU ? new Date(unlocked[ach.id]).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : '';
+      var dateStr = isU ? new Date(unlocked[ach.id]).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : '';
+      var gameLabel = GAME_LABELS[ach.game] || ach.game;
 
-      card.innerHTML = `
-        ${!isU ? '<div class="lock-overlay">🔒</div>' : ''}
-        <span class="ach-rarity-tag">${RARITY_LABELS[ach.rarity]}</span>
-        <span class="ach-icon">${isU ? ach.icon : '❔'}</span>
-        <div class="ach-title">${isU ? ach.title : '???'}</div>
-        <div class="ach-desc">${isU ? ach.desc : ach.hint}</div>
-        <span class="ach-game-tag">${meta.label}</span>
-        ${isU ? '<span class="ach-date">Débloqué le ' + dateStr + '</span>' : ''}
-      `;
+      var html = '';
+      if(!isU){
+        html += '<div class="lock-shimmer"></div>';
+        html += '<div class="lock-overlay">\u{1F512}</div>';
+      }
+      html += '<span class="ach-rarity-tag">' + RARITY_LABELS[ach.rarity] + '</span>';
+      html += '<span class="ach-icon">' + (isU ? ach.icon : '\u2754') + '</span>';
+      html += '<div class="ach-title">' + (isU ? ach.title : '???') + '</div>';
+      html += '<div class="ach-desc">' + (isU ? ach.desc : ach.hint) + '</div>';
+      html += '<div class="ach-footer">';
+      html += '<span class="ach-game-tag">' + gameLabel + '</span>';
+      if(isU) html += '<span class="ach-date">' + dateStr + '</span>';
+      html += '</div>';
+
+      card.innerHTML = html;
+
+      // Click on unlocked card = confetti burst
+      if(isU){
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function(){ miniConfetti(card); });
+      }
 
       grid.appendChild(card);
     });
@@ -727,84 +1064,101 @@ function renderAll(){
     container.appendChild(section);
   });
 
-  // Check milestones for confetti
-  if(unlockedCount >= 10 || unlockedCount >= 25 || unlockedCount >= 50){
-    const lastConfetti = parseInt(localStorage.getItem('kpop_ach_confetti_' + playerName) || '0');
-    const milestone = unlockedCount >= 50 ? 50 : unlockedCount >= 25 ? 25 : 10;
+  // Secret section
+  var secretAchs = ACHIEVEMENTS.filter(function(a){ return a.rarity === 'diamond' && !unlocked[a.id]; });
+  var secretEl = document.getElementById('secretSection');
+  if(secretAchs.length > 0){
+    secretEl.style.display = '';
+    document.getElementById('secretCount').textContent = secretAchs.length + ' restant' + (secretAchs.length>1?'s':'');
+  } else {
+    secretEl.style.display = 'none';
+  }
+
+  // Show toasts for newly detected
+  var newIds = Object.keys(newlyUnlockedIds);
+  if(newIds.length > 0 && newIds.length <= 8){
+    var delay = 300;
+    newIds.forEach(function(id){
+      var ach = ACHIEVEMENTS.find(function(a){ return a.id === id; });
+      if(ach){
+        setTimeout(function(){
+          showAchToast(ach.icon, ach.title);
+          launchConfetti();
+        }, delay);
+        delay += 800;
+      }
+    });
+  }
+
+  // Store state for next visit
+  sessionStorage.setItem('kpop_ach_before', JSON.stringify(unlocked));
+
+  // Milestone confetti
+  if(unlockedCount >= 10){
+    var lastConfetti = parseInt(localStorage.getItem('kpop_ach_confetti_' + playerName) || '0');
+    var milestone = unlockedCount >= 55 ? 55 : unlockedCount >= 40 ? 40 : unlockedCount >= 25 ? 25 : 10;
     if(lastConfetti < milestone){
-      localStorage.setItem('kpop_ach_confetti_' + playerName, milestone);
-      launchConfetti();
+      localStorage.setItem('kpop_ach_confetti_' + playerName, String(milestone));
+      setTimeout(launchConfetti, 500);
     }
   }
 }
 
 // ===== FILTERS =====
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const filter = btn.dataset.filter;
-    applyFilter(filter);
-  });
-});
-
 function applyFilter(filter){
-  const sections = document.querySelectorAll('.game-section');
-  const cards = document.querySelectorAll('.ach-card');
+  var sections = document.querySelectorAll('.category-section');
+  var cards = document.querySelectorAll('.ach-card');
 
   if(filter === 'all'){
-    sections.forEach(s => s.style.display = '');
-    cards.forEach(c => c.style.display = '');
+    sections.forEach(function(s){ s.style.display = ''; });
+    cards.forEach(function(c){ c.style.display = ''; });
   } else if(filter === 'unlocked'){
-    sections.forEach(s => s.style.display = '');
-    cards.forEach(c => {
+    sections.forEach(function(s){ s.style.display = ''; });
+    cards.forEach(function(c){
       c.style.display = c.dataset.state === 'unlocked' ? '' : 'none';
     });
-    // Hide sections with no visible cards
-    sections.forEach(s => {
-      const visible = s.querySelectorAll('.ach-card:not([style*="display: none"])');
+    sections.forEach(function(s){
+      var visible = s.querySelectorAll('.ach-card:not([style*="display: none"])');
       s.style.display = visible.length ? '' : 'none';
     });
   } else if(filter === 'locked'){
-    sections.forEach(s => s.style.display = '');
-    cards.forEach(c => {
+    sections.forEach(function(s){ s.style.display = ''; });
+    cards.forEach(function(c){
       c.style.display = c.dataset.state === 'locked' ? '' : 'none';
     });
-    sections.forEach(s => {
-      const visible = s.querySelectorAll('.ach-card:not([style*="display: none"])');
+    sections.forEach(function(s){
+      var visible = s.querySelectorAll('.ach-card:not([style*="display: none"])');
       s.style.display = visible.length ? '' : 'none';
     });
-  } else if(filter.startsWith('game-')){
-    const game = filter.replace('game-','');
-    sections.forEach(s => {
-      s.style.display = s.dataset.game === game ? '' : 'none';
+  } else if(filter.indexOf('cat-') === 0){
+    var catId = filter.replace('cat-','');
+    sections.forEach(function(s){
+      s.style.display = s.dataset.category === catId ? '' : 'none';
     });
-    cards.forEach(c => c.style.display = '');
+    cards.forEach(function(c){ c.style.display = ''; });
   }
 }
 
-// ===== TOAST NOTIFICATION =====
-let toastQueue = [];
-let toastShowing = false;
+// ===== TOAST =====
+var toastQueue = [];
+var toastShowing = false;
 
 function showAchToast(icon, title){
-  toastQueue.push({icon, title});
+  toastQueue.push({icon:icon, title:title});
   if(!toastShowing) processToastQueue();
 }
 
 function processToastQueue(){
   if(toastQueue.length === 0){ toastShowing = false; return; }
   toastShowing = true;
-  const {icon, title} = toastQueue.shift();
-  const toast = document.getElementById('achToast');
-  document.getElementById('toastIcon').textContent = icon;
-  document.getElementById('toastText').textContent = title;
+  var item = toastQueue.shift();
+  var toast = document.getElementById('achToast');
+  document.getElementById('toastIcon').textContent = item.icon;
+  document.getElementById('toastText').textContent = item.title;
   toast.classList.add('show');
-
-  // Play sparkle sound
   playSparkleSound();
 
-  setTimeout(() => {
+  setTimeout(function(){
     toast.classList.remove('show');
     setTimeout(processToastQueue, 400);
   }, 3000);
@@ -812,15 +1166,15 @@ function processToastQueue(){
 
 function playSparkleSound(){
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const notes = [880, 1108, 1318, 1760];
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var notes = [880, 1108, 1318, 1760];
+    notes.forEach(function(freq, i){
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
       osc.type = 'sine';
       osc.frequency.value = freq;
       gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.08);
-      gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + i * 0.08 + 0.02);
+      gain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + i * 0.08 + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.3);
       osc.connect(gain).connect(ctx.destination);
       osc.start(ctx.currentTime + i * 0.08);
@@ -831,61 +1185,66 @@ function playSparkleSound(){
 
 // ===== CONFETTI =====
 function launchConfetti(){
-  const colors = ['#ff6fd8','#b44dff','#ffd700','#ff4444','#44ff44','#4488ff','#ff88cc'];
-  for(let i = 0; i < 80; i++){
-    const piece = document.createElement('div');
+  var colors = ['#ff6fd8','#b44dff','#ffd700','#ff4488','#44ff88','#4488ff','#ff88cc','#b9f2ff'];
+  for(var i = 0; i < 100; i++){
+    var piece = document.createElement('div');
     piece.className = 'confetti-piece';
     piece.style.left = Math.random() * 100 + 'vw';
     piece.style.top = -10 + 'px';
     piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.width = (Math.random() * 8 + 4) + 'px';
-    piece.style.height = (Math.random() * 8 + 4) + 'px';
-    piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
-    piece.style.animationDelay = (Math.random() * 1) + 's';
+    var s = Math.random() * 8 + 4;
+    piece.style.width = s + 'px';
+    piece.style.height = s + 'px';
+    piece.style.setProperty('--dur', (Math.random() * 2 + 2) + 's');
+    piece.style.animationDelay = (Math.random() * 1.2) + 's';
+    if(Math.random() > 0.5) piece.style.borderRadius = '50%';
     document.body.appendChild(piece);
-    setTimeout(() => piece.remove(), 4000);
+    setTimeout(function(el){ return function(){ el.remove(); }; }(piece), 5000);
   }
 }
 
-// ===== GLOBAL UNLOCK FUNCTION (for other pages to include) =====
-// This function can be copied to other game pages
+// Mini confetti burst from a card
+function miniConfetti(card){
+  var rect = card.getBoundingClientRect();
+  var cx = rect.left + rect.width/2;
+  var cy = rect.top + rect.height/2;
+  var colors = ['#ff6fd8','#b44dff','#ffd700','#b9f2ff'];
+  for(var i = 0; i < 20; i++){
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = cx + 'px';
+    piece.style.top = cy + 'px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    var s = Math.random() * 6 + 3;
+    piece.style.width = s + 'px';
+    piece.style.height = s + 'px';
+    piece.style.setProperty('--dur', (Math.random() * 1.5 + 1) + 's');
+    piece.style.animationDelay = (Math.random() * 0.3) + 's';
+    if(Math.random() > 0.5) piece.style.borderRadius = '50%';
+    document.body.appendChild(piece);
+    setTimeout(function(el){ return function(){ el.remove(); }; }(piece), 3000);
+  }
+}
+
+// ===== GLOBAL UNLOCK (for other pages) =====
 window.checkAndUnlockAchievement = function(id, condition){
   if(!condition) return false;
-  const key = 'kpop_achievements_' + (new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star');
-  let data;
+  var key = 'kpop_achievements_' + (new URLSearchParams(window.location.search).get('player') || localStorage.getItem('kpop_player') || 'Star');
+  var data;
   try { data = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){ data = {}; }
   if(data[id]) return false;
   data[id] = Date.now();
   localStorage.setItem(key, JSON.stringify(data));
-
-  // Show toast if on achievements page
-  const ach = (typeof ACHIEVEMENTS !== 'undefined') ? ACHIEVEMENTS.find(a => a.id === id) : null;
+  var ach = (typeof ACHIEVEMENTS !== 'undefined') ? ACHIEVEMENTS.find(function(a){ return a.id === id; }) : null;
   if(ach && typeof showAchToast === 'function'){
     showAchToast(ach.icon, ach.title);
+    launchConfetti();
   }
   return true;
 };
 
 // ===== INIT =====
 renderAll();
-
-// Show toasts for newly detected achievements
-(function(){
-  const beforeRender = JSON.parse(sessionStorage.getItem('kpop_ach_before') || '{}');
-  const afterRender = getUnlocked();
-  const newlyUnlocked = [];
-  Object.keys(afterRender).forEach(id => {
-    if(!beforeRender[id]) newlyUnlocked.push(id);
-  });
-  if(newlyUnlocked.length > 0 && newlyUnlocked.length <= 5){
-    newlyUnlocked.forEach(id => {
-      const ach = ACHIEVEMENTS.find(a => a.id === id);
-      if(ach) showAchToast(ach.icon, ach.title);
-    });
-  }
-  // Store current state for next visit comparison
-  sessionStorage.setItem('kpop_ach_before', JSON.stringify(afterRender));
-})();
 </script>
 </body>
 </html>

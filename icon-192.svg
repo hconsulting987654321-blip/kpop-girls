@@ -1,22 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ff6fd8"/>
-      <stop offset="100%" style="stop-color:#a18cd1"/>
+      <stop offset="0%" stop-color="#ff6fd8"/>
+      <stop offset="40%" stop-color="#cd5ce0"/>
+      <stop offset="100%" stop-color="#a18cd1"/>
     </linearGradient>
     <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ffffff"/>
-      <stop offset="100%" style="stop-color:#f0e6ff"/>
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#ffe0f7"/>
+    </linearGradient>
+    <linearGradient id="kGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700"/>
+      <stop offset="100%" stop-color="#ffb300"/>
     </linearGradient>
   </defs>
-  <!-- Background -->
-  <rect width="192" height="192" rx="40" fill="url(#bg)"/>
-  <!-- White star -->
+  <!-- Background with rounded corners for maskable -->
+  <rect width="192" height="192" rx="38" fill="url(#bg)"/>
+  <!-- Subtle inner border -->
+  <rect x="4" y="4" width="184" height="184" rx="36" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  <!-- Main star -->
   <polygon points="96,28 112,68 156,68 120,94 134,138 96,114 58,138 72,94 36,68 80,68"
            fill="url(#starGrad)" opacity="0.95"/>
-  <!-- Gold K -->
+  <!-- K letter -->
   <text x="96" y="112" text-anchor="middle" font-family="'Arial Black',sans-serif" font-weight="900"
-        font-size="62" fill="#ffd700" stroke="#e6b800" stroke-width="1">K</text>
+        font-size="60" fill="url(#kGrad)" stroke="#e6a800" stroke-width="1">K</text>
+  <!-- Music note accent -->
+  <text x="148" y="46" font-family="sans-serif" font-size="22" fill="#ffd700" opacity="0.75">&#9835;</text>
   <!-- Sparkle dots -->
   <circle cx="30" cy="30" r="3" fill="#fff" opacity="0.8"/>
   <circle cx="162" cy="28" r="2.5" fill="#fff" opacity="0.7"/>
@@ -26,4 +35,9 @@
   <circle cx="145" cy="172" r="2" fill="#ffd700" opacity="0.6"/>
   <circle cx="170" cy="90" r="1.5" fill="#fff" opacity="0.5"/>
   <circle cx="20" cy="96" r="2" fill="#fff" opacity="0.55"/>
+  <!-- Small decorative stars -->
+  <polygon points="160,44 162,48 166,48 163,51 164,55 160,52 156,55 157,51 154,48 158,48"
+           fill="#fff" opacity="0.4"/>
+  <polygon points="32,158 34,162 38,162 35,165 36,169 32,166 28,169 29,165 26,162 30,162"
+           fill="#ffd700" opacity="0.4"/>
 </svg>

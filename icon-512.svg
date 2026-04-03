@@ -1,19 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ff6fd8"/>
-      <stop offset="100%" style="stop-color:#a18cd1"/>
+      <stop offset="0%" stop-color="#ff6fd8"/>
+      <stop offset="40%" stop-color="#cd5ce0"/>
+      <stop offset="100%" stop-color="#a18cd1"/>
     </linearGradient>
     <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ffffff"/>
-      <stop offset="100%" style="stop-color:#f0e6ff"/>
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#ffe0f7"/>
+    </linearGradient>
+    <linearGradient id="kGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700"/>
+      <stop offset="100%" stop-color="#ffb300"/>
     </linearGradient>
     <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feGaussianBlur stdDeviation="10" result="blur"/>
       <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
-    <filter id="outerGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="18" result="blur"/>
+    <filter id="starGlow" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -22,20 +27,26 @@
   </defs>
   <!-- Background -->
   <rect width="512" height="512" rx="100" fill="url(#bg)"/>
-  <!-- Outer glow ring -->
-  <rect x="8" y="8" width="496" height="496" rx="96" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" filter="url(#outerGlow)"/>
-  <!-- White star with glow -->
+  <!-- Subtle inner border with glow -->
+  <rect x="8" y="8" width="496" height="496" rx="96" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" filter="url(#glow)"/>
+  <!-- Main star with glow -->
   <polygon points="256,65 298,175 416,175 322,245 358,362 256,296 154,362 190,245 96,175 214,175"
-           fill="url(#starGrad)" opacity="0.95" filter="url(#glow)"/>
-  <!-- Gold K -->
+           fill="url(#starGrad)" opacity="0.95" filter="url(#starGlow)"/>
+  <!-- K letter with gradient -->
   <text x="256" y="300" text-anchor="middle" font-family="'Arial Black',sans-serif" font-weight="900"
-        font-size="170" fill="#ffd700" stroke="#e6b800" stroke-width="2">K</text>
-  <!-- Decorative stars -->
-  <text x="420" y="120" font-family="sans-serif" font-size="40" fill="#ffd700" opacity="0.8">&#9733;</text>
-  <text x="70" y="440" font-family="sans-serif" font-size="32" fill="#ffd700" opacity="0.6">&#9733;</text>
-  <text x="400" y="430" font-family="sans-serif" font-size="24" fill="#fff" opacity="0.5">&#9733;</text>
-  <!-- Musical note in corner -->
-  <text x="440" y="470" font-family="sans-serif" font-size="36" fill="#fff" opacity="0.45">&#9834;</text>
+        font-size="165" fill="url(#kGrad)" stroke="#e6a800" stroke-width="2">K</text>
+  <!-- Music notes accent -->
+  <text x="405" y="118" font-family="sans-serif" font-size="40" fill="#ffd700" opacity="0.75">&#9835;</text>
+  <text x="440" y="460" font-family="sans-serif" font-size="32" fill="#fff" opacity="0.4">&#9834;</text>
+  <!-- Decorative mini stars -->
+  <polygon points="420,100 424,110 434,110 426,116 429,126 420,120 411,126 414,116 406,110 416,110"
+           fill="#fff" opacity="0.5"/>
+  <polygon points="85,420 89,430 99,430 91,436 94,446 85,440 76,446 79,436 71,430 81,430"
+           fill="#ffd700" opacity="0.45"/>
+  <polygon points="430,380 433,387 440,387 434,391 436,398 430,394 424,398 426,391 420,387 427,387"
+           fill="#fff" opacity="0.35"/>
+  <polygon points="80,110 83,117 90,117 84,121 86,128 80,124 74,128 76,121 70,117 77,117"
+           fill="#ffd700" opacity="0.4"/>
   <!-- Sparkle dots -->
   <circle cx="75" cy="75" r="6" fill="#fff" opacity="0.8"/>
   <circle cx="440" cy="65" r="5" fill="#fff" opacity="0.7"/>

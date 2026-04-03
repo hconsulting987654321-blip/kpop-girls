@@ -3,22 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>K-Pop Star Academy — 16 Mini-Jeux Magiques</title>
-<meta name="description" content="16 mini-jeux magiques pour les fans de K-Pop. Gratuit, sans pub, hors-ligne. Pour les enfants de 4 a 12 ans.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>K-Pop Star Academy — 15 Jeux Gratuits pour les Fans de K-Pop</title>
+<meta name="description" content="K-Pop Star Academy : 15 mini-jeux magiques gratuits pour les fans de K-Pop. Karaoke, danse, mode, quiz et plus ! Sans pub, 100% gratuit. Pour enfants de 4 a 12 ans.">
+<meta name="keywords" content="kpop, jeux, enfants, gratuit, karaoke, danse, mode, quiz, k-pop, star">
+<meta property="og:title" content="K-Pop Star Academy — 15 Jeux Gratuits">
+<meta property="og:description" content="15 mini-jeux magiques pour les fans de K-Pop. Gratuit, sans pub, fait avec amour.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hconsulting987654321-blip.github.io/kpop-girls/">
+<meta property="og:image" content="https://hconsulting987654321-blip.github.io/kpop-girls/icon-512.svg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://hconsulting987654321-blip.github.io/kpop-girls/landing.html">
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #0a0a1a;
-  --pink: #ff2d95;
-  --purple: #a855f7;
+  --pink: #ff6fd8;
+  --purple: #b44dff;
   --gold: #ffd700;
+  --dark: #0a0a1a;
   --cyan: #06d6a0;
+  --hot-pink: #ff2d95;
   --text: #f0f0ff;
-  --muted: #8888aa;
+  --muted: #9999bb;
   --glass: rgba(255,255,255,0.06);
   --glass-border: rgba(255,255,255,0.12);
 }
@@ -27,467 +35,413 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Quicksand', sans-serif;
-  background: var(--bg);
+  background: var(--dark);
   color: var(--text);
   overflow-x: hidden;
   line-height: 1.6;
 }
 
-/* ========== LOADER ========== */
+/* ===== LOADER ===== */
 #loader {
   position: fixed; inset: 0; z-index: 9999;
-  background: var(--bg);
+  background: var(--dark);
   display: flex; align-items: center; justify-content: center;
-  transition: opacity .6s, visibility .6s;
+  flex-direction: column; gap: 20px;
+  transition: opacity .8s, visibility .8s;
 }
 #loader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-burst { position: relative; width: 80px; height: 80px; }
-.loader-burst span {
-  position: absolute; width: 8px; height: 8px; border-radius: 50%;
-  animation: burstOut 1s ease-out infinite;
+.loader-logo {
+  font-size: 3rem; animation: loaderPulse 1s ease-in-out infinite alternate;
 }
-.loader-burst span:nth-child(1) { background: var(--pink); animation-delay: 0s; }
-.loader-burst span:nth-child(2) { background: var(--purple); animation-delay: .1s; }
-.loader-burst span:nth-child(3) { background: var(--gold); animation-delay: .2s; }
-.loader-burst span:nth-child(4) { background: var(--cyan); animation-delay: .3s; }
-.loader-burst span:nth-child(5) { background: #ff6b6b; animation-delay: .15s; }
-.loader-burst span:nth-child(6) { background: #4ecdc4; animation-delay: .25s; }
-@keyframes burstOut {
-  0% { top: 50%; left: 50%; opacity: 1; transform: scale(0); }
-  50% { opacity: 1; }
-  100% { top: calc(50% + var(--dy, 0px)); left: calc(50% + var(--dx, 0px)); opacity: 0; transform: scale(1.5); }
+@keyframes loaderPulse {
+  from { transform: scale(1); filter: drop-shadow(0 0 10px var(--pink)); }
+  to { transform: scale(1.15); filter: drop-shadow(0 0 30px var(--gold)); }
 }
-.loader-burst span:nth-child(1) { --dx: -30px; --dy: -30px; }
-.loader-burst span:nth-child(2) { --dx: 30px; --dy: -25px; }
-.loader-burst span:nth-child(3) { --dx: 0px; --dy: -35px; }
-.loader-burst span:nth-child(4) { --dx: -25px; --dy: 25px; }
-.loader-burst span:nth-child(5) { --dx: 30px; --dy: 20px; }
-.loader-burst span:nth-child(6) { --dx: 0px; --dy: 35px; }
+.loader-dots { display: flex; gap: 8px; }
+.loader-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+  animation: dotBounce .6s ease-in-out infinite alternate;
+}
+.loader-dots span:nth-child(1) { background: var(--pink); animation-delay: 0s; }
+.loader-dots span:nth-child(2) { background: var(--purple); animation-delay: .15s; }
+.loader-dots span:nth-child(3) { background: var(--gold); animation-delay: .3s; }
+@keyframes dotBounce {
+  from { transform: translateY(0); opacity: .4; }
+  to { transform: translateY(-12px); opacity: 1; }
+}
 
-/* ========== AURORA BACKGROUND ========== */
+/* ===== AURORA ===== */
 .aurora {
-  position: fixed; inset: 0; z-index: -2; overflow: hidden;
+  position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none;
 }
 .aurora::before, .aurora::after {
   content: ''; position: absolute; width: 200%; height: 200%;
-  top: -50%; left: -50%;
-  border-radius: 40%;
+  top: -50%; left: -50%; border-radius: 40%;
   animation: auroraMove 20s ease-in-out infinite alternate;
 }
 .aurora::before {
-  background: radial-gradient(ellipse at 30% 40%, rgba(168,85,247,.12) 0%, transparent 60%),
-              radial-gradient(ellipse at 70% 60%, rgba(255,45,149,.08) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 30% 40%, rgba(180,77,255,.14) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 60%, rgba(255,111,216,.1) 0%, transparent 50%);
 }
 .aurora::after {
-  background: radial-gradient(ellipse at 60% 30%, rgba(6,214,160,.06) 0%, transparent 50%),
-              radial-gradient(ellipse at 20% 80%, rgba(255,215,0,.05) 0%, transparent 50%);
-  animation-delay: -10s;
-  animation-direction: alternate-reverse;
+  background: radial-gradient(ellipse at 60% 30%, rgba(6,214,160,.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 20% 80%, rgba(255,215,0,.06) 0%, transparent 50%);
+  animation-delay: -10s; animation-direction: alternate-reverse;
 }
 @keyframes auroraMove {
   0% { transform: rotate(0deg) scale(1); }
   100% { transform: rotate(15deg) scale(1.1); }
 }
 
-/* ========== STAR FIELD ========== */
-.stars { position: fixed; inset: 0; z-index: -1; }
-.star {
-  position: absolute; border-radius: 50%; background: #fff;
-  animation: twinkle var(--dur) ease-in-out infinite alternate;
-}
-@keyframes twinkle {
-  0% { opacity: 0.2; transform: scale(.8); }
-  100% { opacity: 1; transform: scale(1.2); }
-}
+/* ===== STAR CANVAS ===== */
+#starfield { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 
-/* ========== FLOATING EMOJIS ========== */
+/* ===== FLOATING EMOJIS ===== */
 .float-emoji {
-  position: fixed; font-size: 1.5rem; z-index: 0; pointer-events: none;
-  animation: floatDrift var(--dur) ease-in-out infinite alternate;
-  opacity: .5;
+  position: fixed; font-size: 1.4rem; z-index: 0; pointer-events: none;
+  opacity: 0; animation: floatUp var(--dur, 14s) linear infinite;
+  animation-delay: var(--delay, 0s);
 }
-@keyframes floatDrift {
-  0% { transform: translateY(0) rotate(0deg); }
-  100% { transform: translateY(var(--drift, -30px)) rotate(var(--rot, 15deg)); }
+@keyframes floatUp {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10% { opacity: .5; }
+  90% { opacity: .5; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
 }
 
-/* ========== SCROLL REVEAL ========== */
+/* ===== SCROLL REVEAL ===== */
 .reveal {
-  opacity: 0; transform: translateY(50px);
-  transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
+  opacity: 0; transform: translateY(40px);
+  transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: .1s; }
-.reveal-delay-2 { transition-delay: .2s; }
-.reveal-delay-3 { transition-delay: .3s; }
-.reveal-delay-4 { transition-delay: .4s; }
-.reveal-delay-5 { transition-delay: .5s; }
+.reveal-d1 { transition-delay: .1s; }
+.reveal-d2 { transition-delay: .2s; }
+.reveal-d3 { transition-delay: .3s; }
+.reveal-d4 { transition-delay: .4s; }
 
-/* ========== SECTION BASE ========== */
-section { padding: 100px 24px; max-width: 1100px; margin: 0 auto; position: relative; }
-
-/* ========== HERO ========== */
-.hero {
-  min-height: 100vh; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; text-align: center;
-  padding-top: 40px; gap: 28px;
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 16px 24px;
+  background: rgba(10,10,26,.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: space-between;
+  transition: transform .3s;
 }
-
-.hero-title {
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 800; line-height: 1.1;
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;
-}
-.hero-title .letter {
-  display: inline-block;
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: letterFloat 3s ease-in-out infinite alternate;
-  position: relative;
-}
-.hero-title .letter::after {
-  content: ''; position: absolute; top: -4px; right: -2px;
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--gold);
-  animation: sparkle 2s ease-in-out infinite;
-  opacity: 0;
-}
-.hero-title .letter:nth-child(3n)::after { animation-delay: .5s; }
-.hero-title .letter:nth-child(3n+1)::after { animation-delay: 1s; }
-
-@keyframes letterFloat {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(var(--float-y, -8px)); }
-}
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0); }
-  50% { opacity: 1; transform: scale(1.5); }
-}
-
-.hero-sub {
-  font-size: clamp(1.3rem, 4vw, 2rem);
-  font-weight: 700; color: var(--gold);
-}
-.hero-sub .count { display: inline-block; min-width: 2ch; }
-
-/* Phone mockup */
-.phone-mockup {
-  width: 260px; height: 460px;
-  background: #111128;
-  border-radius: 32px;
-  border: 3px solid rgba(168,85,247,.4);
-  position: relative; overflow: hidden;
-  box-shadow: 0 0 60px rgba(168,85,247,.25), 0 20px 60px rgba(0,0,0,.5);
-  animation: phoneFloat 4s ease-in-out infinite alternate;
-}
-@keyframes phoneFloat {
-  0% { transform: translateY(0) rotate(-1deg); }
-  100% { transform: translateY(-12px) rotate(1deg); }
-}
-.phone-notch {
-  width: 100px; height: 22px; background: #0a0a1a;
-  border-radius: 0 0 14px 14px; margin: 0 auto;
-  position: relative; z-index: 2;
-}
-.phone-screen {
-  padding: 12px; display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px; margin-top: 8px;
-}
-.phone-card {
-  aspect-ratio: 1; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.8rem;
-  animation: cardPop .5s ease-out backwards;
-}
-.phone-card:nth-child(1) { background: linear-gradient(135deg, #ff6b9d, #c44dff); animation-delay: .1s; }
-.phone-card:nth-child(2) { background: linear-gradient(135deg, #ffd700, #ff8c00); animation-delay: .2s; }
-.phone-card:nth-child(3) { background: linear-gradient(135deg, #06d6a0, #00b4d8); animation-delay: .3s; }
-.phone-card:nth-child(4) { background: linear-gradient(135deg, #a855f7, #6366f1); animation-delay: .4s; }
-.phone-card:nth-child(5) { background: linear-gradient(135deg, #ff2d95, #ff6b6b); animation-delay: .5s; }
-.phone-card:nth-child(6) { background: linear-gradient(135deg, #22d3ee, #a78bfa); animation-delay: .6s; }
-.phone-card:nth-child(7) { background: linear-gradient(135deg, #f472b6, #fbbf24); animation-delay: .7s; }
-.phone-card:nth-child(8) { background: linear-gradient(135deg, #34d399, #60a5fa); animation-delay: .8s; }
-.phone-card:nth-child(9) { background: linear-gradient(135deg, #fb923c, #f43f5e); animation-delay: .9s; }
-@keyframes cardPop {
-  0% { transform: scale(0); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.phone-bottom-bar {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 36px; background: rgba(255,255,255,.05);
-  display: flex; align-items: center; justify-content: center; gap: 20px;
-  font-size: .8rem; color: var(--muted);
-}
-
-/* CTA */
-.cta-btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 18px 40px;
-  background: linear-gradient(135deg, var(--pink), var(--purple));
-  color: #fff; font-family: inherit;
-  font-size: 1.25rem; font-weight: 700;
-  border: none; border-radius: 60px;
-  cursor: pointer; text-decoration: none;
-  box-shadow: 0 4px 30px rgba(255,45,149,.4);
-  animation: pulse 2.5s ease-in-out infinite;
-  transition: transform .2s, box-shadow .2s;
-  position: relative; overflow: hidden;
-}
-.cta-btn::before {
-  content: ''; position: absolute; inset: -2px;
-  background: linear-gradient(135deg, var(--pink), var(--purple), var(--gold), var(--pink));
-  background-size: 300% 300%;
-  border-radius: 60px; z-index: -1;
-  animation: shimmer 3s linear infinite;
-}
-@keyframes shimmer {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
-}
-.cta-btn:hover { transform: scale(1.05); box-shadow: 0 6px 40px rgba(255,45,149,.6); }
-.cta-btn:active { transform: scale(.97); }
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 4px 30px rgba(255,45,149,.4); }
-  50% { box-shadow: 0 4px 50px rgba(255,45,149,.7); }
-}
-
-.badges {
-  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
-}
-.badge {
-  padding: 8px 18px; border-radius: 40px;
-  background: var(--glass); border: 1px solid var(--glass-border);
-  font-size: .9rem; font-weight: 600;
-  backdrop-filter: blur(10px);
-}
-
-/* ========== GAMES SHOWCASE ========== */
-.games-section { max-width: 100%; padding: 80px 0; }
-.games-section h2 {
-  text-align: center; font-size: clamp(1.8rem, 5vw, 2.8rem);
-  margin-bottom: 40px; padding: 0 24px;
-  background: linear-gradient(135deg, var(--pink), var(--purple));
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.games-scroll {
-  display: flex; gap: 20px; overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 20px 24px 40px;
-  -ms-overflow-style: none; scrollbar-width: none;
-}
-.games-scroll::-webkit-scrollbar { display: none; }
-
-.game-card {
-  flex: 0 0 220px; scroll-snap-align: center;
-  border-radius: 24px; padding: 28px 20px;
-  text-align: center; position: relative;
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s;
-  transform-style: preserve-3d; perspective: 600px;
-  cursor: default;
-}
-.game-card:hover {
-  transform: translateY(-8px) rotateY(5deg) rotateX(3deg);
-  box-shadow: 0 20px 40px rgba(0,0,0,.4);
-}
-.game-card .emoji { font-size: 3em; display: block; margin-bottom: 12px; }
-.game-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
-.game-card p { font-size: .8rem; color: var(--muted); margin-bottom: 10px; }
-.game-card .stars { color: var(--gold); font-size: .85rem; }
-.game-badge {
-  position: absolute; top: -8px; right: -8px;
-  background: linear-gradient(135deg, #ff2d95, #ff6b6b);
-  color: #fff; font-size: .65rem; font-weight: 800;
-  padding: 4px 10px; border-radius: 20px;
-  text-transform: uppercase; letter-spacing: 1px;
-  box-shadow: 0 4px 12px rgba(255,45,149,.4);
-}
-
-/* ========== FEATURES ========== */
-.features-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-}
-.feature-card {
-  padding: 36px 28px; border-radius: 24px;
-  background: var(--glass); border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  text-align: center;
-  transition: transform .3s, border-color .3s;
-}
-.feature-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--pink);
-}
-.feature-card .icon {
-  font-size: 2.8rem; margin-bottom: 16px;
-  display: block;
-  animation: bounce 2s ease-in-out infinite;
-}
-.feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
-.feature-card p { font-size: .9rem; color: var(--muted); }
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-/* ========== SOCIAL PROOF ========== */
-.social-section { text-align: center; }
-.social-section h2 {
-  font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 48px;
-  background: linear-gradient(135deg, var(--gold), #ff8c00);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.counter {
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  font-weight: 800; margin-bottom: 48px;
+nav.hidden { transform: translateY(-100%); }
+.nav-logo { font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.nav-logo span {
   background: linear-gradient(135deg, var(--pink), var(--gold));
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.testimonials {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px; margin-bottom: 40px;
+.nav-cta {
+  padding: 10px 24px; border-radius: 40px; border: none;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff; font-family: inherit; font-weight: 700; font-size: .9rem;
+  cursor: pointer; text-decoration: none;
+  transition: transform .2s, box-shadow .2s;
 }
-.testimonial {
-  padding: 28px; border-radius: 20px;
-  background: var(--glass); border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px); text-align: left;
+.nav-cta:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(255,111,216,.4); }
+
+/* ===== SECTION ===== */
+section { padding: 100px 24px; max-width: 1100px; margin: 0 auto; position: relative; }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding-top: 80px; gap: 32px;
 }
-.testimonial .avatar { font-size: 2.5rem; margin-bottom: 12px; }
-.testimonial .t-stars { color: var(--gold); margin-bottom: 8px; }
-.testimonial q { font-style: italic; color: var(--muted); font-size: .95rem; }
-.testimonial .t-name { margin-top: 12px; font-weight: 700; font-size: .85rem; color: var(--purple); }
-.parent-badge {
+.hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 28px; border-radius: 40px;
-  background: linear-gradient(135deg, rgba(6,214,160,.15), rgba(6,214,160,.05));
-  border: 1px solid rgba(6,214,160,.3);
-  font-weight: 700; font-size: 1rem;
+  padding: 8px 20px; border-radius: 40px;
+  background: rgba(255,111,216,.12); border: 1px solid rgba(255,111,216,.25);
+  font-size: .85rem; font-weight: 600; color: var(--pink);
+  animation: badgePulse 3s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,111,216,.3); }
+  50% { box-shadow: 0 0 0 8px rgba(255,111,216,0); }
 }
 
-/* ========== INSTALL ========== */
-.install-section { text-align: center; }
-.install-section h2 {
-  font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 48px;
-  background: linear-gradient(135deg, var(--cyan), var(--purple));
+.hero-title {
+  font-size: clamp(2.8rem, 9vw, 5.5rem);
+  font-weight: 800; line-height: 1.05;
+  position: relative;
+}
+.hero-title .line1 {
+  display: block;
+  background: linear-gradient(135deg, var(--pink), var(--purple), var(--pink));
+  background-size: 200% 200%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s ease-in-out infinite;
+}
+.hero-title .line2 {
+  display: block;
+  background: linear-gradient(135deg, var(--gold), #ffaa00, var(--gold));
+  background-size: 200% 200%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s ease-in-out infinite reverse;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Sparkles around title */
+.sparkle {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); pointer-events: none;
+  animation: sparkleAnim 2s ease-in-out infinite;
+}
+@keyframes sparkleAnim {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+}
+
+.hero-sub {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  color: var(--muted); max-width: 600px;
+}
+.hero-sub strong { color: var(--text); }
+
+.cta-group { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; }
+
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 20px 44px;
+  background: linear-gradient(135deg, var(--hot-pink), var(--purple));
+  color: #fff; font-family: inherit;
+  font-size: 1.3rem; font-weight: 800;
+  border: none; border-radius: 60px;
+  cursor: pointer; text-decoration: none;
+  box-shadow: 0 4px 30px rgba(255,45,149,.4);
+  animation: ctaPulse 2.5s ease-in-out infinite;
+  transition: transform .2s, box-shadow .2s;
+  position: relative; overflow: hidden;
+}
+.cta-btn::before {
+  content: ''; position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,.15) 50%, transparent 70%);
+  animation: shine 3s linear infinite;
+}
+@keyframes shine {
+  from { transform: translateX(-100%) rotate(25deg); }
+  to { transform: translateX(100%) rotate(25deg); }
+}
+.cta-btn:hover { transform: scale(1.06); box-shadow: 0 8px 40px rgba(255,45,149,.6); }
+.cta-btn:active { transform: scale(.97); }
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 4px 30px rgba(255,45,149,.4); }
+  50% { box-shadow: 0 4px 50px rgba(255,45,149,.65), 0 0 80px rgba(180,77,255,.2); }
+}
+
+.cta-secondary {
+  padding: 16px 32px; border-radius: 60px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  color: var(--text); font-family: inherit;
+  font-size: 1rem; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: transform .2s, border-color .2s;
+}
+.cta-secondary:hover { transform: scale(1.04); border-color: var(--purple); }
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px; padding: 60px 24px; max-width: 900px; margin: 0 auto;
+}
+.stat-item {
+  text-align: center; padding: 28px 12px;
+  border-radius: 20px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  transition: transform .3s, border-color .3s;
+}
+.stat-item:hover { transform: translateY(-4px); border-color: var(--pink); }
+.stat-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+.stat-num {
+  font-size: 1.6rem; font-weight: 800; display: block;
+  background: linear-gradient(135deg, var(--pink), var(--gold));
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.steps {
-  display: flex; flex-wrap: wrap; gap: 32px;
-  justify-content: center; margin-bottom: 48px;
-}
-.step {
-  flex: 0 1 240px; text-align: center;
-  padding: 32px 20px; border-radius: 24px;
-  background: var(--glass); border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px);
-}
-.step .step-icon {
-  font-size: 3rem; margin-bottom: 16px; display: block;
-}
-.step .step-num {
-  display: inline-block; width: 32px; height: 32px; line-height: 32px;
-  border-radius: 50%; background: linear-gradient(135deg, var(--pink), var(--purple));
-  font-weight: 800; font-size: .9rem; margin-bottom: 12px;
-}
-.step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
-.step p { font-size: .85rem; color: var(--muted); }
+.stat-label { font-size: .8rem; color: var(--muted); font-weight: 600; margin-top: 4px; }
 
-/* QR placeholder */
-.qr-area {
-  width: 160px; height: 160px; margin: 0 auto 32px;
-  border-radius: 16px; border: 2px solid var(--glass-border);
-  background: repeating-conic-gradient(var(--glass) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px;
+/* ===== GAMES GRID ===== */
+.games-section h2 {
+  text-align: center; font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; font-weight: 800;
+}
+.games-subtitle {
+  text-align: center; color: var(--muted); font-size: 1.05rem;
+  margin-bottom: 48px; max-width: 500px; margin-left: auto; margin-right: auto;
+}
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+.game-card {
+  border-radius: 20px; padding: 24px 18px;
+  text-align: center; position: relative;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s, border-color .4s;
+  cursor: pointer; text-decoration: none; color: var(--text); display: block;
+  overflow: hidden;
+}
+.game-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--card-from, rgba(255,111,216,.1)), var(--card-to, rgba(180,77,255,.05)));
+  border-radius: 20px; z-index: -1;
+}
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,.3);
+  border-color: var(--pink);
+}
+.game-card .game-emoji { font-size: 2.8rem; display: block; margin-bottom: 10px; transition: transform .3s; }
+.game-card:hover .game-emoji { transform: scale(1.2) rotate(-5deg); }
+.game-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.game-card p { font-size: .78rem; color: var(--muted); }
+.game-badge {
+  position: absolute; top: -1px; right: -1px;
+  background: linear-gradient(135deg, var(--hot-pink), #ff6b6b);
+  color: #fff; font-size: .6rem; font-weight: 800;
+  padding: 4px 10px; border-radius: 0 20px 0 12px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.game-badge.new { background: linear-gradient(135deg, var(--cyan), #34d399); }
+
+/* ===== TEAM ===== */
+.team-section h2 {
+  text-align: center; font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 48px;
+  background: linear-gradient(135deg, var(--gold), #ffaa00);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; font-weight: 800;
+}
+.team-grid { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+.team-card {
+  flex: 0 1 280px; padding: 40px 24px;
+  border-radius: 24px; text-align: center;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  transition: transform .3s, border-color .3s;
+  position: relative; overflow: hidden;
+}
+.team-card:hover { transform: translateY(-6px); border-color: var(--gold); }
+.team-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--pink), var(--purple), var(--gold));
+}
+.team-avatar {
+  width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 16px;
   display: flex; align-items: center; justify-content: center;
-  font-size: .75rem; color: var(--muted);
-  backdrop-filter: blur(6px);
+  font-size: 3rem;
+  border: 3px solid var(--glass-border);
+  background: rgba(255,255,255,.05);
+  animation: avatarFloat 3s ease-in-out infinite alternate;
+}
+.team-card:nth-child(2) .team-avatar { animation-delay: .5s; }
+.team-card:nth-child(3) .team-avatar { animation-delay: 1s; }
+@keyframes avatarFloat {
+  from { transform: translateY(0); }
+  to { transform: translateY(-6px); }
+}
+.team-name { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+.team-age { font-size: .85rem; color: var(--muted); margin-bottom: 10px; }
+.team-role {
+  display: inline-block; padding: 4px 14px; border-radius: 20px;
+  font-size: .75rem; font-weight: 700;
+  background: rgba(255,215,0,.12); color: var(--gold);
+  border: 1px solid rgba(255,215,0,.2);
+}
+
+/* ===== FEATURES ===== */
+.features-section h2 {
+  text-align: center; font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 48px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; font-weight: 800;
+}
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+.feature-card {
+  padding: 32px 24px; border-radius: 20px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px); text-align: center;
+  transition: transform .3s, border-color .3s;
+}
+.feature-card:hover { transform: translateY(-5px); border-color: var(--cyan); }
+.feature-icon { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+.feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+.feature-card p { font-size: .85rem; color: var(--muted); }
+
+/* ===== FINAL CTA ===== */
+.final-cta {
+  text-align: center; padding: 100px 24px;
   position: relative;
 }
-.qr-area::after {
-  content: 'QR Code'; position: absolute;
-  font-weight: 700; font-size: .8rem;
+.final-cta h2 {
+  font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 800;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--pink), var(--gold));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
+.final-cta p { color: var(--muted); font-size: 1.1rem; margin-bottom: 36px; }
 
-/* Share */
-.share-row {
-  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-}
-.share-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 28px; border-radius: 40px;
-  font-family: inherit; font-size: 1rem; font-weight: 700;
-  border: none; cursor: pointer; color: #fff;
-  transition: transform .2s, box-shadow .2s;
-  text-decoration: none;
-}
-.share-btn:hover { transform: scale(1.05); }
-.share-btn.whatsapp {
-  background: #25d366; box-shadow: 0 4px 20px rgba(37,211,102,.3);
-  font-size: 1.1rem; padding: 16px 36px;
-}
-.share-btn.copy {
-  background: var(--glass); border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px);
-}
-.share-btn.facebook {
-  background: #1877f2; box-shadow: 0 4px 20px rgba(24,119,242,.3);
-}
-
-/* ========== FOOTER ========== */
+/* ===== FOOTER ===== */
 footer {
   text-align: center; padding: 40px 24px;
   color: var(--muted); font-size: .8rem;
   border-top: 1px solid var(--glass-border);
 }
 footer a { color: var(--pink); text-decoration: none; }
+footer .heart { color: #ff2d95; }
 
-/* ========== CONFETTI ========== */
-.confetti-piece {
+/* ===== CONFETTI ===== */
+.confetti {
   position: fixed; z-index: 9998; pointer-events: none;
-  width: 10px; height: 10px; border-radius: 2px;
-  animation: confettiFall var(--fall-dur, 2s) ease-out forwards;
+  width: 8px; height: 8px; border-radius: 2px;
+  animation: confettiFall var(--dur, 2.5s) ease-out forwards;
 }
 @keyframes confettiFall {
   0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
-  100% { opacity: 0; transform: translateY(100vh) rotate(var(--rot, 720deg)) scale(.3); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(var(--rot, 720deg)) scale(.2); }
 }
 
-/* ========== GRADIENT BORDER SECTIONS ========== */
-.glow-border {
-  position: relative;
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .games-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .game-card { padding: 18px 12px; }
+  .game-card .game-emoji { font-size: 2.2rem; }
+  section { padding: 70px 16px; }
+  nav { padding: 12px 16px; }
 }
-.glow-border::before {
-  content: ''; position: absolute; inset: -1px;
-  border-radius: 28px; padding: 1px;
-  background: linear-gradient(135deg, var(--pink), var(--purple), var(--gold), var(--cyan));
-  background-size: 400% 400%;
-  animation: borderGlow 6s linear infinite;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
-  pointer-events: none;
-}
-@keyframes borderGlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 640px) {
-  .hero-title { font-size: clamp(2rem, 10vw, 3rem); }
-  .phone-mockup { width: 200px; height: 360px; }
-  .phone-card { font-size: 1.4rem; }
-  .phone-screen { gap: 6px; padding: 8px; }
-  .game-card { flex: 0 0 180px; padding: 20px 14px; }
-  section { padding: 60px 16px; }
+@media (max-width: 480px) {
+  .games-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-title { font-size: clamp(2.2rem, 12vw, 3rem); }
   .cta-btn { padding: 16px 32px; font-size: 1.1rem; }
+  .stat-item { padding: 20px 8px; }
+  .stat-num { font-size: 1.3rem; }
 }
 </style>
 </head>
@@ -495,392 +449,337 @@ footer a { color: var(--pink); text-decoration: none; }
 
 <!-- Loader -->
 <div id="loader">
-  <div class="loader-burst">
-    <span></span><span></span><span></span>
-    <span></span><span></span><span></span>
+  <div class="loader-logo">&#11088;</div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- Aurora -->
+<div class="aurora"></div>
+
+<!-- Star canvas -->
+<canvas id="starfield"></canvas>
+
+<!-- Nav -->
+<nav id="nav">
+  <div class="nav-logo">&#11088; <span>K-Pop Star Academy</span></div>
+  <a href="index.html" class="nav-cta">Jouer</a>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-badge reveal">&#127775; 15 jeux gratuits pour les fans de K-Pop</div>
+
+  <h1 class="hero-title reveal reveal-d1">
+    <span class="line1">K-Pop Star</span>
+    <span class="line2">Academy</span>
+  </h1>
+
+  <p class="hero-sub reveal reveal-d2">
+    Le monde magique du K-Pop en <strong>15 mini-jeux</strong> pour
+    les petites stars. Gratuit, sans pub, fait avec amour.
+  </p>
+
+  <div class="cta-group reveal reveal-d3">
+    <a href="index.html" class="cta-btn" id="cta-main">
+      &#127918; Jouer Maintenant !
+    </a>
+    <a href="#games" class="cta-secondary">&#11015;&#65039; Voir les jeux</a>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<div class="stats-bar reveal">
+  <div class="stat-item">
+    <span class="stat-icon">&#127918;</span>
+    <span class="stat-num" data-target="15">0</span>
+    <span class="stat-label">Jeux</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">&#128176;</span>
+    <span class="stat-num">100%</span>
+    <span class="stat-label">Gratuit</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">&#128683;</span>
+    <span class="stat-num">Zero</span>
+    <span class="stat-label">Pub</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">&#10084;&#65039;</span>
+    <span class="stat-num">100%</span>
+    <span class="stat-label">Fait avec amour</span>
   </div>
 </div>
 
-<!-- Aurora background -->
-<div class="aurora"></div>
-
-<!-- Star field (injected by JS) -->
-<div class="stars" id="stars"></div>
-
-<!-- Floating emojis -->
-<div id="floating-emojis"></div>
-
-<!-- ==================== HERO ==================== -->
-<section class="hero" id="hero">
-  <div class="hero-title" id="hero-title"></div>
-
-  <div class="hero-sub reveal reveal-delay-1">
-    <span class="count" id="game-count">0</span> Mini-Jeux Magiques
-  </div>
-
-  <div class="phone-mockup reveal reveal-delay-2">
-    <div class="phone-notch"></div>
-    <div class="phone-screen">
-      <div class="phone-card">🎤</div>
-      <div class="phone-card">💃</div>
-      <div class="phone-card">🎨</div>
-      <div class="phone-card">👗</div>
-      <div class="phone-card">⭐</div>
-      <div class="phone-card">🐱</div>
-      <div class="phone-card">🎵</div>
-      <div class="phone-card">💖</div>
-      <div class="phone-card">🏆</div>
-    </div>
-    <div class="phone-bottom-bar">
-      <span>K-Pop Star Academy</span>
-    </div>
-  </div>
-
-  <a href="index.html" class="cta-btn reveal reveal-delay-3" id="cta-main">
-    🎮 Jouer Maintenant — C'est Gratuit !
-  </a>
-
-  <div class="badges reveal reveal-delay-4">
-    <span class="badge">&#10003; Gratuit</span>
-    <span class="badge">&#10003; Sans pub</span>
-    <span class="badge">&#10003; Hors-ligne</span>
-  </div>
+<!-- ===== GAMES ===== -->
+<section class="games-section reveal" id="games">
+  <h2>Nos 15 Jeux</h2>
+  <p class="games-subtitle">Chaque jeu est une aventure unique dans le monde du K-Pop !</p>
+  <div class="games-grid" id="games-grid"></div>
 </section>
 
-<!-- ==================== GAMES SHOWCASE ==================== -->
-<section class="games-section reveal">
-  <h2>Nos 16 Jeux</h2>
-  <div class="games-scroll" id="games-scroll">
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(255,45,149,.15),rgba(168,85,247,.1))">
-      <span class="game-badge">Nouveau</span>
-      <span class="emoji">🎤</span><h3>Karaoke Star</h3><p>Chante tes hits K-Pop</p><div class="stars">⭐⭐⭐</div>
+<!-- ===== TEAM ===== -->
+<section class="team-section reveal" id="team">
+  <h2>&#11088; Nos Stars</h2>
+  <div class="team-grid">
+    <div class="team-card reveal reveal-d1">
+      <div class="team-avatar">&#128102;</div>
+      <div class="team-name">Ambre &#128150;</div>
+      <div class="team-age">6 ans</div>
+      <div class="team-role">Super Danseuse</div>
     </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,140,0,.08))">
-      <span class="emoji">💃</span><h3>Dance Battle</h3><p>Reproduis la choreo</p><div class="stars">⭐⭐⭐⭐</div>
+    <div class="team-card reveal reveal-d2">
+      <div class="team-avatar">&#128103;</div>
+      <div class="team-name">Eden &#128150;</div>
+      <div class="team-age">6 ans</div>
+      <div class="team-role">Reine du Karaoke</div>
     </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(6,214,160,.12),rgba(0,180,216,.08))">
-      <span class="emoji">🎨</span><h3>Makeup Studio</h3><p>Maquillage de star</p><div class="stars">⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(99,102,241,.08))">
-      <span class="game-badge">Hot</span>
-      <span class="emoji">👗</span><h3>Fashion Show</h3><p>Defile de mode K-Pop</p><div class="stars">⭐⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(244,114,182,.12),rgba(251,191,36,.08))">
-      <span class="emoji">📸</span><h3>Photo Booth</h3><p>Selfies avec filtres</p><div class="stars">⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(255,107,107,.12),rgba(255,45,149,.08))">
-      <span class="emoji">🐱</span><h3>Pet Cafe</h3><p>Ton animal virtuel</p><div class="stars">⭐⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(167,139,250,.08))">
-      <span class="emoji">🎵</span><h3>Music Quiz</h3><p>Devine la chanson</p><div class="stars">⭐⭐⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(52,211,153,.12),rgba(96,165,250,.08))">
-      <span class="emoji">🏆</span><h3>Fan Challenge</h3><p>Quiz pour vrais fans</p><div class="stars">⭐⭐⭐⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(251,146,60,.12),rgba(244,63,94,.08))">
-      <span class="game-badge">Nouveau</span>
-      <span class="emoji">🎬</span><h3>MV Director</h3><p>Crée ton clip video</p><div class="stars">⭐⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(236,72,153,.08))">
-      <span class="emoji">💖</span><h3>Bias Picker</h3><p>Trouve ton bias ideal</p><div class="stars">⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(20,184,166,.12),rgba(56,189,248,.08))">
-      <span class="emoji">🎧</span><h3>DJ Remix</h3><p>Mixe tes propres sons</p><div class="stars">⭐⭐⭐</div>
-    </div>
-    <div class="game-card" style="background:linear-gradient(135deg,rgba(249,115,22,.12),rgba(234,179,8,.08))">
-      <span class="emoji">🌟</span><h3>Idol Trainer</h3><p>Entraine ton idol</p><div class="stars">⭐⭐⭐⭐</div>
+    <div class="team-card reveal reveal-d3">
+      <div class="team-avatar">&#128131;</div>
+      <div class="team-name">Louise &#11088;</div>
+      <div class="team-age">10 ans</div>
+      <div class="team-role">Leader du Groupe</div>
     </div>
   </div>
 </section>
 
-<!-- ==================== FEATURES ==================== -->
-<section class="reveal">
-  <h2 style="text-align:center;font-size:clamp(1.8rem,5vw,2.8rem);margin-bottom:48px;background:linear-gradient(135deg,var(--cyan),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">
-    Pourquoi les Kids Adorent
-  </h2>
+<!-- ===== FEATURES ===== -->
+<section class="features-section reveal">
+  <h2>Pourquoi on adore</h2>
   <div class="features-grid">
-    <div class="feature-card reveal reveal-delay-1">
-      <span class="icon">🎮</span><h3>16 Jeux Differents</h3><p>Jamais le temps de s'ennuyer</p>
+    <div class="feature-card reveal reveal-d1">
+      <span class="feature-icon">&#128274;</span>
+      <h3>100% Securise</h3>
+      <p>Zero collecte de donnees, zero inscription</p>
     </div>
-    <div class="feature-card reveal reveal-delay-2">
-      <span class="icon">🐱</span><h3>Ton Animal Virtuel</h3><p>Nourris-le, habille-le, joue</p>
+    <div class="feature-card reveal reveal-d2">
+      <span class="feature-icon">&#128246;</span>
+      <h3>Joue hors-ligne</h3>
+      <p>Installe comme une app, joue partout</p>
     </div>
-    <div class="feature-card reveal reveal-delay-3">
-      <span class="icon">🏆</span><h3>50 Succès à Débloquer</h3><p>Collectionne-les tous !</p>
+    <div class="feature-card reveal reveal-d3">
+      <span class="feature-icon">&#127912;</span>
+      <h3>15 jeux differents</h3>
+      <p>Karaoke, danse, mode, quiz et plus</p>
     </div>
-    <div class="feature-card reveal reveal-delay-4">
-      <span class="icon">👗</span><h3>Mode & Defile</h3><p>Crée tes looks de star</p>
+    <div class="feature-card reveal reveal-d4">
+      <span class="feature-icon">&#127942;</span>
+      <h3>50 Succes</h3>
+      <p>Debloque-les tous pour devenir la star ultime</p>
     </div>
-    <div class="feature-card reveal reveal-delay-5">
-      <span class="icon">🎤</span><h3>Karaoke & Studio</h3><p>Chante comme une idol</p>
+    <div class="feature-card reveal reveal-d1">
+      <span class="feature-icon">&#128062;</span>
+      <h3>Animal virtuel</h3>
+      <p>Adopte et prends soin de ton compagnon K-Pop</p>
     </div>
-    <div class="feature-card reveal">
-      <span class="icon">📱</span><h3>Installe comme une App</h3><p>Sur ton ecran d'accueil</p>
+    <div class="feature-card reveal reveal-d2">
+      <span class="feature-icon">&#128241;</span>
+      <h3>Mobile et Desktop</h3>
+      <p>Marche sur telephone, tablette et ordinateur</p>
     </div>
   </div>
 </section>
 
-<!-- ==================== SOCIAL PROOF ==================== -->
-<section class="social-section reveal">
-  <h2>Ils Adorent</h2>
-
-  <div class="counter">
-    🎮 Plus de <span id="play-count">0</span> parties jouees
-  </div>
-
-  <div class="testimonials">
-    <div class="testimonial reveal reveal-delay-1">
-      <div class="avatar">👧🏻</div>
-      <div class="t-stars">⭐⭐⭐⭐⭐</div>
-      <q>Mon jeu préféré ! Je joue tous les jours au karaoke et au quiz. Trop bien !</q>
-      <div class="t-name">Emma, 9 ans</div>
-    </div>
-    <div class="testimonial reveal reveal-delay-2">
-      <div class="avatar">👩🏽</div>
-      <div class="t-stars">⭐⭐⭐⭐⭐</div>
-      <q>Enfin un jeu gratuit SANS pub ! Ma fille peut jouer tranquille. Merci !</q>
-      <div class="t-name">Sophie M. ⭐⭐⭐⭐⭐</div>
-    </div>
-    <div class="testimonial reveal reveal-delay-3">
-      <div class="avatar">👧🏾</div>
-      <div class="t-stars">⭐⭐⭐⭐⭐</div>
-      <q>J'adore le pet cafe et le fashion show ! Mon chat virtuel est trop mignon !</q>
-      <div class="t-name">Lina, 7 ans</div>
-    </div>
-  </div>
-
-  <div class="parent-badge reveal">
-    🛡️ Recommandé par les parents
-  </div>
+<!-- ===== FINAL CTA ===== -->
+<section class="final-cta reveal">
+  <h2>Prete a devenir une Star ?</h2>
+  <p>Rejoins Ambre, Eden et Louise dans l'aventure K-Pop !</p>
+  <a href="index.html" class="cta-btn" id="cta-final">&#127775; C'est parti !</a>
 </section>
 
-<!-- ==================== INSTALL ==================== -->
-<section class="install-section reveal">
-  <h2>Installe en 30 Secondes</h2>
-
-  <div class="steps">
-    <div class="step reveal reveal-delay-1">
-      <span class="step-icon">📱</span>
-      <span class="step-num">1</span>
-      <h3>Ouvre le lien</h3>
-      <p>Sur ton telephone</p>
-    </div>
-    <div class="step reveal reveal-delay-2">
-      <span class="step-icon">📥</span>
-      <span class="step-num">2</span>
-      <h3>Ajouter a l'ecran</h3>
-      <p>Clique "Ajouter a l'ecran d'accueil"</p>
-    </div>
-    <div class="step reveal reveal-delay-3">
-      <span class="step-icon">🎉</span>
-      <span class="step-num">3</span>
-      <h3>C'est pret !</h3>
-      <p>Amuse-toi, meme sans internet</p>
-    </div>
-  </div>
-
-  <div class="qr-area reveal"></div>
-
-  <div class="share-row reveal">
-    <a href="https://wa.me/?text=Regarde%20ce%20jeu%20K-Pop%20trop%20bien%20!%20https://kpop-star-academy.app" class="share-btn whatsapp" target="_blank">
-      💬 Partager WhatsApp
-    </a>
-    <button class="share-btn copy" id="copy-btn" onclick="copyLink()">
-      📋 Copier le lien
-    </button>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=https://kpop-star-academy.app" class="share-btn facebook" target="_blank">
-      📘 Facebook
-    </a>
-  </div>
-</section>
-
-<!-- ==================== FOOTER ==================== -->
+<!-- ===== FOOTER ===== -->
 <footer>
-  <p>K-Pop Star Academy &mdash; © 2024 Stellar Games Studio</p>
-  <p style="margin-top:8px;">Gratuit &bull; Sans pub &bull; <a href="mentions.html">Vie privée</a></p>
+  <p>K-Pop Star Academy &mdash; Fait avec <span class="heart">&#10084;</span> pour Ambre, Eden et Louise</p>
+  <p style="margin-top:8px">Gratuit &bull; Sans pub &bull; <a href="mentions.html">Mentions legales</a> &bull; <a href="parents.html">Espace parents</a></p>
 </footer>
 
 <script>
-// ===== LOADER =====
-window.addEventListener('load', () => {
-  setTimeout(() => document.getElementById('loader').classList.add('hide'), 800);
+// ===== GAMES DATA =====
+const games = [
+  { emoji: '\u{1F3A4}', name: 'Karaoke Star', desc: 'Chante tes hits K-Pop !', href: 'karaoke.html', badge: 'Hit' },
+  { emoji: '\u{1F483}', name: 'Dance Challenge', desc: 'Reproduis la choreo !', href: 'dance.html', badge: '' },
+  { emoji: '\u{1F457}', name: 'Habillage K-Pop', desc: 'Habille ta star !', href: 'habillage.html', badge: '' },
+  { emoji: '\u{1F3A8}', name: 'Coloriage K-Pop', desc: 'Colorie de belles images !', href: 'coloriage.html', badge: '' },
+  { emoji: '\u{1F3B5}', name: 'Studio Musical', desc: 'Cree tes propres beats !', href: 'studio.html', badge: 'Nouveau', badgeClass: 'new' },
+  { emoji: '\u{1F4F8}', name: 'Photo Booth', desc: 'Selfies avec stickers K-Pop !', href: 'photobooth.html', badge: '' },
+  { emoji: '\u{1F431}', name: 'Mon Pet K-Pop', desc: 'Adopte ton animal virtuel !', href: 'pet.html', badge: 'Hit' },
+  { emoji: '\u{1F0CF}', name: 'K-Pop Memory', desc: 'Retrouve les paires !', href: 'memory.html', badge: '' },
+  { emoji: '\u{1F914}', name: 'Quiz K-Pop', desc: 'Teste tes connaissances !', href: 'quiz.html', badge: '' },
+  { emoji: '\u{1F9E9}', name: 'Puzzle Star', desc: 'Reconstitue les photos !', href: 'puzzle.html', badge: '' },
+  { emoji: '\u2B50', name: 'Attrape les Etoiles', desc: "Attrape un max d'etoiles !", href: 'stars.html', badge: '' },
+  { emoji: '\u{1F3C3}', name: 'Course K-Pop', desc: 'Cours, saute, collecte !', href: 'course.html', badge: 'Nouveau', badgeClass: 'new' },
+  { emoji: '\u{1F460}', name: 'Mode Defile', desc: 'Defile sur le podium !', href: 'defile.html', badge: '' },
+  { emoji: '\u{1F464}', name: 'Cree ton Idol', desc: 'Cree ta K-Pop star !', href: 'avatar.html', badge: '' },
+  { emoji: '\u{1F4C7}', name: 'Ma Carte K-Pop', desc: 'Ta carte de star perso !', href: 'carte.html', badge: '' },
+];
+
+const gradients = [
+  ['rgba(255,111,216,.12)','rgba(180,77,255,.06)'],
+  ['rgba(6,214,160,.12)','rgba(0,180,216,.06)'],
+  ['rgba(255,107,107,.12)','rgba(255,75,75,.06)'],
+  ['rgba(129,140,248,.12)','rgba(99,102,241,.06)'],
+  ['rgba(255,215,0,.12)','rgba(255,170,0,.06)'],
+  ['rgba(167,139,250,.12)','rgba(139,92,246,.06)'],
+  ['rgba(251,146,60,.12)','rgba(249,115,22,.06)'],
+  ['rgba(244,114,182,.12)','rgba(236,72,153,.06)'],
+  ['rgba(52,211,153,.12)','rgba(16,185,129,.06)'],
+  ['rgba(96,165,250,.12)','rgba(59,130,246,.06)'],
+  ['rgba(232,121,249,.12)','rgba(192,38,211,.06)'],
+  ['rgba(74,222,128,.12)','rgba(34,197,94,.06)'],
+  ['rgba(251,191,36,.12)','rgba(245,158,11,.06)'],
+  ['rgba(255,111,216,.12)','rgba(255,45,149,.06)'],
+  ['rgba(34,211,238,.12)','rgba(167,139,250,.06)'],
+];
+
+const grid = document.getElementById('games-grid');
+games.forEach((g, i) => {
+  const card = document.createElement('a');
+  card.href = g.href;
+  card.className = 'game-card reveal';
+  card.style.transitionDelay = (i * .05) + 's';
+  card.style.setProperty('--card-from', gradients[i][0]);
+  card.style.setProperty('--card-to', gradients[i][1]);
+  card.innerHTML =
+    (g.badge ? '<span class="game-badge' + (g.badgeClass ? ' ' + g.badgeClass : '') + '">' + g.badge + '</span>' : '') +
+    '<span class="game-emoji">' + g.emoji + '</span>' +
+    '<h3>' + g.name + '</h3>' +
+    '<p>' + g.desc + '</p>';
+  grid.appendChild(card);
 });
 
-// ===== STAR FIELD =====
+// ===== LOADER =====
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('hide'), 600);
+});
+
+// ===== STAR CANVAS =====
 (() => {
-  const c = document.getElementById('stars');
-  for (let i = 0; i < 60; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 3 + 1;
-    Object.assign(s.style, {
-      width: size + 'px', height: size + 'px',
-      top: Math.random() * 100 + '%',
-      left: Math.random() * 100 + '%',
-      '--dur': (Math.random() * 3 + 2) + 's',
-      animationDelay: Math.random() * 3 + 's'
+  const cv = document.getElementById('starfield');
+  const cx = cv.getContext('2d');
+  let W, H;
+  function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+  resize(); addEventListener('resize', resize);
+  const dots = Array.from({length: 80}, () => ({
+    x: Math.random() * 2000, y: Math.random() * 2000,
+    r: .4 + Math.random() * 1.8, phase: Math.random() * Math.PI * 2, speed: .3 + Math.random() * 1.5
+  }));
+  function draw(t) {
+    cx.clearRect(0, 0, W, H);
+    dots.forEach(d => {
+      const a = .2 + .8 * (.5 + .5 * Math.sin(d.phase + t * d.speed / 1000));
+      cx.beginPath();
+      cx.arc(d.x % W, d.y % H, d.r, 0, 6.28);
+      cx.fillStyle = 'rgba(255,255,255,' + a + ')';
+      cx.fill();
     });
-    c.appendChild(s);
+    requestAnimationFrame(draw);
   }
+  requestAnimationFrame(draw);
 })();
 
 // ===== FLOATING EMOJIS =====
 (() => {
-  const emojis = ['🎤','⭐','💖','👑','🦄','🌈','🎵','✨','🎀','💜'];
-  const c = document.getElementById('floating-emojis');
-  emojis.forEach((e, i) => {
+  const emojis = ['\u{1F3A4}','\u2B50','\u{1F496}','\u{1F451}','\u{1F31F}','\u{1F3B5}','\u2728','\u{1F389}','\u{1F48E}','\u{1F49C}'];
+  for (let i = 0; i < 12; i++) {
     const d = document.createElement('div');
     d.className = 'float-emoji';
-    d.textContent = e;
-    Object.assign(d.style, {
-      top: (10 + Math.random() * 80) + '%',
-      left: (5 + Math.random() * 90) + '%',
-      '--dur': (4 + Math.random() * 6) + 's',
-      '--drift': (-20 - Math.random() * 30) + 'px',
-      '--rot': (Math.random() * 30 - 15) + 'deg',
-      animationDelay: (i * .7) + 's',
-      fontSize: (.8 + Math.random() * 1.2) + 'rem'
-    });
-    c.appendChild(d);
-  });
+    d.textContent = emojis[i % emojis.length];
+    d.style.left = (5 + Math.random() * 90) + '%';
+    d.style.setProperty('--dur', (12 + Math.random() * 10) + 's');
+    d.style.setProperty('--delay', (Math.random() * 12) + 's');
+    d.style.fontSize = (1 + Math.random() * 1) + 'rem';
+    document.body.appendChild(d);
+  }
 })();
 
-// ===== HERO TITLE LETTERS =====
+// ===== SPARKLES AROUND TITLE =====
 (() => {
-  const text = 'K-Pop Star Academy';
-  const colors = [
-    'linear-gradient(135deg,#ff2d95,#ff6b9d)',
-    'linear-gradient(135deg,#a855f7,#c084fc)',
-    'linear-gradient(135deg,#ffd700,#ffec4d)',
-    'linear-gradient(135deg,#06d6a0,#34d399)',
-    'linear-gradient(135deg,#ff6b6b,#ff2d95)',
-    'linear-gradient(135deg,#22d3ee,#a78bfa)',
-    'linear-gradient(135deg,#f472b6,#fbbf24)',
-    'linear-gradient(135deg,#60a5fa,#a855f7)',
-  ];
-  const container = document.getElementById('hero-title');
-  let ci = 0;
-  text.split('').forEach((ch, i) => {
-    const span = document.createElement('span');
-    if (ch === ' ') {
-      span.innerHTML = '&nbsp;';
-      span.style.width = '.3em';
-    } else {
-      span.textContent = ch;
-      span.className = 'letter';
-      span.style.background = colors[ci % colors.length];
-      span.style.webkitBackgroundClip = 'text';
-      span.style.backgroundClip = 'text';
-      span.style.webkitTextFillColor = 'transparent';
-      span.style.animationDelay = (i * .12) + 's';
-      span.style.setProperty('--float-y', (-6 - Math.random() * 10) + 'px');
-      ci++;
-    }
-    container.appendChild(span);
-  });
+  const title = document.querySelector('.hero-title');
+  for (let i = 0; i < 8; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.top = (Math.random() * 100) + '%';
+    s.style.left = (Math.random() * 100) + '%';
+    s.style.animationDelay = (Math.random() * 2) + 's';
+    s.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
+    title.appendChild(s);
+  }
 })();
 
-// ===== COUNTING ANIMATION =====
-function animateCount(el, target, duration) {
-  let start = 0;
-  const step = (ts) => {
-    if (!start) start = ts;
-    const progress = Math.min((ts - start) / duration, 1);
-    el.textContent = Math.floor(progress * target);
-    if (progress < 1) requestAnimationFrame(step);
-    else el.textContent = target;
-  };
-  requestAnimationFrame(step);
-}
-
-// ===== INTERSECTION OBSERVER =====
+// ===== SCROLL REVEAL =====
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      // Trigger counters
-      if (e.target.querySelector('#game-count')) {
-        animateCount(document.getElementById('game-count'), 16, 1500);
-      }
-      if (e.target.querySelector('#play-count')) {
-        animateCount(document.getElementById('play-count'), 1247, 2000);
-      }
-    }
+    if (e.isIntersecting) e.target.classList.add('visible');
   });
-}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// Trigger hero elements immediately
+// Trigger hero immediately
 setTimeout(() => {
   document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('visible'));
-  animateCount(document.getElementById('game-count'), 16, 1500);
-}, 900);
+}, 700);
 
-// ===== CONFETTI =====
-function confetti() {
-  const colors = ['#ff2d95','#a855f7','#ffd700','#06d6a0','#ff6b6b','#22d3ee','#f472b6','#60a5fa'];
-  for (let i = 0; i < 50; i++) {
-    const c = document.createElement('div');
-    c.className = 'confetti-piece';
-    Object.assign(c.style, {
-      left: (Math.random() * 100) + 'vw',
-      top: '-10px',
-      background: colors[Math.floor(Math.random() * colors.length)],
-      width: (6 + Math.random() * 8) + 'px',
-      height: (6 + Math.random() * 8) + 'px',
-      borderRadius: Math.random() > .5 ? '50%' : '2px',
-      '--fall-dur': (1.5 + Math.random() * 2) + 's',
-      '--rot': (360 + Math.random() * 720) + 'deg',
-      animationDelay: (Math.random() * .5) + 's'
-    });
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 4000);
-  }
-}
+// ===== COUNTER ANIMATION =====
+const countEls = document.querySelectorAll('.stat-num[data-target]');
+const countObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = parseInt(el.dataset.target);
+    let start = 0;
+    const step = (ts) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / 1200, 1);
+      el.textContent = Math.floor(p * target);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    };
+    requestAnimationFrame(step);
+    countObs.unobserve(el);
+  });
+}, { threshold: .5 });
+countEls.forEach(el => countObs.observe(el));
 
-document.getElementById('cta-main').addEventListener('click', (e) => {
-  confetti();
+// ===== NAV HIDE ON SCROLL =====
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  const st = window.scrollY;
+  if (st > lastScroll && st > 100) nav.classList.add('hidden');
+  else nav.classList.remove('hidden');
+  lastScroll = st;
 });
 
-// ===== AUTO-SCROLL GAMES =====
-(() => {
-  const scroll = document.getElementById('games-scroll');
-  let scrollDir = 1;
-  let autoScroll = true;
-  let interval;
-
-  function startAutoScroll() {
-    interval = setInterval(() => {
-      if (!autoScroll) return;
-      scroll.scrollLeft += scrollDir;
-      if (scroll.scrollLeft >= scroll.scrollWidth - scroll.clientWidth - 5) scrollDir = -1;
-      if (scroll.scrollLeft <= 5) scrollDir = 1;
-    }, 30);
+// ===== CONFETTI ON CTA =====
+function confetti() {
+  const colors = ['#ff2d95','#b44dff','#ffd700','#06d6a0','#ff6b6b','#22d3ee','#f472b6','#60a5fa'];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    Object.assign(c.style, {
+      left: (Math.random() * 100) + 'vw', top: '-10px',
+      background: colors[Math.floor(Math.random() * colors.length)],
+      width: (5 + Math.random() * 8) + 'px', height: (5 + Math.random() * 8) + 'px',
+      borderRadius: Math.random() > .5 ? '50%' : '2px',
+      '--dur': (2 + Math.random() * 2) + 's',
+      '--rot': (360 + Math.random() * 720) + 'deg',
+      animationDelay: (Math.random() * .4) + 's'
+    });
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4500);
   }
-
-  scroll.addEventListener('pointerdown', () => { autoScroll = false; });
-  scroll.addEventListener('pointerup', () => { setTimeout(() => autoScroll = true, 3000); });
-
-  startAutoScroll();
-})();
-
-// ===== COPY LINK =====
-function copyLink() {
-  navigator.clipboard.writeText(window.location.href).then(() => {
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = '✅ Copie !';
-    setTimeout(() => btn.textContent = '📋 Copier le lien', 2000);
-  });
 }
+document.getElementById('cta-main').addEventListener('click', confetti);
+document.getElementById('cta-final').addEventListener('click', confetti);
 
-// ===== PARALLAX ON FLOATING EMOJIS =====
+// ===== PARALLAX ON MOUSE =====
 document.addEventListener('mousemove', (e) => {
-  const x = (e.clientX / window.innerWidth - .5) * 20;
-  const y = (e.clientY / window.innerHeight - .5) * 20;
+  const x = (e.clientX / innerWidth - .5) * 15;
+  const y = (e.clientY / innerHeight - .5) * 15;
   document.querySelectorAll('.float-emoji').forEach((el, i) => {
-    const factor = (i % 3 + 1) * .5;
-    el.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+    const f = ((i % 3) + 1) * .4;
+    el.style.marginLeft = (x * f) + 'px';
+    el.style.marginTop = (y * f) + 'px';
   });
 });
 </script>
