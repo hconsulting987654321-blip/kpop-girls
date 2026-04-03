@@ -855,7 +855,7 @@ body::before {
 }
 
 /* ===== SECTIONS HEADINGS ===== */
-.games-section h2, .trophies-section h2, .collection-section h2, .classement h2{
+.games-section h2, .trophies-section h2, .collection-section h2, .classement h2, .missions-section h2{
   text-shadow:0 2px 8px rgba(0,0,0,.3);
 }
 
@@ -968,6 +968,231 @@ body::before {
   cursor:pointer;transition:all .2s;font-family:inherit;text-align:center;
 }
 .reset-close-btn:hover{background:rgba(255,255,255,.2);}
+
+/* ===== WELCOME WOW — CURTAIN ===== */
+.welcome-curtain-left,.welcome-curtain-right{
+  position:fixed;top:0;bottom:0;width:50%;z-index:901;
+  background:linear-gradient(180deg,#1a0035 0%,#0d0520 50%,#050510 100%);
+  transition:transform 1.2s cubic-bezier(.77,0,.18,1);
+  pointer-events:none;
+}
+.welcome-curtain-left{left:0;transform:translateX(0);border-right:2px solid rgba(255,111,216,.3);}
+.welcome-curtain-right{right:0;transform:translateX(0);border-left:2px solid rgba(180,77,255,.3);}
+.welcome-curtain-left::after,.welcome-curtain-right::after{
+  content:'';position:absolute;top:0;bottom:0;width:40px;
+  background:repeating-linear-gradient(180deg,transparent,transparent 20px,rgba(255,111,216,.05) 20px,rgba(255,111,216,.05) 40px);
+}
+.welcome-curtain-left::after{right:0;}
+.welcome-curtain-right::after{left:0;}
+.curtain-open .welcome-curtain-left{transform:translateX(-105%);}
+.curtain-open .welcome-curtain-right{transform:translateX(105%);}
+
+/* Spotlight */
+.welcome-spotlight{
+  position:fixed;inset:0;z-index:902;
+  background:radial-gradient(circle at 50% 45%,rgba(255,215,0,.15) 0%,rgba(180,77,255,.08) 30%,transparent 60%);
+  opacity:0;transition:opacity .8s;pointer-events:none;
+}
+.spotlight-on .welcome-spotlight{opacity:1;animation:spotlightPulse 2s ease-in-out infinite;}
+@keyframes spotlightPulse{
+  0%,100%{background:radial-gradient(circle at 50% 45%,rgba(255,215,0,.15) 0%,rgba(180,77,255,.08) 30%,transparent 60%);}
+  50%{background:radial-gradient(circle at 50% 45%,rgba(255,215,0,.25) 0%,rgba(255,111,216,.12) 35%,transparent 65%);}
+}
+
+/* Welcome Glow Name */
+.welcome-glow-name{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:920;
+  font-size:clamp(2.5em,7vw,4.5em);font-weight:800;
+  text-align:center;white-space:nowrap;
+  color:#fff;opacity:0;pointer-events:none;
+  text-shadow:0 0 40px rgba(255,111,216,.8),0 0 80px rgba(180,77,255,.5),0 0 120px rgba(255,215,0,.3);
+  animation:none;
+}
+.welcome-glow-name.show{
+  opacity:1;
+  animation:glowNameIn .8s cubic-bezier(.17,.67,.35,1.3) forwards, glowNamePulse 1.5s .8s ease-in-out infinite;
+}
+.welcome-glow-name.fadeout{
+  animation:glowNameOut .5s ease-in forwards;
+}
+@keyframes glowNameIn{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(0.3);filter:blur(20px);}
+  60%{opacity:1;transform:translate(-50%,-50%) scale(1.15);filter:blur(0);}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:blur(0);}
+}
+@keyframes glowNamePulse{
+  0%,100%{text-shadow:0 0 40px rgba(255,111,216,.8),0 0 80px rgba(180,77,255,.5),0 0 120px rgba(255,215,0,.3);}
+  50%{text-shadow:0 0 60px rgba(255,111,216,1),0 0 120px rgba(180,77,255,.7),0 0 180px rgba(255,215,0,.5);}
+}
+@keyframes glowNameOut{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.5);filter:blur(10px);}
+}
+
+/* ===== ENHANCED PROFILE — VIP/LEGEND BADGE ===== */
+.profile-badge-vip{
+  display:inline-block;margin-left:8px;
+  padding:2px 10px;border-radius:12px;font-size:.65em;font-weight:800;
+  letter-spacing:1px;vertical-align:middle;
+  animation:badgeShine 3s linear infinite;
+}
+.profile-badge-vip.vip{
+  background:linear-gradient(135deg,#ffd700,#ffaa00);color:#1a1028;
+}
+.profile-badge-vip.legend{
+  background:linear-gradient(135deg,#ff6fd8,#b44dff,#ffd700);
+  background-size:200% 200%;color:#fff;
+  animation:badgeShine 3s linear infinite, enterGradient 2s ease infinite;
+}
+@keyframes badgeShine{
+  0%{box-shadow:0 0 8px rgba(255,215,0,.3);}
+  50%{box-shadow:0 0 20px rgba(255,215,0,.6);}
+  100%{box-shadow:0 0 8px rgba(255,215,0,.3);}
+}
+
+/* Profile avatar golden frame */
+.profile-avatar.golden-frame::before{
+  background:conic-gradient(#ffd700,#ffaa00,#fff,#ffd700,#ffaa00,#fff,#ffd700) !important;
+  filter:drop-shadow(0 0 8px rgba(255,215,0,.5));
+}
+
+/* Streak bar animated */
+.streak-bar-wrap{
+  margin-top:8px;display:flex;align-items:center;gap:8px;
+}
+.streak-bar{
+  flex:1;height:10px;border-radius:10px;
+  background:rgba(255,150,0,.1);overflow:hidden;
+  border:1px solid rgba(255,150,0,.2);
+}
+.streak-bar-fill{
+  height:100%;border-radius:10px;
+  background:linear-gradient(90deg,#ff6b00,#ff9500,#ffd700);
+  transition:width .8s cubic-bezier(.25,.8,.25,1);
+  position:relative;
+}
+.streak-bar-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  background-size:200% 100%;
+  animation:xpShimmerOverlay 2s linear infinite;
+}
+.streak-flames{font-size:1.2em;animation:flameWiggle 0.5s ease-in-out infinite alternate;}
+@keyframes flameWiggle{0%{transform:rotate(-5deg) scale(1);}100%{transform:rotate(5deg) scale(1.1);}}
+
+/* Star pulse animation */
+@keyframes starPulseAnim{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.3);text-shadow:0 0 20px rgba(255,215,0,.8);}
+  100%{transform:scale(1);}
+}
+.star-pulse{animation:starPulseAnim .5s cubic-bezier(.25,.8,.25,1);}
+
+/* ===== GAME CARD ENHANCEMENTS ===== */
+.game-progress-bar{
+  width:100%;height:5px;border-radius:5px;
+  background:rgba(255,255,255,.06);margin-top:6px;overflow:hidden;
+}
+.game-progress-fill{
+  height:100%;border-radius:5px;
+  background:linear-gradient(90deg,var(--pink),var(--gold));
+  transition:width .5s;
+}
+
+.game-icon{animation:iconIdleBounce 3s ease-in-out infinite;}
+@keyframes iconIdleBounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-4px);}
+}
+.game-card:hover .game-icon{animation:none;transform:scale(1.15) rotate(-5deg);}
+
+.game-last-played{
+  font-size:.6em;color:rgba(255,255,255,.35);margin-top:4px;
+  font-style:italic;
+}
+
+.game-lock-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.4);backdrop-filter:blur(2px);
+  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2em;opacity:.7;
+  transition:opacity .3s;pointer-events:none;
+}
+.game-card:hover .game-lock-overlay{opacity:.3;}
+
+/* ===== DAILY MISSIONS ===== */
+.missions-section{
+  max-width:600px;width:90%;margin:16px auto;position:relative;z-index:2;
+}
+.missions-section h2{
+  text-align:center;font-size:1.2em;margin-bottom:12px;
+  color:rgba(255,255,255,.8);text-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.mission-card{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  backdrop-filter:blur(8px);
+  border:1px solid var(--glass-border);border-radius:16px;
+  padding:14px 18px;margin-bottom:8px;
+  transition:all .3s;
+}
+.mission-card.completed{
+  border-color:rgba(76,255,76,.3);
+  background:linear-gradient(145deg,rgba(76,255,76,.08),rgba(76,255,76,.02));
+}
+.mission-card:hover{transform:translateX(4px);}
+.mission-icon{font-size:1.8em;flex-shrink:0;}
+.mission-info{flex:1;}
+.mission-info .mission-name{font-weight:700;font-size:.95em;}
+.mission-info .mission-desc{font-size:.72em;color:rgba(255,255,255,.5);margin-top:2px;}
+.mission-reward{
+  font-weight:700;color:var(--gold);font-size:.9em;
+  white-space:nowrap;
+}
+.mission-check{
+  font-size:1.4em;flex-shrink:0;
+}
+.mission-check.done{color:#76ff03;animation:checkPop .4s cubic-bezier(.17,.67,.35,1.2);}
+@keyframes checkPop{0%{transform:scale(0);}60%{transform:scale(1.3);}100%{transform:scale(1);}}
+
+/* ===== WARP SPEED TRANSITION ===== */
+.warp-overlay{
+  position:fixed;inset:0;z-index:99998;
+  pointer-events:none;opacity:0;
+  transition:opacity .15s;
+  background:radial-gradient(ellipse at center,transparent 0%,rgba(5,5,16,.9) 100%);
+}
+.warp-overlay.active{opacity:1;pointer-events:all;}
+.warp-line{
+  position:absolute;
+  background:linear-gradient(to right,transparent,rgba(255,255,255,.8),transparent);
+  height:2px;
+  animation:warpShoot .4s linear forwards;
+  transform-origin:center center;
+}
+@keyframes warpShoot{
+  0%{width:0;opacity:0;}
+  30%{opacity:1;}
+  100%{width:200vw;opacity:0;}
+}
+
+/* ===== KONAMI HEARTS RAIN ===== */
+.konami-heart{
+  position:fixed;z-index:99999;pointer-events:none;
+  font-size:3em;opacity:0.9;
+  animation:heartRain var(--dur) ease-in forwards;
+}
+@keyframes heartRain{
+  0%{transform:translateY(-100px) rotate(0deg) scale(0.5);opacity:0;}
+  10%{opacity:0.9;transform:translateY(-50px) scale(1);}
+  90%{opacity:0.7;}
+  100%{transform:translateY(110vh) rotate(360deg) scale(0.3);opacity:0;}
+}
+
+/* ===== NEWS TICKER ENHANCED ===== */
+.ticker span.player-action{color:var(--pink);font-weight:600;}
+.ticker span.player-action::before{content:'💫 ' !important;}
 </style>
 <!-- Firebase SDK (compat mode for simplicity) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -1020,6 +1245,15 @@ body::before {
   <div class="levelup-title" id="levelupTitle"></div>
   <button class="levelup-dismiss" onclick="dismissLevelUp()" data-i18n="levelup_dismiss">Trop bien !</button>
 </div>
+
+<!-- ===== CURTAIN + SPOTLIGHT ===== -->
+<div class="welcome-curtain-left" id="curtainLeft"></div>
+<div class="welcome-curtain-right" id="curtainRight"></div>
+<div class="welcome-spotlight" id="welcomeSpotlight"></div>
+<div class="welcome-glow-name" id="welcomeGlowName"></div>
+
+<!-- ===== WARP OVERLAY ===== -->
+<div class="warp-overlay" id="warpOverlay"></div>
 
 <!-- ===== WELCOME ===== -->
 <div class="welcome" id="welcome">
@@ -1099,6 +1333,12 @@ body::before {
 
   <!-- Mystery Box Button -->
   <button class="mystery-box-btn" id="mysteryBoxBtn" onclick="showMysteryBox()">🎁 Coffre Surprise !</button>
+
+  <!-- Daily Missions -->
+  <div class="missions-section" id="missionsSection">
+    <h2 data-i18n="missions_title">🎯 Missions du Jour</h2>
+    <div id="missionsList"></div>
+  </div>
 
   <!-- Classement -->
   <div class="classement">
@@ -1276,6 +1516,30 @@ const TRANSLATIONS = {
     reset_all: 'Tout recommencer à zéro',
     reset_all_confirm: 'Tu es VRAIMENT sûre ? Toute ta progression sera perdue !',
     reset_close: 'Fermer',
+    missions_title: '🎯 Missions du Jour',
+    mission_complete: 'Terminé !',
+    mission_reward_claimed: 'Bravo ! +{n} ⭐',
+    missions: {
+      play_dance: {name:'Danse comme une star', desc:'Joue à Dance Challenge', reward:10, icon:'💃', game:'dance.html'},
+      play_quiz: {name:'Teste tes connaissances', desc:'Joue au Quiz K-Pop', reward:10, icon:'🎵', game:'quiz.html'},
+      play_memory: {name:'Mémoire de star', desc:'Joue au K-Pop Memory', reward:10, icon:'🃏', game:'memory.html'},
+      play_stars: {name:'Attrape les étoiles', desc:'Joue à Attrape les Étoiles', reward:10, icon:'⭐', game:'stars.html'},
+      feed_pet: {name:'Prends soin de ton pet', desc:'Nourris ton animal 3 fois', reward:15, icon:'🐱', check:'pet_fed'},
+      score_dance: {name:'Score de folie', desc:'Fais un score de 100+ en Dance', reward:20, icon:'🏆', check:'dance_100'},
+      score_quiz: {name:'Experte K-Pop', desc:'Fais 80%+ au Quiz', reward:20, icon:'📚', check:'quiz_80'},
+      create_avatar: {name:'Crée ton Idol', desc:'Crée ou modifie ton avatar', reward:10, icon:'👸', game:'avatar.html'},
+      play_karaoke: {name:'Chante !', desc:'Fais un karaoké complet', reward:10, icon:'🎙️', game:'karaoke.html'},
+      play_puzzle: {name:'Puzzle du jour', desc:'Termine un puzzle', reward:15, icon:'🧩', game:'puzzle.html'},
+      play_course: {name:'Cours vite !', desc:'Joue à Course K-Pop', reward:10, icon:'🏃‍♀️', game:'course.html'},
+      play_coloriage: {name:'Artiste du jour', desc:'Fais un coloriage', reward:10, icon:'🎨', game:'coloriage.html'},
+    },
+    konami_activated: 'CODE SECRET ACTIVÉ !',
+    last_played_now: "À l'instant",
+    last_played_minutes: 'Il y a {n} min',
+    last_played_hours: 'Il y a {n}h',
+    last_played_yesterday: 'Hier',
+    last_played_days: 'Il y a {n} jours',
+    last_played_never: 'Pas encore joué',
     reset_games: {
       pet: {name:'Mon Pet', desc:'Choisir un nouvel animal', icon:'🐱'},
       avatar: {name:'Mon Idol', desc:'Recréer ton avatar', icon:'👸'},
@@ -1410,6 +1674,30 @@ const TRANSLATIONS = {
     reset_all: 'Reset everything',
     reset_all_confirm: 'Are you REALLY sure? All your progress will be lost!',
     reset_close: 'Close',
+    missions_title: '🎯 Daily Missions',
+    mission_complete: 'Done!',
+    mission_reward_claimed: 'Yay! +{n} ⭐',
+    missions: {
+      play_dance: {name:'Dance like a star', desc:'Play Dance Challenge', reward:10, icon:'💃', game:'dance.html'},
+      play_quiz: {name:'Test your knowledge', desc:'Play K-Pop Quiz', reward:10, icon:'🎵', game:'quiz.html'},
+      play_memory: {name:'Star memory', desc:'Play K-Pop Memory', reward:10, icon:'🃏', game:'memory.html'},
+      play_stars: {name:'Catch the stars', desc:'Play Catch the Stars', reward:10, icon:'⭐', game:'stars.html'},
+      feed_pet: {name:'Care for your pet', desc:'Feed your pet 3 times', reward:15, icon:'🐱', check:'pet_fed'},
+      score_dance: {name:'Amazing score', desc:'Score 100+ in Dance', reward:20, icon:'🏆', check:'dance_100'},
+      score_quiz: {name:'K-Pop expert', desc:'Score 80%+ in Quiz', reward:20, icon:'📚', check:'quiz_80'},
+      create_avatar: {name:'Create your Idol', desc:'Create or edit your avatar', reward:10, icon:'👸', game:'avatar.html'},
+      play_karaoke: {name:'Sing!', desc:'Complete a karaoke', reward:10, icon:'🎙️', game:'karaoke.html'},
+      play_puzzle: {name:'Puzzle of the day', desc:'Complete a puzzle', reward:15, icon:'🧩', game:'puzzle.html'},
+      play_course: {name:'Run fast!', desc:'Play K-Pop Run', reward:10, icon:'🏃‍♀️', game:'course.html'},
+      play_coloriage: {name:'Artist of the day', desc:'Do a coloring', reward:10, icon:'🎨', game:'coloriage.html'},
+    },
+    konami_activated: 'SECRET CODE ACTIVATED!',
+    last_played_now: 'Just now',
+    last_played_minutes: '{n} min ago',
+    last_played_hours: '{n}h ago',
+    last_played_yesterday: 'Yesterday',
+    last_played_days: '{n} days ago',
+    last_played_never: 'Not played yet',
     reset_games: {
       pet: {name:'My Pet', desc:'Choose a new animal', icon:'🐱'},
       avatar: {name:'My Idol', desc:'Recreate your avatar', icon:'👸'},
@@ -2554,7 +2842,7 @@ function refreshAfterReset(){
 
 // ===== SECTION REVEAL ON SCROLL =====
 (function(){
-  const sections = document.querySelectorAll('.games-section, .trophies-section, .collection-section, .classement, .profile-card, .mot-du-jour-wrap');
+  const sections = document.querySelectorAll('.games-section, .trophies-section, .collection-section, .classement, .profile-card, .mot-du-jour-wrap, .missions-section');
   sections.forEach(s => s.classList.add('section-reveal'));
   const observer = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
@@ -2564,6 +2852,437 @@ function refreshAfterReset(){
     });
   },{threshold:0.1});
   sections.forEach(s => observer.observe(s));
+})();
+
+/* ===== ENHANCED WELCOME — CURTAIN + SPOTLIGHT + GLOW ===== */
+const _origEnterApp = enterApp;
+enterApp = function() {
+  playerName = nameInput.value.trim();
+  if (!playerName) return;
+  localStorage.setItem('kpop_player', playerName);
+
+  // Auto-add new player to team if not exists
+  if (!PLAYERS.some(p => p.name.toLowerCase() === playerName.toLowerCase())) {
+    const emoji = PLAYER_EMOJIS[PLAYERS.length % PLAYER_EMOJIS.length];
+    const color = PLAYER_COLORS[PLAYERS.length % PLAYER_COLORS.length];
+    PLAYERS.push({ name: playerName, emoji: emoji, color: color });
+    savePlayers(PLAYERS);
+  }
+
+  let visitors = JSON.parse(localStorage.getItem('kpop_visitors') || '[]');
+  if (!visitors.includes(playerName)) { visitors.push(playerName); localStorage.setItem('kpop_visitors', JSON.stringify(visitors)); }
+
+  playWhoosh();
+
+  // Phase 1: Close curtains first (they start open/invisible, we make them visible then open)
+  document.getElementById('welcome').classList.add('exit');
+
+  // Phase 2: Show spotlight + glow name
+  setTimeout(() => {
+    document.body.classList.add('spotlight-on');
+    const glowEl = document.getElementById('welcomeGlowName');
+    const welcomeText = currentLang === 'en' ? ('Welcome ' + playerName + ' !') : ('Bienvenue ' + playerName + ' !');
+    glowEl.textContent = welcomeText;
+    glowEl.classList.add('show');
+
+    // Big confetti blast
+    launchConfetti();
+    launchConfetti();
+    playCelebSound();
+  }, 400);
+
+  // Phase 3: Open curtains
+  setTimeout(() => {
+    document.body.classList.add('curtain-open');
+  }, 800);
+
+  // Phase 4: Fade out glow name, show main
+  setTimeout(() => {
+    const glowEl = document.getElementById('welcomeGlowName');
+    glowEl.classList.remove('show');
+    glowEl.classList.add('fadeout');
+    document.body.classList.remove('spotlight-on');
+  }, 2200);
+
+  setTimeout(() => {
+    document.getElementById('main').classList.add('show');
+    initMain();
+    checkDailyReward();
+    updateStreak();
+    checkStreakRewards();
+    buildMissions();
+  }, 2500);
+};
+
+/* ===== ENHANCED PROFILE CARD ===== */
+const _origInitMain = initMain;
+initMain = function() {
+  _origInitMain();
+  enhanceProfileCard();
+  buildMissions();
+};
+
+function enhanceProfileCard() {
+  const myStars = parseInt(localStorage.getItem('kpop_stars_' + playerName) || '0');
+  const teamStars = PLAYERS.reduce((sum, p) => sum + parseInt(localStorage.getItem('kpop_stars_' + p.name) || '0'), 0);
+  const level = Math.floor(teamStars / 100) + 1;
+
+  // VIP / Legend badge
+  const nameEl = document.getElementById('profileName');
+  let existingBadge = nameEl.querySelector('.profile-badge-vip');
+  if (existingBadge) existingBadge.remove();
+  if (level > 20) {
+    const badge = document.createElement('span');
+    badge.className = 'profile-badge-vip legend';
+    badge.textContent = 'LEGEND';
+    nameEl.appendChild(badge);
+  } else if (level > 10) {
+    const badge = document.createElement('span');
+    badge.className = 'profile-badge-vip vip';
+    badge.textContent = 'VIP';
+    nameEl.appendChild(badge);
+  }
+
+  // Golden frame for high level
+  const avatarEl = document.getElementById('profileEmoji');
+  if (level > 10) {
+    avatarEl.classList.add('golden-frame');
+  } else {
+    avatarEl.classList.remove('golden-frame');
+  }
+
+  // Streak bar in profile
+  const streak = parseInt(localStorage.getItem('kpop_streak_' + playerName) || '0');
+  let streakWrap = document.querySelector('.streak-bar-wrap');
+  if (!streakWrap) {
+    streakWrap = document.createElement('div');
+    streakWrap.className = 'streak-bar-wrap';
+    const xpWrap = document.querySelector('.xp-bar-wrap');
+    if (xpWrap) xpWrap.after(streakWrap);
+  }
+  if (streak > 0) {
+    const maxStreak = 30;
+    const pct = Math.min(streak / maxStreak * 100, 100);
+    const flames = streak >= 3 ? '<span class="streak-flames">' + '🔥'.repeat(Math.min(streak, 7)) + '</span>' : '';
+    streakWrap.innerHTML = `
+      ${flames}
+      <div class="streak-bar"><div class="streak-bar-fill" style="width:${pct}%"></div></div>
+      <span style="font-size:.75em;color:#ff9500;font-weight:700;">${streak}j</span>
+    `;
+    streakWrap.style.display = 'flex';
+  } else {
+    streakWrap.style.display = 'none';
+  }
+}
+
+/* Star pulse effect when gaining stars */
+const _origClaimDaily = claimDailyReward;
+claimDailyReward = function() {
+  _origClaimDaily();
+  const starEl = document.getElementById('pMyStars');
+  if (starEl) {
+    starEl.classList.add('star-pulse');
+    setTimeout(() => starEl.classList.remove('star-pulse'), 500);
+  }
+};
+
+/* ===== ENHANCED GAME CARDS ===== */
+const _origBuildGames = buildGames;
+buildGames = function() {
+  _origBuildGames();
+  // Now enhance each card with progress bar, last played, lock
+  const grid = document.getElementById('gamesGrid');
+  const cards = grid.querySelectorAll('.game-card');
+  cards.forEach((card, idx) => {
+    const g = GAMES[idx];
+    if (!g) return;
+
+    // Progress bar (score / max score estimate)
+    if (g.hs) {
+      const val = parseInt(localStorage.getItem('kpop_hs_' + g.hs + '_' + playerName) || '0');
+      const maxScore = g.hs === 'dance' ? 500 : g.hs === 'quiz' ? 100 : g.hs === 'stars' ? 300 : g.hs === 'course' ? 200 : g.hs === 'defile' ? 100 : g.hs === 'puzzle' ? 100 : 100;
+      const pct = Math.min(val / maxScore * 100, 100);
+      const progBar = document.createElement('div');
+      progBar.className = 'game-progress-bar';
+      progBar.innerHTML = '<div class="game-progress-fill" style="width:' + pct + '%"></div>';
+      card.appendChild(progBar);
+    }
+
+    // Last played indicator
+    const lastPlayedKey = 'kpop_lastplayed_' + g.file + '_' + playerName;
+    const lastPlayed = localStorage.getItem(lastPlayedKey);
+    const lpDiv = document.createElement('div');
+    lpDiv.className = 'game-last-played';
+    lpDiv.textContent = formatLastPlayed(lastPlayed);
+    card.appendChild(lpDiv);
+
+    // Lock visual if never played
+    if (!lastPlayed && g.file !== 'achievements.html') {
+      const lockOverlay = document.createElement('div');
+      lockOverlay.className = 'game-lock-overlay';
+      lockOverlay.textContent = '🔒';
+      card.appendChild(lockOverlay);
+    }
+
+    // Track when clicked
+    card.addEventListener('click', function() {
+      localStorage.setItem(lastPlayedKey, Date.now().toString());
+    });
+  });
+};
+
+function formatLastPlayed(ts) {
+  if (!ts) return T('last_played_never');
+  const diff = Date.now() - parseInt(ts);
+  const mins = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+  if (mins < 1) return T('last_played_now');
+  if (mins < 60) return T('last_played_minutes', { n: mins });
+  if (hours < 24) return T('last_played_hours', { n: hours });
+  if (days < 2) return T('last_played_yesterday');
+  return T('last_played_days', { n: days });
+}
+
+/* ===== DAILY MISSIONS SYSTEM ===== */
+function getMissionSeed() {
+  const d = new Date();
+  return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+}
+
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+}
+
+function getDailyMissions() {
+  const seed = getMissionSeed();
+  const rng = seededRandom(seed);
+  const missionKeys = Object.keys(TRANSLATIONS[currentLang].missions);
+  // Shuffle and pick 3
+  const shuffled = missionKeys.slice().sort(() => rng() - 0.5);
+  return shuffled.slice(0, 3);
+}
+
+function getMissionStorageKey() {
+  const dateStr = new Date().toISOString().split('T')[0];
+  return 'kpop_missions_' + playerName + '_' + dateStr;
+}
+
+function buildMissions() {
+  if (!playerName) return;
+  const list = document.getElementById('missionsList');
+  if (!list) return;
+  const missions = getDailyMissions();
+  const completedData = JSON.parse(localStorage.getItem(getMissionStorageKey()) || '{}');
+  const missionTrans = TRANSLATIONS[currentLang].missions;
+
+  list.innerHTML = '';
+  missions.forEach(key => {
+    const m = missionTrans[key];
+    if (!m) return;
+    const isComplete = completedData[key] === true;
+    const card = document.createElement('div');
+    card.className = 'mission-card' + (isComplete ? ' completed' : '');
+    card.innerHTML = `
+      <div class="mission-icon">${m.icon}</div>
+      <div class="mission-info">
+        <div class="mission-name">${m.name}</div>
+        <div class="mission-desc">${m.desc}</div>
+      </div>
+      <div class="mission-reward">+${m.reward} ⭐</div>
+      <div class="mission-check ${isComplete ? 'done' : ''}">${isComplete ? '✅' : '⬜'}</div>
+    `;
+    list.appendChild(card);
+  });
+
+  // Auto-check missions based on game activity
+  checkMissionCompletion();
+}
+
+function checkMissionCompletion() {
+  const missions = getDailyMissions();
+  const storageKey = getMissionStorageKey();
+  const completedData = JSON.parse(localStorage.getItem(storageKey) || '{}');
+  const missionTrans = TRANSLATIONS[currentLang].missions;
+  let changed = false;
+
+  missions.forEach(key => {
+    if (completedData[key]) return;
+    const m = missionTrans[key];
+    if (!m) return;
+
+    // Check if the game was played today
+    if (m.game) {
+      const lastPlayed = localStorage.getItem('kpop_lastplayed_' + m.game + '_' + playerName);
+      if (lastPlayed) {
+        const today = new Date().toDateString();
+        const playDate = new Date(parseInt(lastPlayed)).toDateString();
+        if (playDate === today) {
+          completedData[key] = true;
+          changed = true;
+          // Award stars
+          const oldStars = parseInt(localStorage.getItem('kpop_stars_' + playerName) || '0');
+          const newStars = oldStars + m.reward;
+          localStorage.setItem('kpop_stars_' + playerName, newStars.toString());
+        }
+      }
+    }
+
+    // Check score-based missions
+    if (m.check === 'dance_100') {
+      const hs = parseInt(localStorage.getItem('kpop_hs_dance_' + playerName) || '0');
+      if (hs >= 100) { completedData[key] = true; changed = true; awardMissionStars(m.reward); }
+    }
+    if (m.check === 'quiz_80') {
+      const hs = parseInt(localStorage.getItem('kpop_hs_quiz_' + playerName) || '0');
+      if (hs >= 80) { completedData[key] = true; changed = true; awardMissionStars(m.reward); }
+    }
+  });
+
+  if (changed) {
+    localStorage.setItem(storageKey, JSON.stringify(completedData));
+    buildMissions();
+  }
+}
+
+function awardMissionStars(n) {
+  const old = parseInt(localStorage.getItem('kpop_stars_' + playerName) || '0');
+  localStorage.setItem('kpop_stars_' + playerName, (old + n).toString());
+}
+
+/* ===== ENHANCED NEWS TICKER ===== */
+const _origBuildTicker = buildTicker;
+buildTicker = function() {
+  const t = document.getElementById('ticker');
+  const news = TRANSLATIONS[currentLang].news;
+  let items = [...news];
+
+  // Add fake player actions for social feel
+  const playerActions = generatePlayerActions();
+  playerActions.forEach(a => items.push(a));
+
+  // Shuffle facts and actions together
+  items.sort(() => Math.random() - 0.5);
+
+  let html = '';
+  const doubled = [...items, ...items];
+  doubled.forEach((f, i) => {
+    const isAction = f.startsWith('__ACTION__');
+    const text = isAction ? f.replace('__ACTION__', '') : f;
+    html += '<span' + (isAction ? ' class="player-action"' : '') + '>' + text + '</span>';
+  });
+  t.innerHTML = html;
+};
+
+function generatePlayerActions() {
+  const actions = [];
+  const actionTemplates = currentLang === 'en' ? [
+    '{name} reached level {level}!',
+    '{name} found a rare sticker!',
+    '{name} scored {score} in Dance Challenge!',
+    '{name} completed the K-Pop Quiz!',
+    '{name} created an amazing avatar!',
+    '{name} has a {streak}-day streak!',
+  ] : [
+    '{name} a atteint le niveau {level} !',
+    '{name} a trouvé un sticker rare !',
+    '{name} a fait {score} au Dance Challenge !',
+    '{name} a terminé le Quiz K-Pop !',
+    '{name} a créé un avatar incroyable !',
+    '{name} a un streak de {streak} jours !',
+  ];
+
+  PLAYERS.forEach(p => {
+    const stars = parseInt(localStorage.getItem('kpop_stars_' + p.name) || '0');
+    const level = Math.floor(stars / 100) + 1;
+    const streak = parseInt(localStorage.getItem('kpop_streak_' + p.name) || '0');
+    if (stars > 0) {
+      const tmpl = actionTemplates[Math.floor(Math.random() * actionTemplates.length)];
+      const text = tmpl.replace('{name}', p.name)
+        .replace('{level}', level)
+        .replace('{score}', Math.floor(Math.random() * 300) + 50)
+        .replace('{streak}', streak || 1);
+      actions.push('__ACTION__' + text);
+    }
+  });
+  return actions;
+}
+
+/* ===== WARP SPEED TRANSITION ===== */
+(function() {
+  document.addEventListener('click', function(e) {
+    const a = e.target.closest('.game-card');
+    if (!a) return;
+    // Warp effect
+    const overlay = document.getElementById('warpOverlay');
+    overlay.innerHTML = '';
+    overlay.classList.add('active');
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    for (let i = 0; i < 30; i++) {
+      const line = document.createElement('div');
+      line.className = 'warp-line';
+      const angle = (Math.random() * 360);
+      const rad = angle * Math.PI / 180;
+      line.style.left = cx + 'px';
+      line.style.top = cy + 'px';
+      line.style.transform = 'rotate(' + angle + 'deg)';
+      line.style.animationDelay = (Math.random() * 0.15) + 's';
+      line.style.height = (1 + Math.random() * 3) + 'px';
+      line.style.background = `linear-gradient(to right, transparent, ${['#ff6fd8','#b44dff','#ffd700','#fff','#4ecdc4'][Math.floor(Math.random()*5)]}, transparent)`;
+      overlay.appendChild(line);
+    }
+    setTimeout(() => {
+      overlay.classList.remove('active');
+    }, 500);
+  });
+})();
+
+/* ===== KONAMI CODE EASTER EGG ===== */
+(function() {
+  const konamiSequence = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let konamiIndex = 0;
+  document.addEventListener('keydown', function(e) {
+    const expected = konamiSequence[konamiIndex];
+    if (e.key === expected || e.key.toLowerCase() === expected) {
+      konamiIndex++;
+      if (konamiIndex === konamiSequence.length) {
+        konamiIndex = 0;
+        activateKonami();
+      }
+    } else {
+      konamiIndex = 0;
+    }
+  });
+
+  function activateKonami() {
+    playSparkle();
+    playLevelUp();
+    const hearts = ['❤️','💖','💗','💕','💝','💘','💜','🩷','🧡','💛'];
+    for (let i = 0; i < 60; i++) {
+      setTimeout(() => {
+        const h = document.createElement('div');
+        h.className = 'konami-heart';
+        h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.fontSize = (2 + Math.random() * 4) + 'em';
+        h.style.setProperty('--dur', (2 + Math.random() * 3) + 's');
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 6000);
+      }, i * 80);
+    }
+    // Flash message
+    const msg = document.createElement('div');
+    msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100000;font-size:2em;font-weight:800;color:#fff;text-shadow:0 0 40px rgba(255,111,216,.8),0 0 80px rgba(180,77,255,.5);pointer-events:none;animation:celebPop .6s cubic-bezier(.17,.67,.35,1.3);';
+    msg.textContent = T('konami_activated');
+    document.body.appendChild(msg);
+    setTimeout(() => { msg.style.opacity = '0'; msg.style.transition = 'opacity .5s'; }, 2000);
+    setTimeout(() => msg.remove(), 3000);
+  }
 })();
 </script>
 <!-- Page Transition -->
