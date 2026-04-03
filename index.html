@@ -1037,7 +1037,7 @@ body::before {
   <!-- Profile card -->
   <div class="profile-card" id="profileCard">
     <div class="profile-top">
-      <div class="profile-avatar" id="profileEmoji">❤️</div>
+      <div class="profile-avatar" id="profileEmoji">💖</div>
       <div class="profile-info">
         <div class="name" id="profileName"></div>
         <div class="title-rank" id="profileTitle"></div>
@@ -1400,7 +1400,7 @@ function initLangToggle() {
 
 /* ===== DATA ===== */
 const PLAYERS = [
-  {name:'Ambre', age:6, emoji:'❤️', color:'linear-gradient(145deg,#ff1a1a,#ff6b6b)', stars:true},
+  {name:'Ambre', age:6, emoji:'💖', color:'linear-gradient(145deg,#ff1a1a,#ff6b6b)', stars:true},
   {name:'Eden', age:6, emoji:'💖', color:'linear-gradient(145deg,#a18cd1,#cdb4f0)'},
   {name:'Louise', age:10, emoji:'⭐', color:'linear-gradient(145deg,#fbc2eb,#f6a5c1)'},
 ];
@@ -1917,7 +1917,7 @@ function initMain(){
   emojiEl.textContent=pd?pd.emoji:'🌟';
   if(pd)emojiEl.style.background=pd.color;
   if(pd&&pd.stars){
-    emojiEl.innerHTML='<span class="heart-stars-wrap">❤️<span class="mini-stars">✨</span><span class="mini-stars s2">⭐</span><span class="mini-stars s3">✨</span></span>';
+    emojiEl.innerHTML='<span class="heart-stars-wrap">💖<span class="mini-stars">✨</span><span class="mini-stars s2">⭐</span><span class="mini-stars s3">✨</span></span>';
   }
   document.getElementById('profileName').textContent=playerName;
 
