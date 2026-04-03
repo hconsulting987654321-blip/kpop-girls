@@ -484,6 +484,15 @@ body::before {
   from{transform:rotate(0deg);}
   to{transform:rotate(360deg);}
 }
+.heart-stars-wrap{position:relative;display:inline-block;}
+.mini-stars{position:absolute;font-size:.35em;animation:starTwinkle 1.5s ease-in-out infinite;}
+.mini-stars:nth-child(2){top:-2px;right:-4px;animation-delay:0s;}
+.mini-stars.s2{top:50%;left:-6px;font-size:.3em;animation-delay:.5s;}
+.mini-stars.s3{bottom:-2px;right:-2px;font-size:.28em;animation-delay:1s;}
+@keyframes starTwinkle{
+  0%,100%{opacity:.4;transform:scale(.7);}
+  50%{opacity:1;transform:scale(1.2);}
+}
 .profile-info{flex:1;}
 .profile-info .name{font-size:1.35em;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.3);}
 .profile-info .title-rank{
@@ -1028,7 +1037,7 @@ body::before {
   <!-- Profile card -->
   <div class="profile-card" id="profileCard">
     <div class="profile-top">
-      <div class="profile-avatar" id="profileEmoji">💜</div>
+      <div class="profile-avatar" id="profileEmoji">❤️</div>
       <div class="profile-info">
         <div class="name" id="profileName"></div>
         <div class="title-rank" id="profileTitle"></div>
@@ -1391,7 +1400,7 @@ function initLangToggle() {
 
 /* ===== DATA ===== */
 const PLAYERS = [
-  {name:'Ambre', age:6, emoji:'💜', color:'linear-gradient(145deg,#ff9a9e,#fecfef)'},
+  {name:'Ambre', age:6, emoji:'❤️', color:'linear-gradient(145deg,#ff1a1a,#ff6b6b)', stars:true},
   {name:'Eden', age:6, emoji:'💖', color:'linear-gradient(145deg,#a18cd1,#cdb4f0)'},
   {name:'Louise', age:10, emoji:'⭐', color:'linear-gradient(145deg,#fbc2eb,#f6a5c1)'},
 ];
@@ -1904,8 +1913,12 @@ function initMain(){
   const pd=PLAYERS.find(p=>p.name===playerName);
 
   // Profile card
-  document.getElementById('profileEmoji').textContent=pd?pd.emoji:'🌟';
-  if(pd)document.getElementById('profileEmoji').style.background=pd.color;
+  const emojiEl=document.getElementById('profileEmoji');
+  emojiEl.textContent=pd?pd.emoji:'🌟';
+  if(pd)emojiEl.style.background=pd.color;
+  if(pd&&pd.stars){
+    emojiEl.innerHTML='<span class="heart-stars-wrap">❤️<span class="mini-stars">✨</span><span class="mini-stars s2">⭐</span><span class="mini-stars s3">✨</span></span>';
+  }
   document.getElementById('profileName').textContent=playerName;
 
   // Custom title from mystery box or rank title
